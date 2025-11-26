@@ -10,7 +10,7 @@
           <MagnifyingGlassIcon class="w-5 h-5 mr-2" />
           Trouver du fret
         </NuxtLink>
-        <button class="btn btn-primary flex items-center justify-center">
+        <button @click="publishAvailability" class="btn btn-primary flex items-center justify-center">
           <PlusIcon class="w-5 h-5 mr-2" />
           Publier ma disponibilité
         </button>
@@ -149,12 +149,17 @@ import { useMessagingStore } from '~/stores/messaging';
 import { useAnnouncementStore } from '~/stores/announcement';
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ['auth'],
+  layout: 'dashboard'
 });
 
 const authStore = useAuthStore();
 const messagingStore = useMessagingStore();
 const announcementStore = useAnnouncementStore();
+
+const publishAvailability = () => {
+  alert('Fonctionnalité de publication de disponibilité à venir !');
+};
 
 const currentUser = computed(() => authStore.currentUser);
 

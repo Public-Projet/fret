@@ -76,6 +76,16 @@
           </div>
         </div>
         <p class="mt-2 italic">Mot de passe : n'importe lequel</p>
+        <div class="mt-3 flex space-x-3">
+          <button type="button" @click="loginAsDemo('shipper')"
+            class="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded hover:bg-primary-200 transition-colors">
+            Connexion Chargeur
+          </button>
+          <button type="button" @click="loginAsDemo('carrier')"
+            class="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded hover:bg-primary-200 transition-colors">
+            Connexion Transporteur
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -114,5 +124,15 @@ const handleLogin = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const loginAsDemo = async (role: 'shipper' | 'carrier') => {
+  if (role === 'shipper') {
+    email.value = 'jean.dupont@logistique.fr';
+  } else {
+    email.value = 'marie.martin@transport.fr';
+  }
+  password.value = 'password';
+  await handleLogin();
 };
 </script>

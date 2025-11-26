@@ -1,6 +1,12 @@
 <template>
   <div class="container-custom py-8">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Messagerie</h1>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Messagerie</h1>
+      <button @click="startMockConversation" class="btn btn-primary flex items-center">
+        <PlusIcon class="w-5 h-5 mr-2" />
+        Nouvelle conversation
+      </button>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-12rem)]">
       <!-- Liste des conversations -->
@@ -13,13 +19,9 @@
             Aucune conversation
           </div>
           <div v-else>
-            <NuxtLink 
-              v-for="conversation in conversations" 
-              :key="conversation.id"
-              :to="`/messages/${conversation.id}`"
+            <NuxtLink v-for="conversation in conversations" :key="conversation.id" :to="`/messages/${conversation.id}`"
               class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700/50 last:border-0"
-              :class="{ 'bg-primary-50 dark:bg-primary-900/10': isActive(conversation.id) }"
-            >
+              :class="{ 'bg-primary-50 dark:bg-primary-900/10': isActive(conversation.id) }">
               <div class="flex justify-between items-start mb-1">
                 <span class="font-semibold text-gray-900 dark:text-white truncate">
                   {{ getOtherParticipant(conversation)?.company || getOtherParticipant(conversation)?.firstName }}
@@ -54,7 +56,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ChatBubbleLeftRightIcon } from '@heroicons/vue/24/outline';
+import { ChatBubbleLeftRightIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAuthStore } from '~/stores/auth';
 import type { Conversation } from '~/types';
@@ -66,9 +68,10 @@ definePageMeta({
 const messagingStore = useMessagingStore();
 const authStore = useAuthStore();
 const route = useRoute();
+const router = useRouter();
 
 const currentUser = computed(() => authStore.currentUser);
-const conversations = computed(() => 
+const conversations = computed(() =>
   currentUser.value ? messagingStore.userConversations(currentUser.value.id) : []
 );
 
@@ -82,10 +85,25 @@ const formatDate = (dateString?: string) => {
   if (!dateString) return '';
   const date = new Date(dateString);
   const now = new Date();
-  
+
   if (date.toDateString() === now.toDateString()) {
     return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   }
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+};
+
+const startMockConversation = async () => {
+  if (!currentUser.value) return;
+
+  // Create a mock conversation with a support user or random user
+  // In a real app, this would open a user selection modal
+  const otherUserId = currentUser.value.role === 'shipper' ? 'carrier-1' : 'shipper-1';
+
+  // Using a mock announcement ID 'ann-1' for demo purposes
+  const result = await messagingStore.getOrCreateConversation('ann-1', [currentUser.value.id, otherUserId]);
+
+  if (result.success && result.conversation) {
+    router.push(`/messages/${result.conversation.id}`);
+  }
 };
 </script>

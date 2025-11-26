@@ -123,12 +123,12 @@
                 <NuxtLink :to="`/announcements/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">
                   <EyeIcon class="w-5 h-5" />
                 </NuxtLink>
-                <button v-if="announcement.status === 'pending'"
+                <button v-if="announcement.status === 'pending'" @click="handleEdit(announcement)"
                   class="btn btn-ghost p-2 text-blue-600 hover:bg-blue-50" title="Modifier">
                   <PencilIcon class="w-5 h-5" />
                 </button>
-                <button v-if="announcement.status === 'pending'" class="btn btn-ghost p-2 text-red-600 hover:bg-red-50"
-                  title="Annuler">
+                <button v-if="announcement.status === 'pending'" @click="handleDelete(announcement.id)"
+                  class="btn btn-ghost p-2 text-red-600 hover:bg-red-50" title="Annuler">
                   <TrashIcon class="w-5 h-5" />
                 </button>
               </div>
@@ -137,6 +137,9 @@
         </div>
       </div>
     </div>
+
+    <EditAnnouncementModal v-if="showEditModal" :announcement="announcementToEdit" @close="showEditModal = false"
+      @update="handleUpdate" />
   </div>
 </template>
 
@@ -156,15 +159,19 @@ import {
 } from '@heroicons/vue/24/outline';
 import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
-import type { AnnouncementStatus } from '~/types';
+import type { Announcement } from '~/types';
+import EditAnnouncementModal from '~/components/dashboard/EditAnnouncementModal.vue';
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ['auth'],
+  layout: 'dashboard'
 });
 
 const authStore = useAuthStore();
 const announcementStore = useAnnouncementStore();
 const currentFilter = ref('all');
+const showEditModal = ref(false);
+const announcementToEdit = ref<Announcement | null>(null);
 
 const loading = computed(() => announcementStore.loading);
 const currentUser = computed(() => authStore.currentUser);
@@ -226,6 +233,25 @@ const formatDate = (dateString: string) => {
     month: 'short',
     year: 'numeric'
   });
+};
+
+const handleEdit = (announcement: Announcement) => {
+  announcementToEdit.value = announcement;
+  showEditModal.value = true;
+};
+
+const handleDelete = async (id: string) => {
+  if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?')) {
+    await announcementStore.deleteAnnouncement(id);
+  }
+};
+
+const handleUpdate = async (updatedData: Partial<Announcement>) => {
+  if (announcementToEdit.value) {
+    await announcementStore.updateAnnouncement(announcementToEdit.value.id, updatedData);
+    showEditModal.value = false;
+    announcementToEdit.value = null;
+  }
 };
 
 onMounted(() => {
