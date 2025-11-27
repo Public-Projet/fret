@@ -22,7 +22,7 @@
 
                 <div class="grid grid-cols-2 gap-4">
                   <div>
-                    <label class="label">Budget (€)</label>
+                    <label class="label">Budget (FCFA)</label>
                     <input v-model.number="form.budget" type="number" class="input" />
                   </div>
                   <div>

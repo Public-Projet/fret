@@ -87,7 +87,7 @@
             <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
               <CurrencyEuroIcon class="w-6 h-6 mx-auto text-gray-400 mb-2" />
               <p class="text-xs text-gray-500 uppercase">Budget</p>
-              <p class="font-semibold text-primary-600">{{ announcement.budget }}€</p>
+              <p class="font-semibold text-primary-600">{{ announcement.budget }}FCFA</p>
             </div>
           </div>
 
@@ -120,7 +120,7 @@
                     </div>
                   </div>
                 </div>
-                <span class="font-bold text-lg text-primary-600">{{ offer.price }}€</span>
+                <span class="font-bold text-lg text-primary-600">{{ offer.price }}FCFA</span>
               </div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{{ offer.message }}</p>
               <div class="flex justify-end space-x-2">
@@ -169,7 +169,7 @@
           <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Faire une offre</h3>
           <form @submit.prevent="submitOffer" class="space-y-4">
             <div>
-              <label class="label">Votre prix (€)</label>
+              <label class="label">Votre prix (FCFA)</label>
               <input v-model.number="offerForm.price" type="number" required class="input" />
             </div>
             <div>

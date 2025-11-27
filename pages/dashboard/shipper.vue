@@ -46,7 +46,7 @@
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Budget total</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ totalBudget }}€</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ totalBudget }}FCFA</p>
         </div>
       </div>
     </div>
@@ -117,7 +117,7 @@
             <div class="flex items-center justify-between md:justify-end space-x-4">
               <div class="text-right">
                 <p class="text-sm text-gray-500 dark:text-gray-400">Budget</p>
-                <p class="text-lg font-bold text-gray-900 dark:text-white">{{ announcement.budget }}€</p>
+                <p class="text-lg font-bold text-gray-900 dark:text-white">{{ announcement.budget }}FCFA</p>
               </div>
               <div class="flex space-x-2">
                 <NuxtLink :to="`/announcements/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">

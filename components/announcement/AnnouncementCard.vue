@@ -51,7 +51,7 @@
         <CurrencyEuroIcon class="w-5 h-5 text-gray-400" />
         <div>
           <p class="text-xs text-gray-500 dark:text-gray-400">Budget</p>
-          <p class="text-sm font-medium text-primary-600 dark:text-primary-400">{{ announcement.budget }}€</p>
+          <p class="text-sm font-medium text-primary-600 dark:text-primary-400">{{ announcement.budget }}FCFA</p>
         </div>
       </div>
     </div>

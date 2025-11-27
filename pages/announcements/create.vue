@@ -11,7 +11,7 @@
             <div class="space-y-4">
               <div>
                 <label class="label">Titre de l'annonce</label>
-                <input v-model="form.title" type="text" required class="input" placeholder="Ex: Transport de palettes Paris - Lyon" />
+                <input v-model="form.title" type="text" required class="input" placeholder="Ex: Transport de palettes Cotonou - Porto-Novo" />
               </div>
               <div>
                 <label class="label">Description détaillée</label>
@@ -30,7 +30,7 @@
                   </select>
                 </div>
                 <div>
-                  <label class="label">Budget estimatif (€)</label>
+                  <label class="label">Budget estimatif (FCFA)</label>
                   <input v-model.number="form.budget" type="number" required class="input" placeholder="0" />
                 </div>
               </div>

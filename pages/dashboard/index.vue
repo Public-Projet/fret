@@ -68,13 +68,13 @@ const stats = computed(() => {
     return [
       { label: 'Annonces actives', value: '12', icon: DocumentTextIcon, colorClass: 'bg-blue-100 text-blue-600' },
       { label: 'En cours', value: '3', icon: TruckIcon, colorClass: 'bg-green-100 text-green-600' },
-      { label: 'Dépenses ce mois', value: '2.4k€', icon: CurrencyEuroIcon, colorClass: 'bg-purple-100 text-purple-600' },
+      { label: 'Dépenses ce mois', value: '2.4kFCFA', icon: CurrencyEuroIcon, colorClass: 'bg-purple-100 text-purple-600' },
     ];
   } else {
     return [
       { label: 'Trajets disponibles', value: '45', icon: DocumentTextIcon, colorClass: 'bg-blue-100 text-blue-600' },
       { label: 'Mes trajets', value: '5', icon: TruckIcon, colorClass: 'bg-green-100 text-green-600' },
-      { label: 'Revenus ce mois', value: '3.8k€', icon: CurrencyEuroIcon, colorClass: 'bg-purple-100 text-purple-600' },
+      { label: 'Revenus ce mois', value: '3.8kFCFA', icon: CurrencyEuroIcon, colorClass: 'bg-purple-100 text-purple-600' },
     ];
   }
 });

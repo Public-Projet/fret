@@ -68,19 +68,16 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <p class="font-semibold">Chargeur :</p>
-            <p>jean.dupont@logistique.fr</p>
+            <p>s.azian@charg.com</p>
           </div>
-          <div>
-            <p class="font-semibold">Transporteur :</p>
-            <p>marie.martin@transport.fr</p>
-          </div>
-        </div>
-        <p class="mt-2 italic">Mot de passe : n'importe lequel</p>
-        <div class="mt-3 flex space-x-3">
-          <button type="button" @click="loginAsDemo('shipper')"
+           <button type="button" @click="loginAsDemo('shipper')"
             class="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded hover:bg-primary-200 transition-colors">
             Connexion Chargeur
           </button>
+          <div>
+            <p class="font-semibold">Transporteur :</p>
+            <p>amos.kpos@transp.com</p>
+          </div>
           <button type="button" @click="loginAsDemo('carrier')"
             class="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded hover:bg-primary-200 transition-colors">
             Connexion Transporteur
@@ -128,9 +125,9 @@ const handleLogin = async () => {
 
 const loginAsDemo = async (role: 'shipper' | 'carrier') => {
   if (role === 'shipper') {
-    email.value = 'jean.dupont@logistique.fr';
+    email.value = 's.azian@charg.com';
   } else {
-    email.value = 'marie.martin@transport.fr';
+    email.value = 'amos.kpos@transp.com';
   }
   password.value = 'password';
   await handleLogin();

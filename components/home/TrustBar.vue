@@ -5,10 +5,9 @@
         Ils nous font confiance
       </p>
       <div class="flex flex-wrap justify-center items-center gap-12 opacity-60">
-        <div class="text-4xl font-black text-gray-400">CARREFOUR</div>
-        <div class="text-4xl font-black text-gray-400">IKEA</div>
-        <div class="text-4xl font-black text-gray-400">LEROY MERLIN</div>
-        <div class="text-4xl font-black text-gray-400">DECATHLON</div>
+        <div class="text-4xl font-black text-gray-400">PORT AUTONOME DE COTONOU</div>
+        <div class="text-4xl font-black text-gray-400">MTN BENIN</div>
+        <div class="text-4xl font-black text-gray-400">SIAB BENIN</div>
       </div>
     </div>
   </section>

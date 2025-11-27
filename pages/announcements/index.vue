@@ -12,7 +12,7 @@
               v-model="filters.originCity" 
               type="text" 
               class="input" 
-              placeholder="Ex: Paris"
+              placeholder="Ex: Cotonou"
             />
           </div>
           <div>
@@ -21,7 +21,7 @@
               v-model="filters.destinationCity" 
               type="text" 
               class="input" 
-              placeholder="Ex: Lyon"
+              placeholder="Ex: Abomey"
             />
           </div>
           <div>
@@ -37,7 +37,7 @@
             </select>
           </div>
           <div>
-            <label class="label">Budget min (€)</label>
+            <label class="label">Budget min (FCFA)</label>
             <input 
               v-model.number="filters.minBudget" 
               type="number" 

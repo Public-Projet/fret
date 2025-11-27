@@ -43,7 +43,7 @@
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">CA potentiel</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ potentialRevenue }}€</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ potentialRevenue }}FCFA</p>
         </div>
       </div>
       <div class="card p-6 flex items-center space-x-4">
@@ -85,7 +85,7 @@
                   </span>
                 </div>
                 <h3 class="font-medium text-gray-900 dark:text-white">
-                  Offre de {{ offer.price }}€
+                  Offre de {{ offer.price }}FCFA
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
                   {{ offer.message }}
@@ -120,7 +120,7 @@
               </div>
             </div>
             <div class="flex items-center justify-between mt-3">
-              <span class="font-bold text-primary-600">{{ announcement.budget }}€</span>
+              <span class="font-bold text-primary-600">{{ announcement.budget }}FCFA</span>
               <NuxtLink :to="`/announcements/${announcement.id}`"
                 class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
                 Détails →

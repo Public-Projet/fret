@@ -1,5 +1,5 @@
 {
-  "name": "FRET",
+  "name": "fret",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
     "@pinia/nuxt": "^0.11.3",
+    "@tabler/icons-vue": "^3.35.0",
     "nuxt": "^3.20.1",
     "pinia": "^3.0.4",
     "vue": "^3.5.25",

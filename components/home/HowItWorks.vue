@@ -43,14 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  DocumentTextIcon,
-  MagnifyingGlassIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  BoltIcon,
-  ShieldCheckIcon
-} from '@heroicons/vue/24/outline';
-import FeatureCard from './FeatureCard.vue';
-import GradientBadge from '../common/GradientBadge.vue';
+import { DocumentTextIcon, MagnifyingGlassIcon, CheckCircleIcon, ClockIcon, BoltIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
+import { FeatureCard } from "@/components/home";
+import { GradientBadge } from "@/components/common";
 </script>

@@ -22,7 +22,7 @@
         <div
           class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8 animate-fade-in">
           <SparklesIcon class="w-5 h-5 text-yellow-300" />
-          <span class="text-white font-medium">La plateforme n°1 du transport en France</span>
+          <span class="text-white font-medium">La plateforme n°1 du transport au Bénin</span>
         </div>
 
         <!-- Titre principal avec effet gradient -->
@@ -84,13 +84,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import {
-  TruckIcon,
-  UserGroupIcon,
-  ArrowRightIcon,
-  ChevronDownIcon,
-  SparklesIcon
-} from '@heroicons/vue/24/outline';
+import { TruckIcon, UserGroupIcon, ArrowRightIcon, ChevronDownIcon, SparklesIcon } from '@heroicons/vue/24/outline';
 import StatCard from './StatCard.vue';
 
 const shippers = ref(0);

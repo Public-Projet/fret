@@ -11,21 +11,21 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <TestimonialCard
           quote="FreightConnect a révolutionné notre logistique. Nous avons réduit nos coûts de 35% tout en améliorant nos délais de livraison."
-          name="Marie Dupont" role="Directrice Logistique, IKEA" initials="MD" avatar-color="blue" />
+          name="Isaac Agossou" role="Directeur Logistique, IKEA" initials="IA" avatar-color="blue" />
 
         <TestimonialCard
           quote="Interface intuitive et transporteurs professionnels. J'ai trouvé mon transporteur en moins de 20 minutes!"
-          name="Jean Martin" role="PDG, Decathlon" initials="JM" avatar-color="green" />
+          name="Jean Tossou" role="PDG, Azonnagbò" initials="JT" avatar-color="green" />
 
         <TestimonialCard
           quote="Grâce à FreightConnect, j'ai multiplié mes contrats par 3. La plateforme est parfaite pour nous, transporteurs."
-          name="Pierre Leroy" role="Transporteur indépendant" initials="PL" avatar-color="blue" />
+          name="Pierre Cossou" role="Transporteur indépendant" initials="PC" avatar-color="blue" />
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import TestimonialCard from './TestimonialCard.vue';
-import GradientBadge from '../common/GradientBadge.vue';
+import { TestimonialCard } from "@/components/home";
+import { GradientBadge } from "@/components/common";
 </script>
