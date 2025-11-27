@@ -7,7 +7,7 @@
           {{ announcement.title }}
         </h3>
         <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-          <MapPinIcon class="w-4 h-4" />
+          <IconMapPin class="w-4 h-4" />
           <span>{{ announcement.origin.city }} → {{ announcement.destination.city }}</span>
           <span v-if="announcement.distance" class="text-gray-400">
             ({{ announcement.distance }} km)
@@ -27,28 +27,28 @@
     <!-- Details -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
       <div class="flex items-center space-x-2">
-        <CubeIcon class="w-5 h-5 text-gray-400" />
+        <IconCube class="w-5 h-5 text-gray-400" />
         <div>
           <p class="text-xs text-gray-500 dark:text-gray-400">Type</p>
           <p class="text-sm font-medium text-gray-900 dark:text-white">{{ cargoTypeLabel }}</p>
         </div>
       </div>
       <div class="flex items-center space-x-2">
-        <ScaleIcon class="w-5 h-5 text-gray-400" />
+        <IconScale class="w-5 h-5 text-gray-400" />
         <div>
           <p class="text-xs text-gray-500 dark:text-gray-400">Poids</p>
           <p class="text-sm font-medium text-gray-900 dark:text-white">{{ announcement.weight }} kg</p>
         </div>
       </div>
       <div class="flex items-center space-x-2">
-        <CalendarIcon class="w-5 h-5 text-gray-400" />
+        <IconCalendar class="w-5 h-5 text-gray-400" />
         <div>
           <p class="text-xs text-gray-500 dark:text-gray-400">Enlèvement</p>
           <p class="text-sm font-medium text-gray-900 dark:text-white">{{ formatDate(announcement.pickupDate) }}</p>
         </div>
       </div>
       <div class="flex items-center space-x-2">
-        <CurrencyEuroIcon class="w-5 h-5 text-gray-400" />
+        <IconTag class="w-5 h-5 text-gray-400" />
         <div>
           <p class="text-xs text-gray-500 dark:text-gray-400">Budget</p>
           <p class="text-sm font-medium text-primary-600 dark:text-primary-400">{{ announcement.budget }}FCFA</p>
@@ -60,14 +60,14 @@
     <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
       <div class="flex items-center space-x-2">
         <div class="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
-          <UserIcon class="w-4 h-4 text-primary-600 dark:text-primary-400" />
+          <IconUser class="w-4 h-4 text-primary-600 dark:text-primary-400" />
         </div>
         <div>
           <p class="text-sm font-medium text-gray-900 dark:text-white">
             {{ announcement.user?.company || 'Entreprise' }}
           </p>
           <div class="flex items-center space-x-1">
-            <StarIcon class="w-3 h-3 text-yellow-400 fill-current" />
+            <IconStar class="w-3 h-3 text-yellow-400 fill-current" />
             <span class="text-xs text-gray-600 dark:text-gray-400">
               {{ announcement.user?.rating || 0 }} ({{ announcement.user?.reviewCount || 0 }})
             </span>
@@ -83,16 +83,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import {
-  MapPinIcon,
-  CubeIcon,
-  ScaleIcon,
-  CalendarIcon,
-  CurrencyEuroIcon,
-  UserIcon,
-  StarIcon
-} from '@heroicons/vue/24/outline';
 import type { Announcement } from '~/types';
+import { IconCalendar, IconCube, IconMapPin, IconScale, IconStar, IconTag, IconUser } from '@tabler/icons-vue';
 
 const props = defineProps<{
   announcement: Announcement;

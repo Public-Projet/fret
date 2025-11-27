@@ -26,7 +26,7 @@
           <NuxtLink to="/register"
             class="group px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-xl shadow-2xl hover:shadow-white/30 transition-all duration-300 hover:scale-110 flex items-center space-x-3">
             <span>Créer un compte gratuit</span>
-            <ArrowRightIcon class="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+            <IconArrowRight class="w-6 h-6 group-hover:translate-x-2 transition-transform" />
           </NuxtLink>
 
           <NuxtLink to="/announcements"
@@ -38,15 +38,15 @@
         <!-- Mini features -->
         <div class="flex flex-wrap justify-center gap-8 text-white">
           <div class="flex items-center space-x-2">
-            <CheckCircleIcon class="w-6 h-6" />
+            <IconCircleCheck class="w-6 h-6" />
             <span class="font-semibold">Sans engagement</span>
           </div>
           <div class="flex items-center space-x-2">
-            <CheckCircleIcon class="w-6 h-6" />
+            <IconCircleCheck class="w-6 h-6" />
             <span class="font-semibold">Inscription gratuite</span>
           </div>
           <div class="flex items-center space-x-2">
-            <CheckCircleIcon class="w-6 h-6" />
+            <IconCircleCheck class="w-6 h-6" />
             <span class="font-semibold">Support 24/7</span>
           </div>
         </div>
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRightIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { IconArrowRight, IconCircleCheck } from '@tabler/icons-vue';
 </script>
 
 <style scoped>

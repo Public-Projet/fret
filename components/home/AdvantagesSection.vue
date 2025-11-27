@@ -14,19 +14,19 @@
           </p>
 
           <div class="space-y-6">
-            <AdvantageItem :icon="ShieldCheckIcon" title="Sécurité garantie à 100%"
+            <AdvantageItem :icon="IconShieldCheck" title="Sécurité garantie à 100%"
               description="Tous nos transporteurs sont vérifiés, certifiés et assurés. Vos marchandises sont protégées du départ à l'arrivée."
               icon-class="from-blue-500 to-blue-700" />
 
-            <AdvantageItem :icon="CurrencyEuroIcon" title="Economisez jusqu'à 40%"
+            <AdvantageItem :icon="IconTag" title="Economisez jusqu'à 40%"
               description="Comparez les offres en temps réel et négociez pour obtenir les meilleurs tarifs du marché."
               icon-class="from-green-500 to-green-700" />
 
-            <AdvantageItem :icon="BoltIcon" title="Rapidité incomparable"
+            <AdvantageItem :icon="IconBolt" title="Rapidité incomparable"
               description="Trouvez un transporteur qualifié en moins de 30 minutes au lieu de plusieurs jours."
               icon-class="from-blue-500 to-blue-700" />
 
-            <AdvantageItem :icon="ChatBubbleLeftRightIcon" title="Communication simplifiée"
+            <AdvantageItem :icon="IconMessage" title="Communication simplifiée"
               description="Messagerie instantanée intégrée, suivi en temps réel et notifications automatiques."
               icon-class="from-green-500 to-green-700" />
           </div>
@@ -48,36 +48,28 @@
               </div>
 
               <!-- Cards transport -->
-              <TransportActivityCard icon-class="from-blue-500 to-blue-700" :icon="TruckIcon" title="Transport Express"
+              <TransportActivityCard icon-class="from-blue-500 to-blue-700" :icon="IconTruck" title="Transport Express"
                 subtitle="Cotonou → Parakou" status="LIVRÉ" status-class="bg-green-500" weight="2.5 tonnes" price="180.000 FCFA"
                 price-class="text-blue-600 dark:text-blue-400" />
 
-              <TransportActivityCard icon-class="from-green-500 to-green-700" :icon="CubeIcon" title="Palettes fragiles"
+              <TransportActivityCard icon-class="from-green-500 to-green-700" :icon="IconCube" title="Palettes fragiles"
                 subtitle="Bohicon → Covè" status="EN COURS" status-class="bg-yellow-500 animate-pulse"
                 weight="1.8 tonnes" price="75.000 FCFA" price-class="text-green-600 dark:text-green-400" />
 
-              <TransportActivityCard icon-class="from-gray-500 to-gray-700" :icon="TruckIcon" title="Vrac matériaux"
+              <TransportActivityCard icon-class="from-gray-500 to-gray-700" :icon="IconTruckDelivery" title="Vrac matériaux"
                 subtitle="Abomey-Calavi → Comè" status="NOUVEAU" status-class="bg-blue-500" weight="5.0 tonnes"
                 price="225.000FCFA" price-class="text-gray-600 dark:text-gray-400" />
             </div>
 
-            <!-- Footer mockup -->
             <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                <ChartBarIcon class="w-5 h-5" />
-                <span>+127% ce mois-ci</span>
-              </div>
-              <button class="text-blue-600 dark:text-blue-400 font-semibold text-sm hover:underline">
-                Voir tout →
-              </button>
             </div>
           </div>
 
           <!-- Stats flottantes -->
-          <FloatingStats value="98%" label="Satisfaction" :icon="CheckCircleIcon" position-classes="-top-6 -right-6"
+          <FloatingStats value="98%" label="Satisfaction" :icon="IconCircleCheck" position-classes="-top-6 -right-6"
             icon-bg-color="bg-green-100 dark:bg-green-900/30" icon-color="text-green-600 dark:text-green-400" />
 
-          <FloatingStats value="24/7" label="Support" :icon="BoltIcon"
+          <FloatingStats value="24/7" label="Support" :icon="IconBolt"
             position-classes="-bottom-6 -left-6 animation-delay-2000" icon-bg-color="bg-blue-100 dark:bg-blue-900/30"
             icon-color="text-blue-600 dark:text-blue-400" />
         </div>
@@ -87,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ShieldCheckIcon, CurrencyEuroIcon, BoltIcon, ChatBubbleLeftRightIcon, TruckIcon, CubeIcon, ChartBarIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
 import { AdvantageItem, TransportActivityCard } from "@/components/home";
 import { FloatingStats, GradientBadge } from "@/components/common";
+import { IconBolt, IconCircleCheck, IconCube, IconMessage, IconShieldCheck, IconTag, IconTruck, IconTruckDelivery } from '@tabler/icons-vue';
 </script>
