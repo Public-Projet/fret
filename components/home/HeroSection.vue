@@ -21,7 +21,7 @@
         <!-- Badge animé -->
         <div
           class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8 animate-fade-in">
-          <SparklesIcon class="w-5 h-5 text-yellow-300" />
+          <IconSparkles class="w-5 h-5 text-yellow-300" />
           <span class="text-white font-medium">La plateforme n°1 du transport au Bénin</span>
         </div>
 
@@ -44,16 +44,16 @@
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
           <NuxtLink to="/register?role=shipper"
             class="group relative px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
-            <TruckIcon class="w-6 h-6 group-hover:rotate-12 transition-transform" />
+            <IconTruck class="w-6 h-6 group-hover:rotate-12 transition-transform" />
             <span>Je suis chargeur</span>
-            <ArrowRightIcon class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+            <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
           </NuxtLink>
 
           <NuxtLink to="/register?role=carrier"
             class="group relative px-8 py-4 bg-green-500 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
-            <UserGroupIcon class="w-6 h-6 group-hover:scale-110 transition-transform" />
+            <IconUsersGroup class="w-6 h-6 group-hover:scale-110 transition-transform" />
             <span>Je suis transporteur</span>
-            <ArrowRightIcon class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+             <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
           </NuxtLink>
         </div>
 
@@ -68,7 +68,7 @@
 
     <!-- Scroll indicator -->
     <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-      <ChevronDownIcon class="w-8 h-8 text-white/70" />
+      <IconChevronDown class="w-8 h-8 text-white/70" />
     </div>
 
     <!-- Wave separator moderne -->
@@ -84,8 +84,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { TruckIcon, UserGroupIcon, ArrowRightIcon, ChevronDownIcon, SparklesIcon } from '@heroicons/vue/24/outline';
 import StatCard from './StatCard.vue';
+import { IconArrowRight, IconChevronDown, IconSparkles, IconTruck, IconUsersGroup } from '@tabler/icons-vue';
 
 const shippers = ref(0);
 const carriers = ref(0);

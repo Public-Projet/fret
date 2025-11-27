@@ -6,7 +6,7 @@
         <div>
           <div class="flex items-center space-x-2 mb-4">
             <div class="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <TruckIcon class="w-6 h-6 text-white" />
+              <IconTruck class="w-6 h-6 text-white" />
             </div>
             <span class="text-xl font-bold text-white">FreightConnect</span>
           </div>
@@ -129,7 +129,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { TruckIcon } from '@heroicons/vue/24/outline';
+import { IconTruck } from '@tabler/icons-vue';
 
 const currentYear = computed(() => new Date().getFullYear());
 </script>

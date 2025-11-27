@@ -6,7 +6,7 @@
         <NuxtLink to="/" class="flex items-center space-x-2 group">
           <div
             class="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform">
-            <TruckIcon class="w-6 h-6 text-white" />
+            <IconTruck class="w-6 h-6 text-white" />
           </div>
           <span class="text-xl font-bold text-gradient hidden sm:block">FreightConnect</span>
         </NuxtLink>
@@ -48,8 +48,8 @@
           <!-- Toggle Dark Mode -->
           <button @click="toggleTheme" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             aria-label="Toggle dark mode">
-            <MoonIcon v-if="!isDark" class="w-5 h-5 text-gray-700 dark:text-gray-300" />
-            <SunIcon v-else class="w-5 h-5 text-gray-700 dark:text-gray-300" />
+            <IconMoon v-if="!isDark" class="w-5 h-5 text-gray-700 dark:text-gray-300" />
+            <IconSun v-else class="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
 
           <!-- User Menu -->
@@ -61,7 +61,7 @@
                   class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-medium">
                   {{ userInitials }}
                 </div>
-                <ChevronDownIcon class="w-4 h-4 text-gray-700 dark:text-gray-300 hidden md:block" />
+                <IconChevronDown class="w-4 h-4 text-gray-700 dark:text-gray-300 hidden md:block" />
               </button>
 
               <!-- Dropdown Menu -->
@@ -71,7 +71,7 @@
                 leave-to-class="transform opacity-0 scale-95">
                 <div v-if="isUserMenuOpen"
                   class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1">
-                  <NuxtLink to="/profile"
+                  <NuxtLink to="app/profile"
                     class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     @click="closeUserMenu">
                     Mon profil
@@ -103,8 +103,8 @@
           <button @click="toggleMobileMenu"
             class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             aria-label="Toggle mobile menu">
-            <Bars3Icon v-if="!isMobileMenuOpen" class="w-6 h-6 text-gray-700 dark:text-gray-300" />
-            <XMarkIcon v-else class="w-6 h-6 text-gray-700 dark:text-gray-300" />
+            <IconMenu2 v-if="!isMobileMenuOpen" class="w-6 h-6 text-gray-700 dark:text-gray-300" />
+            <IconX v-else class="w-6 h-6 text-gray-700 dark:text-gray-300" />
           </button>
         </div>
       </div>
@@ -134,7 +134,7 @@
                 {{ unreadCount }}
               </span>
             </NuxtLink>
-            <NuxtLink to="/profile"
+            <NuxtLink to="app/profile"
               class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               @click="closeMobileMenu">
               Mon profil
@@ -165,17 +165,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import {
-  TruckIcon,
-  MoonIcon,
-  SunIcon,
-  ChevronDownIcon,
-  Bars3Icon,
-  XMarkIcon
-} from '@heroicons/vue/24/outline';
 import { useAuthStore } from '~/stores/auth';
 import { useThemeStore } from '~/stores/theme';
 import { useMessagingStore } from '~/stores/messaging';
+import { IconChevronDown, IconMenu2, IconMoon, IconSun, IconTruck, IconX } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const themeStore = useThemeStore();

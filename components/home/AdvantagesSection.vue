@@ -15,26 +15,21 @@
 
           <div class="space-y-6">
             <AdvantageItem :icon="IconShieldCheck" title="Sécurité garantie à 100%"
-              description="Tous nos transporteurs sont vérifiés, certifiés et assurés. Vos marchandises sont protégées du départ à l'arrivée."
-              icon-class="from-blue-500 to-blue-700" />
+              description="Tous nos transporteurs sont vérifiés, certifiés et assurés. Vos marchandises sont protégées du départ à l'arrivée." icon-class="from-blue-500 to-blue-700" />
 
             <AdvantageItem :icon="IconTag" title="Economisez jusqu'à 40%"
-              description="Comparez les offres en temps réel et négociez pour obtenir les meilleurs tarifs du marché."
-              icon-class="from-green-500 to-green-700" />
+              description="Comparez les offres en temps réel et négociez pour obtenir les meilleurs tarifs du marché." icon-class="from-green-500 to-green-700" />
 
             <AdvantageItem :icon="IconBolt" title="Rapidité incomparable"
-              description="Trouvez un transporteur qualifié en moins de 30 minutes au lieu de plusieurs jours."
-              icon-class="from-blue-500 to-blue-700" />
+              description="Trouvez un transporteur qualifié en moins de 30 minutes au lieu de plusieurs jours." icon-class="from-blue-500 to-blue-700" />
 
             <AdvantageItem :icon="IconMessage" title="Communication simplifiée"
-              description="Messagerie instantanée intégrée, suivi en temps réel et notifications automatiques."
-              icon-class="from-green-500 to-green-700" />
+              description="Messagerie instantanée intégrée, suivi en temps réel et notifications automatiques." icon-class="from-green-500 to-green-700" />
           </div>
         </div>
 
         <!-- Colonne droite - Mockup animé -->
         <div class="relative">
-          <!-- Effets lumineux -->
           <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-green-500/20 rounded-3xl blur-3xl"></div>
 
           <!-- Mockup principal -->

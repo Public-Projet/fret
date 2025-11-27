@@ -1,7 +1,7 @@
 <template>
   <div class="card p-8 hover:scale-105 transition-transform">
     <div class="flex items-center space-x-1 mb-4">
-      <StarIcon v-for="i in 5" :key="i" class="w-5 h-5 text-yellow-400 fill-current" />
+      <IconStar v-for="i in 5" :key="i" class="w-5 h-5 text-yellow-400 fill-current" />
     </div>
     <p class="text-gray-600 dark:text-gray-400 mb-6 italic">
       {{ quote }}
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { StarIcon } from '@heroicons/vue/24/outline';
+import { IconStar } from '@tabler/icons-vue';
 
 defineProps<{
   quote: string;

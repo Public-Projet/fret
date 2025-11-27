@@ -3,7 +3,7 @@
     <div class="max-w-md w-full space-y-8 card p-8">
       <div>
         <div class="mx-auto h-12 w-12 bg-primary-100 rounded-full flex items-center justify-center">
-          <TruckIcon class="h-8 w-8 text-primary-600" />
+          <IconTruck class="h-8 w-8 text-primary-600" />
         </div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Connexion
@@ -54,7 +54,7 @@
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             :disabled="loading">
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <LockClosedIcon class="h-5 w-5 text-primary-500 group-hover:text-primary-400" aria-hidden="true" />
+              <IconLock class="h-5 w-5 text-primary-500 group-hover:text-primary-400" aria-hidden="true" />
             </span>
             <span v-if="loading">Connexion...</span>
             <span v-else>Se connecter</span>
@@ -90,8 +90,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { TruckIcon, LockClosedIcon } from '@heroicons/vue/24/solid';
 import { useAuthStore } from '~/stores/auth';
+import { IconLock, IconTruck } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const router = useRouter();

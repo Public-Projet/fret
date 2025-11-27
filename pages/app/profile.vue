@@ -13,12 +13,12 @@
             <p class="text-lg text-gray-600 dark:text-gray-400 mb-2">{{ user?.company }}</p>
             <div class="flex items-center justify-center md:justify-start space-x-4 text-sm text-gray-500">
               <div class="flex items-center">
-                <StarIcon class="w-5 h-5 text-yellow-400 mr-1" />
+                <IconStarFilled class="w-5 h-5 text-yellow-400 mr-1" />
                 <span class="font-medium text-gray-900 dark:text-white mr-1">{{ user?.rating }}</span>
                 <span>({{ user?.reviewCount }} avis)</span>
               </div>
               <div class="flex items-center">
-                <CheckBadgeIcon class="w-5 h-5 text-green-500 mr-1" />
+                <IconBadge class="w-5 h-5 text-green-500 mr-1" />
                 <span>Vérifié</span>
               </div>
             </div>
@@ -58,24 +58,24 @@
             <div class="space-y-3">
               <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                 <div class="flex items-center">
-                  <DocumentIcon class="w-5 h-5 text-gray-400 mr-2" />
+                  <IconFile class="w-5 h-5 text-gray-400 mr-2" />
                   <span class="text-sm font-medium">Kbis</span>
                 </div>
-                <CheckCircleIcon class="w-5 h-5 text-green-500" />
+                <IconCircleCheck class="w-5 h-5 text-green-500" />
               </div>
               <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                 <div class="flex items-center">
-                  <DocumentIcon class="w-5 h-5 text-gray-400 mr-2" />
+                  <IconFile class="w-5 h-5 text-gray-400 mr-2" />
                   <span class="text-sm font-medium">Assurance</span>
                 </div>
-                <CheckCircleIcon class="w-5 h-5 text-green-500" />
+                <IconCircleCheck class="w-5 h-5 text-green-500" />
               </div>
               <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                 <div class="flex items-center">
-                  <DocumentIcon class="w-5 h-5 text-gray-400 mr-2" />
+                  <IconFile class="w-5 h-5 text-gray-400 mr-2" />
                   <span class="text-sm font-medium">Identité</span>
                 </div>
-                <CheckCircleIcon class="w-5 h-5 text-green-500" />
+                <IconCircleCheck class="w-5 h-5 text-green-500" />
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@
                     </div>
                   </div>
                   <div class="flex">
-                    <StarIcon v-for="i in 5" :key="i" class="w-4 h-4"
+                    <IconStar v-for="i in 5" :key="i" class="w-4 h-4"
                       :class="i <= review.rating ? 'text-yellow-400' : 'text-gray-300'" />
                   </div>
                 </div>
@@ -121,17 +121,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import {
-  StarIcon,
-  CheckBadgeIcon,
-  DocumentIcon,
-  CheckCircleIcon
-} from '@heroicons/vue/24/solid';
 import { useAuthStore } from '~/stores/auth';
 import { useReviewStore } from '~/stores/review';
+import { IconBadge, IconCircleCheck, IconFile, IconStar, IconStarFilled } from '@tabler/icons-vue';
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ['auth'],
+  layout: 'dashboard'
 });
 
 const authStore = useAuthStore();

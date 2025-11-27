@@ -22,7 +22,7 @@
             <NuxtLink to="/dashboard"
               class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
-              <HomeIcon class="w-5 h-5" />
+              <IconHome class="w-5 h-5" />
               <span>Vue d'ensemble</span>
             </NuxtLink>
 
@@ -30,7 +30,7 @@
               <NuxtLink to="/dashboard/shipper"
                 class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
-                <TruckIcon class="w-5 h-5" />
+                <IconTruck class="w-5 h-5" />
                 <span>Mes Expéditions</span>
               </NuxtLink>
             </template>
@@ -39,7 +39,7 @@
               <NuxtLink to="/dashboard/carrier"
                 class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
-                <TruckIcon class="w-5 h-5" />
+                <IconTruck class="w-5 h-5" />
                 <span>Mes Trajets</span>
               </NuxtLink>
             </template>
@@ -47,7 +47,7 @@
             <NuxtLink to="/messages"
               class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
-              <ChatBubbleLeftRightIcon class="w-5 h-5" />
+              <IconMessage class="w-5 h-5" />
               <div class="flex-1 flex justify-between items-center">
                 <span>Messages</span>
                 <span v-if="unreadCount > 0"
@@ -60,7 +60,7 @@
             <NuxtLink to="/settings"
               class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
-              <Cog6ToothIcon class="w-5 h-5" />
+              <IconSettings class="w-5 h-5" />
               <span>Paramètres</span>
             </NuxtLink>
           </nav>
@@ -78,16 +78,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import Header from '~/components/layout/Header.vue';
 import Footer from '~/components/layout/Footer.vue';
-import {
-  HomeIcon,
-  TruckIcon,
-  ChatBubbleLeftRightIcon,
-  Cog6ToothIcon
-} from '@heroicons/vue/24/outline';
 import { useAuthStore } from '~/stores/auth';
 import { useMessagingStore } from '~/stores/messaging';
+import { IconHome, IconMessage, IconSettings, IconTruck } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const messagingStore = useMessagingStore();
