@@ -5,8 +5,8 @@
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tableau de bord Chargeur</h1>
         <p class="text-gray-600 dark:text-gray-400">Gérez vos expéditions et suivez vos annonces</p>
       </div>
-      <NuxtLink to="/announcements/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
-        <PlusIcon class="w-5 h-5 mr-2" />
+      <NuxtLink to="/offers/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
+        <IconPlus class="w-5 h-5 mr-2" />
         Créer une annonce
       </NuxtLink>
     </div>
@@ -15,7 +15,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <div class="card p-6 flex items-center space-x-4">
         <div class="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-          <DocumentTextIcon class="w-6 h-6" />
+          <IconFileText class="w-6 h-6" />
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Annonces actives</p>
@@ -24,7 +24,7 @@
       </div>
       <div class="card p-6 flex items-center space-x-4">
         <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400">
-          <ChatBubbleLeftRightIcon class="w-6 h-6" />
+          <IconMessage class="w-6 h-6" />
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">En négociation</p>
@@ -33,7 +33,7 @@
       </div>
       <div class="card p-6 flex items-center space-x-4">
         <div class="p-3 rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-          <CheckCircleIcon class="w-6 h-6" />
+          <IconCircleCheck class="w-6 h-6" />
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Terminées</p>
@@ -42,7 +42,7 @@
       </div>
       <div class="card p-6 flex items-center space-x-4">
         <div class="p-3 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
-          <CurrencyEuroIcon class="w-6 h-6" />
+          <IconCurrencyEuro class="w-6 h-6" />
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Budget total</p>
@@ -76,12 +76,12 @@
 
       <div v-else-if="filteredAnnouncements.length === 0" class="p-12 text-center">
         <div class="mx-auto h-12 w-12 text-gray-400 mb-4">
-          <DocumentTextIcon />
+          <IconFileText />
         </div>
         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Aucune annonce trouvée</h3>
         <p class="mt-1 text-gray-500 dark:text-gray-400">Commencez par créer votre première annonce de transport.</p>
         <div class="mt-6">
-          <NuxtLink to="/announcements/create" class="btn btn-primary">
+          <NuxtLink to="/offers/create" class="btn btn-primary">
             Créer une annonce
           </NuxtLink>
         </div>
@@ -94,7 +94,7 @@
             <div class="flex-1">
               <div class="flex items-center justify-between md:justify-start md:space-x-4 mb-2">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-                  <NuxtLink :to="`/announcements/${announcement.id}`" class="hover:text-primary-600">
+                  <NuxtLink :to="`/offers/${announcement.id}`" class="hover:text-primary-600">
                     {{ announcement.title }}
                   </NuxtLink>
                 </h3>
@@ -104,11 +104,11 @@
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-500 dark:text-gray-400">
                 <div class="flex items-center space-x-2">
-                  <MapPinIcon class="w-4 h-4" />
+                  <IconMapPin class="w-4 h-4" />
                   <span>{{ announcement.origin.city }} → {{ announcement.destination.city }}</span>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <CalendarIcon class="w-4 h-4" />
+                  <IconCalendar class="w-4 h-4" />
                   <span>{{ formatDate(announcement.pickupDate) }}</span>
                 </div>
               </div>
@@ -120,16 +120,16 @@
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ announcement.budget }}FCFA</p>
               </div>
               <div class="flex space-x-2">
-                <NuxtLink :to="`/announcements/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">
-                  <EyeIcon class="w-5 h-5" />
+                <NuxtLink :to="`/offers/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">
+                  <IconEye class="w-5 h-5" />
                 </NuxtLink>
                 <button v-if="announcement.status === 'pending'" @click="handleEdit(announcement)"
                   class="btn btn-ghost p-2 text-blue-600 hover:bg-blue-50" title="Modifier">
-                  <PencilIcon class="w-5 h-5" />
+                  <IconPencil class="w-5 h-5" />
                 </button>
                 <button v-if="announcement.status === 'pending'" @click="handleDelete(announcement.id)"
                   class="btn btn-ghost p-2 text-red-600 hover:bg-red-50" title="Annuler">
-                  <TrashIcon class="w-5 h-5" />
+                  <IconTrash class="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -145,22 +145,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import {
-  PlusIcon,
-  DocumentTextIcon,
-  ChatBubbleLeftRightIcon,
-  CheckCircleIcon,
-  CurrencyEuroIcon,
-  MapPinIcon,
-  CalendarIcon,
-  EyeIcon,
-  PencilIcon,
-  TrashIcon
-} from '@heroicons/vue/24/outline';
 import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
 import type { Announcement } from '~/types';
 import EditAnnouncementModal from '~/components/dashboard/EditAnnouncementModal.vue';
+import { IconCalendar, IconCircleCheck, IconCurrencyEuro, IconEye, IconFileText, IconMapPin, IconMessage, IconPencil, IconPlus, IconTrash } from '@tabler/icons-vue';
 
 definePageMeta({
   middleware: ['auth'],

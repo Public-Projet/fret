@@ -43,13 +43,7 @@
 import { computed } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
-import {
-  PlusIcon,
-  TruckIcon,
-  DocumentTextIcon,
-  ChatBubbleLeftRightIcon,
-  CurrencyEuroIcon
-} from '@heroicons/vue/24/outline';
+import { IconCurrencyEuro, IconFileText, IconMessage, IconPlus, IconTruck } from '@tabler/icons-vue';
 
 definePageMeta({
   middleware: ['auth'],
@@ -66,15 +60,15 @@ const isShipper = computed(() => authStore.isShipper);
 const stats = computed(() => {
   if (isShipper.value) {
     return [
-      { label: 'Annonces actives', value: '12', icon: DocumentTextIcon, colorClass: 'bg-blue-100 text-blue-600' },
-      { label: 'En cours', value: '3', icon: TruckIcon, colorClass: 'bg-green-100 text-green-600' },
-      { label: 'Dépenses ce mois', value: '2.4kFCFA', icon: CurrencyEuroIcon, colorClass: 'bg-purple-100 text-purple-600' },
+      { label: 'Annonces actives', value: '12', icon: IconFileText, colorClass: 'bg-blue-100 text-blue-600' },
+      { label: 'En cours', value: '3', icon: IconTruck, colorClass: 'bg-green-100 text-green-600' },
+      { label: 'Dépenses ce mois', value: '2.4kFCFA', icon: IconCurrencyEuro, colorClass: 'bg-purple-100 text-purple-600' },
     ];
   } else {
     return [
-      { label: 'Trajets disponibles', value: '45', icon: DocumentTextIcon, colorClass: 'bg-blue-100 text-blue-600' },
-      { label: 'Mes trajets', value: '5', icon: TruckIcon, colorClass: 'bg-green-100 text-green-600' },
-      { label: 'Revenus ce mois', value: '3.8kFCFA', icon: CurrencyEuroIcon, colorClass: 'bg-purple-100 text-purple-600' },
+      { label: 'Trajets disponibles', value: '45', icon: IconFileText, colorClass: 'bg-blue-100 text-blue-600' },
+      { label: 'Mes trajets', value: '5', icon: IconTruck, colorClass: 'bg-green-100 text-green-600' },
+      { label: 'Revenus ce mois', value: '3.8kFCFA', icon: IconCurrencyEuro, colorClass: 'bg-purple-100 text-purple-600' },
     ];
   }
 });
@@ -82,15 +76,15 @@ const stats = computed(() => {
 const quickActions = computed(() => {
   if (isShipper.value) {
     return [
-      { label: 'Nouvelle annonce', description: 'Publier une demande de transport', icon: PlusIcon, to: '/announcements/create' },
-      { label: 'Mes annonces', description: 'Gérer vos expéditions', icon: DocumentTextIcon, to: '/dashboard/shipper' },
-      { label: 'Messages', description: 'Voir vos conversations', icon: ChatBubbleLeftRightIcon, to: '/messages' },
+      { label: 'Nouvelle annonce', description: 'Publier une demande de transport', icon: IconPlus, to: '/offers/create' },
+      { label: 'Mes annonces', description: 'Gérer vos expéditions', icon: IconFileText, to: '/app/index' },
+      { label: 'Messages', description: 'Voir vos conversations', icon: IconMessage, to: '/app/messages' },
     ];
   } else {
     return [
-      { label: 'Trouver du fret', description: 'Parcourir les annonces disponibles', icon: PlusIcon, to: '/announcements' },
-      { label: 'Mes trajets', description: 'Gérer vos transports en cours', icon: TruckIcon, to: '/dashboard/carrier' },
-      { label: 'Messages', description: 'Voir vos conversations', icon: ChatBubbleLeftRightIcon, to: '/messages' },
+      { label: 'Trouver du fret', description: 'Parcourir les annonces disponibles', icon: IconPlus, to: '/offers' },
+      { label: 'Mes trajets', description: 'Gérer vos transports en cours', icon: IconTruck, to: '/app/carrier' },
+      { label: 'Messages', description: 'Voir vos conversations', icon: IconMessage, to: '/app/messages' },
     ];
   }
 });

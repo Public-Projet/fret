@@ -177,7 +177,7 @@ const handleSubmit = async () => {
     });
 
     if (result.success) {
-      router.push('/dashboard/shipper');
+      router.push('/app/index');
     }
   } catch (error) {
     console.error(error);

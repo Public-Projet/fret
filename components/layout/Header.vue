@@ -14,15 +14,15 @@
         <!-- Navigation Desktop -->
         <div class="hidden md:flex items-center space-x-6">
           <template v-if="isAuthenticated">
-            <NuxtLink :to="isShipper ? '/dashboard/shipper' : '/dashboard/carrier'"
+            <NuxtLink :to="isShipper ? '/app/index' : '/app/carrier'"
               class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Tableau de bord
             </NuxtLink>
-            <NuxtLink to="/announcements"
+            <NuxtLink to="/offers"
               class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Annonces
             </NuxtLink>
-            <NuxtLink to="/messages"
+            <NuxtLink to="/app/messages"
               class="relative text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Messages
               <span v-if="unreadCount > 0"
@@ -32,7 +32,7 @@
             </NuxtLink>
           </template>
           <template v-else>
-            <NuxtLink to="/announcements"
+            <NuxtLink to="/offers"
               class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Annonces
             </NuxtLink>
@@ -76,7 +76,7 @@
                     @click="closeUserMenu">
                     Mon profil
                   </NuxtLink>
-                  <NuxtLink to="/settings"
+                  <NuxtLink to="/app/settings"
                     class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     @click="closeUserMenu">
                     Paramètres
@@ -91,10 +91,10 @@
             </div>
           </template>
           <template v-else>
-            <NuxtLink to="/login" class="btn btn-ghost hidden md:inline-flex">
+            <NuxtLink to="/auth/login" class="btn btn-ghost hidden md:inline-flex">
               Connexion
             </NuxtLink>
-            <NuxtLink to="/register" class="btn btn-primary">
+            <NuxtLink to="/auth/register" class="btn btn-primary">
               Inscription
             </NuxtLink>
           </template>
@@ -116,17 +116,17 @@
         leave-to-class="transform opacity-0 -translate-y-2">
         <div v-if="isMobileMenuOpen" class="md:hidden py-4 space-y-2">
           <template v-if="isAuthenticated">
-            <NuxtLink :to="isShipper ? '/dashboard/shipper' : '/dashboard/carrier'"
+            <NuxtLink :to="isShipper ? '/app/index' : '/app/carrier'"
               class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               @click="closeMobileMenu">
               Tableau de bord
             </NuxtLink>
-            <NuxtLink to="/announcements"
+            <NuxtLink to="/offers"
               class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               @click="closeMobileMenu">
               Annonces
             </NuxtLink>
-            <NuxtLink to="/messages"
+            <NuxtLink to="/app/messages"
               class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               @click="closeMobileMenu">
               Messages
@@ -141,17 +141,17 @@
             </NuxtLink>
           </template>
           <template v-else>
-            <NuxtLink to="/announcements"
+            <NuxtLink to="/offers"
               class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               @click="closeMobileMenu">
               Annonces
             </NuxtLink>
-            <NuxtLink to="/login"
+            <NuxtLink to="/auth/login"
               class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               @click="closeMobileMenu">
               Connexion
             </NuxtLink>
-            <NuxtLink to="/register"
+            <NuxtLink to="/auth/register"
               class="block px-4 py-2 bg-primary-600 text-white hover:bg-primary-700 rounded-lg text-center"
               @click="closeMobileMenu">
               Inscription

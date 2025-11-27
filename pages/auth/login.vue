@@ -10,7 +10,7 @@
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
           Ou
-          <NuxtLink to="/register" class="font-medium text-primary-600 hover:text-primary-500">
+          <NuxtLink to="/auth/register" class="font-medium text-primary-600 hover:text-primary-500">
             créez un compte gratuitement
           </NuxtLink>
         </p>
@@ -109,9 +109,9 @@ const handleLogin = async () => {
     const result = await authStore.login(email.value, password.value);
     if (result.success && result.user) {
       if (result.user.role === 'shipper') {
-        router.push('/dashboard/shipper');
+        router.push('/app/index');
       } else {
-        router.push('/dashboard/carrier');
+        router.push('/app/carrier');
       }
     } else {
       error.value = result.error || 'Erreur de connexion';

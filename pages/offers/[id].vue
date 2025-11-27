@@ -6,7 +6,7 @@
 
     <div v-else-if="!announcement" class="text-center py-12">
       <p class="text-lg text-gray-500">Annonce non trouvée</p>
-      <NuxtLink to="/announcements" class="btn btn-primary mt-4">Retour aux annonces</NuxtLink>
+      <NuxtLink to="/offers" class="btn btn-primary mt-4">Retour aux annonces</NuxtLink>
     </div>
 
     <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -22,11 +22,11 @@
 
           <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-6">
             <div class="flex items-center">
-              <CalendarIcon class="w-4 h-4 mr-1" />
+              <IconCalendar class="w-4 h-4 mr-1" />
               Publié le {{ formatDate(announcement.createdAt) }}
             </div>
             <div class="flex items-center">
-              <MapPinIcon class="w-4 h-4 mr-1" />
+              <IconMapPin class="w-4 h-4 mr-1" />
               {{ announcement.distance }} km
             </div>
           </div>
@@ -70,22 +70,22 @@
           <!-- Caractéristiques -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <CubeIcon class="w-6 h-6 mx-auto text-gray-400 mb-2" />
+              <IconCube class="w-6 h-6 mx-auto text-gray-400 mb-2" />
               <p class="text-xs text-gray-500 uppercase">Type</p>
               <p class="font-semibold text-gray-900 dark:text-white">{{ announcement.cargoType }}</p>
             </div>
             <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <ScaleIcon class="w-6 h-6 mx-auto text-gray-400 mb-2" />
+              <IconScale class="w-6 h-6 mx-auto text-gray-400 mb-2" />
               <p class="text-xs text-gray-500 uppercase">Poids</p>
               <p class="font-semibold text-gray-900 dark:text-white">{{ announcement.weight }} kg</p>
             </div>
             <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <ArrowsPointingOutIcon class="w-6 h-6 mx-auto text-gray-400 mb-2" />
+              <IconArrowsMaximize class="w-6 h-6 mx-auto text-gray-400 mb-2" />
               <p class="text-xs text-gray-500 uppercase">Volume</p>
               <p class="font-semibold text-gray-900 dark:text-white">{{ announcement.volume }} m³</p>
             </div>
             <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <CurrencyEuroIcon class="w-6 h-6 mx-auto text-gray-400 mb-2" />
+              <IconCurrencyEuro class="w-6 h-6 mx-auto text-gray-400 mb-2" />
               <p class="text-xs text-gray-500 uppercase">Budget</p>
               <p class="font-semibold text-primary-600">{{ announcement.budget }}FCFA</p>
             </div>
@@ -115,7 +115,7 @@
                   <div>
                     <p class="font-medium text-gray-900 dark:text-white">{{ offer.carrier?.company }}</p>
                     <div class="flex items-center text-xs text-gray-500">
-                      <StarIcon class="w-3 h-3 text-yellow-400 mr-1" />
+                      <IconStar class="w-3 h-3 text-yellow-400 mr-1" />
                       {{ offer.carrier?.rating }} ({{ offer.carrier?.reviewCount }})
                     </div>
                   </div>
@@ -147,18 +147,18 @@
               <p class="font-medium text-gray-900 dark:text-white">{{ announcement.user?.company ||
                 announcement.user?.firstName }}</p>
               <div class="flex items-center text-sm text-gray-500">
-                <StarIcon class="w-4 h-4 text-yellow-400 mr-1" />
+                <IconStar class="w-4 h-4 text-yellow-400 mr-1" />
                 {{ announcement.user?.rating }} ({{ announcement.user?.reviewCount }} avis)
               </div>
             </div>
           </div>
           <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <div class="flex items-center">
-              <CheckBadgeIcon class="w-4 h-4 text-green-500 mr-2" />
+              <IconBadge class="w-4 h-4 text-green-500 mr-2" />
               Identité vérifiée
             </div>
             <div class="flex items-center">
-              <ClockIcon class="w-4 h-4 text-gray-400 mr-2" />
+              <IconClock class="w-4 h-4 text-gray-400 mr-2" />
               Membre depuis {{ new Date(announcement.user?.createdAt || '').getFullYear() }}
             </div>
           </div>
@@ -189,20 +189,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive } from 'vue';
-import {
-  CalendarIcon,
-  MapPinIcon,
-  CubeIcon,
-  ScaleIcon,
-  ArrowsPointingOutIcon,
-  CurrencyEuroIcon,
-  StarIcon,
-  CheckBadgeIcon,
-  ClockIcon
-} from '@heroicons/vue/24/outline';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { useAuthStore } from '~/stores/auth';
 import { useMessagingStore } from '~/stores/messaging';
+import { IconArrowsMaximize, IconBadge, IconCalendar, IconClock, IconCube, IconCurrencyEuro, IconMapPin, IconScale, IconStar } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -291,7 +281,7 @@ const contactCarrier = async (carrierId: string) => {
   );
 
   if (result.success && result.conversation) {
-    router.push(`/messages/${result.conversation.id}`);
+    router.push(`/app/messages/${result.conversation.id}`);
   }
 };
 

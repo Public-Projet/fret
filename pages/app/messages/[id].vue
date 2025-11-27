@@ -10,7 +10,7 @@
           <NuxtLink 
             v-for="conversation in conversations" 
             :key="conversation.id"
-            :to="`/messages/${conversation.id}`"
+            :to="`/app/messages/${conversation.id}`"
             class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700/50 last:border-0"
             :class="{ 'bg-primary-50 dark:bg-primary-900/10': isActive(conversation.id) }"
           >
@@ -34,8 +34,8 @@
         <!-- Header Chat -->
         <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <NuxtLink to="/messages" class="md:hidden mr-2">
-              <ArrowLeftIcon class="w-6 h-6 text-gray-500" />
+            <NuxtLink to="/app/messages" class="md:hidden mr-2">
+              <IconArrowLeft class="w-6 h-6 text-gray-500" />
             </NuxtLink>
             <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold">
               {{ otherParticipant?.firstName[0] }}
@@ -50,7 +50,7 @@
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <NuxtLink v-if="currentConversation?.announcementId" :to="`/announcements/${currentConversation.announcementId}`" class="btn btn-ghost btn-sm">
+            <NuxtLink v-if="currentConversation?.announcementId" :to="`/offers/${currentConversation.announcementId}`" class="btn btn-ghost btn-sm">
               Voir l'annonce
             </NuxtLink>
           </div>
@@ -96,7 +96,7 @@
               class="btn btn-primary p-2 rounded-full w-10 h-10 flex items-center justify-center"
               :disabled="!newMessage.trim() || sending"
             >
-              <PaperAirplaneIcon class="w-5 h-5" />
+              <IconSend class="w-5 h-5" />
             </button>
           </form>
         </div>
@@ -107,13 +107,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue';
-import { ArrowLeftIcon, PaperAirplaneIcon } from '@heroicons/vue/24/outline';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAuthStore } from '~/stores/auth';
 import type { Conversation } from '~/types';
+import { IconArrowLeft, IconSend } from '@tabler/icons-vue';
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ['auth'],
+  layout: 'dashboard'
 });
 
 const route = useRoute();

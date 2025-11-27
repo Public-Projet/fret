@@ -6,12 +6,12 @@
         <p class="text-gray-600 dark:text-gray-400">Trouvez des chargements et gérez vos offres</p>
       </div>
       <div class="flex space-x-4 mt-4 md:mt-0">
-        <NuxtLink to="/announcements" class="btn btn-outline flex items-center justify-center">
-          <MagnifyingGlassIcon class="w-5 h-5 mr-2" />
+        <NuxtLink to="/offers" class="btn btn-outline flex items-center justify-center">
+          <IconSearch class="w-5 h-5 mr-2" />
           Trouver du fret
         </NuxtLink>
         <button @click="publishAvailability" class="btn btn-primary flex items-center justify-center">
-          <PlusIcon class="w-5 h-5 mr-2" />
+          <IconPlus class="w-5 h-5 mr-2" />
           Publier ma disponibilité
         </button>
       </div>
@@ -21,7 +21,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <div class="card p-6 flex items-center space-x-4">
         <div class="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-          <PaperAirplaneIcon class="w-6 h-6" />
+          <IconSend class="w-6 h-6" />
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Offres en cours</p>
@@ -30,7 +30,7 @@
       </div>
       <div class="card p-6 flex items-center space-x-4">
         <div class="p-3 rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-          <CheckCircleIcon class="w-6 h-6" />
+          <IconCircleCheck class="w-6 h-6" />
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Missions acceptées</p>
@@ -39,7 +39,7 @@
       </div>
       <div class="card p-6 flex items-center space-x-4">
         <div class="p-3 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
-          <CurrencyEuroIcon class="w-6 h-6" />
+          <IconCurrencyEuro class="w-6 h-6" />
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">CA potentiel</p>
@@ -48,7 +48,7 @@
       </div>
       <div class="card p-6 flex items-center space-x-4">
         <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400">
-          <StarIcon class="w-6 h-6" />
+          <IconStar class="w-6 h-6" />
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Ma note</p>
@@ -67,7 +67,7 @@
 
         <div v-if="myOffers.length === 0" class="card p-8 text-center">
           <p class="text-gray-500 dark:text-gray-400">Vous n'avez fait aucune offre pour le moment.</p>
-          <NuxtLink to="/announcements" class="text-primary-600 hover:underline mt-2 inline-block">
+          <NuxtLink to="/offers" class="text-primary-600 hover:underline mt-2 inline-block">
             Voir les annonces disponibles
           </NuxtLink>
         </div>
@@ -91,7 +91,7 @@
                   {{ offer.message }}
                 </p>
               </div>
-              <NuxtLink :to="`/announcements/${offer.announcementId}`" class="btn btn-ghost btn-sm">
+              <NuxtLink :to="`/offers/${offer.announcementId}`" class="btn btn-ghost btn-sm">
                 Voir l'annonce
               </NuxtLink>
             </div>
@@ -103,7 +103,7 @@
       <div class="space-y-6">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recommandé pour vous</h2>
-          <NuxtLink to="/announcements" class="text-sm text-primary-600 hover:text-primary-500">
+          <NuxtLink to="/offers" class="text-sm text-primary-600 hover:text-primary-500">
             Voir tout
           </NuxtLink>
         </div>
@@ -115,13 +115,13 @@
                 {{ announcement.title }}
               </h3>
               <div class="flex items-center text-xs text-gray-500 mt-1">
-                <MapPinIcon class="w-3 h-3 mr-1" />
+                <IconMapPin class="w-3 h-3 mr-1" />
                 <span>{{ announcement.origin.city }} → {{ announcement.destination.city }}</span>
               </div>
             </div>
             <div class="flex items-center justify-between mt-3">
               <span class="font-bold text-primary-600">{{ announcement.budget }}FCFA</span>
-              <NuxtLink :to="`/announcements/${announcement.id}`"
+              <NuxtLink :to="`/offers/${announcement.id}`"
                 class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
                 Détails →
               </NuxtLink>
@@ -135,18 +135,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import {
-  PlusIcon,
-  MagnifyingGlassIcon,
-  PaperAirplaneIcon,
-  CheckCircleIcon,
-  CurrencyEuroIcon,
-  StarIcon,
-  MapPinIcon
-} from '@heroicons/vue/24/outline';
 import { useAuthStore } from '~/stores/auth';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAnnouncementStore } from '~/stores/announcement';
+import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconStar } from '@tabler/icons-vue';
 
 definePageMeta({
   middleware: ['auth'],

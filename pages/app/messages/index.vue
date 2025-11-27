@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Messagerie</h1>
       <button @click="startMockConversation" class="btn btn-primary flex items-center">
-        <PlusIcon class="w-5 h-5 mr-2" />
+        <IconPlus class="w-5 h-5 mr-2" />
         Nouvelle conversation
       </button>
     </div>
@@ -19,7 +19,7 @@
             Aucune conversation
           </div>
           <div v-else>
-            <NuxtLink v-for="conversation in conversations" :key="conversation.id" :to="`/messages/${conversation.id}`"
+            <NuxtLink v-for="conversation in conversations" :key="conversation.id" :to="`/app/messages/${conversation.id}`"
               class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700/50 last:border-0"
               :class="{ 'bg-primary-50 dark:bg-primary-900/10': isActive(conversation.id) }">
               <div class="flex justify-between items-start mb-1">
@@ -46,7 +46,7 @@
       <!-- Zone de chat (placeholder pour desktop) -->
       <div class="hidden md:flex col-span-2 card items-center justify-center text-gray-400">
         <div class="text-center">
-          <ChatBubbleLeftRightIcon class="w-16 h-16 mx-auto mb-4" />
+          <IconMessage class="w-16 h-16 mx-auto mb-4" />
           <p class="text-lg">Sélectionnez une conversation pour commencer à discuter</p>
         </div>
       </div>
@@ -56,13 +56,14 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ChatBubbleLeftRightIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAuthStore } from '~/stores/auth';
 import type { Conversation } from '~/types';
+import { IconMessage, IconPlus } from '@tabler/icons-vue';
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ['auth'],
+  layout: 'dashboard'
 });
 
 const messagingStore = useMessagingStore();
@@ -103,7 +104,7 @@ const startMockConversation = async () => {
   const result = await messagingStore.getOrCreateConversation('ann-1', [currentUser.value.id, otherUserId]);
 
   if (result.success && result.conversation) {
-    router.push(`/messages/${result.conversation.id}`);
+    router.push(`/app/messages/${result.conversation.id}`);
   }
 };
 </script>

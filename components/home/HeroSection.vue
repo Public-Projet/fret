@@ -42,14 +42,14 @@
 
         <!-- CTA Buttons avec animations -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <NuxtLink to="/register?role=shipper"
+          <NuxtLink to="/auth/register?role=shipper"
             class="group relative px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
             <IconTruck class="w-6 h-6 group-hover:rotate-12 transition-transform" />
             <span>Je suis chargeur</span>
             <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
           </NuxtLink>
 
-          <NuxtLink to="/register?role=carrier"
+          <NuxtLink to="/auth/register?role=carrier"
             class="group relative px-8 py-4 bg-green-500 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
             <IconUsersGroup class="w-6 h-6 group-hover:scale-110 transition-transform" />
             <span>Je suis transporteur</span>

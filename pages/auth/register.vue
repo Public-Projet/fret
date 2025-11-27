@@ -3,7 +3,7 @@
     <div class="max-w-md w-full space-y-8 card p-8">
       <div>
         <div class="mx-auto h-12 w-12 bg-primary-100 rounded-full flex items-center justify-center">
-          <UserPlusIcon class="h-8 w-8 text-primary-600" />
+          <IconUser class="h-8 w-8 text-primary-600" />
         </div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Créer un compte
@@ -24,7 +24,7 @@
             ? 'border-primary-600 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
             : 'border-gray-200 hover:border-gray-300 text-gray-500 dark:border-gray-700 dark:text-gray-400'
         ]">
-          <CubeIcon class="w-6 h-6 mx-auto mb-2" />
+          <IconCube class="w-6 h-6 mx-auto mb-2" />
           <span class="font-medium">Chargeur</span>
         </button>
         <button type="button" @click="role = 'carrier'" :class="[
@@ -33,7 +33,7 @@
             ? 'border-secondary-600 bg-secondary-50 text-secondary-700 dark:bg-secondary-900/20 dark:text-secondary-400'
             : 'border-gray-200 hover:border-gray-300 text-gray-500 dark:border-gray-700 dark:text-gray-400'
         ]">
-          <TruckIcon class="w-6 h-6 mx-auto mb-2" />
+          <IconTruck class="w-6 h-6 mx-auto mb-2" />
           <span class="font-medium">Transporteur</span>
         </button>
       </div>
@@ -91,9 +91,9 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import { UserPlusIcon, TruckIcon, CubeIcon } from '@heroicons/vue/24/outline';
 import { useAuthStore } from '~/stores/auth';
 import type { UserRole } from '~/types';
+import { IconCube, IconTruck, IconUser } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -130,9 +130,9 @@ const handleRegister = async () => {
 
     if (result.success && result.user) {
       if (result.user.role === 'shipper') {
-        router.push('/dashboard/shipper');
+        router.push('/app/index');
       } else {
-        router.push('/dashboard/carrier');
+        router.push('/app/carrier');
       }
     } else {
       error.value = result.error || 'Erreur lors de l\'inscription';

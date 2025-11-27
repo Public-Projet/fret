@@ -23,13 +23,13 @@
         </p>
 
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
-          <NuxtLink to="/register"
+          <NuxtLink to="/auth/register"
             class="group px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-xl shadow-2xl hover:shadow-white/30 transition-all duration-300 hover:scale-110 flex items-center space-x-3">
             <span>Créer un compte gratuit</span>
             <IconArrowRight class="w-6 h-6 group-hover:translate-x-2 transition-transform" />
           </NuxtLink>
 
-          <NuxtLink to="/announcements"
+          <NuxtLink to="/offers"
             class="px-10 py-5 border-4 border-white text-white rounded-2xl font-black text-xl hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-110">
             Voir les annonces
           </NuxtLink>
