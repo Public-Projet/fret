@@ -1,0 +1,104 @@
+<template>
+  <section class="section bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+    <div class="container-custom">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <!-- Colonne gauche - Avantages -->
+        <div>
+          <GradientBadge text="Nos Avantages" variant="green" />
+          <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
+            Pourquoi choisir
+            <span class="block text-gradient">FreightConnect ?</span>
+          </h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 mb-10">
+            Une plateforme complète qui simplifie chaque étape de votre logistique
+          </p>
+
+          <div class="space-y-6">
+            <AdvantageItem :icon="ShieldCheckIcon" title="Sécurité garantie à 100%"
+              description="Tous nos transporteurs sont vérifiés, certifiés et assurés. Vos marchandises sont protégées du départ à l'arrivée."
+              icon-class="from-blue-500 to-blue-700" />
+
+            <AdvantageItem :icon="CurrencyEuroIcon" title="Economisez jusqu'à 40%"
+              description="Comparez les offres en temps réel et négociez pour obtenir les meilleurs tarifs du marché."
+              icon-class="from-green-500 to-green-700" />
+
+            <AdvantageItem :icon="BoltIcon" title="Rapidité incomparable"
+              description="Trouvez un transporteur qualifié en moins de 30 minutes au lieu de plusieurs jours."
+              icon-class="from-blue-500 to-blue-700" />
+
+            <AdvantageItem :icon="ChatBubbleLeftRightIcon" title="Communication simplifiée"
+              description="Messagerie instantanée intégrée, suivi en temps réel et notifications automatiques."
+              icon-class="from-green-500 to-green-700" />
+          </div>
+        </div>
+
+        <!-- Colonne droite - Mockup animé -->
+        <div class="relative">
+          <!-- Effets lumineux -->
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-green-500/20 rounded-3xl blur-3xl"></div>
+
+          <!-- Mockup principal -->
+          <div
+            class="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700">
+            <div class="space-y-4">
+              <!-- En-tête mockup -->
+              <div class="flex items-center justify-between mb-6">
+                <h4 class="text-lg font-bold text-gray-900 dark:text-white">Activités récentes</h4>
+                <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+              </div>
+
+              <!-- Cards transport -->
+              <TransportActivityCard icon-class="from-blue-500 to-blue-700" :icon="TruckIcon" title="Transport Express"
+                subtitle="Paris → Lyon" status="LIVRÉ" status-class="bg-green-500" weight="2.5 tonnes" price="890 €"
+                price-class="text-blue-600 dark:text-blue-400" />
+
+              <TransportActivityCard icon-class="from-green-500 to-green-700" :icon="CubeIcon" title="Palettes fragiles"
+                subtitle="Marseille → Bordeaux" status="EN COURS" status-class="bg-yellow-500 animate-pulse"
+                weight="1.8 tonnes" price="1,250 €" price-class="text-green-600 dark:text-green-400" />
+
+              <TransportActivityCard icon-class="from-gray-500 to-gray-700" :icon="TruckIcon" title="Vrac matériaux"
+                subtitle="Lille → Strasbourg" status="NOUVEAU" status-class="bg-blue-500" weight="5.0 tonnes"
+                price="1,580 €" price-class="text-gray-600 dark:text-gray-400" />
+            </div>
+
+            <!-- Footer mockup -->
+            <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                <ChartBarIcon class="w-5 h-5" />
+                <span>+127% ce mois-ci</span>
+              </div>
+              <button class="text-blue-600 dark:text-blue-400 font-semibold text-sm hover:underline">
+                Voir tout →
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats flottantes -->
+          <FloatingStats value="98%" label="Satisfaction" :icon="CheckCircleIcon" position-classes="-top-6 -right-6"
+            icon-bg-color="bg-green-100 dark:bg-green-900/30" icon-color="text-green-600 dark:text-green-400" />
+
+          <FloatingStats value="24/7" label="Support" :icon="BoltIcon"
+            position-classes="-bottom-6 -left-6 animation-delay-2000" icon-bg-color="bg-blue-100 dark:bg-blue-900/30"
+            icon-color="text-blue-600 dark:text-blue-400" />
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import {
+  ShieldCheckIcon,
+  CurrencyEuroIcon,
+  BoltIcon,
+  ChatBubbleLeftRightIcon,
+  TruckIcon,
+  CubeIcon,
+  ChartBarIcon,
+  CheckCircleIcon
+} from '@heroicons/vue/24/outline';
+import AdvantageItem from './AdvantageItem.vue';
+import TransportActivityCard from './TransportActivityCard.vue';
+import FloatingStats from '../common/FloatingStats.vue';
+import GradientBadge from '../common/GradientBadge.vue';
+</script>
