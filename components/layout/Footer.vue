@@ -5,7 +5,7 @@
         <!-- À propos -->
         <div>
           <div class="flex items-center space-x-2 mb-4">
-            <span class="text-xl font-bold text-white">FreightConnect</span>
+            <span class="text-xl font-bold text-white">Bourse de Fret Bénin</span>
           </div>
           <p class="text-sm text-gray-400 mb-4">
             La plateforme moderne de mise en relation entre chargeurs et transporteurs.
@@ -108,7 +108,7 @@
       <!-- Copyright -->
       <div class="border-t border-gray-800 mt-8 pt-8 text-center">
         <p class="text-sm text-gray-400">
-          © {{ currentYear }} FreightConnect. Tous droits réservés.
+          © {{ currentYear }} Bourse de Fret Bénin. Tous droits réservés.
         </p>
       </div>
     </div>

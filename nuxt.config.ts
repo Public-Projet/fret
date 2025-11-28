@@ -12,14 +12,13 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'FreightConnect - Plateforme de mise en relation',
+      title: 'Bourse de Fret Bénin - Plateforme de mise en relation',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        {
-          name: 'description',
-          content: 'Plateforme moderne de mise en relation entre chargeurs et transporteurs'
-        }
+        { name: 'author', content: 'AFR Bourse de Fret' },
+        { name: 'keywords', content: 'transport, trasporteur, chargeur, Bénin, marchandise, camion, Véhicule, bourse, deplacé, deplacement, connexion, ensemble,facile, facilité' },
+        { name: 'google-site-verification', content: 'OdKxHpVkBSxk0mj4vD4OTmZPdVi5pWzyCu4QPIMHy9A' },
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

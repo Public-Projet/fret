@@ -18,7 +18,7 @@ import TestimonialsSection from '~/components/home/TestimonialsSection.vue';
 import CtaSection from '~/components/home/CtaSection.vue';
 
 useHead({
-  title: 'FreightConnect - Révolutionnez votre logistique de transport',
+  title: 'Révolutionnez votre logistique de transport',
   meta: [
     {
       name: 'description',

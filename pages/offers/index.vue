@@ -107,4 +107,8 @@ const resetFilters = () => {
 onMounted(() => {
   announcementStore.fetchAnnouncements();
 });
+
+useHead({
+  title: 'Trouver du fret',
+});
 </script>

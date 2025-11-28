@@ -177,7 +177,7 @@ const handleSubmit = async () => {
     });
 
     if (result.success) {
-      router.push('/app/index');
+      router.push('/app');
     }
   } catch (error) {
     console.error(error);

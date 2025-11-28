@@ -2,15 +2,15 @@
   <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 card p-8">
       <div>
-        <div class="mx-auto h-12 w-12 bg-primary-100 rounded-full flex items-center justify-center">
-          <IconUser class="h-8 w-8 text-primary-600" />
+        <div class="mx-auto flex items-center justify-center">
+          <img src="/img/Logo.png" alt="Logo" class="h-24 w-auto" />
         </div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+        <h2 class="mt-4 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Créer un compte
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
           Ou
-          <NuxtLink to="/login" class="font-medium text-primary-600 hover:text-primary-500">
+          <NuxtLink to="/auth/login" class="font-medium text-primary-600 hover:text-primary-500">
             connectez-vous à votre compte existant
           </NuxtLink>
         </p>
@@ -93,7 +93,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import type { UserRole } from '~/types';
-import { IconCube, IconTruck, IconUser } from '@tabler/icons-vue';
+import { IconCube, IconTruck } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -130,7 +130,7 @@ const handleRegister = async () => {
 
     if (result.success && result.user) {
       if (result.user.role === 'shipper') {
-        router.push('/app/index');
+        router.push('/app');
       } else {
         router.push('/app/carrier');
       }
@@ -143,4 +143,8 @@ const handleRegister = async () => {
     loading.value = false;
   }
 };
+
+useHead({
+  title: 'Inscription',
+});
 </script>

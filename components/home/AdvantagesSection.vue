@@ -7,7 +7,7 @@
           <GradientBadge text="Nos Avantages" variant="green" />
           <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
             Pourquoi choisir
-            <span class="block text-gradient">FreightConnect ?</span>
+            <span class="block text-gradient">Bourse de Fret Bénin ?</span>
           </h2>
           <p class="text-lg text-gray-600 dark:text-gray-400 mb-10">
             Une plateforme complète qui simplifie chaque étape de votre logistique

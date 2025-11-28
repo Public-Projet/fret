@@ -77,7 +77,7 @@ const quickActions = computed(() => {
   if (isShipper.value) {
     return [
       { label: 'Nouvelle annonce', description: 'Publier une demande de transport', icon: IconPlus, to: '/offers/create' },
-      { label: 'Mes annonces', description: 'Gérer vos expéditions', icon: IconFileText, to: '/app/index' },
+      { label: 'Mes annonces', description: 'Gérer vos expéditions', icon: IconFileText, to: '/app' },
       { label: 'Messages', description: 'Voir vos conversations', icon: IconMessage, to: '/app/messages' },
     ];
   } else {

@@ -19,7 +19,7 @@
           <span class="block">logistique ?</span>
         </h2>
         <p class="text-xl md:text-2xl text-blue-100 mb-12 max-w-2xl mx-auto">
-          Rejoignez plus de 5,000 entreprises qui ont déjà optimisé leur transport avec FreightConnect
+          Rejoignez des utilisateurs qui ont déjà optimisé leur transport avec Bourse de Fret Bénin
         </p>
 
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">

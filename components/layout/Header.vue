@@ -4,17 +4,14 @@
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center space-x-2 group">
-          <div
-            class="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform">
-            <IconTruck class="w-6 h-6 text-white" />
-          </div>
-          <span class="text-xl font-bold text-gradient hidden sm:block">FreightConnect</span>
+          <img src="/img/Logo.png" alt="Logo" class="h-12 w-auto" />
+          <span class="text-xl font-bold text-gradient hidden sm:block">Bourse de Fret Bénin</span>
         </NuxtLink>
 
         <!-- Navigation Desktop -->
         <div class="hidden md:flex items-center space-x-6">
           <template v-if="isAuthenticated">
-            <NuxtLink :to="isShipper ? '/app/index' : '/app/carrier'"
+            <NuxtLink :to="isShipper ? '/app' : '/app/carrier'"
               class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Tableau de bord
             </NuxtLink>
@@ -116,7 +113,7 @@
         leave-to-class="transform opacity-0 -translate-y-2">
         <div v-if="isMobileMenuOpen" class="md:hidden py-4 space-y-2">
           <template v-if="isAuthenticated">
-            <NuxtLink :to="isShipper ? '/app/index' : '/app/carrier'"
+            <NuxtLink :to="isShipper ? '/app' : '/app/carrier'"
               class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               @click="closeMobileMenu">
               Tableau de bord
@@ -168,7 +165,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useThemeStore } from '~/stores/theme';
 import { useMessagingStore } from '~/stores/messaging';
-import { IconChevronDown, IconMenu2, IconMoon, IconSun, IconTruck, IconX } from '@tabler/icons-vue';
+import { IconChevronDown, IconMenu2, IconMoon, IconSun, IconX } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const themeStore = useThemeStore();
