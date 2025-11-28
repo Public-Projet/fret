@@ -15,53 +15,78 @@
       </div>
     </div>
 
+    <!-- Image AP -->
+    <div class="absolute inset-0">
+      <img src="https://transportsgranger.com/wp-content/uploads/2025/06/Transport-de-fret-par-conteneur.jpg"
+        alt="background transport" class="w-full h-full object-cover opacity-20 mix-blend-overlay" />
+    </div>
+
     <!-- Contenu Hero -->
     <div class="container-custom relative z-10 py-20">
-      <div class="text-center max-w-5xl mx-auto">
-        <!-- Badge animé -->
-        <div
-          class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8 animate-fade-in">
-          <IconSparkles class="w-5 h-5 text-yellow-300" />
-          <span class="text-white font-medium">La plateforme n°1 du transport au Bénin</span>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+        <!-- TEXTE -->
+        <div class="lg:col-span-2">
+          <div class="text-left max-w-3xl">
+            <!-- Badge animé -->
+            <div
+              class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8 animate-fade-in">
+              <IconSparkles class="w-5 h-5 text-yellow-300" />
+              <span class="text-sm text-white font-medium">La plateforme n°1 du transport au Bénin</span>
+            </div>
+
+            <!-- Titre principal -->
+            <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+              Révolutionnez votre
+              <span
+                class="block mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 bg-clip-text text-transparent">
+                logistique de transport
+              </span>
+            </h1>
+
+            <!-- Sous-titre -->
+            <p class="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed max-w-2xl">
+              Connectez-vous instantanément avec des milliers de transporteurs qualifiés.
+              Economisez jusqu'à 40% sur vos coûts de transport.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-16">
+              <NuxtLink to="/auth/register?role=shipper"
+                class="group relative px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
+                <IconTruck class="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                <span>Je suis chargeur</span>
+                <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              </NuxtLink>
+
+              <NuxtLink to="/auth/register?role=carrier"
+                class="group relative px-8 py-4 bg-green-500 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
+                <IconUsersGroup class="w-6 h-6 group-hover:scale-110 transition-transform" />
+                <span>Je suis transporteur</span>
+                <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              </NuxtLink>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-6 max-w-2xl">
+              <StatCard :value="shippers" label="Chargeurs actifs" />
+              <StatCard :value="carriers" label="Transporteurs" />
+              <StatCard :value="deliveries" label="Transports réussis" suffix="k+" />
+            </div>
+          </div>
         </div>
 
-        <!-- Titre principal avec effet gradient -->
-        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
-          Révolutionnez votre
-          <span
-            class="block mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 bg-clip-text text-transparent">
-            logistique de transport
-          </span>
-        </h1>
+        <!-- IMAGE -->
+        <div class="lg:col-span-1 flex justify-center">
+          <div class="relative max-w-md w-full animate-slide-right">
+            <img src="https://developers.google.com/static/maps/solutions/images/store_locator.png"
+              alt="Transport Logistics" class="w-full h-auto" />
 
-        <!-- Sous-titre -->
-        <p class="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
-          Connectez-vous instantanément avec des milliers de transporteurs qualifiés.
-          Economisez jusqu'à 40% sur vos coûts de transport.
-        </p>
-
-        <!-- CTA Buttons avec animations -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <NuxtLink to="/auth/register?role=shipper"
-            class="group relative px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
-            <IconTruck class="w-6 h-6 group-hover:rotate-12 transition-transform" />
-            <span>Je suis chargeur</span>
-            <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-          </NuxtLink>
-
-          <NuxtLink to="/auth/register?role=carrier"
-            class="group relative px-8 py-4 bg-green-500 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
-            <IconUsersGroup class="w-6 h-6 group-hover:scale-110 transition-transform" />
-            <span>Je suis transporteur</span>
-             <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-          </NuxtLink>
-        </div>
-
-        <!-- Stats en temps réel -->
-        <div class="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
-          <StatCard :value="shippers" label="Chargeurs actifs" />
-          <StatCard :value="carriers" label="Transporteurs" />
-          <StatCard :value="deliveries" label="Transports réussis" suffix="k+" />
+            <!-- Décorations -->
+            <div class="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+            <div
+              class="absolute -bottom-8 -left-8 w-40 h-40 bg-green-400/20 rounded-full blur-3xl animate-pulse animation-delay-2000">
+            </div>
+          </div>
         </div>
       </div>
     </div>
