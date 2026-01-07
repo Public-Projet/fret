@@ -19,7 +19,7 @@
     </NuxtLink>
 
     <template v-if="isShipper">
-      <NuxtLink to="/app"
+      <NuxtLink to="/app/shipper"
         class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200"
         active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium shadow-sm ring-1 ring-primary-100 dark:ring-primary-900/30"
         :class="{ 'justify-center px-2': collapsed }">

@@ -11,8 +11,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   // Utilisateur connecté
   if (authStore.isAuthenticated) {
     // Ne peut pas accéder aux pages /auth/*
-    if (to.path.startsWith('/auth')) {
-      return navigateTo('/app');
+    if (to.path.startsWith('/auth') || to.path === '/app' || to.path === '/app/') {
+      return navigateTo(authStore.isShipper ? '/app/shipper' : '/app/carrier');
     }
   }
 

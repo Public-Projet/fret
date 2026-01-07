@@ -40,7 +40,6 @@
         <div class="container-custom py-8">
           <slot />
         </div>
-        <Footer class="mt-auto" />
       </main>
     </div>
   </div>
@@ -48,7 +47,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import Footer from '~/components/layout/Footer.vue';
 import AppHeader from '~/components/layout/AppHeader.vue';
 import AppSidebar from '~/components/layout/AppSidebar.vue';
 import AppNavigation from '~/components/layout/AppNavigation.vue';

@@ -2,8 +2,8 @@
   <div class="container-custom py-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tableau de bord Transporteur</h1>
-        <p class="text-gray-600 dark:text-gray-400">Trouvez des chargements et gérez vos offres</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Bienvenue, {{ currentUser?.firstName }}</h1>
+        <p class="text-gray-600 dark:text-gray-400">Tableau de bord Transporteur</p>
       </div>
       <div class="flex space-x-4 mt-4 md:mt-0">
         <NuxtLink to="/offers" class="btn btn-outline flex items-center justify-center">

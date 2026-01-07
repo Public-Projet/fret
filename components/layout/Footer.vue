@@ -24,81 +24,13 @@
         </div>
 
         <!-- Liens rapides -->
-        <div>
-          <h3 class="text-white font-semibold mb-4">Liens rapides</h3>
+        <!-- Sections dynamiques -->
+        <div v-for="section in footerSections" :key="section.title">
+          <h3 class="text-white font-semibold mb-4">{{ section.title }}</h3>
           <ul class="space-y-2">
-            <li>
-              <NuxtLink to="/offers" class="text-sm hover:text-white transition-colors">
-                Annonces
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/about" class="text-sm hover:text-white transition-colors">
-                À propos
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/how-it-works" class="text-sm hover:text-white transition-colors">
-                Comment ça marche
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/pricing" class="text-sm hover:text-white transition-colors">
-                Tarifs
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Support -->
-        <div>
-          <h3 class="text-white font-semibold mb-4">Support</h3>
-          <ul class="space-y-2">
-            <li>
-              <NuxtLink to="/help" class="text-sm hover:text-white transition-colors">
-                Centre d'aide
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/contact" class="text-sm hover:text-white transition-colors">
-                Contact
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/faq" class="text-sm hover:text-white transition-colors">
-                FAQ
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/safety" class="text-sm hover:text-white transition-colors">
-                Sécurité
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Légal -->
-        <div>
-          <h3 class="text-white font-semibold mb-4">Légal</h3>
-          <ul class="space-y-2">
-            <li>
-              <NuxtLink to="/terms" class="text-sm hover:text-white transition-colors">
-                Conditions d'utilisation
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/privacy" class="text-sm hover:text-white transition-colors">
-                Politique de confidentialité
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/cookies" class="text-sm hover:text-white transition-colors">
-                Cookies
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink to="/legal" class="text-sm hover:text-white transition-colors">
-                Mentions légales
+            <li v-for="link in section.links" :key="link.to">
+              <NuxtLink :to="link.to" class="text-sm hover:text-white transition-colors">
+                {{ link.label }}
               </NuxtLink>
             </li>
           </ul>
@@ -120,4 +52,34 @@ import { computed } from 'vue';
 import { IconBrandFacebook, IconBrandLinkedin, IconBrandX } from '@tabler/icons-vue';
 
 const currentYear = computed(() => new Date().getFullYear());
+
+const footerSections = [
+  {
+    title: 'Liens rapides',
+    links: [
+      { label: 'Annonces', to: '/offers' },
+      { label: 'À propos', to: '/about' },
+      { label: 'Comment ça marche', to: '/#features' },
+      { label: 'Tarifs', to: '/pricing' }
+    ]
+  },
+  {
+    title: 'Support',
+    links: [
+      { label: "Centre d'aide", to: '/help' },
+      { label: 'Contact', to: '/contact' },
+      { label: 'FAQ', to: '/faq' },
+      { label: 'Sécurité', to: '/safety' }
+    ]
+  },
+  {
+    title: 'Légal',
+    links: [
+      { label: "Conditions d'utilisation", to: '/terms' },
+      { label: 'Politique de confidentialité', to: '/privacy' },
+      { label: 'Cookies', to: '/cookies' },
+      { label: 'Mentions légales', to: '/legal' }
+    ]
+  }
+];
 </script>

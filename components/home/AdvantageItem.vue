@@ -2,7 +2,7 @@
   <div
     class="group flex items-start space-x-4 p-5 rounded-2xl hover:bg-white dark:hover:bg-gray-700/50 transition-all duration-300 cursor-pointer">
     <div
-      :class="['w-14 h-14 bg-gradient-to-br rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform', `from-${iconClass.split(' ')[1]}`]">
+      :class="['w-14 h-14 bg-gradient-to-br rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform', iconClass]">
       <component :is="icon" class="w-7 h-7 text-white" />
     </div>
     <div>

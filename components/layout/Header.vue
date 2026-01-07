@@ -4,40 +4,21 @@
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center space-x-2 group">
-          <img src="/img/Logo.png" alt="Logo" class="h-12 w-auto" />
-          <span class="text-xl font-bold text-gradient hidden sm:block">Bourse de Fret Bénin</span>
+          <img src="/img/Logo.png" alt="Logo" class="h-12 w-auto bg-white rounded-lg p-1" />
+          <span :class="['text-xl font-bold hidden sm:block', isDark ? 'text-white' : 'text-gradient']">
+            Bourse de Fret Bénin</span>
         </NuxtLink>
 
         <!-- Navigation Desktop -->
         <div class="hidden md:flex items-center space-x-6">
-          <template v-if="isAuthenticated">
-            <NuxtLink :to="isShipper ? '/app' : '/app/carrier'"
-              class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-              Tableau de bord
-            </NuxtLink>
-            <NuxtLink to="/offers"
-              class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-              Annonces
-            </NuxtLink>
-            <NuxtLink to="/app/messages"
-              class="relative text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-              Messages
-              <span v-if="unreadCount > 0"
-                class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {{ unreadCount }}
-              </span>
-            </NuxtLink>
-          </template>
-          <template v-else>
-            <NuxtLink to="/offers"
-              class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-              Annonces
-            </NuxtLink>
-            <NuxtLink to="/#features"
-              class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-              Fonctionnalités
-            </NuxtLink>
-          </template>
+          <NuxtLink v-for="link in headerLinks" :key="link.to" :to="link.to"
+            class="relative text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            {{ link.label }}
+            <span v-if="link.badge && link.badge > 0"
+              class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {{ link.badge }}
+            </span>
+          </NuxtLink>
         </div>
 
         <!-- Actions -->
@@ -68,7 +49,12 @@
                 leave-to-class="transform opacity-0 scale-95">
                 <div v-if="isUserMenuOpen"
                   class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1">
-                  <NuxtLink to="app/profile"
+                  <NuxtLink :to="isShipper ? '/app' : '/app/carrier'"
+                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    @click="closeUserMenu">
+                    Tableau de bord
+                  </NuxtLink>
+                  <NuxtLink to="/app/profile"
                     class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     @click="closeUserMenu">
                     Mon profil
@@ -112,47 +98,31 @@
         leave-active-class="transition ease-in duration-150" leave-from-class="transform opacity-100 translate-y-0"
         leave-to-class="transform opacity-0 -translate-y-2">
         <div v-if="isMobileMenuOpen" class="md:hidden py-4 space-y-2">
-          <template v-if="isAuthenticated">
-            <NuxtLink :to="isShipper ? '/app' : '/app/carrier'"
-              class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-              @click="closeMobileMenu">
-              Tableau de bord
-            </NuxtLink>
-            <NuxtLink to="/offers"
-              class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-              @click="closeMobileMenu">
-              Annonces
-            </NuxtLink>
-            <NuxtLink to="/app/messages"
-              class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-              @click="closeMobileMenu">
-              Messages
-              <span v-if="unreadCount > 0" class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">
-                {{ unreadCount }}
+          <NuxtLink v-for="link in headerLinks" :key="link.to" :to="link.to"
+            class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+            @click="closeMobileMenu">
+            <span class="flex items-center justify-between">
+              {{ link.label }}
+              <span v-if="link.badge && link.badge > 0" class="bg-red-500 text-white text-xs rounded-full px-2 py-1">
+                {{ link.badge }}
               </span>
-            </NuxtLink>
-            <NuxtLink to="app/profile"
-              class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-              @click="closeMobileMenu">
-              Mon profil
-            </NuxtLink>
-          </template>
-          <template v-else>
-            <NuxtLink to="/offers"
-              class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-              @click="closeMobileMenu">
-              Annonces
-            </NuxtLink>
-            <NuxtLink to="/auth/login"
-              class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-              @click="closeMobileMenu">
-              Connexion
-            </NuxtLink>
-            <NuxtLink to="/auth/register"
-              class="block px-4 py-2 bg-primary-600 text-white hover:bg-primary-700 rounded-lg text-center"
-              @click="closeMobileMenu">
-              Inscription
-            </NuxtLink>
+            </span>
+          </NuxtLink>
+
+          <!-- Mobile Auth Buttons (only if not authenticated) -->
+          <template v-if="!isAuthenticated">
+            <div class="pt-4 space-y-2 border-t border-gray-100 dark:border-gray-700 mt-2">
+              <NuxtLink to="/auth/login"
+                class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                @click="closeMobileMenu">
+                Connexion
+              </NuxtLink>
+              <NuxtLink to="/auth/register"
+                class="block px-4 py-2 bg-primary-600 text-white hover:bg-primary-700 rounded-lg text-center"
+                @click="closeMobileMenu">
+                Inscription
+              </NuxtLink>
+            </div>
           </template>
         </div>
       </Transition>
@@ -187,6 +157,22 @@ const unreadCount = computed(() =>
 const userInitials = computed(() => {
   if (!currentUser.value) return '';
   return `${currentUser.value.firstName[0]}${currentUser.value.lastName[0]}`.toUpperCase();
+});
+
+const headerLinks = computed(() => {
+  if (authStore.isAuthenticated) {
+    return [
+      { label: 'Tableau de bord', to: authStore.isShipper ? '/app/shipper' : '/app/carrier' },
+      { label: 'Annonces', to: '/offers' },
+      { label: 'Messages', to: '/app/messages', badge: unreadCount.value }
+    ];
+  } else {
+    return [
+      { label: 'Annonces', to: '/offers' },
+      { label: 'Fonctionnalités', to: '/#features' },
+      { label: 'Tarifs', to: '/pricing' }
+    ];
+  }
 });
 
 const toggleTheme = () => {

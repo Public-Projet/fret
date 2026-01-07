@@ -11,13 +11,10 @@
       <!-- Content -->
       <div class="relative z-10 w-full flex flex-col justify-between p-12 text-white">
         <!-- Logo or Brand -->
-        <div class="flex items-center gap-3">
-          <!-- Placeholder for logo if needed -->
-          <h1 class="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-            <span class="p-2 bg-primary-600 rounded-lg">BF</span>
-            BourseFret
-          </h1>
-        </div>
+        <NuxtLink to="/" class="flex items-center gap-3 group">
+          <img src="/img/Logo.png" alt="BourseFret Logo" class="h-10 w-auto bg-white rounded-lg p-1" />
+          <span class="text-3xl font-bold tracking-tight text-white">BourseFret</span>
+        </NuxtLink>
 
         <!-- Dynamic Text -->
         <div class="mb-12 max-w-2xl">
@@ -38,7 +35,27 @@
     </div>
 
     <!-- Form Column (1/3) -->
-    <div class="w-full lg:w-1/3 flex flex-col justify-center items-center p-6 sm:p-12 relative">
+    <div
+      class="w-full lg:w-1/3 flex flex-col justify-center items-center p-6 sm:p-12 relative bg-white dark:bg-gray-900 transition-colors duration-300">
+
+      <!-- Top Right Controls -->
+      <div class="absolute top-4 right-4 flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button @click="toggleTheme"
+          class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
+          aria-label="Toggle theme">
+          <IconMoon v-if="!isDark" class="w-5 h-5" />
+          <IconSun v-else class="w-5 h-5" />
+        </button>
+
+        <!-- Home Button -->
+        <NuxtLink to="/"
+          class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors">
+          <IconHome class="w-4 h-4" />
+          <span class="hidden sm:inline">Accueil</span>
+        </NuxtLink>
+      </div>
+
       <!-- Mobile Header (Logo) -->
       <div class="lg:hidden w-full mb-8">
         <div class="mb-8 text-center sm:text-left">
@@ -61,6 +78,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useThemeStore } from '~/stores/theme';
+import { IconMoon, IconSun, IconHome } from '@tabler/icons-vue';
+
 interface Props {
   bgImage?: string;
   quote?: string;
@@ -72,4 +93,8 @@ const props = withDefaults(defineProps<Props>(), {
   quote: 'Connectez-vous pour accéder à la meilleure bourse de fret en temps réel.',
   author: 'L\'équipe BourseFret'
 });
+
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.isDark);
+const toggleTheme = () => themeStore.toggleTheme();
 </script>

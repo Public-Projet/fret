@@ -3,11 +3,18 @@
     class="bg-white/80 dark:bg-gray-800/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center sticky top-0 z-30 transition-all duration-300">
     <div class="flex items-center gap-4">
       <NuxtLink to="/" class="flex items-center gap-2 group">
-        <img src="/img/Logo.png" alt="BourseFret" class="h-10 w-auto" />
+        <img src="/img/Logo.png" alt="BourseFret" class="h-10 w-auto bg-white rounded-lg p-1" />
       </NuxtLink>
     </div>
 
     <div class="flex items-center gap-3">
+      <!-- Theme Toggle -->
+      <button @click="toggleTheme"
+        class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700/50 transition-colors">
+        <IconMoon v-if="!isDark" class="w-5 h-5" />
+        <IconSun v-else class="w-5 h-5" />
+      </button>
+
       <!-- User Dropdown -->
       <div class="relative" ref="dropdownRef">
         <button @click="isDropdownOpen = !isDropdownOpen"
@@ -68,7 +75,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
-import { IconMenu2, IconX, IconChevronDown, IconUser, IconLogout, IconHome } from '@tabler/icons-vue';
+import { useThemeStore } from '~/stores/theme'; // Added
+import { IconMenu2, IconX, IconChevronDown, IconUser, IconLogout, IconHome, IconMoon, IconSun } from '@tabler/icons-vue';
 
 defineProps<{
   menuOpen: boolean;
@@ -77,7 +85,11 @@ defineProps<{
 defineEmits(['toggle-menu']);
 
 const authStore = useAuthStore();
+const themeStore = useThemeStore(); // Added
 const router = useRouter();
+
+const isDark = computed(() => themeStore.isDark); // Added
+const toggleTheme = () => themeStore.toggleTheme(); // Added
 
 const isDropdownOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
