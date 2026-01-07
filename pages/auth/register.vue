@@ -1,10 +1,9 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 card p-8">
+  <NuxtLayout name="auth"
+    bg-image="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+    quote="Un réseau puissant pour faire avancer votre business." author="L'équipe BourseFret">
+    <div class="w-full space-y-8">
       <div>
-        <div class="mx-auto flex items-center justify-center">
-          <img src="/img/Logo.png" alt="Logo" class="h-24 w-auto" />
-        </div>
         <h2 class="mt-4 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Créer un compte
         </h2>
@@ -78,7 +77,7 @@
 
         <div>
           <button type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary-500/30"
             :disabled="loading">
             <span v-if="loading">Création du compte...</span>
             <span v-else>S'inscrire</span>
@@ -86,7 +85,7 @@
         </div>
       </form>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
@@ -94,6 +93,10 @@ import { ref, reactive, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import type { UserRole } from '~/types';
 import { IconCube, IconTruck } from '@tabler/icons-vue';
+
+definePageMeta({
+  layout: false
+});
 
 const route = useRoute();
 const router = useRouter();

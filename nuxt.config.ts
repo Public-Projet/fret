@@ -4,9 +4,31 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   modules: [
+    ['nuxt-gtag', {
+      id: 'G-S2H4ZNE84G',
+      enabled: true
+    }],
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
+    '@nuxtjs/color-mode',
+    '@nuxtjs/google-fonts',
+    '@nuxtjs/robots',
+    '@nuxtjs/sitemap',
   ],
+
+  colorMode: {
+    classSuffix: '',
+  },
+
+  sitemap: {
+    xslColumns: [
+      { label: 'URL', width: '50%' },
+      { label: 'Last Modified', select: 'sitemap:lastmod', width: '25%' },
+      { label: 'Priority', select: 'sitemap:priority', width: '12.5%' },
+      { label: 'Change Frequency', select: 'sitemap:changefreq', width: '12.5%' },
+      { label: 'Hreflangs', select: 'count(xhtml:link)', width: '25%' },
+    ],
+  },
 
   css: ['~/assets/css/main.css'],
 
@@ -23,6 +45,20 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ]
+    }
+  },
+
+  runtimeConfig: {
+    public: {
+      baseAPI: process.env.API_URL,
+    }
+  },
+
+  googleFonts: {
+    display: 'swap',
+    families: {
+      'Open+Sans': [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      'Changa+One': [400],
     }
   },
 

@@ -140,11 +140,6 @@ import { useMessagingStore } from '~/stores/messaging';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconStar } from '@tabler/icons-vue';
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'dashboard'
-});
-
 const authStore = useAuthStore();
 const messagingStore = useMessagingStore();
 const announcementStore = useAnnouncementStore();

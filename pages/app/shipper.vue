@@ -151,11 +151,6 @@ import type { Announcement } from '~/types';
 import EditAnnouncementModal from '~/components/dashboard/EditAnnouncementModal.vue';
 import { IconCalendar, IconCircleCheck, IconCurrencyEuro, IconEye, IconFileText, IconMapPin, IconMessage, IconPencil, IconPlus, IconTrash } from '@tabler/icons-vue';
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'dashboard'
-});
-
 const authStore = useAuthStore();
 const announcementStore = useAnnouncementStore();
 const currentFilter = ref('all');

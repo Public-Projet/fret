@@ -2,7 +2,7 @@
   <div class="container-custom py-8">
     <div class="max-w-3xl mx-auto">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Créer une nouvelle annonce</h1>
-      
+
       <div class="card p-8">
         <form @submit.prevent="handleSubmit" class="space-y-6">
           <!-- Informations générales -->
@@ -11,11 +11,13 @@
             <div class="space-y-4">
               <div>
                 <label class="label">Titre de l'annonce</label>
-                <input v-model="form.title" type="text" required class="input" placeholder="Ex: Transport de palettes Cotonou - Porto-Novo" />
+                <input v-model="form.title" type="text" required class="input"
+                  placeholder="Ex: Transport de palettes Cotonou - Porto-Novo" />
               </div>
               <div>
                 <label class="label">Description détaillée</label>
-                <textarea v-model="form.description" rows="4" required class="input" placeholder="Décrivez votre marchandise et vos besoins spécifiques..."></textarea>
+                <textarea v-model="form.description" rows="4" required class="input"
+                  placeholder="Décrivez votre marchandise et vos besoins spécifiques..."></textarea>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -128,10 +130,6 @@ import { useAnnouncementStore } from '~/stores/announcement';
 import { useAuthStore } from '~/stores/auth';
 import type { CargoType } from '~/types';
 
-definePageMeta({
-  middleware: ['auth']
-});
-
 const router = useRouter();
 const announcementStore = useAnnouncementStore();
 const authStore = useAuthStore();
@@ -163,7 +161,7 @@ const form = reactive({
 
 const handleSubmit = async () => {
   if (!authStore.currentUser) return;
-  
+
   loading.value = true;
   try {
     const result = await announcementStore.createAnnouncement({

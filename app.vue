@@ -7,8 +7,15 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '~/stores/auth';
+
 const heroImagePath = "https://assets.volvo.com/is/image/VolvoInformationTechnologyAB/Volvo-High-Capacity-Transport-1?wid=1024";
 const baseUrl = "https://boursefret.netlify.app";
+const authStore = useAuthStore();
+
+onMounted(() => {
+  authStore.restoreSession();
+});
 
 useHead({
   titleTemplate: '%s | Bourse de Fret Bénin',

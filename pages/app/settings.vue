@@ -81,11 +81,6 @@
 import { ref, computed } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'dashboard'
-});
-
 const authStore = useAuthStore();
 const currentUser = computed(() => authStore.currentUser);
 

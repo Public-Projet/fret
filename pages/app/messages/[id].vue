@@ -7,13 +7,10 @@
           <h2 class="font-bold text-gray-900 dark:text-white">Conversations</h2>
         </div>
         <div class="flex-1 overflow-y-auto">
-          <NuxtLink 
-            v-for="conversation in conversations" 
-            :key="conversation.id"
+          <NuxtLink v-for="conversation in conversations" :key="conversation.id"
             :to="`/app/messages/${conversation.id}`"
             class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700/50 last:border-0"
-            :class="{ 'bg-primary-50 dark:bg-primary-900/10': isActive(conversation.id) }"
-          >
+            :class="{ 'bg-primary-50 dark:bg-primary-900/10': isActive(conversation.id) }">
             <div class="flex justify-between items-start mb-1">
               <span class="font-semibold text-gray-900 dark:text-white truncate">
                 {{ getOtherParticipant(conversation)?.company || getOtherParticipant(conversation)?.firstName }}
@@ -37,7 +34,8 @@
             <NuxtLink to="/app/messages" class="md:hidden mr-2">
               <IconArrowLeft class="w-6 h-6 text-gray-500" />
             </NuxtLink>
-            <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold">
+            <div
+              class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold">
               {{ otherParticipant?.firstName[0] }}
             </div>
             <div>
@@ -50,7 +48,8 @@
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <NuxtLink v-if="currentConversation?.announcementId" :to="`/offers/${currentConversation.announcementId}`" class="btn btn-ghost btn-sm">
+            <NuxtLink v-if="currentConversation?.announcementId" :to="`/offers/${currentConversation.announcementId}`"
+              class="btn btn-ghost btn-sm">
               Voir l'annonce
             </NuxtLink>
           </div>
@@ -58,23 +57,14 @@
 
         <!-- Messages -->
         <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900/50" ref="messagesContainer">
-          <div 
-            v-for="message in messages" 
-            :key="message.id" 
-            class="flex"
-            :class="message.senderId === currentUser?.id ? 'justify-end' : 'justify-start'"
-          >
-            <div 
-              class="max-w-[75%] rounded-lg p-3 shadow-sm"
-              :class="message.senderId === currentUser?.id 
-                ? 'bg-primary-600 text-white rounded-br-none' 
-                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-none'"
-            >
+          <div v-for="message in messages" :key="message.id" class="flex"
+            :class="message.senderId === currentUser?.id ? 'justify-end' : 'justify-start'">
+            <div class="max-w-[75%] rounded-lg p-3 shadow-sm" :class="message.senderId === currentUser?.id
+              ? 'bg-primary-600 text-white rounded-br-none'
+              : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-none'">
               <p>{{ message.content }}</p>
-              <p 
-                class="text-xs mt-1 text-right"
-                :class="message.senderId === currentUser?.id ? 'text-primary-100' : 'text-gray-400'"
-              >
+              <p class="text-xs mt-1 text-right"
+                :class="message.senderId === currentUser?.id ? 'text-primary-100' : 'text-gray-400'">
                 {{ formatTime(message.createdAt) }}
               </p>
             </div>
@@ -84,18 +74,10 @@
         <!-- Input -->
         <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
           <form @submit.prevent="sendMessage" class="flex space-x-2">
-            <input 
-              v-model="newMessage" 
-              type="text" 
-              placeholder="Écrivez votre message..." 
-              class="input flex-1"
-              :disabled="sending"
-            />
-            <button 
-              type="submit" 
-              class="btn btn-primary p-2 rounded-full w-10 h-10 flex items-center justify-center"
-              :disabled="!newMessage.trim() || sending"
-            >
+            <input v-model="newMessage" type="text" placeholder="Écrivez votre message..." class="input flex-1"
+              :disabled="sending" />
+            <button type="submit" class="btn btn-primary p-2 rounded-full w-10 h-10 flex items-center justify-center"
+              :disabled="!newMessage.trim() || sending">
               <IconSend class="w-5 h-5" />
             </button>
           </form>
@@ -112,11 +94,6 @@ import { useAuthStore } from '~/stores/auth';
 import type { Conversation } from '~/types';
 import { IconArrowLeft, IconSend } from '@tabler/icons-vue';
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'dashboard'
-});
-
 const route = useRoute();
 const messagingStore = useMessagingStore();
 const authStore = useAuthStore();
@@ -127,10 +104,10 @@ const newMessage = ref('');
 const sending = ref(false);
 
 const currentUser = computed(() => authStore.currentUser);
-const conversations = computed(() => 
+const conversations = computed(() =>
   currentUser.value ? messagingStore.userConversations(currentUser.value.id) : []
 );
-const currentConversation = computed(() => 
+const currentConversation = computed(() =>
   conversations.value.find(c => c.id === conversationId)
 );
 const messages = computed(() => messagingStore.conversationMessages(conversationId));
@@ -165,7 +142,7 @@ const scrollToBottom = () => {
 
 const sendMessage = async () => {
   if (!newMessage.value.trim() || !currentUser.value) return;
-  
+
   sending.value = true;
   try {
     await messagingStore.sendMessage(conversationId, currentUser.value.id, newMessage.value);

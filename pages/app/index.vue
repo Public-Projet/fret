@@ -45,11 +45,6 @@ import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { IconCurrencyEuro, IconFileText, IconMessage, IconPlus, IconTruck } from '@tabler/icons-vue';
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'dashboard'
-});
-
 const authStore = useAuthStore();
 const announcementStore = useAnnouncementStore();
 

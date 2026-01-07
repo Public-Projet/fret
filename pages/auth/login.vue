@@ -1,10 +1,9 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 card p-8">
+  <NuxtLayout name="auth"
+    bg-image="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+    quote="La rapidité et la fiabilité au service de votre logistique." author="L'équipe BourseFret">
+    <div class="w-full space-y-8">
       <div>
-        <div class="mx-auto flex items-center justify-center">
-          <img src="/img/Logo.png" alt="Logo" class="h-24 w-auto" />
-        </div>
         <h2 class="mt-4 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Connexion
         </h2>
@@ -16,8 +15,8 @@
         </p>
       </div>
       <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-        <div class="rounded-md shadow-sm -space-y-px">
-          <div class="mb-4">
+        <div class="space-y-4">
+          <div>
             <label for="email-address" class="label">Adresse email</label>
             <input id="email-address" name="email" type="email" autocomplete="email" required v-model="email"
               class="input" placeholder="exemple@email.com" />
@@ -51,7 +50,7 @@
 
         <div>
           <button type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary-500/30"
             :disabled="loading">
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <IconLock class="h-5 w-5 text-primary-500 group-hover:text-primary-400" aria-hidden="true" />
@@ -70,7 +69,7 @@
             <p class="font-semibold">Chargeur :</p>
             <p>s.azian@charg.com</p>
           </div>
-           <button type="button" @click="loginAsDemo('shipper')"
+          <button type="button" @click="loginAsDemo('shipper')"
             class="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded hover:bg-primary-200 transition-colors">
             Connexion Chargeur
           </button>
@@ -85,13 +84,17 @@
         </div>
       </div>
     </div>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { IconLock } from '@tabler/icons-vue';
+
+definePageMeta({
+  layout: false
+});
 
 const authStore = useAuthStore();
 const router = useRouter();

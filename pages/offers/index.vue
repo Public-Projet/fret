@@ -2,27 +2,17 @@
   <div class="container-custom py-8">
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Trouver du fret</h1>
-      
+
       <!-- Filtres -->
       <div class="card p-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="label">Ville de départ</label>
-            <input 
-              v-model="filters.originCity" 
-              type="text" 
-              class="input" 
-              placeholder="Ex: Cotonou"
-            />
+            <input v-model="filters.originCity" type="text" class="input" placeholder="Ex: Cotonou" />
           </div>
           <div>
             <label class="label">Ville d'arrivée</label>
-            <input 
-              v-model="filters.destinationCity" 
-              type="text" 
-              class="input" 
-              placeholder="Ex: Abomey"
-            />
+            <input v-model="filters.destinationCity" type="text" class="input" placeholder="Ex: Abomey" />
           </div>
           <div>
             <label class="label">Type de marchandise</label>
@@ -38,12 +28,7 @@
           </div>
           <div>
             <label class="label">Budget min (FCFA)</label>
-            <input 
-              v-model.number="filters.minBudget" 
-              type="number" 
-              class="input" 
-              placeholder="0"
-            />
+            <input v-model.number="filters.minBudget" type="number" class="input" placeholder="0" />
           </div>
         </div>
         <div class="flex justify-end mt-4 space-x-2">
@@ -63,11 +48,7 @@
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <AnnouncementCard 
-        v-for="announcement in announcements" 
-        :key="announcement.id" 
-        :announcement="announcement" 
-      />
+      <AnnouncementCard v-for="announcement in announcements" :key="announcement.id" :announcement="announcement" />
     </div>
   </div>
 </template>
@@ -79,6 +60,10 @@ import AnnouncementCard from '~/components/announcement/AnnouncementCard.vue';
 import type { AnnouncementFilters } from '~/types';
 
 const announcementStore = useAnnouncementStore();
+
+definePageMeta({
+  layout: 'guest'
+});
 
 const filters = ref<AnnouncementFilters>({
   originCity: '',

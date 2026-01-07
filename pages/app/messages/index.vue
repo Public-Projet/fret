@@ -19,7 +19,8 @@
             Aucune conversation
           </div>
           <div v-else>
-            <NuxtLink v-for="conversation in conversations" :key="conversation.id" :to="`/app/messages/${conversation.id}`"
+            <NuxtLink v-for="conversation in conversations" :key="conversation.id"
+              :to="`/app/messages/${conversation.id}`"
               class="block p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700/50 last:border-0"
               :class="{ 'bg-primary-50 dark:bg-primary-900/10': isActive(conversation.id) }">
               <div class="flex justify-between items-start mb-1">
@@ -60,11 +61,6 @@ import { useMessagingStore } from '~/stores/messaging';
 import { useAuthStore } from '~/stores/auth';
 import type { Conversation } from '~/types';
 import { IconMessage, IconPlus } from '@tabler/icons-vue';
-
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'dashboard'
-});
 
 const messagingStore = useMessagingStore();
 const authStore = useAuthStore();

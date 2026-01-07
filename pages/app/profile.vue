@@ -125,11 +125,6 @@ import { useAuthStore } from '~/stores/auth';
 import { useReviewStore } from '~/stores/review';
 import { IconBadge, IconCircleCheck, IconFile, IconStar, IconStarFilled } from '@tabler/icons-vue';
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'dashboard'
-});
-
 const authStore = useAuthStore();
 const reviewStore = useReviewStore();
 

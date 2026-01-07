@@ -17,6 +17,10 @@ import AdvantagesSection from '~/components/home/AdvantagesSection.vue';
 import TestimonialsSection from '~/components/home/TestimonialsSection.vue';
 import CtaSection from '~/components/home/CtaSection.vue';
 
+definePageMeta({
+  layout: 'guest'
+});
+
 useHead({
   title: 'Révolutionnez votre logistique de transport',
   meta: [

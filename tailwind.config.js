@@ -38,6 +38,11 @@ export default {
           950: '#052e16',
         },
       },
+      fontFamily: {
+        body: ['Open Sans', 'sans-serif'],
+        sans: ['Open Sans', 'sans-serif'],
+        heading: ['Changa One', 'sans-serif']
+      },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',

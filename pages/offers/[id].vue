@@ -194,6 +194,10 @@ import { useAuthStore } from '~/stores/auth';
 import { useMessagingStore } from '~/stores/messaging';
 import { IconArrowsMaximize, IconBadge, IconCalendar, IconClock, IconCube, IconCurrencyEuro, IconMapPin, IconScale, IconStar } from '@tabler/icons-vue';
 
+definePageMeta({
+  layout: 'guest'
+});
+
 const route = useRoute();
 const router = useRouter();
 const announcementStore = useAnnouncementStore();
