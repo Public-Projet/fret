@@ -62,7 +62,8 @@ import type { AnnouncementFilters } from '~/types';
 const announcementStore = useAnnouncementStore();
 
 definePageMeta({
-  layout: 'guest'
+  layout: 'guest',
+  auth: false, // Ensure public access if auth module is used
 });
 
 const filters = ref<AnnouncementFilters>({

@@ -94,7 +94,7 @@ const startMockConversation = async () => {
 
   // Create a mock conversation with a support user or random user
   // In a real app, this would open a user selection modal
-  const otherUserId = currentUser.value.role === 'shipper' ? 'carrier-1' : 'shipper-1';
+  const otherUserId = currentUser.value.role === 'shipper' ? '4' : '3';
 
   // Using a mock announcement ID 'ann-1' for demo purposes
   const result = await messagingStore.getOrCreateConversation('ann-1', [currentUser.value.id, otherUserId]);

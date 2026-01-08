@@ -2,53 +2,13 @@
   <div class="container-custom py-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Bienvenue, {{ currentUser?.firstName }}</h1>
-        <p class="text-gray-600 dark:text-gray-400">Tableau de bord Chargeur</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mes annonces</h1>
+        <p class="text-gray-600 dark:text-gray-400">Gérez vos demandes de transport</p>
       </div>
-      <NuxtLink to="/offers/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
+      <NuxtLink to="/app/shipper/offers/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
         <IconPlus class="w-5 h-5 mr-2" />
         Créer une annonce
       </NuxtLink>
-    </div>
-
-    <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <div class="card p-6 flex items-center space-x-4">
-        <div class="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-          <IconFileText class="w-6 h-6" />
-        </div>
-        <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Annonces actives</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ activeAnnouncementsCount }}</p>
-        </div>
-      </div>
-      <div class="card p-6 flex items-center space-x-4">
-        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400">
-          <IconMessage class="w-6 h-6" />
-        </div>
-        <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">En négociation</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ negotiatingCount }}</p>
-        </div>
-      </div>
-      <div class="card p-6 flex items-center space-x-4">
-        <div class="p-3 rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-          <IconCircleCheck class="w-6 h-6" />
-        </div>
-        <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Terminées</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ completedCount }}</p>
-        </div>
-      </div>
-      <div class="card p-6 flex items-center space-x-4">
-        <div class="p-3 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
-          <IconCurrencyEuro class="w-6 h-6" />
-        </div>
-        <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Budget total</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ totalBudget }}FCFA</p>
-        </div>
-      </div>
     </div>
 
     <!-- Filtres et Liste -->
@@ -56,7 +16,6 @@
       class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
       <div
         class="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Mes annonces</h2>
         <div class="flex space-x-2 overflow-x-auto pb-2 sm:pb-0">
           <button v-for="status in ['all', 'pending', 'negotiating', 'accepted', 'completed', 'cancelled']"
             :key="status" @click="currentFilter = status" :class="[
@@ -81,7 +40,7 @@
         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Aucune annonce trouvée</h3>
         <p class="mt-1 text-gray-500 dark:text-gray-400">Commencez par créer votre première annonce de transport.</p>
         <div class="mt-6">
-          <NuxtLink to="/offers/create" class="btn btn-primary">
+          <NuxtLink to="/app/shipper/offers/create" class="btn btn-primary">
             Créer une annonce
           </NuxtLink>
         </div>
@@ -94,7 +53,7 @@
             <div class="flex-1">
               <div class="flex items-center justify-between md:justify-start md:space-x-4 mb-2">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-                  <NuxtLink :to="`/offers/${announcement.id}`" class="hover:text-primary-600">
+                  <NuxtLink :to="`/app/shipper/offers/${announcement.id}`" class="hover:text-primary-600">
                     {{ announcement.title }}
                   </NuxtLink>
                 </h3>
@@ -120,7 +79,7 @@
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ announcement.budget }}FCFA</p>
               </div>
               <div class="flex space-x-2">
-                <NuxtLink :to="`/offers/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">
+                <NuxtLink :to="`/app/shipper/offers/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">
                   <IconEye class="w-5 h-5" />
                 </NuxtLink>
                 <button v-if="announcement.status === 'pending'" @click="handleEdit(announcement)"
@@ -149,7 +108,7 @@ import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
 import type { Announcement } from '~/types';
 import EditAnnouncementModal from '~/components/dashboard/EditAnnouncementModal.vue';
-import { IconCalendar, IconCircleCheck, IconCurrencyEuro, IconEye, IconFileText, IconMapPin, IconMessage, IconPencil, IconPlus, IconTrash } from '@tabler/icons-vue';
+import { IconCalendar, IconFileText, IconMapPin, IconPencil, IconPlus, IconTrash, IconEye } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const announcementStore = useAnnouncementStore();
@@ -169,23 +128,6 @@ const filteredAnnouncements = computed(() => {
   if (currentFilter.value === 'all') return myAnnouncements.value;
   return myAnnouncements.value.filter(a => a.status === currentFilter.value);
 });
-
-// Stats
-const activeAnnouncementsCount = computed(() =>
-  myAnnouncements.value.filter(a => ['pending', 'negotiating'].includes(a.status)).length
-);
-
-const negotiatingCount = computed(() =>
-  myAnnouncements.value.filter(a => a.status === 'negotiating').length
-);
-
-const completedCount = computed(() =>
-  myAnnouncements.value.filter(a => a.status === 'completed').length
-);
-
-const totalBudget = computed(() =>
-  myAnnouncements.value.reduce((sum, a) => sum + a.budget, 0)
-);
 
 const getStatusLabel = (status: string) => {
   const labels: Record<string, string> = {

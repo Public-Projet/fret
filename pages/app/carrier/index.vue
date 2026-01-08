@@ -17,6 +17,14 @@
       </div>
     </div>
 
+    <div class="mb-6 flex justify-end">
+      <NuxtLink to="/app/carrier/availability"
+        class="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center">
+        <IconTruck class="w-4 h-4 mr-1" />
+        Gérer mes disponibilités
+      </NuxtLink>
+    </div>
+
     <!-- Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <div class="card p-6 flex items-center space-x-4">
@@ -138,15 +146,17 @@ import { computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAnnouncementStore } from '~/stores/announcement';
-import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconStar } from '@tabler/icons-vue';
+import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconStar, IconTruck } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const messagingStore = useMessagingStore();
 const announcementStore = useAnnouncementStore();
 
 const publishAvailability = () => {
-  alert('Fonctionnalité de publication de disponibilité à venir !');
+  useRouter().push('/app/carrier/availability/create');
 };
+// ... rest of script
+
 
 const currentUser = computed(() => authStore.currentUser);
 

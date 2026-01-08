@@ -76,15 +76,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import {
-  IconHome,
-  IconDashboard,
-  IconTruck,
-  IconMessage,
-  IconSettings,
-  IconChevronLeft,
-  IconChevronRight
-} from '@tabler/icons-vue';
+import { IconTruck, IconDashboard, IconMessage, IconSettings, IconChevronLeft, IconChevronRight } from '@tabler/icons-vue';
 import { ROLES } from '~/utils/roles';
 import { useAuthStore } from '~/stores/auth';
 
@@ -106,17 +98,12 @@ interface MenuItem {
   label: string;
   to: string;
   icon: any;
-  roles: string[]; // ['all'] or specific roles
+  roles: string[];
   badge?: number;
 }
 
 const menuItems = computed<MenuItem[]>(() => [
-  {
-    label: 'Accueil',
-    to: '/',
-    icon: IconHome,
-    roles: ['all']
-  },
+  // Transporteur
   {
     label: 'Tableau de bord',
     to: '/app/shipper',
@@ -124,9 +111,23 @@ const menuItems = computed<MenuItem[]>(() => [
     roles: [ROLES.Shipper]
   },
   {
+    label: 'Annonces',
+    to: '/app/shipper/offers',
+    icon: IconTruck,
+    roles: [ROLES.Shipper]
+  },
+
+  // Expediteur
+  {
     label: 'Tableau de bord',
     to: '/app/carrier',
     icon: IconDashboard,
+    roles: [ROLES.Carrier]
+  },
+  {
+    label: 'Disponibilités',
+    to: '/app/carrier/availability',
+    icon: IconTruck,
     roles: [ROLES.Carrier]
   },
   {

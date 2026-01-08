@@ -343,8 +343,105 @@ export const mockConversations: Conversation[] = [
     status: 'active',
     createdAt: '2025-11-23T11:00:00Z',
     updatedAt: '2025-11-23T14:30:00Z',
+    lastMessage: mockMessages[2],
   },
+  {
+    id: 'conv-2',
+    announcementId: 'ann-3',
+    participants: [mockUsers[0], mockUsers[4]],
+    unreadCount: 0,
+    status: 'active',
+    createdAt: '2025-11-19T09:30:00Z',
+    updatedAt: '2025-11-19T10:15:00Z',
+    lastMessage: {
+      id: 'msg-6',
+      conversationId: 'conv-2',
+      senderId: '1',
+      content: 'C\'est noté. Merci pour votre réactivité.',
+      read: true,
+      createdAt: '2025-11-19T10:15:00Z',
+    }
+  },
+  {
+    id: 'conv-3',
+    announcementId: 'ann-1',
+    participants: [mockUsers[0], mockUsers[1]],
+    unreadCount: 2,
+    status: 'active',
+    createdAt: '2025-11-21T08:00:00Z',
+    updatedAt: '2025-11-21T09:45:00Z',
+    lastMessage: {
+      id: 'msg-9',
+      conversationId: 'conv-3',
+      senderId: '2',
+      content: 'Je peux être là à 8h demain.',
+      read: false,
+      createdAt: '2025-11-21T09:45:00Z',
+    }
+  }
 ];
+
+// Messages supplémentaires pour conv-2 et conv-3
+const additionalMessages: Message[] = [
+  {
+    id: 'msg-4',
+    conversationId: 'conv-2',
+    senderId: '5',
+    content: 'Bonjour, concernant le transport de vrac, j\'ai un camion benne.',
+    read: true,
+    createdAt: '2025-11-19T09:30:00Z',
+  },
+  {
+    id: 'msg-5',
+    conversationId: 'conv-2',
+    senderId: '1',
+    content: 'Bonjour, parfait. Quand pouvez-vous charger ?',
+    read: true,
+    createdAt: '2025-11-19T09:45:00Z',
+  },
+  {
+    id: 'msg-6',
+    conversationId: 'conv-2',
+    senderId: '5',
+    content: 'Je serai disponible le 10 décembre comme demandé.',
+    read: true,
+    createdAt: '2025-11-19T09:50:00Z',
+  },
+  {
+    id: 'msg-7',
+    conversationId: 'conv-3',
+    senderId: '2',
+    content: 'Salut, je suis dispo pour tes 15 palettes.',
+    read: true,
+    createdAt: '2025-11-21T08:00:00Z',
+  },
+  {
+    id: 'msg-8',
+    conversationId: 'conv-3',
+    senderId: '1',
+    content: 'Super. Quel est ton tarif ?',
+    read: true,
+    createdAt: '2025-11-21T08:30:00Z',
+  },
+  {
+    id: 'msg-9',
+    conversationId: 'conv-3',
+    senderId: '2',
+    content: 'Je peux le faire pour 130000.',
+    read: false,
+    createdAt: '2025-11-21T08:45:00Z',
+  },
+  {
+    id: 'msg-10',
+    conversationId: 'conv-3',
+    senderId: '2',
+    content: 'Je peux être là à 8h demain.',
+    read: false,
+    createdAt: '2025-11-21T09:45:00Z',
+  }
+];
+
+mockMessages.push(...additionalMessages);
 
 // Avis mockés
 export const mockReviews: Review[] = [
