@@ -1,3 +1,9 @@
+export * from './api'
+export * from './auth'
+
+
+
+
 // Types pour les utilisateurs
 export type UserRole = 'shipper' | 'carrier'; // chargeur | transporteur
 
@@ -8,14 +14,16 @@ export interface User {
   lastName: string;
   role: UserRole;
   company?: string;
-  phone: string;
+  phone?: string;
   avatar?: string;
-  rating: number;
-  reviewCount: number;
-  verified: boolean;
-  createdAt: string;
+  rating?: number;
+  reviewCount?: number;
+  verified?: boolean;
+  createdAt?: string;
+  status?: 'pending' | 'active' | 'suspended';
   documents?: Document[];
 }
+
 
 // Types pour les annonces
 export type CargoType = 'palettes' | 'vrac' | 'conteneur' | 'frigorifique' | 'dangereux' | 'autre';

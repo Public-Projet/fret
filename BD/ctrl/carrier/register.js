@@ -1,6 +1,6 @@
 module.exports = {
-  friendlyName: 'Inscription',
-  description: 'Inscrire un nouvel Incubé.',
+  friendlyName: 'Inscription transporteur',
+  description: 'Inscrire un nouveau transporteur.',
 
   inputs: {
     email: {
@@ -28,21 +28,23 @@ module.exports = {
     },
     emailAlreadyInUse: {
       statusCode: 409,
-      description: 'L\'email fourni est déjà utilisé.'
+      description: 'Cet email est déjà utilisé.',
+      responseType: 'json'
     },
     invalidPhoneFormat: {
       statusCode: 400,
-      description: 'Le format du numéro de téléphone est invalide.'
+      description: 'Le format du numéro de téléphone est invalide.',
+      responseType: 'json'
     },
     passwordFormatInvalid: {
       statusCode: 400,
-      description: 'Le format du mot de passe est invalide.'
+      description: 'Le format du mot de passe est invalide.',
+      responseType: 'json'
     }
   },
 
-  fn: async function ({ email, password, nom, prenom }) {
+  fn: async function ({ email, password, firstname, lastname }) {
     const crypto = require('crypto');
-    const bcrypt = require('bcryptjs');
 
     const emailProofToken = crypto.randomBytes(32).toString('hex');
     const emailProofTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 heures
@@ -51,23 +53,32 @@ module.exports = {
       const newCarrier = await Carrier.create({
         email: email.toLowerCase(),
         password: password,
-        nom,
-        prenom,
+        firstname,
+        lastname,
+        username: `${firstname.toLowerCase()}_${lastname.toLowerCase()}`,
         status: 'pending',
         emailProofToken,
         emailProofTokenExpiresAt
       }).fetch();
     } catch (err) {
       if (err.code === 'E_UNIQUE') {
-        throw 'emailAlreadyInUse';
+        throw {
+          emailAlreadyInUse: {
+            message: 'Cet email est déjà utilisé.'
+          }
+        };
       }
       if (err.message) {
         if (err.message.includes('invalidFormat') || err.message.includes('The phone number format is invalid')) {
-          throw { invalidPhoneFormat: 'Le format du numéro de téléphone est invalide.' };
+          throw {
+            invalidPhoneFormat: {
+              message: 'Le format du numéro de téléphone est invalide.'
+            }
+          };
         }
 
         if (err.message.includes('validatePassword') || err.message.includes('Le mot de passe')) {
-          let cleanMsg = '';
+          let cleanMsg = 'Le mot de passe doit contenir au moins 8 caractères, avec 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.';
 
           if (err.message.includes("Additional data: '")) {
             const parts = err.message.split("Additional data: '");
@@ -76,22 +87,18 @@ module.exports = {
             }
           }
 
-          if (!cleanMsg && err.message.includes('Le mot de passe doit contenir')) {
-            cleanMsg = 'Le mot de passe doit contenir au moins 8 caractères, avec 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.';
-          }
-
-          if (cleanMsg) {
-            throw { passwordFormatInvalid: cleanMsg };
-          }
+          throw {
+            passwordFormatInvalid: { message: cleanMsg }
+          };
         }
 
         if (err.raw && err.raw.invalid) {
-          throw { passwordFormatInvalid: err.raw.invalid };
+          throw { passwordFormatInvalid: { message: err.raw.invalid } };
         }
       }
 
       if (err.invalid) {
-        throw { passwordFormatInvalid: err.invalid };
+        throw { passwordFormatInvalid: { message: err.invalid } };
       }
 
       throw err;
@@ -104,16 +111,18 @@ module.exports = {
         layout: 'default-layout',
         template: 'carrier/verify-email',
         to: email,
-        subject: 'Vérifiez votre adresse email - CyberIncub',
+        subject: 'Vérifiez votre adresse email - Bourse de Fret',
         appSlug: 'bf',
         templateData: {
-          firstName: prenom,
-          verificationLink: `${appUrls}/auth/verify-email?token=${emailProofToken}`,
+          firstName: firstname,
+          role: 'Transporteur',
+          roleDescription: 'En tant que transporteur, vous pourrez consulter les offres de fret et proposer vos services.',
+          verificationLink: `${appUrls}/auth/verify-carrier-email?token=${emailProofToken}`,
           expirationDelay: '24 heures'
         }
       });
     } catch (error) {
-      sails.log.error('Échec de l\'envoi de l\'email de vérification au nouvel incubé :', error);
+      sails.log.error('Échec de l\'envoi de l\'email de vérification au nouveau transporteur :', error);
     }
 
     return {

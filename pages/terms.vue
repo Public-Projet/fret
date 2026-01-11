@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Conditions d\'Utilisation | Bourse de Fret Bénin'
+  title: 'Conditions d\'utilisation'
 });
 
 definePageMeta({

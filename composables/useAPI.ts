@@ -1,0 +1,125 @@
+/**
+ * Composable useAPI - Gestion des appels API avec cookies httpOnly
+ */
+
+import type { ApiError, ApiResponse } from '~/types/api';
+
+export function useAPI() {
+  const config = useRuntimeConfig();
+  const baseURL = config.public.baseAPI as string;
+
+  /**
+   * Effectue une requête HTTP générique
+   */
+  async function request<T>(
+    url: string,
+    options: RequestInit = {}
+  ): Promise<ApiResponse<T>> {
+    const fullUrl = `${baseURL}${url}`;
+
+    const defaultOptions: RequestInit = {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    };
+
+    try {
+      const response = await fetch(fullUrl, {
+        ...defaultOptions,
+        ...options,
+        headers: {
+          ...defaultOptions.headers,
+          ...options.headers,
+        },
+      });
+
+      // Parse la réponse JSON
+      let responseData: T | null = null;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        responseData = await response.json();
+      }
+
+      if (!response.ok) {
+        // Gestion des erreurs HTTP
+        const errorData = responseData as Record<string, unknown> | null;
+
+        // Redirection vers login si non authentifié
+        if (response.status === 401) {
+          const router = useRouter();
+          router.push('/auth/login');
+        }
+
+        return {
+          data: null,
+          error: {
+            message: (errorData?.message as string) || `Erreur HTTP ${response.status}`,
+            statusCode: response.status,
+            data: errorData ?? undefined,
+          },
+          success: false,
+        };
+      }
+
+      return {
+        data: responseData,
+        error: null,
+        success: true,
+      };
+    } catch (err) {
+      const error = err as Error;
+      return {
+        data: null,
+        error: {
+          message: error.message || 'Erreur réseau',
+          statusCode: 0,
+        },
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Requête GET
+   */
+  async function get<T>(url: string): Promise<ApiResponse<T>> {
+    return request<T>(url, { method: 'GET' });
+  }
+
+  /**
+   * Requête POST
+   */
+  async function post<T>(url: string, data?: object): Promise<ApiResponse<T>> {
+    return request<T>(url, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  /**
+   * Requête PUT
+   */
+  async function put<T>(url: string, data?: object): Promise<ApiResponse<T>> {
+    return request<T>(url, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  /**
+   * Requête DELETE
+   */
+  async function del<T>(url: string): Promise<ApiResponse<T>> {
+    return request<T>(url, { method: 'DELETE' });
+  }
+
+  return {
+    request,
+    get,
+    post,
+    put,
+    del,
+  };
+}

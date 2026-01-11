@@ -235,7 +235,7 @@ import { ref } from 'vue';
 import { IconCheck, IconChevronDown } from '@tabler/icons-vue';
 
 useHead({
-  title: 'Tarifs | Bourse de Fret Bénin'
+  title: 'Tarification'
 });
 
 definePageMeta({

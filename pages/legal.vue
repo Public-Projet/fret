@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Mentions Légales | Bourse de Fret Bénin'
+  title: 'Mentions légales'
 });
 
 definePageMeta({

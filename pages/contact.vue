@@ -83,7 +83,7 @@
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom</label>
                   <input type="text" id="lastName" v-model="form.lastName" required
                     class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
-                    placeholder="Dupont" />
+                    placeholder="Dossou" />
                 </div>
               </div>
 
@@ -91,7 +91,7 @@
                 <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
                 <input type="email" id="email" v-model="form.email" required
                   class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
-                  placeholder="jean.dupont@exemple.com" />
+                  placeholder="jean.dossou@exemple.com" />
               </div>
 
               <div>
@@ -146,7 +146,7 @@ import { ref, reactive } from 'vue';
 import { IconMail, IconPhone, IconMapPin, IconSend } from '@tabler/icons-vue';
 
 useHead({
-  title: 'Contact | Bourse de Fret Bénin'
+  title: 'Contact'
 });
 
 definePageMeta({

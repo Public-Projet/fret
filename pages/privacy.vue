@@ -77,7 +77,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Politique de Confidentialité | Bourse de Fret Bénin'
+  title: 'Politique de confidentialité'
 });
 
 definePageMeta({

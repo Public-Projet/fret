@@ -28,15 +28,18 @@ module.exports = {
         },
         emailAlreadyInUse: {
             statusCode: 409,
-            description: 'L\'email fourni est déjà utilisé.'
+            description: 'Cet email est déjà utilisé.',
+            responseType: 'json'
         },
         invalidPhoneFormat: {
             statusCode: 400,
-            description: 'Le format du numéro de téléphone est invalide.'
+            description: 'Le format du numéro de téléphone est invalide.',
+            responseType: 'json'
         },
         passwordFormatInvalid: {
             statusCode: 400,
-            description: 'Le format du mot de passe est invalide.'
+            description: 'Le format du mot de passe est invalide.',
+            responseType: 'json'
         }
     },
 
@@ -59,15 +62,23 @@ module.exports = {
             }).fetch();
         } catch (err) {
             if (err.code === 'E_UNIQUE') {
-                throw 'emailAlreadyInUse';
+                throw {
+                    emailAlreadyInUse: {
+                        message: 'Cet email est déjà utilisé.'
+                    }
+                };
             }
             if (err.message) {
                 if (err.message.includes('invalidFormat') || err.message.includes('The phone number format is invalid')) {
-                    throw { invalidPhoneFormat: 'Le format du numéro de téléphone est invalide.' };
+                    throw {
+                        invalidPhoneFormat: {
+                            message: 'Le format du numéro de téléphone est invalide.'
+                        }
+                    };
                 }
 
                 if (err.message.includes('validatePassword') || err.message.includes('Le mot de passe')) {
-                    let cleanMsg = '';
+                    let cleanMsg = 'Le mot de passe doit contenir au moins 8 caractères, avec 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.';
 
                     if (err.message.includes("Additional data: '")) {
                         const parts = err.message.split("Additional data: '");
@@ -76,22 +87,18 @@ module.exports = {
                         }
                     }
 
-                    if (!cleanMsg && err.message.includes('Le mot de passe doit contenir')) {
-                        cleanMsg = 'Le mot de passe doit contenir au moins 8 caractères, avec 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.';
-                    }
-
-                    if (cleanMsg) {
-                        throw { passwordFormatInvalid: cleanMsg };
-                    }
+                    throw { passwordFormatInvalid: { message: cleanMsg } };
                 }
 
                 if (err.raw && err.raw.invalid) {
-                    throw { passwordFormatInvalid: err.raw.invalid };
+                    throw { passwordFormatInvalid: { message: err.raw.invalid } };
                 }
             }
 
             if (err.invalid) {
-                throw { passwordFormatInvalid: err.invalid };
+                throw {
+                    passwordFormatInvalid: { message: err.invalid }
+                };
             }
 
             throw err;
@@ -108,7 +115,9 @@ module.exports = {
                 appSlug: 'bf',
                 templateData: {
                     firstName: firstname,
-                    verificationLink: `${appUrls}/auth/verify-email?token=${emailProofToken}`,
+                    role: 'Expéditeur',
+                    roleDescription: 'En tant qu\'expéditeur, vous pourrez publier vos offres de fret et trouver des transporteurs fiables.',
+                    verificationLink: `${appUrls}/auth/verify-shipper-email?token=${emailProofToken}`,
                     expirationDelay: '24 heures'
                 }
             });

@@ -1,52 +1,55 @@
 <template>
   <section class="relative py-24 overflow-hidden">
     <!-- Background animé -->
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-green-600">
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-green-600 dark:from-slate-900 dark:via-gray-900 dark:to-slate-950">
       <div class="absolute inset-0 opacity-20">
         <div
-          class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob">
+          class="absolute top-0 left-0 w-96 h-96 bg-white dark:bg-blue-500/30 rounded-full mix-blend-overlay filter blur-3xl animate-blob">
         </div>
         <div
-          class="absolute bottom-0 right-0 w-96 h-96 bg-green-400 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000">
+          class="absolute bottom-0 right-0 w-96 h-96 bg-green-400 dark:bg-emerald-500/30 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000">
         </div>
       </div>
     </div>
 
     <div class="container-custom relative z-10 text-center">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
+        <h2 class="text-4xl md:text-6xl font-black text-white dark:text-gray-100 mb-6 leading-tight">
           Prêt à transformer votre
-          <span class="block">logistique ?</span>
+          <span
+            class="block bg-gradient-to-r from-green-400 via-green-300 to-green-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">logistique
+            ?</span>
         </h2>
-        <p class="text-xl md:text-2xl text-blue-100 mb-12 max-w-2xl mx-auto">
+        <p class="text-xl md:text-2xl text-blue-100 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
           Rejoignez des utilisateurs qui ont déjà optimisé leur transport avec Bourse de Fret Bénin
         </p>
 
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
           <NuxtLink to="/auth/register"
-            class="group px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-xl shadow-2xl hover:shadow-white/30 transition-all duration-300 hover:scale-110 flex items-center space-x-3">
+            class="group px-10 py-5 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-2xl font-black text-xl shadow-2xl hover:shadow-white/30 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-110 flex items-center space-x-3 dark:border dark:border-gray-700">
             <span>Créer un compte gratuit</span>
             <IconArrowRight class="w-6 h-6 group-hover:translate-x-2 transition-transform" />
           </NuxtLink>
 
           <NuxtLink to="/offers"
-            class="px-10 py-5 border-4 border-white text-white rounded-2xl font-black text-xl hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-110">
+            class="px-10 py-5 border-4 border-white dark:border-gray-600 text-white dark:text-gray-200 rounded-2xl font-black text-xl hover:bg-white hover:text-blue-600 dark:hover:bg-gray-800 dark:hover:text-emerald-400 transition-all duration-300 hover:scale-110">
             Voir les annonces
           </NuxtLink>
         </div>
 
         <!-- Mini features -->
-        <div class="flex flex-wrap justify-center gap-8 text-white">
+        <div class="flex flex-wrap justify-center gap-8 text-white dark:text-gray-300">
           <div class="flex items-center space-x-2">
-            <IconCircleCheck class="w-6 h-6" />
+            <IconCircleCheck class="w-6 h-6 dark:text-emerald-400" />
             <span class="font-semibold">Sans engagement</span>
           </div>
           <div class="flex items-center space-x-2">
-            <IconCircleCheck class="w-6 h-6" />
+            <IconCircleCheck class="w-6 h-6 dark:text-emerald-400" />
             <span class="font-semibold">Inscription gratuite</span>
           </div>
           <div class="flex items-center space-x-2">
-            <IconCircleCheck class="w-6 h-6" />
+            <IconCircleCheck class="w-6 h-6 dark:text-emerald-400" />
             <span class="font-semibold">Support 24/7</span>
           </div>
         </div>
