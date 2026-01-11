@@ -14,27 +14,46 @@ module.exports = {
             description: 'Email vérifié avec succès.'
         },
         invalidToken: {
+            statusCode: 400,
             description: 'Token invalide ou expiré.',
-            responseType: 'badRequest'
+            responseType: 'json'
+        },
+        expiredToken: {
+            statusCode: 410,
+            description: 'Le lien de vérification a expiré.',
+            responseType: 'json'
         }
     },
 
     fn: async function ({ token }) {
-        const shipper = await Shipper.findOne({
-            emailProofToken: token,
-            emailProofTokenExpiresAt: { '>': Date.now() }
-        });
+        // Chercher l'expéditeur avec ce token (sans vérifier l'expiration)
+        const shipperWithToken = await Shipper.findOne({ emailProofToken: token });
 
-        if (!shipper) { throw 'invalidToken'; }
+        if (!shipperWithToken) {
+            throw {
+                invalidToken: {
+                    message: 'Le lien de vérification est invalide. Veuillez vous réinscrire.'
+                }
+            };
+        }
 
-        await Shipper.updateOne({ id: shipper.id }).set({
+        // Vérifier si le token est expiré
+        if (shipperWithToken.emailProofTokenExpiresAt <= Date.now()) {
+            throw {
+                expiredToken: {
+                    message: 'Le lien de vérification a expiré. Veuillez demander un nouveau lien.'
+                }
+            };
+        }
+
+        await Shipper.updateOne({ id: shipperWithToken.id }).set({
             status: 'active',
             emailProofToken: '',
             emailProofTokenExpiresAt: 0
         });
 
         return {
-            message: 'Email vérifié avec succès. Vous pouvez maintenant vous connecter.'
+            message: 'Votre email a été vérifié avec succès ! Vous pouvez maintenant vous connecter.'
         };
     }
 };

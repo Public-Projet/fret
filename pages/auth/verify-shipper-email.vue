@@ -1,0 +1,156 @@
+<template>
+  <NuxtLayout name="auth"
+    bg-image="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+    quote="Votre compte expéditeur est presque prêt !" author="L'équipe BourseFret">
+    <div class="w-full space-y-8 text-center">
+      <!-- Loading State -->
+      <div v-if="loading" class="py-12">
+        <div
+          class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+          <IconLoader2 class="w-8 h-8 text-primary-600 dark:text-primary-400 animate-spin" />
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          Vérification en cours...
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400">
+          Veuillez patienter pendant que nous vérifions votre email.
+        </p>
+      </div>
+
+      <!-- Success State -->
+      <div v-else-if="success" class="py-12">
+        <div
+          class="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+          <IconCircleCheck class="w-12 h-12 text-green-600 dark:text-green-400" />
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          Email vérifié avec succès !
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">
+          {{ successMessage }}
+        </p>
+        <NuxtLink to="/auth/login"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-primary-500/30">
+          <IconLogin class="w-5 h-5" />
+          Se connecter en tant qu'Expéditeur
+        </NuxtLink>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="py-12">
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+          <IconCircleX class="w-12 h-12 text-red-600 dark:text-red-400" />
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          Échec de la vérification
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">
+          {{ errorMessage }}
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <NuxtLink to="/auth/register?role=shipper"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all">
+            <IconUserPlus class="w-5 h-5" />
+            S'inscrire à nouveau
+          </NuxtLink>
+          <NuxtLink to="/auth/login"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+            <IconLogin class="w-5 h-5" />
+            Connexion
+          </NuxtLink>
+        </div>
+      </div>
+
+      <!-- No Token State -->
+      <div v-else class="py-12">
+        <div
+          class="w-20 h-20 mx-auto mb-6 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
+          <IconAlertTriangle class="w-12 h-12 text-yellow-600 dark:text-yellow-400" />
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          Lien invalide
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">
+          Le lien de vérification semble incomplet ou invalide.
+        </p>
+        <NuxtLink to="/auth/register?role=shipper"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all">
+          <IconUserPlus class="w-5 h-5" />
+          S'inscrire
+        </NuxtLink>
+      </div>
+    </div>
+  </NuxtLayout>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import {
+  IconLoader2,
+  IconCircleCheck,
+  IconCircleX,
+  IconLogin,
+  IconUserPlus,
+  IconAlertTriangle
+} from '@tabler/icons-vue';
+
+definePageMeta({
+  layout: false
+});
+
+const route = useRoute();
+const api = useAPI();
+
+const loading = ref(false);
+const success = ref(false);
+const error = ref(false);
+const successMessage = ref('');
+const errorMessage = ref('');
+
+onMounted(async () => {
+  const token = route.query.token as string;
+
+  if (!token) {
+    return;
+  }
+
+  loading.value = true;
+
+  try {
+    const response = await api.post<{ message: string }>('/shipper/auth/verify-email', { token });
+
+    if (response.success && response.data) {
+      success.value = true;
+      successMessage.value = response.data.message || 'Votre email a été vérifié avec succès !';
+    } else {
+      error.value = true;
+
+      // Extraire le message d'erreur
+      if (response.error?.data) {
+        const errorData = response.error.data as Record<string, unknown>;
+        if (errorData.expiredToken && typeof errorData.expiredToken === 'object') {
+          errorMessage.value = (errorData.expiredToken as { message?: string }).message || 'Le lien de vérification a expiré.';
+        } else if (errorData.invalidToken && typeof errorData.invalidToken === 'object') {
+          errorMessage.value = (errorData.invalidToken as { message?: string }).message || 'Le lien de vérification est invalide.';
+        } else if (errorData.message) {
+          errorMessage.value = errorData.message as string;
+        } else {
+          errorMessage.value = 'Le lien de vérification est invalide ou a expiré.';
+        }
+      } else {
+        errorMessage.value = response.error?.message || 'Une erreur est survenue lors de la vérification.';
+      }
+    }
+  } catch (e) {
+    console.error('Erreur verification:', e);
+    error.value = true;
+    errorMessage.value = 'Une erreur inattendue est survenue.';
+  } finally {
+    loading.value = false;
+  }
+});
+
+useHead({
+  title: 'Vérification Email Expéditeur - Bourse de Fret',
+});
+</script>
