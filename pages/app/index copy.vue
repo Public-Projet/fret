@@ -78,7 +78,7 @@ const quickActions = computed(() => {
   } else {
     return [
       { label: 'Trouver du fret', description: 'Parcourir les annonces disponibles', icon: IconPlus, to: '/offers' },
-      { label: 'Mes trajets', description: 'Gérer vos transports en cours', icon: IconTruck, to: '/app/carrier' },
+      { label: 'Mes trajets', description: 'Gérer vos transports en cours', icon: IconTruck, to: '/app/uc' },
       { label: 'Messages', description: 'Voir vos conversations', icon: IconMessage, to: '/app/messages' },
     ];
   }

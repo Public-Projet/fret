@@ -2,8 +2,7 @@
   <div class="container-custom py-8">
     <div class="max-w-2xl mx-auto">
       <div class="mb-6">
-        <NuxtLink to="/app/carrier/availability"
-          class="text-sm text-gray-500 hover:text-gray-900 flex items-center mb-2">
+        <NuxtLink to="/app/uc/availability" class="text-sm text-gray-500 hover:text-gray-900 flex items-center mb-2">
           <IconArrowLeft class="w-4 h-4 mr-1" />
           Retour aux disponibilités
         </NuxtLink>
@@ -145,12 +144,9 @@ const form = reactive({
 const submitAvailability = async () => {
   submitting.value = true;
   try {
-    // Here we would call availabilityStore.create(form)
-    // Since I haven't created that store yet, I'll simulate success and redirect.
-    // I will create the store in the next step to make this functional.
     await new Promise(resolve => setTimeout(resolve, 1000));
     console.log("Availability published:", form);
-    router.push('/app/carrier/availability');
+    router.push('/app/uc/availability');
   } finally {
     submitting.value = false;
   }

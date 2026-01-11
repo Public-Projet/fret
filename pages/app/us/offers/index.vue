@@ -5,7 +5,7 @@
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mes annonces</h1>
         <p class="text-gray-600 dark:text-gray-400">Gérez vos demandes de transport</p>
       </div>
-      <NuxtLink to="/app/shipper/offers/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
+      <NuxtLink to="/app/us/offers/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
         <IconPlus class="w-5 h-5 mr-2" />
         Créer une annonce
       </NuxtLink>
@@ -40,7 +40,7 @@
         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Aucune annonce trouvée</h3>
         <p class="mt-1 text-gray-500 dark:text-gray-400">Commencez par créer votre première annonce de transport.</p>
         <div class="mt-6">
-          <NuxtLink to="/app/shipper/offers/create" class="btn btn-primary">
+          <NuxtLink to="/app/us/offers/create" class="btn btn-primary">
             Créer une annonce
           </NuxtLink>
         </div>
@@ -53,7 +53,7 @@
             <div class="flex-1">
               <div class="flex items-center justify-between md:justify-start md:space-x-4 mb-2">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-                  <NuxtLink :to="`/app/shipper/offers/${announcement.id}`" class="hover:text-primary-600">
+                  <NuxtLink :to="`/app/us/offers/${announcement.id}`" class="hover:text-primary-600">
                     {{ announcement.title }}
                   </NuxtLink>
                 </h3>
@@ -79,7 +79,7 @@
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ announcement.budget }}FCFA</p>
               </div>
               <div class="flex space-x-2">
-                <NuxtLink :to="`/app/shipper/offers/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">
+                <NuxtLink :to="`/app/us/offers/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">
                   <IconEye class="w-5 h-5" />
                 </NuxtLink>
                 <button v-if="announcement.status === 'pending'" @click="handleEdit(announcement)"

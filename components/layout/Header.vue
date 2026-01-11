@@ -49,12 +49,12 @@
                 leave-to-class="transform opacity-0 scale-95">
                 <div v-if="isUserMenuOpen"
                   class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1">
-                  <NuxtLink :to="isShipper ? '/app' : '/app/carrier'"
+                  <NuxtLink :to="isShipper ? '/app' : '/app/uc'"
                     class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     @click="closeUserMenu">
                     Tableau de bord
                   </NuxtLink>
-                  <NuxtLink :to="isShipper ? '/app/shipper/profile' : '/app/carrier/profile'"
+                  <NuxtLink :to="isShipper ? '/app/us/profile' : '/app/uc/profile'"
                     class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     @click="closeUserMenu">
                     Mon profil
@@ -162,7 +162,7 @@ const userInitials = computed(() => {
 const headerLinks = computed(() => {
   if (authStore.isAuthenticated) {
     return [
-      { label: 'Tableau de bord', to: authStore.isShipper ? '/app/shipper' : '/app/carrier' },
+      { label: 'Tableau de bord', to: authStore.isShipper ? '/app/us' : '/app/uc' },
       { label: 'Annonces', to: '/offers' },
       { label: 'Messages', to: '/app/messages', badge: unreadCount.value }
     ];

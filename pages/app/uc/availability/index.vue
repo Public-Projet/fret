@@ -5,8 +5,7 @@
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mes disponibilités</h1>
         <p class="text-gray-600 dark:text-gray-400">Gérez vos créneaux et véhicules disponibles</p>
       </div>
-      <NuxtLink to="/app/carrier/availability/create"
-        class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
+      <NuxtLink to="/app/uc/availability/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
         <IconPlus class="w-5 h-5 mr-2" />
         Publier une disponibilité
       </NuxtLink>
@@ -21,7 +20,7 @@
       <IconTruck class="w-16 h-16 mx-auto text-gray-300 mb-4" />
       <h3 class="text-lg font-medium text-gray-900 dark:text-white">Aucune disponibilité publiée</h3>
       <p class="text-gray-500 dark:text-gray-400 mt-2">Publiez vos trajets pour être visible des chargeurs.</p>
-      <NuxtLink to="/app/carrier/availability/create" class="btn btn-primary mt-6">
+      <NuxtLink to="/app/uc/availability/create" class="btn btn-primary mt-6">
         Publier maintenant
       </NuxtLink>
     </div>

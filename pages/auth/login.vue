@@ -114,7 +114,7 @@ const handleLogin = async () => {
       if (result.user.role === 'shipper') {
         router.push('/app');
       } else {
-        router.push('/app/carrier');
+        router.push('/app/uc');
       }
     } else {
       error.value = result.error || 'Erreur de connexion';

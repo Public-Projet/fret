@@ -6,14 +6,14 @@
 
     <div v-else-if="!announcement" class="text-center py-12">
       <p class="text-lg text-gray-500">Annonce non trouvée</p>
-      <NuxtLink to="/app/shipper/offers" class="btn btn-primary mt-4">Retour aux annonces</NuxtLink>
+      <NuxtLink to="/app/us/offers" class="btn btn-primary mt-4">Retour aux annonces</NuxtLink>
     </div>
 
     <div v-else>
       <!-- Header -->
       <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
         <div>
-          <NuxtLink to="/app/shipper/offers" class="text-sm text-gray-500 hover:text-gray-900 flex items-center mb-2">
+          <NuxtLink to="/app/us/offers" class="text-sm text-gray-500 hover:text-gray-900 flex items-center mb-2">
             <IconArrowLeft class="w-4 h-4 mr-1" />
             Retour à mes annonces
           </NuxtLink>
@@ -258,16 +258,6 @@ const acceptOffer = async (offerId: string) => {
 };
 
 const viewCarrierProfile = (carrierId: string) => {
-  // Navigate to public carrier profile - wait, we don't have public carrier profile pages yet?
-  // Or we use the new internal one? The prompt says "pages\app\carrier\profil.vue". 
-  // Assuming we might need a general user profile viewer or just send to the app/carrier/profile if logged in?
-  // Actually, usually you view *another* user's profile. 
-  // The requested pages were "pages/app/shipper/profile" (MY profile) and "pages/app/carrier/profile" (MY profile).
-  // So viewing a 3rd party carrier profile might need a different page like `/profile/[id]`.
-  // For now, I'll alert or just log, as that page wasn't explicitly requested (only "pages/app/carrier/profil.vue" which implies "mon profil").
-  // Let's check if the existing 'profile.vue' was generic. Yes.
-  // I will refrain from creating a NEW generic profile page unless needed. 
-  // I'll leave a TODO or simple alert.
   alert("Voir le profil du transporteur (Fonctionnalité à venir)");
 };
 

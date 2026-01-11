@@ -6,11 +6,11 @@
         <p class="text-gray-600 dark:text-gray-400">Tableau de bord Chargeur</p>
       </div>
       <div class="flex space-x-4 mt-4 md:mt-0">
-        <NuxtLink to="/app/shipper/offers" class="btn btn-outline flex items-center justify-center">
+        <NuxtLink to="/app/us/offers" class="btn btn-outline flex items-center justify-center">
           <IconList class="w-5 h-5 mr-2" />
           Mes annonces
         </NuxtLink>
-        <NuxtLink to="/app/shipper/offers/create" class="btn btn-primary flex items-center justify-center">
+        <NuxtLink to="/app/us/offers/create" class="btn btn-primary flex items-center justify-center">
           <IconPlus class="w-5 h-5 mr-2" />
           Créer une annonce
         </NuxtLink>
@@ -73,7 +73,7 @@
             </div>
             <NuxtLink :to="`/offers/${announcement.id}`" class="text-primary-600 text-sm font-medium">Voir</NuxtLink>
           </div>
-          <NuxtLink to="/app/shipper/offers" class="block text-center text-primary-600 text-sm mt-4 hover:underline">
+          <NuxtLink to="/app/us/offers" class="block text-center text-primary-600 text-sm mt-4 hover:underline">
             Voir toutes mes annonces</NuxtLink>
         </div>
       </div>
@@ -84,7 +84,7 @@
         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Boostez vos expéditions</h3>
         <p class="text-gray-500 dark:text-gray-400 mt-2">Créez une nouvelle annonce pour trouver rapidement un
           transporteur.</p>
-        <NuxtLink to="/app/shipper/offers/create" class="btn btn-primary mt-4">Nouvelle annonce</NuxtLink>
+        <NuxtLink to="/app/us/offers/create" class="btn btn-primary mt-4">Nouvelle annonce</NuxtLink>
       </div>
     </div>
   </div>

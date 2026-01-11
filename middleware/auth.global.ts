@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if (authStore.isAuthenticated) {
     // Ne peut pas accéder aux pages /auth/*
     if (to.path.startsWith('/auth') || to.path === '/app' || to.path === '/app/') {
-      return navigateTo(authStore.isShipper ? '/app/shipper' : '/app/carrier');
+      return navigateTo(authStore.isShipper ? '/app/us' : '/app/uc');
     }
   }
 

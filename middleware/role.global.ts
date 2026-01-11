@@ -13,18 +13,16 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const userRole = authStore.currentUser.role;
 
   // Règles d'accès pour les Expéditeurs (Shippers)
-  // Ne peuvent pas accéder aux routes transporteurs
   if (userRole === ROLES.Shipper) {
-    if (path.startsWith('/app/carrier')) {
-      return navigateTo('/app/shipper');
+    if (path.startsWith('/app/uc')) {
+      return navigateTo('/app/us');
     }
   }
 
   // Règles d'accès pour les Transporteurs (Carriers)
-  // Ne peuvent pas accéder aux routes expéditeurs
   if (userRole === ROLES.Carrier) {
-    if (path.startsWith('/app/shipper') || path.startsWith('/offers/create')) {
-      return navigateTo('/app/carrier');
+    if (path.startsWith('/app/us') || path.startsWith('/offers/create')) {
+      return navigateTo('/app/uc');
     }
   }
 });

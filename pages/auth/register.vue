@@ -135,7 +135,7 @@ const handleRegister = async () => {
       if (result.user.role === 'shipper') {
         router.push('/app');
       } else {
-        router.push('/app/carrier');
+        router.push('/app/uc');
       }
     } else {
       error.value = result.error || 'Erreur lors de l\'inscription';

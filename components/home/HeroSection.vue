@@ -1,16 +1,17 @@
 <template>
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Background animé avec gradient moderne -->
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 dark:from-slate-900 dark:via-gray-900 dark:to-slate-950">
       <div class="absolute inset-0 opacity-20">
         <div
-          class="absolute top-20 left-10 w-72 h-72 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob">
+          class="absolute top-20 left-10 w-72 h-72 bg-white dark:bg-blue-500/30 rounded-full mix-blend-overlay filter blur-3xl animate-blob">
         </div>
         <div
-          class="absolute top-40 right-10 w-72 h-72 bg-green-400 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-2000">
+          class="absolute top-40 right-10 w-72 h-72 bg-green-400 dark:bg-emerald-500/30 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-2000">
         </div>
         <div
-          class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-400 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000">
+          class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-400 dark:bg-purple-500/30 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000">
         </div>
       </div>
     </div>
@@ -29,22 +30,23 @@
           <div class="text-left max-w-3xl">
             <!-- Badge animé -->
             <div
-              class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8 animate-fade-in">
-              <IconSparkles class="w-5 h-5 text-yellow-300" />
-              <span class="text-sm text-white font-medium">La plateforme n°1 du transport au Bénin</span>
+              class="inline-flex items-center space-x-2 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-full px-6 py-3 mb-8 animate-fade-in">
+              <IconSparkles class="w-5 h-5 text-yellow-300 dark:text-yellow-400" />
+              <span class="text-sm text-white dark:text-gray-200 font-medium">La plateforme n°1 du transport au
+                Bénin</span>
             </div>
 
             <!-- Titre principal -->
-            <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+            <h1 class="text-5xl md:text-7xl font-black text-white dark:text-gray-100 mb-6 leading-tight">
               Révolutionnez votre
               <span
-                class="block mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 bg-clip-text text-transparent">
+                class="block mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">
                 logistique de transport
               </span>
             </h1>
 
             <!-- Sous-titre -->
-            <p class="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed max-w-2xl">
+            <p class="text-xl md:text-2xl text-blue-100 dark:text-gray-300 mb-12 leading-relaxed max-w-2xl">
               Connectez-vous instantanément avec des milliers de transporteurs qualifiés.
               Economisez jusqu'à 40% sur vos coûts de transport.
             </p>
@@ -52,14 +54,14 @@
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 mb-16">
               <NuxtLink to="/auth/register?role=shipper"
-                class="group relative px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
+                class="group relative px-8 py-4 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 flex items-center space-x-3 dark:border dark:border-gray-700">
                 <IconTruck class="w-6 h-6 group-hover:rotate-12 transition-transform" />
                 <span>Je suis chargeur</span>
                 <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </NuxtLink>
 
               <NuxtLink to="/auth/register?role=carrier"
-                class="group relative px-8 py-4 bg-green-500 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
+                class="group relative px-8 py-4 bg-green-500 dark:bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 dark:hover:shadow-emerald-400/40 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
                 <IconUsersGroup class="w-6 h-6 group-hover:scale-110 transition-transform" />
                 <span>Je suis transporteur</span>
                 <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
@@ -82,9 +84,11 @@
               alt="Transport Logistics" class="w-full h-auto" />
 
             <!-- Décorations -->
-            <div class="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
             <div
-              class="absolute -bottom-8 -left-8 w-40 h-40 bg-green-400/20 rounded-full blur-3xl animate-pulse animation-delay-2000">
+              class="absolute -top-6 -right-6 w-32 h-32 bg-white/10 dark:bg-blue-400/10 rounded-full blur-3xl animate-pulse">
+            </div>
+            <div
+              class="absolute -bottom-8 -left-8 w-40 h-40 bg-green-400/20 dark:bg-emerald-500/15 rounded-full blur-3xl animate-pulse animation-delay-2000">
             </div>
           </div>
         </div>
@@ -93,7 +97,7 @@
 
     <!-- Scroll indicator -->
     <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-      <IconChevronDown class="w-8 h-8 text-white/70" />
+      <IconChevronDown class="w-8 h-8 text-white/70 dark:text-gray-400" />
     </div>
 
     <!-- Wave separator moderne -->

@@ -106,13 +106,13 @@ const menuItems = computed<MenuItem[]>(() => [
   // Transporteur
   {
     label: 'Tableau de bord',
-    to: '/app/shipper',
+    to: '/app/us',
     icon: IconDashboard,
     roles: [ROLES.Shipper]
   },
   {
     label: 'Annonces',
-    to: '/app/shipper/offers',
+    to: '/app/us/offers',
     icon: IconTruck,
     roles: [ROLES.Shipper]
   },
@@ -120,13 +120,13 @@ const menuItems = computed<MenuItem[]>(() => [
   // Expediteur
   {
     label: 'Tableau de bord',
-    to: '/app/carrier',
+    to: '/app/uc',
     icon: IconDashboard,
     roles: [ROLES.Carrier]
   },
   {
     label: 'Disponibilités',
-    to: '/app/carrier/availability',
+    to: '/app/uc/availability',
     icon: IconTruck,
     roles: [ROLES.Carrier]
   },
