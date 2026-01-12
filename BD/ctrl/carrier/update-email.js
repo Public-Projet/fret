@@ -1,0 +1,98 @@
+module.exports = {
+  friendlyName: 'Mettre à jour l\'email',
+  description: 'Mettre à jour l\'email du transporteur connecté.',
+
+  inputs: {
+    email: {
+      type: 'string',
+      required: true,
+      isEmail: true,
+      description: 'La nouvelle adresse email.'
+    },
+    password: {
+      type: 'string',
+      required: true,
+      description: 'Le mot de passe actuel pour confirmer la modification.'
+    }
+  },
+
+  exits: {
+    success: {
+      statusCode: 200,
+      description: 'Email mis à jour avec succès.'
+    },
+    emailAlreadyInUse: {
+      statusCode: 409,
+      description: 'L\'adresse email fournie est déjà utilisée.',
+      responseType: 'json'
+    },
+    badCombo: {
+      statusCode: 401,
+      description: 'Mot de passe incorrect.',
+      responseType: 'json'
+    }
+  },
+
+  fn: async function ({ email, password }) {
+    const bcrypt = require('bcryptjs');
+    const carrier = await Carrier.findOne({ id: this.req.me.id });
+
+    if (!carrier) {
+      throw {
+        badCombo: {
+          message: 'Utilisateur introuvable.'
+        }
+      };
+    }
+
+    const passwordsMatch = await bcrypt.compare(password, carrier.password);
+    if (!passwordsMatch) {
+      throw {
+        badCombo: {
+          message: 'Le mot de passe saisi est incorrect.'
+        }
+      };
+    }
+
+    try {
+      const updatedCarrier = await Carrier.updateOne({ id: this.req.me.id })
+        .set({
+          email: email.toLowerCase()
+        });
+
+      // Notifier le transporteur
+      await sails.helpers.sender.notification.with({
+        recipientId: this.req.me.id,
+        model: 'carrier',
+        app: 'bf',
+        title: 'Email mis à jour',
+        content: `Votre adresse email a été mise à jour avec succès vers ${email.toLowerCase()}.`,
+        priority: 'normal',
+        isForCarrier: true
+      }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification de mise à jour d\'email :', err));
+
+      return {
+        message: 'Votre adresse email a été mise à jour avec succès.',
+        user: {
+          id: updatedCarrier.id,
+          email: updatedCarrier.email,
+          lastname: updatedCarrier.lastname,
+          firstname: updatedCarrier.firstname,
+          role: updatedCarrier.role,
+          status: updatedCarrier.status,
+          photoUrl: updatedCarrier.photoUrl
+        }
+      };
+
+    } catch (err) {
+      if (err.code === 'E_UNIQUE') {
+        throw {
+          emailAlreadyInUse: {
+            message: 'Cette adresse email est déjà utilisée par un autre compte.'
+          }
+        };
+      }
+      throw err;
+    }
+  }
+};

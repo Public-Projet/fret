@@ -1,26 +1,22 @@
 module.exports = {
-  'POST /api/v1/shipper/auth/register': {
-    action: 'shipper/auth/register',
-    swagger: { tags: ['EXPEDITEUR - AUTH'] }
+  'GET /api/v1/carrier/me': {
+    policy: ['isAuthenticated', 'isCarrier'],
+    action: 'carrier/profile/get-profile',
+    swagger: { tags: ['TRANSPORTEUR - PROFILE'] }
   },
-  'POST /api/v1/shipper/auth/verify-email': {
-    action: 'shipper/auth/verify-email',
-    swagger: { tags: ['EXPEDITEUR - AUTH'] }
+  'PATCH /api/v1/carrier/update-profile': {
+    policy: ['isAuthenticated', 'isCarrier'],
+    action: 'carrier/profile/update-profile',
+    swagger: { tags: ['TRANSPORTEUR - PROFILE'] }
   },
-  'POST /api/v1/shipper/auth/login': {
-    action: 'shipper/auth/login',
-    swagger: { tags: ['EXPEDITEUR - AUTH'] }
+  'PATCH /api/v1/carrier/update-password': {
+    policy: ['isAuthenticated', 'isCarrier'],
+    action: 'carrier/profile/update-password',
+    swagger: { tags: ['TRANSPORTEUR - PROFILE'] }
   },
-  'POST /api/v1/shipper/auth/logout': {
-    action: 'shipper/auth/logout',
-    swagger: { tags: ['EXPEDITEUR - AUTH'] }
-  },
-  'POST /api/v1/shipper/auth/forgot-password': {
-    action: 'shipper/auth/forgot-password',
-    swagger: { tags: ['EXPEDITEUR - AUTH'] }
-  },
-  'POST /api/v1/shipper/auth/reset-password': {
-    action: 'shipper/auth/reset-password',
-    swagger: { tags: ['EXPEDITEUR - AUTH'] }
+  'PATCH /api/v1/carrier/update-email': {
+    policy: ['isAuthenticated', 'isCarrier'],
+    action: 'carrier/profile/update-email',
+    swagger: { tags: ['TRANSPORTEUR - PROFILE'] }
   },
 };
