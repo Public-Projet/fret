@@ -283,7 +283,7 @@ const handleLogin = async () => {
     if (result.success && result.user) {
       // Redirection selon le rôle
       if (result.user.role === 'shipper') {
-        router.push('/app');
+        router.push('/app/us');
       } else {
         router.push('/app/uc');
       }

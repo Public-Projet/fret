@@ -17,10 +17,15 @@ export function useAPI() {
   ): Promise<ApiResponse<T>> {
     const fullUrl = `${baseURL}${url}`;
 
+    // Récupérer le token JWT depuis le cookie
+    const tokenCookie = useCookie('auth_token');
+    const token = tokenCookie.value;
+
     const defaultOptions: RequestInit = {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         ...options.headers,
       },
     };
@@ -109,6 +114,16 @@ export function useAPI() {
   }
 
   /**
+   * Requête PATCH
+   */
+  async function patch<T>(url: string, data?: object): Promise<ApiResponse<T>> {
+    return request<T>(url, {
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  /**
    * Requête DELETE
    */
   async function del<T>(url: string): Promise<ApiResponse<T>> {
@@ -120,6 +135,8 @@ export function useAPI() {
     get,
     post,
     put,
+    patch,
     del,
   };
 }
+
