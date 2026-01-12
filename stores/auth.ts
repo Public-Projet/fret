@@ -53,7 +53,7 @@ export const useAuthStore = defineStore('auth', {
     /**
      * Connexion utilisateur (appel API réel)
      */
-    async login(email: string, password: string, role: UserRole) {
+    async login(email: string, password: string, role: UserRole, rememberMe: boolean = false) {
       this.isLoading = true;
 
       const api = useAPI();
@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
         ? '/shipper/auth/login'
         : '/carrier/auth/login';
 
-      const response = await api.post<LoginResponse>(endpoint, { email, password });
+      const response = await api.post<LoginResponse>(endpoint, { email, password, rememberMe });
 
       this.isLoading = false;
 

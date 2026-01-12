@@ -1,5 +1,5 @@
 module.exports = {
-  friendlyName: 'Réinitialiser le mot de passe',
+  friendlyName: 'Réinitialiser le mot de passe transporteur',
   description: 'Réinitialiser le mot de passe en utilisant un token valide.',
 
   inputs: {
@@ -18,27 +18,45 @@ module.exports = {
       description: 'Réinitialisation de mot de passe réussie.'
     },
     invalidToken: {
-      description: 'Token invalide ou expiré.',
-      statusCode: 400
+      statusCode: 400,
+      description: 'Token invalide.',
+      responseType: 'json'
+    },
+    expiredToken: {
+      statusCode: 410,
+      description: 'Le lien de réinitialisation a expiré.',
+      responseType: 'json'
     },
     passwordFormatInvalid: {
       statusCode: 400,
-      description: 'Le format du mot de passe est invalide.'
+      description: 'Le format du mot de passe est invalide.',
+      responseType: 'json'
     }
   },
 
   fn: async function ({ token, password }) {
-    const bcrypt = require('bcryptjs');
+    // Chercher le transporteur avec ce token (sans vérifier l'expiration)
+    const carrierWithToken = await Carrier.findOne({ passwordResetToken: token });
 
-    const carrier = await Carrier.findOne({
-      passwordResetToken: token,
-      passwordResetTokenExpiresAt: { '>': Date.now() }
-    });
+    if (!carrierWithToken) {
+      throw {
+        invalidToken: {
+          message: 'Le lien de réinitialisation est invalide. Veuillez faire une nouvelle demande.'
+        }
+      };
+    }
 
-    if (!carrier) { throw { invalidToken: 'Token invalide ou expiré.' }; }
+    // Vérifier si le token est expiré
+    if (carrierWithToken.passwordResetTokenExpiresAt <= Date.now()) {
+      throw {
+        expiredToken: {
+          message: 'Le lien de réinitialisation a expiré. Veuillez faire une nouvelle demande.'
+        }
+      };
+    }
 
     try {
-      await Carrier.updateOne({ id: carrier.id }).set({
+      await Carrier.updateOne({ id: carrierWithToken.id }).set({
         password: password,
         passwordResetToken: '',
         passwordResetTokenExpiresAt: 0
@@ -46,7 +64,7 @@ module.exports = {
     } catch (err) {
       if (err.message) {
         if (err.message.includes('validatePassword') || err.message.includes('Le mot de passe')) {
-          let cleanMsg = '';
+          let cleanMsg = 'Le mot de passe doit contenir au moins 8 caractères, avec 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.';
 
           if (err.message.includes("Additional data: '")) {
             const parts = err.message.split("Additional data: '");
@@ -55,39 +73,33 @@ module.exports = {
             }
           }
 
-          if (!cleanMsg && err.message.includes('Le mot de passe doit contenir')) {
-            cleanMsg = 'Le mot de passe doit contenir au moins 8 caractères, avec 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.';
-          }
-
-          if (cleanMsg) {
-            throw { passwordFormatInvalid: cleanMsg };
-          }
+          throw { passwordFormatInvalid: { message: cleanMsg } };
         }
 
         if (err.raw && err.raw.invalid) {
-          throw { passwordFormatInvalid: err.raw.invalid };
+          throw { passwordFormatInvalid: { message: err.raw.invalid } };
         }
       }
 
       if (err.invalid) {
-        throw { passwordFormatInvalid: err.invalid };
+        throw { passwordFormatInvalid: { message: err.invalid } };
       }
       throw err;
     }
 
     // Notifier le transporteur
     await sails.helpers.sender.notification.with({
-      recipientId: carrier.id,
+      recipientId: carrierWithToken.id,
       model: 'carrier',
-      app: 'ci',
+      app: 'bf',
       title: 'Mot de passe réinitialisé',
       content: 'Votre mot de passe a été réinitialisé avec succès.',
       priority: 'normal',
       isForAdmin: false
-    }).catch(err => sails.log.error('Erreur lors de l\'envoi de la notification de réinitialisation de mot de passe :', err));
+    }).catch(err => sails.log.error('Erreur notification reset password:', err));
 
     return {
-      message: 'Mot de passe réinitialisé avec succès'
+      message: 'Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.'
     };
   }
 };

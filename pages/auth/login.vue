@@ -73,7 +73,7 @@
 
         <div class="flex items-center justify-between">
           <div class="flex items-center">
-            <input id="remember-me" name="remember-me" type="checkbox"
+            <input id="remember-me" name="remember-me" type="checkbox" v-model="rememberMe"
               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" />
             <label for="remember-me" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">
               Se souvenir de moi
@@ -81,9 +81,12 @@
           </div>
 
           <div class="text-sm">
-            <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
+            <button type="button" @click="openForgotPasswordModal" :class="[
+              'font-medium hover:underline',
+              selectedRole === 'shipper' ? 'text-primary-600 hover:text-primary-500' : 'text-secondary-600 hover:text-secondary-500'
+            ]">
               Mot de passe oublié ?
-            </a>
+            </button>
           </div>
         </div>
 
@@ -117,13 +120,101 @@
         </p>
       </div>
     </div>
+
+    <!-- Modal Mot de passe oublié -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="showForgotModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <!-- Backdrop -->
+          <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="closeForgotPasswordModal"></div>
+
+          <!-- Modal Content -->
+          <div class="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 space-y-6">
+            <!-- Close Button -->
+            <button @click="closeForgotPasswordModal"
+              class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+              <IconX class="w-5 h-5" />
+            </button>
+
+            <!-- Formulaire demande de réinitialisation -->
+            <div v-if="!forgotEmailSent">
+              <div class="text-center mb-6">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
+                  :class="selectedRole === 'shipper' ? 'bg-primary-100 dark:bg-primary-900/30' : 'bg-secondary-100 dark:bg-secondary-900/30'">
+                  <IconMail class="w-8 h-8"
+                    :class="selectedRole === 'shipper' ? 'text-primary-600 dark:text-primary-400' : 'text-secondary-600 dark:text-secondary-400'" />
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                  Mot de passe oublié
+                </h3>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                  Entrez votre adresse email pour recevoir un lien de réinitialisation.
+                </p>
+              </div>
+
+              <form @submit.prevent="handleForgotPassword" class="space-y-4">
+                <div>
+                  <label for="forgot-email" class="label">Adresse email</label>
+                  <input id="forgot-email" type="email" required v-model="forgotEmail" class="input"
+                    placeholder="exemple@email.com" />
+                </div>
+
+                <div v-if="forgotError"
+                  class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                  <p class="text-red-600 dark:text-red-400 text-sm text-center">{{ forgotError }}</p>
+                </div>
+
+                <button type="submit"
+                  class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:opacity-50"
+                  :class="[
+                    selectedRole === 'shipper'
+                      ? 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/30'
+                      : 'bg-secondary-600 hover:bg-secondary-700 shadow-secondary-500/30'
+                  ]" :disabled="forgotLoading">
+                  <span v-if="forgotLoading" class="flex items-center gap-2">
+                    <IconLoader2 class="h-4 w-4 animate-spin" />
+                    Envoi...
+                  </span>
+                  <span v-else class="flex items-center gap-2">
+                    <IconMail class="h-5 w-5" />
+                    Envoyer le lien
+                  </span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Email envoyé -->
+            <div v-else class="text-center py-6">
+              <div
+                class="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <IconMailCheck class="w-12 h-12 text-green-600 dark:text-green-400" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                Email envoyé !
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-6">
+                {{ forgotSuccessMessage }}
+              </p>
+              <button @click="closeForgotPasswordModal"
+                class="px-6 py-2 text-sm font-medium rounded-lg transition-colors" :class="[
+                  selectedRole === 'shipper'
+                    ? 'text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
+                    : 'text-secondary-600 hover:bg-secondary-50 dark:hover:bg-secondary-900/20'
+                ]">
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
-import { IconLock, IconCube, IconTruck, IconLoader2, IconEye, IconEyeOff } from '@tabler/icons-vue';
+import { IconLock, IconCube, IconTruck, IconLoader2, IconEye, IconEyeOff, IconX, IconMail, IconMailCheck } from '@tabler/icons-vue';
 import type { UserRole } from '~/types';
 
 definePageMeta({
@@ -132,15 +223,26 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const router = useRouter();
+const api = useAPI();
 
+// Login form
 const email = ref('');
 const password = ref('');
 const error = ref('');
 const loading = ref(false);
 const showPassword = ref(false);
+const rememberMe = ref(false);
 const selectedRole = ref<UserRole>('shipper');
 const lastConnectedRole = ref<UserRole | null>(null);
 const lastConnectedAt = ref<string | null>(null);
+
+// Forgot password modal
+const showForgotModal = ref(false);
+const forgotEmail = ref('');
+const forgotError = ref('');
+const forgotLoading = ref(false);
+const forgotEmailSent = ref(false);
+const forgotSuccessMessage = ref('');
 
 onMounted(() => {
   // Charger les informations de dernière connexion
@@ -176,7 +278,7 @@ const handleLogin = async () => {
   error.value = '';
 
   try {
-    const result = await authStore.login(email.value, password.value, selectedRole.value);
+    const result = await authStore.login(email.value, password.value, selectedRole.value, rememberMe.value);
 
     if (result.success && result.user) {
       // Redirection selon le rôle
@@ -196,7 +298,75 @@ const handleLogin = async () => {
   }
 };
 
+// Forgot password functions
+const openForgotPasswordModal = () => {
+  showForgotModal.value = true;
+  forgotEmail.value = email.value; // Pré-remplir avec l'email saisi
+  forgotError.value = '';
+  forgotEmailSent.value = false;
+};
+
+const closeForgotPasswordModal = () => {
+  showForgotModal.value = false;
+  forgotEmail.value = '';
+  forgotError.value = '';
+  forgotEmailSent.value = false;
+};
+
+const handleForgotPassword = async () => {
+  forgotLoading.value = true;
+  forgotError.value = '';
+
+  try {
+    const endpoint = selectedRole.value === 'shipper'
+      ? '/shipper/auth/forgot-password'
+      : '/carrier/auth/forgot-password';
+
+    const response = await api.post<{ message: string } | string>(endpoint, {
+      email: forgotEmail.value
+    });
+
+    if (response.success && response.data) {
+      forgotEmailSent.value = true;
+      // Handle both string and object response formats
+      if (typeof response.data === 'string') {
+        forgotSuccessMessage.value = response.data;
+      } else {
+        forgotSuccessMessage.value = response.data.message || 'Un email de réinitialisation a été envoyé.';
+      }
+    } else {
+      forgotError.value = response.error?.message || 'Une erreur est survenue.';
+    }
+  } catch (e) {
+    forgotError.value = 'Une erreur inattendue est survenue.';
+  } finally {
+    forgotLoading.value = false;
+  }
+};
+
 useHead({
   title: 'Connexion - Bourse de Fret',
 });
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active .relative,
+.modal-leave-active .relative {
+  transition: transform 0.2s ease;
+}
+
+.modal-enter-from .relative,
+.modal-leave-to .relative {
+  transform: scale(0.95);
+}
+</style>

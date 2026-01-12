@@ -1,5 +1,5 @@
 module.exports = {
-  friendlyName: 'Mot de passe oublié',
+  friendlyName: 'Mot de passe oublié transporteur',
   description: 'Initier le processus de réinitialisation de mot de passe.',
 
   inputs: {
@@ -20,7 +20,9 @@ module.exports = {
     const carrier = await Carrier.findOne({ email: email.toLowerCase() });
 
     if (!carrier) {
-      return;
+      return {
+        message: 'Si cette adresse email est associée à un compte, vous recevrez un lien de réinitialisation.'
+      };
     }
 
     const passwordResetToken = crypto.randomBytes(32).toString('hex');
@@ -38,10 +40,11 @@ module.exports = {
         layout: 'default-layout',
         template: 'carrier/forgot-password',
         to: email,
-        subject: 'Réinitialisation de mot de passe - CyberIncub',
+        subject: 'Réinitialisation de mot de passe - Bourse de Fret',
         appSlug: 'bf',
         templateData: {
           firstName: carrier.firstname,
+          role: 'Transporteur',
           resetLink: `${appUrls}/auth/reset-password-carrier?token=${passwordResetToken}`,
           expirationDelay: '1 heure'
         }
@@ -50,6 +53,8 @@ module.exports = {
       sails.log.error('Échec de l\'envoi de l\'email de réinitialisation de mot de passe :', error);
     }
 
-    return;
+    return {
+      message: 'Si cette adresse email est associée à un compte, vous recevrez un lien de réinitialisation.'
+    };
   }
 };

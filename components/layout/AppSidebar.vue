@@ -49,12 +49,12 @@
       <div class="p-4 border-t border-gray-100 dark:border-gray-700/50" v-if="!collapsed">
         <div class="flex flex-col space-y-3">
           <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-500 dark:text-gray-400">
-            <NuxtLink to="/terms" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <NuxtLink to="/l/terms" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Conditions
             </NuxtLink>
-            <NuxtLink to="/privacy" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <NuxtLink to="/l/privacy" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Confidentialité</NuxtLink>
-            <NuxtLink to="/help" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Aide
+            <NuxtLink to="/h/help" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Aide
             </NuxtLink>
           </div>
           <p class="text-sm text-gray-400 dark:text-gray-500">

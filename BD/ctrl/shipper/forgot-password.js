@@ -19,8 +19,11 @@ module.exports = {
         const crypto = require('crypto');
         const shipper = await Shipper.findOne({ email: email.toLowerCase() });
 
+        // Pour des raisons de sécurité, on ne révèle pas si l'email existe ou non
         if (!shipper) {
-            return;
+            return {
+                message: 'Si cette adresse email est associée à un compte, vous recevrez un lien de réinitialisation.'
+            };
         }
 
         const passwordResetToken = crypto.randomBytes(32).toString('hex');
@@ -42,6 +45,7 @@ module.exports = {
                 appSlug: 'bf',
                 templateData: {
                     firstName: shipper.firstname,
+                    role: 'Expéditeur',
                     resetLink: `${appUrls}/auth/reset-password-shipper?token=${passwordResetToken}`,
                     expirationDelay: '1 heure'
                 }
@@ -50,6 +54,8 @@ module.exports = {
             sails.log.error('Échec de l\'envoi de l\'email de réinitialisation de mot de passe :', error);
         }
 
-        return;
+        return {
+            message: 'Si cette adresse email est associée à un compte, vous recevrez un lien de réinitialisation.'
+        };
     }
 };
