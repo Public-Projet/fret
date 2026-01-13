@@ -13,7 +13,7 @@ export function useAPI() {
    */
   async function request<T>(
     url: string,
-    options: RequestInit = {}
+    options: RequestInit & { skipAuthRedirect?: boolean } = {}
   ): Promise<ApiResponse<T>> {
     const fullUrl = `${baseURL}${url}`;
 
@@ -51,10 +51,18 @@ export function useAPI() {
         // Gestion des erreurs HTTP
         const errorData = responseData as Record<string, unknown> | null;
 
-        // Redirection vers login si non authentifié
+        // Redirection vers login si non authentifié (mais pas pour badCombo qui est une erreur de mot de passe incorrect)
         if (response.status === 401) {
-          const router = useRouter();
-          router.push('/auth/login');
+          const errorData = responseData as Record<string, unknown> | null;
+          const isBadCombo = errorData && ('badCombo' in errorData);
+
+          // Check custom option to skip redirect
+          const skipRedirect = (options as any).skipAuthRedirect === true;
+
+          if (!isBadCombo && !skipRedirect) {
+            const router = useRouter();
+            router.push('/auth/login');
+          }
         }
 
         return {
@@ -89,15 +97,16 @@ export function useAPI() {
   /**
    * Requête GET
    */
-  async function get<T>(url: string): Promise<ApiResponse<T>> {
-    return request<T>(url, { method: 'GET' });
+  async function get<T>(url: string, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+    return request<T>(url, { ...options, method: 'GET' });
   }
 
   /**
    * Requête POST
    */
-  async function post<T>(url: string, data?: object): Promise<ApiResponse<T>> {
+  async function post<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
     return request<T>(url, {
+      ...options,
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
     });
@@ -106,8 +115,9 @@ export function useAPI() {
   /**
    * Requête PUT
    */
-  async function put<T>(url: string, data?: object): Promise<ApiResponse<T>> {
+  async function put<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
     return request<T>(url, {
+      ...options,
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
     });
@@ -116,8 +126,9 @@ export function useAPI() {
   /**
    * Requête PATCH
    */
-  async function patch<T>(url: string, data?: object): Promise<ApiResponse<T>> {
+  async function patch<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
     return request<T>(url, {
+      ...options,
       method: 'PATCH',
       body: data ? JSON.stringify(data) : undefined,
     });
@@ -126,8 +137,8 @@ export function useAPI() {
   /**
    * Requête DELETE
    */
-  async function del<T>(url: string): Promise<ApiResponse<T>> {
-    return request<T>(url, { method: 'DELETE' });
+  async function del<T>(url: string, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+    return request<T>(url, { ...options, method: 'DELETE' });
   }
 
   return {

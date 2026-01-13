@@ -64,7 +64,7 @@ export const useProfileStore = defineStore('profile', {
     /**
      * Récupérer le profil utilisateur
      */
-    async fetchProfile(role: UserRole) {
+    async fetchProfile(role: UserRole, requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
       this.isLoading = true;
       this.error = null;
 
@@ -72,7 +72,7 @@ export const useProfileStore = defineStore('profile', {
       const endpoint = role === 'shipper' ? '/shipper/me' : '/carrier/me';
 
       try {
-        const response = await api.get<{ message: string; user: UserProfile }>(endpoint);
+        const response = await api.get<{ message: string; user: UserProfile }>(endpoint, requestOptions);
 
         if (response.success && response.data?.user) {
           this.profile = response.data.user;
@@ -94,7 +94,7 @@ export const useProfileStore = defineStore('profile', {
     /**
      * Mettre à jour le profil
      */
-    async updateProfile(role: UserRole, data: UpdateProfileData) {
+    async updateProfile(role: UserRole, data: UpdateProfileData, requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
       this.isLoading = true;
       this.error = null;
 
@@ -102,7 +102,7 @@ export const useProfileStore = defineStore('profile', {
       const endpoint = role === 'shipper' ? '/shipper/update-profile' : '/carrier/update-profile';
 
       try {
-        const response = await api.patch<{ message: string; user: UserProfile }>(endpoint, data);
+        const response = await api.patch<{ message: string; user: UserProfile }>(endpoint, data, requestOptions);
 
         if (response.success && response.data?.user) {
           this.profile = response.data.user;
@@ -124,7 +124,7 @@ export const useProfileStore = defineStore('profile', {
     /**
      * Mettre à jour le mot de passe
      */
-    async updatePassword(role: UserRole, data: UpdatePasswordData) {
+    async updatePassword(role: UserRole, data: UpdatePasswordData, requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
       this.isLoading = true;
       this.error = null;
 
@@ -132,7 +132,7 @@ export const useProfileStore = defineStore('profile', {
       const endpoint = role === 'shipper' ? '/shipper/update-password' : '/carrier/update-password';
 
       try {
-        const response = await api.patch<{ message: string }>(endpoint, data);
+        const response = await api.patch<{ message: string }>(endpoint, data, requestOptions);
 
         if (response.success && response.data) {
           return { success: true, message: response.data.message };
@@ -153,7 +153,7 @@ export const useProfileStore = defineStore('profile', {
     /**
      * Mettre à jour l'email
      */
-    async updateEmail(role: UserRole, data: UpdateEmailData) {
+    async updateEmail(role: UserRole, data: UpdateEmailData, requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
       this.isLoading = true;
       this.error = null;
 
@@ -165,7 +165,7 @@ export const useProfileStore = defineStore('profile', {
         const response = await api.patch<{ message: string }>(endpoint, {
           email: data.newEmail,
           password: data.password
-        });
+        }, requestOptions);
 
         if (response.success && response.data) {
           return { success: true, message: response.data.message };

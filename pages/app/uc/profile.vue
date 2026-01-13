@@ -182,11 +182,17 @@ const handleUpdatePassword = async (data: { currentPassword: string; newPassword
 const handleUpdateEmail = async (data: { newEmail: string; password: string }) => {
   emailLoading.value = true;
   emailError.value = '';
-  const result = await profileStore.updateEmail('carrier', data);
+
+  // Use skipAuthRedirect to avoid auto-redirects on 401/403 errors
+  const result = await profileStore.updateEmail('carrier', data, { skipAuthRedirect: true });
+
   emailLoading.value = false;
   if (result.success) {
     emailSuccess.value = result.message || 'Email mis à jour !';
-    await profileStore.fetchProfile('carrier');
+
+    // Refresh profile but don't redirect if it fails (e.g. invalid token after update)
+    await profileStore.fetchProfile('carrier', { skipAuthRedirect: true });
+
     setTimeout(() => { showEmailModal.value = false; }, 1500);
   } else {
     emailError.value = result.error || 'Une erreur est survenue';

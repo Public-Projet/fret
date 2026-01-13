@@ -27,7 +27,7 @@ module.exports = {
       responseType: 'json'
     },
     badCombo: {
-      statusCode: 401,
+      statusCode: 403,
       description: 'Mot de passe incorrect.',
       responseType: 'json'
     }
