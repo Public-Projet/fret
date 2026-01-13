@@ -169,7 +169,7 @@ const handleUpdatePassword = async (data: { currentPassword: string; newPassword
   const result = await profileStore.updatePassword('carrier', {
     currentPassword: data.currentPassword,
     newPassword: data.newPassword
-  });
+  }, { skipAuthRedirect: true });
   passwordLoading.value = false;
   if (result.success) {
     passwordSuccess.value = result.message || 'Mot de passe mis à jour !';

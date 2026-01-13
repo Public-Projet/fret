@@ -21,7 +21,7 @@ module.exports = {
       description: 'Mot de passe mis à jour avec succès.'
     },
     badCombo: {
-      statusCode: 401,
+      statusCode: 403,
       description: 'Mot de passe actuel incorrect.',
       responseType: 'json'
     },
