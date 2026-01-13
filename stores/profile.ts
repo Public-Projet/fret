@@ -161,7 +161,11 @@ export const useProfileStore = defineStore('profile', {
       const endpoint = role === 'shipper' ? '/shipper/update-email' : '/carrier/update-email';
 
       try {
-        const response = await api.patch<{ message: string }>(endpoint, data);
+        // Map frontend fields to backend fields
+        const response = await api.patch<{ message: string }>(endpoint, {
+          email: data.newEmail,
+          password: data.password
+        });
 
         if (response.success && response.data) {
           return { success: true, message: response.data.message };
@@ -198,7 +202,7 @@ export const useProfileStore = defineStore('profile', {
         const errorData = error.data as Record<string, unknown>;
 
         // Chercher dans les différentes structures d'erreur
-        const errorKeys = ['badCombo', 'invalidPhoneFormat', 'passwordFormatInvalid', 'notFound', 'invalidEmail'];
+        const errorKeys = ['badCombo', 'invalidPhoneFormat', 'passwordFormatInvalid', 'notFound', 'invalidEmail', 'emailAlreadyInUse'];
         for (const key of errorKeys) {
           if (errorData[key] && typeof errorData[key] === 'object') {
             return (errorData[key] as { message?: string }).message || 'Une erreur est survenue';
