@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { UserRole } from '~/types';
 import type {
-  AuthUser, AuthState, LoginResponse, RegisterResponse, RegisterData, mapApiUserToAuthUser
+  AuthUser, AuthState, LoginResponse, RegisterResponse, RegisterData, ApiUser, mapApiUserToAuthUser
 } from '~/types/auth';
 import { mapApiUserToAuthUser as mapUser } from '~/types/auth';
 
@@ -43,11 +43,34 @@ export const useAuthStore = defineStore('auth', {
         return { success: false, error: 'Aucune session active' };
       }
 
-      // On considère l'utilisateur authentifié si le token existe
-      // Le backend validera le token à chaque requête
-      this.isAuthenticated = true;
+      // Charger les données utilisateur depuis l'API
+      this.isLoading = true;
+      const api = useAPI();
+      const endpoint = roleCookie.value === 'shipper' ? '/shipper/me' : '/carrier/me';
 
-      return { success: true };
+      try {
+        const response = await api.get<{ user: ApiUser }>(endpoint);
+
+        if (response.success && response.data?.user) {
+          this.user = mapUser(response.data.user);
+          this.isAuthenticated = true;
+          this.isLoading = false;
+          return { success: true };
+        } else {
+          // Token invalide ou expiré, nettoyer les cookies
+          tokenCookie.value = null;
+          roleCookie.value = null;
+          this.user = null;
+          this.isAuthenticated = false;
+          this.isLoading = false;
+          return { success: false, error: 'Session expirée' };
+        }
+      } catch (e) {
+        this.user = null;
+        this.isAuthenticated = false;
+        this.isLoading = false;
+        return { success: false, error: 'Erreur de chargement du profil' };
+      }
     },
 
     /**

@@ -1,11 +1,11 @@
 import { useAuthStore } from '~/stores/auth';
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(async (to, from) => {
   const authStore = useAuthStore();
 
-  // Restaurer la session si nécessaire
-  if (!authStore.isAuthenticated) {
-    authStore.restoreSession();
+  // Restaurer la session si nécessaire (attente async du chargement)
+  if (!authStore.isAuthenticated && !authStore.isLoading) {
+    await authStore.loadUser();
   }
 
   // Utilisateur connecté
