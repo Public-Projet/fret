@@ -101,7 +101,7 @@ Un email de confirmation vous sera envoyé. Cliquez sur le lien pour activer vot
     `,
     category: 'Mon Compte',
     categorySlug: 'compte',
-    views: 2847,
+    views: 47,
     createdAt: '2025-10-15',
     updatedAt: '2026-01-10'
   },
@@ -134,7 +134,7 @@ Votre profil est votre vitrine sur la plateforme. Voici comment le personnaliser
     `,
     category: 'Mon Compte',
     categorySlug: 'compte',
-    views: 1523,
+    views: 23,
     createdAt: '2025-11-02',
     updatedAt: '2026-01-05'
   },
@@ -160,13 +160,13 @@ Vous recevrez un email avec un lien de réinitialisation valide pendant 24h.
 ### Étape 4 : Créer un nouveau mot de passe
 Choisissez un mot de passe fort avec :
 - Au moins 8 caractères
-- Des lettres majuscules ET minuscules
+- Des lettres majuscules et minuscules
 - Au moins un chiffre
-- Un caractère spécial (recommandé)
+- Un caractère spécial
     `,
     category: 'Mon Compte',
     categorySlug: 'compte',
-    views: 1876,
+    views: 76,
     createdAt: '2025-10-20',
     updatedAt: '2026-01-08'
   },
@@ -190,7 +190,6 @@ Dans votre tableau de bord, cliquez sur **"Nouvelle annonce"**.
 - Type de marchandise
 - Poids estimé
 - Dimensions (si applicable)
-- Photos (optionnel mais recommandé)
 
 ### Étape 3 : Itinéraire
 - Adresse de départ
@@ -209,7 +208,7 @@ Vérifiez toutes les informations et cliquez sur **"Publier"**.
     `,
     category: 'Publier une annonce',
     categorySlug: 'annonces',
-    views: 3156,
+    views: 56,
     createdAt: '2025-09-10',
     updatedAt: '2026-01-12'
   },
@@ -241,7 +240,7 @@ Si vous ne souhaitez plus recevoir de propositions temporairement, mettez votre 
     `,
     category: 'Publier une annonce',
     categorySlug: 'annonces',
-    views: 987,
+    views: 87,
     createdAt: '2025-11-15',
     updatedAt: '2026-01-03'
   },
@@ -275,7 +274,7 @@ Si vous ne souhaitez plus recevoir de propositions temporairement, mettez votre 
     `,
     category: 'Publier une annonce',
     categorySlug: 'annonces',
-    views: 2341,
+    views: 41,
     createdAt: '2025-10-01',
     updatedAt: '2026-01-11'
   },
@@ -283,39 +282,6 @@ Si vous ne souhaitez plus recevoir de propositions temporairement, mettez votre 
   // Catégorie: Paiements
   {
     id: '7',
-    slug: 'moyens-paiement-acceptes',
-    title: 'Quels sont les moyens de paiement acceptés ?',
-    excerpt: 'Découvrez toutes les options de paiement disponibles sur la plateforme.',
-    content: `
-## Moyens de paiement
-
-### Cartes bancaires
-- Visa
-- Mastercard
-- Cartes de débit
-
-### Mobile Money
-- MTN Mobile Money
-- Moov Money
-- Wave
-
-### Virements bancaires
-Disponibles pour les comptes Entreprise et les montants importants.
-
-### Sécurité des paiements
-Tous les paiements sont :
-- Cryptés SSL
-- Traités par des partenaires certifiés
-- Protégés contre la fraude
-    `,
-    category: 'Paiements & Facturation',
-    categorySlug: 'paiements',
-    views: 1654,
-    createdAt: '2025-11-20',
-    updatedAt: '2026-01-07'
-  },
-  {
-    id: '8',
     slug: 'gerer-abonnement',
     title: 'Gérer mon abonnement Pro',
     excerpt: 'Modifier, annuler ou renouveler votre abonnement transporteur.',
@@ -343,14 +309,14 @@ Les factures sont disponibles au format PDF dans votre espace personnel.
     `,
     category: 'Paiements & Facturation',
     categorySlug: 'paiements',
-    views: 892,
+    views: 92,
     createdAt: '2025-12-01',
     updatedAt: '2026-01-09'
   },
 
   // Catégorie: Sécurité
   {
-    id: '9',
+    id: '8',
     slug: 'devenir-transporteur-verifie',
     title: 'Comment devenir transporteur vérifié ?',
     excerpt: 'Obtenez le badge vérifié et gagnez la confiance des expéditeurs.',
@@ -379,7 +345,7 @@ Vous recevrez un email expliquant les raisons et comment régulariser votre situ
     `,
     category: 'Sécurité & Vérification',
     categorySlug: 'securite',
-    views: 2789,
+    views: 89,
     createdAt: '2025-09-25',
     updatedAt: '2026-01-10'
   },
@@ -413,7 +379,7 @@ Pour les situations urgentes, contactez-nous directement par email ou téléphon
     `,
     category: 'Sécurité & Vérification',
     categorySlug: 'securite',
-    views: 1234,
+    views: 34,
     createdAt: '2025-10-10',
     updatedAt: '2026-01-06'
   },
@@ -447,7 +413,7 @@ Choisissez entre :
     `,
     category: 'Paramètres',
     categorySlug: 'parametres',
-    views: 756,
+    views: 56,
     createdAt: '2025-11-25',
     updatedAt: '2026-01-04'
   },
@@ -483,7 +449,7 @@ Toutes vos conversations sont conservées et accessibles dans **"Messages"**.
     `,
     category: 'Communication',
     categorySlug: 'communication',
-    views: 1987,
+    views: 87,
     createdAt: '2025-10-05',
     updatedAt: '2026-01-11'
   }

@@ -301,7 +301,7 @@ const STATS = [
   {
     key: 'shippers' as const,
     label: 'Chargeurs actifs',
-    targetValue: 5247,
+    targetValue: 247,
     suffix: '+',
     animated: true,
     bgClass: 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-600',
@@ -310,7 +310,7 @@ const STATS = [
   {
     key: 'carriers' as const,
     label: 'Transporteurs',
-    targetValue: 12389,
+    targetValue: 389,
     suffix: '+',
     animated: true,
     bgClass: 'bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-700 dark:to-gray-600',
@@ -319,7 +319,7 @@ const STATS = [
   {
     key: 'deliveries' as const,
     label: 'Transports réussis',
-    targetValue: 847,
+    targetValue: 3,
     suffix: 'k+',
     animated: true,
     bgClass: 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-600',

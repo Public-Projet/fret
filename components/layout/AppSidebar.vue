@@ -125,6 +125,12 @@ const menuItems = computed<MenuItem[]>(() => [
     roles: [ROLES.Carrier]
   },
   {
+    label: 'Véhicules',
+    to: '/app/uc/vehicles',
+    icon: IconTruck,
+    roles: [ROLES.Carrier]
+  },
+  {
     label: 'Disponibilités',
     to: '/app/uc/availability',
     icon: IconTruck,

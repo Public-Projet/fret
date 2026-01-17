@@ -45,8 +45,8 @@
             </div>
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Téléphone</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Du Lundi au Vendredi, 8h-18h.</p>
-            <a href="tel:+22901000000" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline">
-              +229 01 00 00 00
+            <a href="tel:+22901XXXXXXXX" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline">
+              +229 01 XX XX XX XX
             </a>
           </div>
 
@@ -59,7 +59,7 @@
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Bureau</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Venez nous rencontrer.</p>
             <p class="text-gray-900 dark:text-white font-medium">
-              Zone Commerciale Ganhi,<br />Cotonou, Bénin
+              Zone xxx,<br />Cotonou, Bénin
             </p>
           </div>
         </div>

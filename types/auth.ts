@@ -30,6 +30,9 @@ export interface ApiUser {
   lastname: string;
   role: UserRole;
   status: 'pending' | 'active' | 'suspended';
+  phone?: string;
+  bio?: string;
+  photoUrl?: string;
 }
 
 /**
@@ -79,5 +82,8 @@ export function mapApiUserToAuthUser(apiUser: ApiUser): AuthUser {
     lastName: apiUser.lastname,
     role: apiUser.role,
     status: apiUser.status,
+    phone: apiUser.phone,
+    avatar: apiUser.photoUrl,
+    // Add other fields if needed for AuthUser matching
   };
 }

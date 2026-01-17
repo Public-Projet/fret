@@ -30,32 +30,39 @@
         class="card p-6 flex flex-col md:flex-row justify-between gap-4">
         <div class="flex-1">
           <div class="flex items-center mb-2">
-            <h3 class="font-bold text-lg text-gray-900 dark:text-white mr-2">{{ item.vehicleType }}</h3>
-            <span class="badge badge-success">Actif</span>
+            <h3 class="font-bold text-lg text-gray-900 dark:text-white mr-2">
+              {{ item.vehicle?.brand }} {{ item.vehicle?.model }} {{ item.vehicle?.type ? `(${item.vehicle?.type})` : ''
+              }}
+            </h3>
+            <span class="badge" :class="{
+              'badge-success': item.status === 'active',
+              'badge-error': item.status === 'expired'
+            }">{{ item.status === 'active' ? 'Actif' : 'Expiré' }}</span>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 text-sm text-gray-600 dark:text-gray-400">
             <div class="flex items-center">
               <IconCalendar class="w-4 h-4 mr-2" />
-              {{ formatDate(item.availableFrom) }} - {{ formatDate(item.availableTo) }}
+              {{ formatDate(item.startDate) }} - {{ formatDate(item.endDate) }}
             </div>
             <div class="flex items-center">
               <IconMapPin class="w-4 h-4 mr-2" />
               {{ item.origin.city }} <span v-if="item.destination?.city">→ {{ item.destination?.city }}</span> <span
                 v-else>(Tout trajet)</span>
             </div>
-            <div class="flex items-center">
+            <div class="flex items-center" v-if="item.vehicle">
               <IconWeight class="w-4 h-4 mr-2" />
-              {{ item.capacity }}kg / {{ item.volumeCapacity }}m³
+              {{ item.vehicle.capacity || '-' }}T / {{ item.vehicle.volume || '-' }}m³
             </div>
-            <div class="flex items-center">
+            <div class="flex items-center" v-if="item.price">
               <IconCurrencyEuro class="w-4 h-4 mr-2" />
-              {{ item.pricePerKm }} FCFA/km
+              {{ item.price }} FCFA
             </div>
           </div>
         </div>
         <div class="flex items-center space-x-2">
-          <button class="btn btn-outline text-red-600 hover:bg-red-50 border-red-200">Supprimer</button>
-          <button class="btn btn-outline">Modifier</button>
+          <NuxtLink :to="`/app/uc/availability/${item.id}`" class="btn btn-outline hover:bg-gray-50">
+            <IconEye class="w-4 h-4 mr-2" /> Détails
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -63,32 +70,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
-// import { useAvailabilityStore } from '~/stores/availability'; // To be created
-import { IconCalendar, IconMapPin, IconPlus, IconTruck, IconWeight, IconCurrencyEuro } from '@tabler/icons-vue';
-import { mockAvailabilities } from '~/data/mock'; // Fallback for now
+import { useAvailabilityStore } from '~/stores/availability';
+import { IconCalendar, IconMapPin, IconPlus, IconTruck, IconWeight, IconCurrencyEuro, IconTrash, IconLoader2, IconEye } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
-const currentUser = computed(() => authStore.currentUser);
-const loading = ref(false);
+const availabilityStore = useAvailabilityStore();
 
-const availabilities = computed(() => {
-  // Temporary Mock Logic until Store is ready
-  if (!currentUser.value) return [];
-  // Return mock items that match carrier ID, or just all for demo if current user has no logic yet in mock
-  return mockAvailabilities.filter(a => a.carrierId === currentUser.value?.id || a.carrierId === '4' || a.carrierId === '2');
-  // Just showing some data for the 'connected' user if they happen to be ID 2 or 4 or 5
+const availabilities = computed(() => availabilityStore.availabilities);
+const loading = computed(() => availabilityStore.loading);
+
+onMounted(() => {
+  availabilityStore.fetchAvailabilities();
 });
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('fr-FR', {
     day: 'numeric',
-    month: 'short'
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
   });
 };
 
-onMounted(() => {
-  // Fetch availabilities
-});
+const handleDelete = async (id: string) => {
+  if (!confirm('Voulez-vous vraiment supprimer cette disponibilité ?')) return;
+  await availabilityStore.deleteAvailability(id);
+};
 </script>

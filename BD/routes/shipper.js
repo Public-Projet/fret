@@ -19,4 +19,9 @@ module.exports = {
     action: 'shipper/profile/update-email',
     swagger: { tags: ['EXPÉDITEUR - PROFILE'] }
   },
+  'DELETE /api/v1/shipper/delete-account': {
+    policy: ['isAuthenticated', 'isShipper'],
+    action: 'auth/delete-account',
+    swagger: { tags: ['EXPÉDITEUR - AUTH'] }
+  },
 };

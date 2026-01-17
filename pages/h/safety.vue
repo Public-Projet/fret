@@ -5,7 +5,7 @@
         <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
           <IconShieldCheck class="w-6 h-6 text-white" />
         </div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Sécurité & Confiance</h1>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Sécurité & confiance</h1>
       </div>
       <p class="text-gray-600 dark:text-gray-400 mb-8">
         Votre sécurité est notre priorité. Découvrez comment nous protégeons nos utilisateurs.
@@ -121,10 +121,6 @@
             Signaler un problème
           </NuxtLink>
         </section>
-      </div>
-
-      <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-        <p class="text-sm text-gray-500 dark:text-gray-400">Dernière mise à jour : 12 janvier 2026</p>
       </div>
     </div>
   </div>

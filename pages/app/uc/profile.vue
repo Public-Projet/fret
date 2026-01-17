@@ -4,7 +4,7 @@
     <CarrierProfileHeader :profile="profile" />
 
     <!-- Stats Bar -->
-    <CarrierStatsBar :missions="0" :rating="'-'" :vehicles="0" @open-security="showSecurityModal = true"
+    <CarrierStatsBar :missions="0" :rating="'-'" :vehicles="vehicles.length" @open-security="showSecurityModal = true"
       @open-edit="openEditModal" />
 
     <div class="container-custom mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -12,18 +12,60 @@
       <div class="lg:col-span-2 space-y-8">
         <!-- Fleet Section -->
         <section>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-            <IconTruck class="w-5 h-5 mr-2 text-secondary-600" />
-            Ma Flotte
-          </h3>
-          <div
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+              <IconTruck class="w-5 h-5 mr-2 text-secondary-600" />
+              Ma Flotte
+            </h3>
+            <button v-if="vehicles.length > 0" @click="openVehicleModal" class="btn btn-secondary btn-xs">
+              <IconPlus class="w-3 h-3 mr-1" />
+              Ajouter
+            </button>
+          </div>
+
+          <div v-if="vehicles.length === 0"
             class="bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 p-8 text-center">
             <IconTruck class="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
             <p class="text-gray-500 dark:text-gray-400 mb-4">Aucun véhicule enregistré</p>
-            <button class="mx-auto flex items-center btn btn-secondary btn-sm">
+            <button @click="openVehicleModal" class="mx-auto flex items-center btn btn-secondary btn-sm">
               <IconPlus class="w-4 h-4 mr-1" />
               Ajouter un véhicule
             </button>
+          </div>
+
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div v-for="vehicle in vehicles" :key="vehicle.id"
+              class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h4 class="font-bold text-gray-900 dark:text-white">{{ vehicle.brand }} {{ vehicle.model }}</h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 font-mono">{{ vehicle.licensePlate }}</p>
+                </div>
+                <div class="flex space-x-1">
+                  <button @click="openEditVehicleModal(vehicle)"
+                    class="p-1.5 text-gray-400 hover:text-secondary-600 transition-colors bg-gray-50 dark:bg-gray-700/30 rounded-lg"
+                    title="Modifier">
+                    <IconPencil class="w-3.5 h-3.5" />
+                  </button>
+                  <button @click="handleDeleteVehicle(vehicle.id)"
+                    class="p-1.5 text-gray-400 hover:text-red-500 transition-colors bg-gray-50 dark:bg-gray-700/30 rounded-lg"
+                    title="Supprimer">
+                    <IconTrash class="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <div class="flex space-x-2 mb-3">
+                <span class="badge badge-outline text-xs capitalize">{{ vehicle.type }}</span>
+                <span class="badge text-xs" :class="vehicle.status === 'available' ? 'badge-success' : 'badge-warning'">
+                  {{ vehicle.status === 'available' ? 'Disponible' : vehicle.status === 'in_transit' ? 'En transit' :
+                    'Maintenance' }}
+                </span>
+              </div>
+              <NuxtLink :to="`/app/uc/vehicles/${vehicle.id}`"
+                class="text-xs text-secondary-600 hover:text-secondary-700 font-medium block text-right">
+                Voir détails &rarr;
+              </NuxtLink>
+            </div>
           </div>
         </section>
 
@@ -73,6 +115,9 @@
       :error="emailError" :success="emailSuccess" accent-color="secondary" @close="showEmailModal = false"
       @submit="handleUpdateEmail" />
 
+    <ProfileVehicleModal :show="showVehicleModal" :vehicle="selectedVehicle" :loading="vehicleLoading"
+      :error="vehicleError" :success="vehicleSuccess" @close="showVehicleModal = false" @submit="handleVehicleSubmit" />
+
     <ProfileSecurityModal :show="showSecurityModal" :email="profile?.email" accent-color="secondary"
       @close="showSecurityModal = false" @open-password="openPasswordModal" @open-email="openEmailModal" />
   </div>
@@ -80,9 +125,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useProfileStore } from '~/stores/profile';
+import { useProfileStore, type AddVehicleData, type Vehicle } from '~/stores/profile';
 import {
-  IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus
+  IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil
 } from '@tabler/icons-vue';
 
 // Profile Components
@@ -94,17 +139,30 @@ import ProfileEditModal from '~/components/profile/ProfileEditModal.vue';
 import ProfilePasswordModal from '~/components/profile/ProfilePasswordModal.vue';
 import ProfileEmailModal from '~/components/profile/ProfileEmailModal.vue';
 import ProfileSecurityModal from '~/components/profile/ProfileSecurityModal.vue';
+import ProfileVehicleModal from '~/components/profile/ProfileVehicleModal.vue';
 
 const profileStore = useProfileStore();
 const profile = computed(() => profileStore.profile);
+const vehicles = computed(() => profileStore.vehicles);
 
 // Modals visibility
 const showEditModal = ref(false);
 const showPasswordModal = ref(false);
 const showEmailModal = ref(false);
 const showSecurityModal = ref(false);
+const showVehicleModal = ref(false);
 
-// Edit profile state
+const selectedVehicle = ref<Vehicle | null>(null);
+
+// ... existing state ...
+
+// Vehicle state
+// Vehicle state
+const vehicleLoading = ref(false);
+const vehicleError = ref('');
+const vehicleSuccess = ref('');
+
+// Edit Profile state
 const editLoading = ref(false);
 const editError = ref('');
 const editSuccess = ref('');
@@ -119,11 +177,6 @@ const emailLoading = ref(false);
 const emailError = ref('');
 const emailSuccess = ref('');
 
-onMounted(async () => {
-  await profileStore.fetchProfile('carrier');
-});
-
-// Modal handlers
 const openEditModal = () => {
   editError.value = '';
   editSuccess.value = '';
@@ -131,17 +184,68 @@ const openEditModal = () => {
 };
 
 const openPasswordModal = () => {
-  showSecurityModal.value = false;
   passwordError.value = '';
   passwordSuccess.value = '';
   showPasswordModal.value = true;
 };
 
 const openEmailModal = () => {
-  showSecurityModal.value = false;
   emailError.value = '';
   emailSuccess.value = '';
   showEmailModal.value = true;
+};
+
+onMounted(async () => {
+  await profileStore.fetchProfile('carrier');
+});
+
+// ... existing modal handlers ...
+
+const openVehicleModal = () => {
+  selectedVehicle.value = null; // Add mode
+  vehicleError.value = '';
+  vehicleSuccess.value = '';
+  showVehicleModal.value = true;
+};
+
+const openEditVehicleModal = (vehicle: Vehicle) => {
+  selectedVehicle.value = vehicle; // Edit mode
+  vehicleError.value = '';
+  vehicleSuccess.value = '';
+  showVehicleModal.value = true;
+};
+
+// ... existing handlers ...
+
+const handleVehicleSubmit = async (data: AddVehicleData) => {
+  vehicleLoading.value = true;
+  vehicleError.value = '';
+  vehicleSuccess.value = '';
+
+  let result;
+  if (selectedVehicle.value) {
+    result = await profileStore.updateVehicle(selectedVehicle.value.id, data);
+  } else {
+    result = await profileStore.addVehicle(data);
+  }
+
+  vehicleLoading.value = false;
+
+  if (result.success) {
+    vehicleSuccess.value = result.message || (selectedVehicle.value ? 'Véhicule mis à jour !' : 'Véhicule ajouté !');
+    setTimeout(() => { showVehicleModal.value = false; }, 1500);
+  } else {
+    vehicleError.value = result.error || 'Une erreur est survenue';
+  }
+};
+
+const handleDeleteVehicle = async (id: string) => {
+  if (!confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?')) return;
+
+  const result = await profileStore.deleteVehicle(id);
+  if (!result.success) {
+    alert(result.error || 'Erreur lors de la suppression');
+  }
 };
 
 // Form handlers
@@ -198,6 +302,8 @@ const handleUpdateEmail = async (data: { newEmail: string; password: string }) =
     emailError.value = result.error || 'Une erreur est survenue';
   }
 };
+
+
 
 definePageMeta({ layout: 'default' });
 useHead({ title: 'Mon Profil Transporteur - Bourse de Fret' });

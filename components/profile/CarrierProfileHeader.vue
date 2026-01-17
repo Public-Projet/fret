@@ -9,7 +9,7 @@
       <div class="flex items-center space-x-4 mb-2">
         <span v-if="profile?.status === 'active'"
           class="px-3 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full text-xs font-bold uppercase tracking-wider flex items-center">
-          <IconShieldCheck class="w-3 h-3 mr-1" />
+          <IconRosetteDiscountCheck class="w-3 h-3 mr-1" />
           Transporteur Vérifié
         </span>
         <span v-else-if="profile?.status === 'pending'"
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { IconShieldCheck } from '@tabler/icons-vue';
+import { IconRosetteDiscountCheck } from '@tabler/icons-vue';
 import type { UserProfile } from '~/stores/profile';
 
 defineProps<{

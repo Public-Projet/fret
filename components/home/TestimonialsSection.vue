@@ -19,7 +19,7 @@
 
         <TestimonialCard
           quote="Grâce à Bourse de Fret, j'ai multiplié mes contrats par 3. La plateforme est parfaite pour nous, transporteurs."
-          name="Pierre Cossou" role="Transporteur indépendant" initials="PC" avatar-color="blue" />
+          name="Pierre Cossou" role="Transporteur indépendant" initials="PC" avatar-color="yellow" />
       </div>
     </div>
   </section>

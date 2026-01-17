@@ -13,8 +13,8 @@
             <li><strong>Raison sociale :</strong> Bourse Fret SARL</li>
             <li><strong>Siège social :</strong> Cotonou, Bénin</li>
             <li><strong>Email :</strong> contact@boursefret.bj</li>
-            <li><strong>Téléphone :</strong> +229 01 00 00 00</li>
-            <li><strong>Numéro IFU :</strong> 0000000000000</li>
+            <li><strong>Téléphone :</strong> +229 01 XX XX XX XX</li>
+            <li><strong>Numéro IFU :</strong> xxx</li>
           </ul>
         </section>
 
@@ -24,9 +24,9 @@
             Le site est hébergé par :
           </p>
           <ul class="list-none pl-0 space-y-1 mt-2">
-            <li><strong>Hébergeur :</strong> Vercel Inc.</li>
-            <li><strong>Adresse :</strong> 340 S Lemon Ave #4133 Walnut, CA 91789, USA</li>
-            <li><strong>Site web :</strong> https://vercel.com</li>
+            <li><strong>Hébergeur :</strong> xxx</li>
+            <li><strong>Adresse :</strong> xxx</li>
+            <li><strong>Site web :</strong> xxx</li>
           </ul>
         </section>
 

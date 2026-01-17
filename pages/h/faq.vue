@@ -117,7 +117,7 @@ const faqs = [
   {
     category: 'Paiement',
     question: "Quels sont les moyens de paiement acceptés ?",
-    answer: "Nous acceptons les cartes bancaires (Visa, Mastercard), le Mobile Money (MTN Money, Moov Money) et les virements bancaires pour les entreprises. Tous les paiements sont sécurisés."
+    answer: "Nous utilisons l'agragteur de paiements béninois Fedapay. Les moyens de paiement sont ceux définis par celui-ci. Pour le plan Entreprise, nous acceptons les virements bancaires.",
   },
   {
     category: 'Paiement',

@@ -26,8 +26,8 @@
               avec notre site en collectant des informations anonymes.
             </li>
             <li>
-              <strong>Cookies de fonctionnalité :</strong> Permettent de mémoriser vos préférences (langue, thème
-              sombre/clair, région).
+              <strong>Cookies de fonctionnalité :</strong> Permettent de mémoriser vos préférences (thème sombre/clair,
+              état du menu, dernière connexion, etc...).
             </li>
             <li>
               <strong>Cookies analytiques :</strong> Utilisés pour analyser l'utilisation du site et améliorer nos

@@ -7,7 +7,8 @@
       {{ quote }}
     </p>
     <div class="flex items-center space-x-3">
-      <div :class="['w-12 h-12 rounded-full flex items-center justify-center text-white font-bold', `bg-${avatarColor}-600`]">
+      <div
+        :class="['w-12 h-12 rounded-full flex items-center justify-center text-white font-bold', `bg-${avatarColor}-500`]">
         {{ initials }}
       </div>
       <div>

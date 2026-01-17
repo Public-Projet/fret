@@ -17,32 +17,39 @@
           <div class="mb-6">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <IconTruck class="w-5 h-5 mr-2 text-primary-600" />
-              Véhicule et Capacité
+              Véhicule et Options
             </h2>
+
+            <div v-if="error" class="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">{{ error }}</div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="label">Type de véhicule</label>
-                <select v-model="form.vehicleType" required class="input">
-                  <option value="">Sélectionner</option>
-                  <option value="Camion 20T">Camion 20T</option>
-                  <option value="Camion 10T">Camion 10T</option>
-                  <option value="Camion frigorifique">Camion frigorifique</option>
-                  <option value="Fourgon">Fourgon</option>
-                  <option value="Plateau">Plateau</option>
-                  <option value="Benne">Benne</option>
+              <div class="md:col-span-2">
+                <label class="label">Sélectionner un véhicule</label>
+                <div v-if="loadingVehicles" class="flex items-center text-sm text-gray-500">
+                  <IconLoader2 class="w-4 h-4 animate-spin mr-2" /> Chargement de vos véhicules...
+                </div>
+                <div v-else-if="vehicles.length === 0" class="text-sm text-yellow-600 bg-yellow-50 p-3 rounded-lg">
+                  Vous n'avez aucun véhicule. <NuxtLink to="/app/uc/vehicles" class="underline font-medium">Ajoutez-en
+                    un d'abord</NuxtLink>.
+                </div>
+                <select v-else v-model="form.vehicleId" required class="input">
+                  <option value="" disabled>Choisir un véhicule...</option>
+                  <option v-for="v in vehicles" :key="v.id" :value="v.id">
+                    {{ v.brand }} {{ v.model }} ({{ v.licensePlate }}) - {{ v.type }}
+                  </option>
                 </select>
               </div>
-              <div>
-                <label class="label">Prix au km (FCFA)</label>
-                <input v-model.number="form.pricePerKm" type="number" required class="input" placeholder="Ex: 500" />
-              </div>
-              <div>
-                <label class="label">Capacité (kg)</label>
-                <input v-model.number="form.capacity" type="number" required class="input" placeholder="Ex: 20000" />
-              </div>
-              <div>
-                <label class="label">Volume (m³)</label>
-                <input v-model.number="form.volumeCapacity" type="number" required class="input" placeholder="Ex: 60" />
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="label">Prix (FCFA) - Optionnel</label>
+                  <input v-model.number="form.price" type="number" class="input" placeholder="Prix global ou au tour" />
+                </div>
+                <div>
+                  <label class="label">Limite de demandes - Optionnel</label>
+                  <input v-model.number="form.maxRequests" type="number" class="input" placeholder="Ex: 5" />
+                  <p class="text-xs text-gray-500 mt-1">La disponibilité passera en "Complet" une fois atteinte.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -56,11 +63,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="label">Disponible du</label>
-                <input v-model="form.availableFrom" type="datetime-local" required class="input" />
+                <input v-model="form.startDate" type="datetime-local" required class="input" />
               </div>
               <div>
                 <label class="label">Au</label>
-                <input v-model="form.availableTo" type="datetime-local" required class="input" />
+                <input v-model="form.endDate" type="datetime-local" required class="input" />
               </div>
             </div>
 
@@ -100,55 +107,91 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import { useAuthStore } from '~/stores/auth';
-import type { Availability } from '~/types';
-import { IconArrowLeft, IconMapPin, IconTruck } from '@tabler/icons-vue';
+import { ref, reactive, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAvailabilityStore } from '~/stores/availability';
+import { useProfileStore } from '~/stores/profile';
+import { IconArrowLeft, IconMapPin, IconTruck, IconLoader2 } from '@tabler/icons-vue';
 
-const authStore = useAuthStore();
 const router = useRouter();
-const submitting = ref(false);
+const availabilityStore = useAvailabilityStore();
+const profileStore = useProfileStore();
 
-// Note: In a real app we'd use a dedicated store for availabilities.
-// Since one is not provided in context, I'll simulate or use a new one if I were to create it.
-// For now I'll mock the submission.
-// I'll update the 'mock.ts' later or assume there's a store method.
-// Looking at 'stores/announcement' or 'messaging', there isn't an 'availability' store yet.
-// I'll assume for this task I might need to create one, BUT the user asked to "create page for this action".
-// I will simulate the action for now or check if I should create a store. 
-// Given the user instructions "analyze data/mock.ts", let's see if I can add to it implicitly via a new store?
-// Actually, `mockAvailabilities` exists in `mock.ts`.
-// I will create `stores/availability.ts` after this if it doesn't exist, but first let's scaffold the page.
+const vehicles = computed(() => profileStore.vehicles);
+const loadingVehicles = computed(() => profileStore.vehiclesLoading);
+const submitting = ref(false);
+const error = ref('');
+
+onMounted(async () => {
+  await profileStore.fetchVehicles();
+});
 
 const form = reactive({
-  vehicleType: '',
-  capacity: undefined as number | undefined,
-  volumeCapacity: undefined as number | undefined,
-  pricePerKm: undefined as number | undefined,
-  availableFrom: '',
-  availableTo: '',
+  vehicleId: '',
+  price: undefined as number | undefined,
+  maxRequests: undefined as number | undefined,
+  startDate: '',
+  endDate: '',
   origin: {
     address: '',
     city: '',
-    postalCode: '',
     country: 'Bénin',
   },
   destination: {
     address: '',
     city: '',
-    postalCode: '',
     country: '',
   },
 });
 
 const submitAvailability = async () => {
+  if (!form.vehicleId) {
+    error.value = 'Veuillez sélectionner un véhicule';
+    return;
+  }
+
+  if (new Date(form.startDate) >= new Date(form.endDate)) {
+    error.value = 'La date de début doit être avant la date de fin';
+    return;
+  }
+
+  const now = new Date();
+  if (new Date(form.startDate) < now) {
+    error.value = 'La date de début ne peut pas être dans le passé';
+    return;
+  }
+  if (new Date(form.endDate) < now) {
+    error.value = 'La date de fin ne peut pas être dans le passé';
+    return;
+  }
+
   submitting.value = true;
-  try {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log("Availability published:", form);
+  error.value = '';
+
+  const result = await availabilityStore.addAvailability({
+    vehicleId: form.vehicleId,
+    price: form.price,
+    maxRequests: form.maxRequests,
+    startDate: new Date(form.startDate).toISOString(),
+    endDate: new Date(form.endDate).toISOString(),
+    origin: {
+      city: form.origin.city,
+      country: form.origin.country,
+      address: form.origin.address
+    },
+    destination: form.destination.city ? {
+      city: form.destination.city,
+      country: form.destination.country,
+      address: form.destination.address
+    } : undefined
+  });
+
+  submitting.value = false;
+
+  if (result.success) {
     router.push('/app/uc/availability');
-  } finally {
-    submitting.value = false;
+  } else {
+    error.value = typeof result.error === 'string' ? result.error : 'Une erreur est survenue';
   }
 };
 </script>

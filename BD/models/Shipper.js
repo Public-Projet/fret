@@ -68,6 +68,11 @@ module.exports = {
       type: 'number',
       description: 'Date d\'expiration du token de réinitialisation.'
     },
+    deletedAt: {
+      type: 'number',
+      description: 'Timestamp de la suppression du compte (Soft Delete).',
+      defaultsTo: 0
+    }
   },
 
   beforeCreate: async function (valuesToSet, proceed) {

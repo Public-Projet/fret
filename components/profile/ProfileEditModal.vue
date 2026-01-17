@@ -25,7 +25,7 @@
             </div>
             <div>
               <label class="label">Téléphone</label>
-              <input type="tel" v-model="form.phone" class="input" placeholder="+229 XX XX XX XX" />
+              <input type="tel" v-model="form.phone" class="input" placeholder="+229 01 XX XX XX XX" />
             </div>
             <div>
               <label class="label">Biographie</label>

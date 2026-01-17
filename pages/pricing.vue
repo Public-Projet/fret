@@ -254,7 +254,7 @@ const faqs = ref([
   {
     question: "Puis-je changer de forfait à tout moment ?",
     answer: "Oui, absolument. Vous pouvez passer d'un forfait mensuel à annuel, ou changer de niveau de service à tout moment depuis vos paramètres de compte. Les changements prennent effet immédiatement.",
-    isOpen: false
+    isOpen: true
   },
   {
     question: "Y a-t-il des frais cachés ?",
@@ -263,12 +263,12 @@ const faqs = ref([
   },
   {
     question: "Comment fonctionne la période d'essai ?",
-    answer: "Le plan Découverte est gratuit à vie avec des fonctionnalités limitées. Pour tester les fonctionnalités Pro, nous offrons parfois des codes promotionnels ou des périodes d'essai lors d'événements spéciaux.",
+    answer: "Le plan Découverte est gratuit à vie avec des fonctionnalités limitées.",
     isOpen: false
   },
   {
     question: "Quels moyens de paiement acceptez-vous ?",
-    answer: "Nous acceptons les cartes bancaires (Visa, Mastercard), Mobile Money (MTN, Moov) et les virements bancaires pour les plans Entreprise.",
+    answer: "Nous utilisons l'agragteur de paiements béninois Fedapay. Les moyens de paiement sont ceux définis par celui-ci. Pour le plan Entreprise, nous acceptons les virements bancaires.",
     isOpen: false
   }
 ]);
