@@ -217,9 +217,12 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const formatInputDate = (isoString: string) => {
-  if (!isoString) return '';
-  return new Date(isoString).toISOString().slice(0, 16); // format for datetime-local
+const formatInputDate = (dateString: string) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const offset = date.getTimezoneOffset() * 60000;
+  const localISOTime = (new Date(date.getTime() - offset)).toISOString().slice(0, 16);
+  return localISOTime;
 };
 
 const toggleEditMode = () => {
@@ -260,8 +263,8 @@ const handleUpdate = async () => {
 
   const payload = {
     // status is handled by backend
-    startDate: new Date(form.startDate).toISOString(),
-    endDate: new Date(form.endDate).toISOString(),
+    startDate: form.startDate,
+    endDate: form.endDate,
     price: form.price,
     maxRequests: form.maxRequests,
     origin: form.origin,

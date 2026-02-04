@@ -172,8 +172,8 @@ const submitAvailability = async () => {
     vehicleId: form.vehicleId,
     price: form.price,
     maxRequests: form.maxRequests,
-    startDate: new Date(form.startDate).toISOString(),
-    endDate: new Date(form.endDate).toISOString(),
+    startDate: form.startDate,
+    endDate: form.endDate,
     origin: {
       city: form.origin.city,
       country: form.origin.country,
