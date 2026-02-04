@@ -137,8 +137,12 @@ export function useAPI() {
   /**
    * Requête DELETE
    */
-  async function del<T>(url: string, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
-    return request<T>(url, { ...options, method: 'DELETE' });
+  async function del<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+    return request<T>(url, {
+      ...options,
+      method: 'DELETE',
+      body: data ? JSON.stringify(data) : undefined,
+    });
   }
 
   return {

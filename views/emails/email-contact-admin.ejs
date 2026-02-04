@@ -1,0 +1,16 @@
+<%- exposeLocalsToBrowser() %>
+<p>Bonjour,</p>
+<p>Un nouveau message de contact a été reçu sur la plateforme BourseFret.</p>
+<p><strong>Détails du message :</strong></p>
+<ul>
+    <li><strong>Numéro de Ticket :</strong> <%= message.ticketNumber %></li>
+    <li><strong>Nom :</strong> <%= message.firstName %> <%= message.lastName %></li>
+    <li><strong>Email :</strong> <%= message.email %></li>
+    <% if(message.phone) { %><li><strong>Téléphone :</strong> <%= message.phone %></li><% } %>
+    <li><strong>Sujet :</strong> <%= message.subject %></li>
+</ul>
+<p><strong>Message :</strong></p>
+<blockquote style="background: #f9f9f9; padding: 15px; border-left: 5px solid #ccc;">
+    <%- message.message.replace(/\n/g, '<br>') %>
+</blockquote>
+<p>Cordialement,<br>L'équipe BourseFret</p>

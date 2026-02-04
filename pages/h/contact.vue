@@ -95,6 +95,14 @@
               </div>
 
               <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Téléphone
+                  (Facultatif)</label>
+                <input type="tel" id="phone" v-model="form.phone"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
+                  placeholder="+229 01 23 45 67" />
+              </div>
+
+              <div>
                 <label for="subject"
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sujet</label>
                 <select id="subject" v-model="form.subject" required
@@ -116,7 +124,7 @@
               </div>
 
               <div class="flex items-center">
-                <input id="privacy" type="checkbox" required
+                <input id="privacy" type="checkbox" v-model="form.privacy" required
                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer">
                 <label for="privacy" class="ml-2 block text-sm text-gray-600 dark:text-gray-400">
                   J'accepte la <NuxtLink to="/l/privacy" class="text-primary-600 hover:underline">politique de
@@ -138,12 +146,47 @@
         </div>
       </div>
     </div>
+
+
+
+    <!-- Success Modal -->
+    <div v-if="showSuccess"
+      class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm">
+      <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-md w-full shadow-2xl transform transition-all">
+        <div class="text-center mb-6">
+          <div
+            class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600 dark:text-green-400">
+            <IconCheck class="w-8 h-8" />
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Message envoyé !</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Merci de nous avoir contactés. Votre numéro de ticket est :
+          </p>
+        </div>
+
+        <div
+          class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-6 flex items-center justify-between border border-gray-200 dark:border-gray-600">
+          <code class="font-mono text-lg font-bold text-primary-600 dark:text-primary-400">{{ ticketNumber }}</code>
+          <button @click="copyTicket"
+            class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-gray-500 dark:text-gray-400"
+            title="Copier">
+            <IconCopy v-if="!copied" class="w-5 h-5" />
+            <IconCheck v-else class="w-5 h-5 text-green-500" />
+          </button>
+        </div>
+
+        <button @click="closeSuccess" class="w-full btn btn-primary py-3 rounded-xl font-bold">
+          Fermer
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-import { IconMail, IconPhone, IconMapPin, IconSend } from '@tabler/icons-vue';
+import { IconMail, IconPhone, IconMapPin, IconSend, IconCheck, IconCopy } from '@tabler/icons-vue';
+import { useAPI } from '~/composables/useAPI';
 
 useHead({
   title: 'Contact'
@@ -154,29 +197,65 @@ definePageMeta({
 });
 
 const isLoading = ref(false);
+const showSuccess = ref(false);
+const ticketNumber = ref('');
+const copied = ref(false);
+const api = useAPI();
 
 const form = reactive({
   firstName: '',
   lastName: '',
   email: '',
+  phone: '',
   subject: '',
-  message: ''
+  message: '',
+  privacy: false
 });
 
 const handleSubmit = async () => {
+  if (!form.privacy) {
+    alert('Veuillez accepter la politique de confidentialité.');
+    return;
+  }
+
   isLoading.value = true;
 
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  try {
+    const response = await api.post<{ ticketNumber: string }>('/contact/submit', form);
 
-  // Reset form
-  form.firstName = '';
-  form.lastName = '';
-  form.email = '';
-  form.subject = '';
-  form.message = '';
+    if (response.success && response.data) {
+      ticketNumber.value = response.data.ticketNumber;
+      showSuccess.value = true;
 
-  isLoading.value = false;
-  alert('Votre message a été envoyé avec succès ! Nous vous recontacterons très bientôt.');
+      // Reset form
+      form.firstName = '';
+      form.lastName = '';
+      form.email = '';
+      form.phone = '';
+      form.subject = '';
+      form.message = '';
+      form.privacy = false;
+    } else {
+      alert('Erreur lors de l\'envoi : ' + (response.error || 'Une erreur est survenue.'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Une erreur technique est survenue.');
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const copyTicket = () => {
+  navigator.clipboard.writeText(ticketNumber.value);
+  copied.value = true;
+  setTimeout(() => {
+    copied.value = false;
+  }, 2000);
+};
+
+const closeSuccess = () => {
+  showSuccess.value = false;
+  ticketNumber.value = '';
 };
 </script>

@@ -94,6 +94,9 @@
     <ProfileEmailModal :show="showEmailModal" :loading="emailLoading" :error="emailError" :success="emailSuccess"
       @close="closeEmailModal" @submit="handleEmailSubmit" />
 
+    <AccountDeletionModal :show="showDeleteModal" :loading="deleteLoading" :error="deleteError" :success="deleteSuccess"
+      @close="closeDeleteModal" @submit="handleDeleteSubmit" />
+
   </div>
 </template>
 
@@ -104,6 +107,7 @@ import { useAuthStore } from '~/stores/auth';
 import { useProfileStore, type UpdatePasswordData, type UpdateEmailData } from '~/stores/profile';
 import ProfilePasswordModal from '~/components/profile/ProfilePasswordModal.vue';
 import ProfileEmailModal from '~/components/profile/ProfileEmailModal.vue';
+import AccountDeletionModal from '~/components/profile/AccountDeletionModal.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -147,6 +151,12 @@ const showEmailModal = ref(false);
 const emailLoading = ref(false);
 const emailError = ref('');
 const emailSuccess = ref('');
+
+// Delete Account Modal
+const showDeleteModal = ref(false);
+const deleteLoading = ref(false);
+const deleteError = ref('');
+const deleteSuccess = ref('');
 
 // Password Handlers
 const closePasswordModal = () => {
@@ -208,25 +218,49 @@ const handleEmailSubmit = async (data: UpdateEmailData) => {
   emailLoading.value = false;
 };
 
-// Delete Account
-const handleDeleteAccount = async () => {
-  if (!confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return;
+// Delete Account Handlers
+const closeDeleteModal = () => {
+  showDeleteModal.value = false;
+  setTimeout(() => {
+    deleteError.value = '';
+    deleteSuccess.value = '';
+  }, 300);
+};
+
+const handleDeleteAccount = () => {
+  showDeleteModal.value = true;
+};
+
+const handleDeleteSubmit = async (data: { password: string; confirmation: string }) => {
+  if (!currentUser.value) return;
+
+  deleteLoading.value = true;
+  deleteError.value = '';
+  deleteSuccess.value = '';
 
   try {
     const api = useAPI();
-    const userRole = currentUser.value?.role;
-    const endpoint = userRole === 'shipper' ? '/shipper/delete-account' : '/carrier/delete-account';
+    const userRole = currentUser.value.role;
+    const endpoint = userRole === 'shipper' ? '/shipper/profile' : '/carrier/profile';
+    console.log('Account Deletion - Role:', userRole);
+    console.log('Account Deletion - Endpoint:', endpoint);
+    console.log('Account Deletion - Data:', data);
 
-    const response = await api.del(endpoint);
+    const response = await api.del(endpoint, data);
 
     if (response.success) {
-      await authStore.logout();
-      router.push('/auth/login');
+      deleteSuccess.value = 'Votre compte a été supprimé.';
+      setTimeout(async () => {
+        await authStore.logout();
+        router.push('/auth/login');
+      }, 1500);
     } else {
-      alert('Erreur lors de la suppression du compte: ' + (response.error?.message || response.error));
+      deleteError.value = response.error?.message || 'Erreur lors de la suppression.';
     }
-  } catch (error) {
-    alert('Une erreur est survenue.');
+  } catch (error: any) {
+    deleteError.value = error.message || 'Une erreur est survenue.';
+  } finally {
+    deleteLoading.value = false;
   }
 };
 

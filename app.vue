@@ -3,11 +3,18 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+
+    <!-- Global WhatsApp Floating Button -->
+    <a href="https://wa.me/2290166523639" target="_blank" rel="noopener noreferrer"
+      class="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 flex items-center justify-center">
+      <IconBrandWhatsapp class="w-8 h-8" />
+    </a>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
+import { IconBrandWhatsapp } from '@tabler/icons-vue';
 
 const heroImagePath = "https://assets.volvo.com/is/image/VolvoInformationTechnologyAB/Volvo-High-Capacity-Transport-1?wid=1024";
 const baseUrl = "https://boursefret.netlify.app";
