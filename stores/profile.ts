@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
+import { useAPI } from '~/composables/useAPI';
 import type { UserRole } from '~/types';
+import type { Availability } from './availability';
 
 // Interface pour le profil utilisateur
 export interface UserProfile {
@@ -13,6 +15,15 @@ export interface UserProfile {
   bio?: string;
   photoUrl?: string;
   status: 'pending' | 'active' | 'suspended';
+  kycDocuments?: {
+    id: string;
+    type: string;
+    name: string;
+    status: 'pending' | 'verified' | 'rejected';
+    uploadedAt: number;
+    url: string;
+  }[];
+  kycStatus?: 'none' | 'pending' | 'verified' | 'rejected';
 }
 
 // Interface pour les données de mise à jour du profil
@@ -46,6 +57,8 @@ export interface Vehicle {
   capacity?: number;
   volume?: number;
   status: 'available' | 'in_transit' | 'maintenance';
+  availability?: Availability | null;
+  history?: Availability[];
 }
 
 export interface AddVehicleData {
@@ -276,9 +289,16 @@ export const useProfileStore = defineStore('profile', {
       const api = useAPI();
 
       try {
-        const response = await api.get<{ vehicle: Vehicle }>(`/carrier/vehicle/${id}`);
-        if (response.success && response.data?.vehicle) {
-          return { success: true, vehicle: response.data.vehicle };
+        const response = await api.get<{ vehicle: Vehicle; availability: Availability | null; history: Availability[] }>(`/carrier/vehicle/${id}`);
+        if (response.success && response.data) {
+          return {
+            success: true,
+            vehicle: {
+              ...response.data.vehicle,
+              availability: response.data.availability,
+              history: response.data.history
+            }
+          };
         } else {
           return { success: false, error: this.extractErrorMessage(response.error) };
         }
@@ -286,6 +306,35 @@ export const useProfileStore = defineStore('profile', {
         return { success: false, error: 'Erreur lors du chargement du véhicule' };
       } finally {
         this.vehiclesLoading = false;
+      }
+    },
+
+    /**
+     * Envoyer un document KYC
+     */
+    async uploadKycDocument(type: string, file: File) {
+      this.isLoading = true;
+      this.error = null;
+      const api = useAPI();
+
+      try {
+        const formData = new FormData();
+        formData.append('type', type);
+        formData.append('document', file);
+
+        const response = await api.post<{ message: string; document: any }>('/carrier/kyc', formData);
+
+        if (response.success && response.data) {
+          // Refresh profile to get updated kycDocuments
+          await this.fetchProfile('carrier');
+          return { success: true, message: response.data.message };
+        } else {
+          return { success: false, error: this.extractErrorMessage(response.error) };
+        }
+      } catch (e) {
+        return { success: false, error: 'Erreur lors de l\'envoi du document' };
+      } finally {
+        this.isLoading = false;
       }
     },
 

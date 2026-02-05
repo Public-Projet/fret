@@ -18,6 +18,16 @@ export interface AuthUser {
   reviewCount?: number;
   verified?: boolean;
   createdAt?: string;
+
+  kycDocuments?: {
+    id: string;
+    type: string;
+    name: string;
+    status: 'pending' | 'verified' | 'rejected';
+    uploadedAt: number;
+    url: string;
+  }[];
+  kycStatus?: 'none' | 'pending' | 'verified' | 'rejected';
 }
 
 /**
@@ -33,6 +43,8 @@ export interface ApiUser {
   phone?: string;
   bio?: string;
   photoUrl?: string;
+  kycDocuments?: any[];
+  kycStatus?: string;
 }
 
 /**
@@ -84,6 +96,7 @@ export function mapApiUserToAuthUser(apiUser: ApiUser): AuthUser {
     status: apiUser.status,
     phone: apiUser.phone,
     avatar: apiUser.photoUrl,
-    // Add other fields if needed for AuthUser matching
+    kycDocuments: apiUser.kycDocuments,
+    kycStatus: apiUser.kycStatus as any,
   };
 }

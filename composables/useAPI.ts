@@ -21,10 +21,12 @@ export function useAPI() {
     const tokenCookie = useCookie('auth_token');
     const token = tokenCookie.value;
 
+    const isFormData = options.body instanceof FormData;
+
     const defaultOptions: RequestInit = {
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/json',
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
         ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         ...options.headers,
       },
@@ -104,11 +106,11 @@ export function useAPI() {
   /**
    * Requête POST
    */
-  async function post<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+  async function post<T>(url: string, data?: object | FormData, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
     return request<T>(url, {
       ...options,
       method: 'POST',
-      body: data ? JSON.stringify(data) : undefined,
+      body: data instanceof FormData ? data : (data ? JSON.stringify(data) : undefined),
     });
   }
 
