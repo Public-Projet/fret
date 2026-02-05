@@ -39,10 +39,17 @@
                   <label class="label">Type de document</label>
                   <select v-model="form.type" class="input" required>
                     <option value="" disabled>Choisir un type...</option>
-                    <option value="id_card">Carte d'identité / CNI</option>
-                    <option value="drivers_license">Permis de conduire</option>
-                    <option value="truck_insurance">Assurance véhicule</option>
-                    <option value="business_license">Licence de transport / Registre de commerce</option>
+                    <template v-if="role === 'carrier'">
+                      <option value="id_card">Carte d'identité / CNI</option>
+                      <option value="drivers_license">Permis de conduire</option>
+                      <option value="truck_insurance">Assurance véhicule</option>
+                      <option value="business_license">Licence de transport / Registre de commerce</option>
+                    </template>
+                    <template v-else-if="role === 'shipper'">
+                      <option value="id_card">Carte d'identité / CNI</option>
+                      <option value="business_license">Registre de commerce</option>
+                      <option value="tax_id">Identifiant fiscal (Patente)</option>
+                    </template>
                   </select>
                 </div>
 
@@ -89,12 +96,15 @@ import {
   IconX, IconFileUpload, IconCloudUpload, IconFileCheck, IconLoader2
 } from '@tabler/icons-vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   show: boolean;
   loading: boolean;
   error?: string;
   success?: string;
-}>();
+  role?: 'carrier' | 'shipper';
+}>(), {
+  role: 'carrier'
+});
 
 const emit = defineEmits(['close', 'submit']);
 

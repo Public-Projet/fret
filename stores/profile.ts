@@ -312,21 +312,22 @@ export const useProfileStore = defineStore('profile', {
     /**
      * Envoyer un document KYC
      */
-    async uploadKycDocument(type: string, file: File) {
+    async uploadKycDocument(type: string, file: File, role: UserRole = 'carrier') {
       this.isLoading = true;
       this.error = null;
       const api = useAPI();
+      const endpoint = role === 'shipper' ? '/shipper/kyc' : '/carrier/kyc';
 
       try {
         const formData = new FormData();
         formData.append('type', type);
         formData.append('document', file);
 
-        const response = await api.post<{ message: string; document: any }>('/carrier/kyc', formData);
+        const response = await api.post<{ message: string; document: any }>(endpoint, formData);
 
         if (response.success && response.data) {
           // Refresh profile to get updated kycDocuments
-          await this.fetchProfile('carrier');
+          await this.fetchProfile(role);
           return { success: true, message: response.data.message };
         } else {
           return { success: false, error: this.extractErrorMessage(response.error) };
@@ -339,8 +340,26 @@ export const useProfileStore = defineStore('profile', {
     },
 
     /**
-     * Mettre à jour un véhicule
+     * Récupérer les métadonnées d'un document KYC
      */
+    async fetchKycDocument(role: UserRole, docId: string) {
+      this.isLoading = true;
+      const api = useAPI();
+      const endpoint = role === 'shipper' ? `/shipper/kyc-document/${docId}` : `/carrier/kyc-document/${docId}`;
+
+      try {
+        const response = await api.get<{ document: any }>(endpoint);
+        if (response.success && response.data?.document) {
+          return { success: true, document: response.data.document };
+        } else {
+          return { success: false, error: this.extractErrorMessage(response.error) };
+        }
+      } catch (e) {
+        return { success: false, error: 'Erreur lors de la récupération du document' };
+      } finally {
+        this.isLoading = false;
+      }
+    },
     async updateVehicle(id: string, data: Partial<AddVehicleData>) {
       this.vehiclesLoading = true;
       const api = useAPI();

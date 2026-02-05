@@ -96,7 +96,13 @@
                 </div>
                 <div>
                   <h4 class="font-bold text-gray-900 dark:text-white">{{ getDocTypeName(doc.type) }}</h4>
-                  <p class="text-xs text-gray-500">Soumis le {{ formatDate(doc.uploadedAt) }}</p>
+                  <div class="flex items-center space-x-2">
+                    <p class="text-xs text-gray-500">Soumis le {{ formatDate(doc.uploadedAt) }}</p>
+                    <span class="text-gray-300">•</span>
+                       <NuxtLink :to="`/app/uc/kyc/${doc.id}`" class="text-xs text-secondary-600 hover:text-secondary-700 font-medium flex items-center">
+                         <IconEye class="w-3 h-3 mr-1" /> Détails
+                       </NuxtLink>
+                  </div>
                 </div>
               </div>
               <span class="badge" :class="{
@@ -157,7 +163,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useProfileStore, type AddVehicleData, type Vehicle } from '~/stores/profile';
 import {
-  IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil
+  IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconDownload, IconX, IconLoader2, IconEye, IconArrowLeft, IconFileDescription, IconAlertCircle, IconFileTypePdf
 } from '@tabler/icons-vue';
 
 // Profile Components

@@ -10,11 +10,53 @@
         <ProfileAboutCard :profile="profile" accent-color="primary" @edit-email="openEmailModal" />
         <ProfileSecurityCard accent-color="primary" @open-password="openPasswordModal" @open-email="openEmailModal" />
 
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <h3 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+            <IconCertificate class="w-5 h-5 mr-2 text-primary-600" />
+            Documents
+          </h3>
+
+          <div v-if="!profile?.kycDocuments || profile.kycDocuments.length === 0" class="text-center py-4">
+            <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Aucun document</p>
+            <button @click="openKycModal" class="btn btn-primary btn-sm w-full">
+              <IconPlus class="w-4 h-4 mr-1" /> Ajouter
+            </button>
+          </div>
+
+          <div v-else class="space-y-3">
+            <div v-for="doc in profile.kycDocuments" :key="doc.id"
+              class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+              <div class="flex items-center space-x-3 overflow-hidden">
+                <IconFileCheck v-if="doc.status === 'verified'" class="w-5 h-5 text-green-500 flex-shrink-0" />
+                <IconLoader2 v-else-if="doc.status === 'pending'" class="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                <IconX v-else class="w-5 h-5 text-red-500 flex-shrink-0" />
+                <div class="min-w-0">
+                  <p class="text-sm font-medium truncate text-gray-900 dark:text-white">{{ getDocTypeName(doc.type) }}
+                  </p>
+                  <NuxtLink :to="`/app/us/kyc/${doc.id}`"
+                    class="text-xs text-primary-600 hover:text-primary-700 flex items-center mt-0.5">
+                    <IconEye class="w-3 h-3 mr-1" /> Détails
+                  </NuxtLink>
+                </div>
+              </div>
+              <span class="badge badge-sm" :class="{
+                'badge-success': doc.status === 'verified',
+                'badge-warning': doc.status === 'pending',
+                'badge-error': doc.status === 'rejected'
+              }">{{ getStatusLabel(doc.status) }}</span>
+            </div>
+            <button @click="openKycModal" class="btn btn-ghost btn-sm w-full text-primary-600 text-xs">
+              + Ajouter un autre
+            </button>
+          </div>
+        </div>
+
         <div
           class="bg-gradient-to-br from-primary-900 to-slate-900 text-white rounded-xl shadow-lg p-6 relative overflow-hidden">
           <div class="relative z-10">
             <h3 class="text-lg font-bold mb-1">Expéditeur</h3>
-            <p class="text-primary-200 text-sm mb-4">Compte {{ profile?.status === 'active' ? 'actif' : 'en attente' }}
+            <p class="text-primary-200 text-sm mb-4">Compte {{ profile?.status === 'active' ? 'actif' : 'en attente'
+            }}
             </p>
           </div>
           <IconPremiumRights class="absolute -bottom-4 -right-4 w-32 h-32 text-white/5" />
@@ -51,13 +93,16 @@
 
     <ProfileSecurityModal :show="showSecurityModal" :email="profile?.email" accent-color="primary"
       @close="showSecurityModal = false" @open-password="openPasswordModal" @open-email="openEmailModal" />
+
+    <ProfileKycModal :show="showKycModal" :loading="kycLoading" :error="kycError" :success="kycSuccess" role="shipper"
+      @close="showKycModal = false" @submit="handleKycSubmit" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useProfileStore } from '~/stores/profile';
-import { IconPremiumRights, IconHistory } from '@tabler/icons-vue';
+import { IconPremiumRights, IconHistory, IconCertificate, IconPlus, IconFileCheck, IconLoader2, IconX, IconDownload, IconEye } from '@tabler/icons-vue';
 
 // Profile Components
 import ShipperProfileHeader from '~/components/profile/ShipperProfileHeader.vue';
@@ -68,6 +113,7 @@ import ProfileEditModal from '~/components/profile/ProfileEditModal.vue';
 import ProfilePasswordModal from '~/components/profile/ProfilePasswordModal.vue';
 import ProfileEmailModal from '~/components/profile/ProfileEmailModal.vue';
 import ProfileSecurityModal from '~/components/profile/ProfileSecurityModal.vue';
+import ProfileKycModal from '~/components/profile/ProfileKycModal.vue';
 
 const profileStore = useProfileStore();
 const profile = computed(() => profileStore.profile);
@@ -92,6 +138,12 @@ const passwordSuccess = ref('');
 const emailLoading = ref(false);
 const emailError = ref('');
 const emailSuccess = ref('');
+
+// KYC state
+const showKycModal = ref(false);
+const kycLoading = ref(false);
+const kycError = ref('');
+const kycSuccess = ref('');
 
 onMounted(async () => {
   await profileStore.fetchProfile('shipper');
@@ -171,6 +223,46 @@ const handleUpdateEmail = async (data: { newEmail: string; password: string }) =
   } else {
     emailError.value = result.error || 'Une erreur est survenue';
   }
+};
+
+const openKycModal = () => {
+  kycError.value = '';
+  kycSuccess.value = '';
+  showKycModal.value = true;
+};
+
+const handleKycSubmit = async (data: { type: string; file: File }) => {
+  kycLoading.value = true;
+  kycError.value = '';
+  kycSuccess.value = '';
+
+  const result = await profileStore.uploadKycDocument(data.type, data.file, 'shipper');
+  kycLoading.value = false;
+
+  if (result.success) {
+    kycSuccess.value = result.message || 'Document soumis avec succès !';
+    setTimeout(() => { showKycModal.value = false; }, 1500);
+  } else {
+    kycError.value = result.error || 'Une erreur est survenue lors de l\'envoi';
+  }
+};
+
+const getDocTypeName = (type: string) => {
+  const types: Record<string, string> = {
+    id_card: "Carte d'identité",
+    business_license: "Registre de commerce",
+    tax_id: "Identifiant fiscal (Patente)"
+  };
+  return types[type] || type;
+};
+
+const getStatusLabel = (status: string) => {
+  const labels: Record<string, string> = {
+    pending: 'En attente',
+    verified: 'Vérifié',
+    rejected: 'Rejeté'
+  };
+  return labels[status] || status;
 };
 
 definePageMeta({ layout: 'default' });
