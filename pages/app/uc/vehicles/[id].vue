@@ -157,7 +157,7 @@
             </div>
 
             <div class="mt-8 border-t border-gray-100 dark:border-gray-700 pt-6">
-              <NuxtLink :to="`/app/uc/availability/`" class="btn btn-outline btn-sm w-full">
+              <NuxtLink :to="`/app/uc/avail`" class="btn btn-outline btn-sm w-full">
                 Gérer
               </NuxtLink>
             </div>
@@ -192,7 +192,7 @@
             <h3 class="font-bold text-gray-900 dark:text-white mb-4">Disponibilité</h3>
             <p class="text-gray-500 dark:text-gray-400 text-sm">Ce véhicule n'a aucune disponibilité active publiée.</p>
             <div class="mt-6">
-              <NuxtLink to="/app/uc/availability" class="btn btn-secondary btn-sm w-full">
+              <NuxtLink to="/app/uc/avail" class="btn btn-secondary btn-sm w-full">
                 Publier une disponibilité
               </NuxtLink>
             </div>

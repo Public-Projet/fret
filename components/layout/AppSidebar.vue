@@ -132,7 +132,7 @@ const menuItems = computed<MenuItem[]>(() => [
   },
   {
     label: 'Disponibilités',
-    to: '/app/uc/availability',
+    to: '/app/uc/avail',
     icon: IconTruck,
     roles: [ROLES.Carrier]
   },

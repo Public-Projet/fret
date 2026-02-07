@@ -18,7 +18,7 @@
     </div>
 
     <div class="mb-6 flex justify-end">
-      <NuxtLink to="/app/uc/availability"
+      <NuxtLink to="/app/uc/avail"
         class="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center">
         <IconTruck class="w-4 h-4 mr-1" />
         Gérer mes disponibilités
@@ -153,7 +153,7 @@ const messagingStore = useMessagingStore();
 const announcementStore = useAnnouncementStore();
 
 const publishAvailability = () => {
-  useRouter().push('/app/uc/availability/create');
+  useRouter().push('/app/uc/avail/create');
 };
 
 const currentUser = computed(() => authStore.currentUser);

@@ -33,7 +33,3 @@ onMounted(() => {
   themeStore.restoreTheme();
 });
 </script>
-
-<style scoped>
-/* Optional: Define grid pattern inline if image missing */
-</style>

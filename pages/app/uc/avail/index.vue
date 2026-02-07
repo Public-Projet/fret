@@ -5,7 +5,7 @@
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mes disponibilités</h1>
         <p class="text-gray-600 dark:text-gray-400">Gérez vos créneaux et véhicules disponibles</p>
       </div>
-      <NuxtLink to="/app/uc/availability/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
+      <NuxtLink to="/app/uc/avail/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
         <IconPlus class="w-5 h-5 mr-2" />
         Publier une disponibilité
       </NuxtLink>
@@ -20,7 +20,7 @@
       <IconTruck class="w-16 h-16 mx-auto text-gray-300 mb-4" />
       <h3 class="text-lg font-medium text-gray-900 dark:text-white">Aucune disponibilité publiée</h3>
       <p class="text-gray-500 dark:text-gray-400 mt-2">Publiez vos trajets pour être visible des chargeurs.</p>
-      <NuxtLink to="/app/uc/availability/create" class="btn btn-primary mt-6">
+      <NuxtLink to="/app/uc/avail/create" class="btn btn-primary mt-6">
         Publier maintenant
       </NuxtLink>
     </div>
@@ -36,8 +36,10 @@
             </h3>
             <span class="badge" :class="{
               'badge-success': item.status === 'active',
+              'badge-warning': item.status === 'full',
+              'badge-info': item.status === 'prolonged',
               'badge-error': item.status === 'expired'
-            }">{{ item.status === 'active' ? 'Actif' : 'Expiré' }}</span>
+            }">{{ getStatusLabel(item.status) }}</span>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 text-sm text-gray-600 dark:text-gray-400">
             <div class="flex items-center">
@@ -60,7 +62,7 @@
           </div>
         </div>
         <div class="flex items-center space-x-2">
-          <NuxtLink :to="`/app/uc/availability/${item.id}`" class="btn btn-outline hover:bg-gray-50">
+          <NuxtLink :to="`/app/uc/avail/${item.id}`" class="btn btn-outline hover:bg-gray-50">
             <IconEye class="w-4 h-4 mr-2" /> Détails
           </NuxtLink>
         </div>
@@ -73,7 +75,7 @@
 import { computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAvailabilityStore } from '~/stores/availability';
-import { IconCalendar, IconMapPin, IconPlus, IconTruck, IconWeight, IconCurrencyEuro, IconTrash, IconLoader2, IconEye } from '@tabler/icons-vue';
+import { IconCalendar, IconMapPin, IconPlus, IconTruck, IconWeight, IconCurrencyEuro, IconEye } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const availabilityStore = useAvailabilityStore();
@@ -84,6 +86,16 @@ const loading = computed(() => availabilityStore.loading);
 onMounted(() => {
   availabilityStore.fetchAvailabilities();
 });
+
+const getStatusLabel = (status: string) => {
+  const labels: Record<string, string> = {
+    active: 'Actif',
+    full: 'Complet',
+    expired: 'Expiré',
+    prolonged: 'Prolongé'
+  };
+  return labels[status] || status;
+};
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('fr-FR', {

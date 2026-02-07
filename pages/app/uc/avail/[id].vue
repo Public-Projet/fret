@@ -2,7 +2,7 @@
   <div class="container-custom py-8">
     <!-- Header/Nav -->
     <div class="mb-6 flex justify-between items-center">
-      <NuxtLink to="/app/uc/availability" class="text-sm text-gray-500 hover:text-gray-900 flex items-center">
+      <NuxtLink to="/app/uc/avail" class="text-sm text-gray-500 hover:text-gray-900 flex items-center">
         <IconArrowLeft class="w-4 h-4 mr-1" />
         Retour aux disponibilités
       </NuxtLink>
@@ -22,7 +22,7 @@
 
     <div v-else-if="error" class="bg-red-50 text-red-600 p-6 rounded-xl text-center">
       <p class="mb-4">{{ error }}</p>
-      <NuxtLink to="/app/uc/availability" class="btn btn-outline btn-sm">Retour à la liste</NuxtLink>
+      <NuxtLink to="/app/uc/avail" class="btn btn-outline btn-sm">Retour à la liste</NuxtLink>
     </div>
 
     <!-- View Mode -->
@@ -37,9 +37,10 @@
               <span class="badge" :class="{
                 'badge-success': availability.status === 'active',
                 'badge-error': availability.status === 'expired',
-                'badge-warning': availability.status === 'full'
+                'badge-warning': availability.status === 'full',
+                'badge-info': availability.status === 'prolonged'
               }">
-                {{ availability.status.toUpperCase() }}
+                {{ getStatusLabel(availability.status) }}
               </span>
             </div>
             <div class="text-right">
@@ -211,6 +212,16 @@ const loadAvailability = async () => {
   loading.value = false;
 };
 
+const getStatusLabel = (status: string) => {
+  const labels: Record<string, string> = {
+    active: 'Actif',
+    full: 'Complet',
+    expired: 'Expiré',
+    prolonged: 'Prolongé'
+  };
+  return labels[status].toUpperCase() || status.toUpperCase();
+};
+
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('fr-FR', {
     day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
@@ -287,7 +298,7 @@ const handleDelete = async () => {
   if (!confirm('Supprimer cette disponibilité ?')) return;
   const result = await store.deleteAvailability(id);
   if (result.success) {
-    router.push('/app/uc/availability');
+    router.push('/app/uc/avail');
   } else {
     alert(result.error);
   }

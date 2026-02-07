@@ -2,7 +2,7 @@
   <div class="container-custom py-8">
     <div class="max-w-2xl mx-auto">
       <div class="mb-6">
-        <NuxtLink to="/app/uc/availability" class="text-sm text-gray-500 hover:text-gray-900 flex items-center mb-2">
+        <NuxtLink to="/app/uc/avail" class="text-sm text-gray-500 hover:text-gray-900 flex items-center mb-2">
           <IconArrowLeft class="w-4 h-4 mr-1" />
           Retour aux disponibilités
         </NuxtLink>
@@ -189,7 +189,7 @@ const submitAvailability = async () => {
   submitting.value = false;
 
   if (result.success) {
-    router.push('/app/uc/availability');
+    router.push('/app/uc/avail');
   } else {
     error.value = typeof result.error === 'string' ? result.error : 'Une erreur est survenue';
   }
