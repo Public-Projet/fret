@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <!-- Mobile Header -->
-    <AppHeader :menu-open="mobileMenuOpen" @toggle-menu="mobileMenuOpen = !mobileMenuOpen" />
+    <LayoutAppHeader :menu-open="mobileMenuOpen" @toggle-menu="mobileMenuOpen = !mobileMenuOpen" />
 
     <!-- Mobile Menu Overlay -->
     <div v-if="mobileMenuOpen" class="lg:hidden fixed inset-0 z-20 bg-gray-900/50 backdrop-blur-sm"
@@ -24,13 +24,14 @@
             </div>
           </div>
         </div>
-        <AppNavigation :is-shipper="isShipper" :unread-count="unreadCount" @click.native="mobileMenuOpen = false" />
+        <LayoutAppNavigation :is-shipper="isShipper" :unread-count="unreadCount"
+          @click.native="mobileMenuOpen = false" />
       </div>
     </div>
 
     <div class="flex flex-grow relative">
       <!-- Desktop Sidebar -->
-      <AppSidebar :user-initials="userInitials" :user-name="userName" :user-role="userRole"
+      <LayoutAppSidebar :user-initials="userInitials" :user-name="userName" :user-role="userRole"
         :user-email="currentUser?.email || ''" :is-shipper="isShipper" :unread-count="unreadCount"
         :collapsed="isSidebarCollapsed" @toggle-collapse="isSidebarCollapsed = !isSidebarCollapsed" />
 
@@ -47,10 +48,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import AppHeader from '~/components/layout/AppHeader.vue';
-import AppSidebar from '~/components/layout/AppSidebar.vue';
-import AppNavigation from '~/components/layout/AppNavigation.vue';
-
 import { useAuthStore } from '~/stores/auth';
 import { useMessagingStore } from '~/stores/messaging';
 

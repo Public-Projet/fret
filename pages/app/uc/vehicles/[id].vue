@@ -206,7 +206,7 @@
       :success="modalSuccess" @close="closeModal" @submit="handleSubmit" />
 
     <!-- Status Modal -->
-    <VehicleStatusModal :show="showStatusModal" :current-status="vehicle?.status || 'available'"
+    <ProfileVehicleStatusModal :show="showStatusModal" :current-status="vehicle?.status || 'available'"
       :loading="statusLoading" :error="statusError" :success="statusSuccess" @close="showStatusModal = false"
       @submit="handleStatusChange" />
   </div>
@@ -217,8 +217,6 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProfileStore, type Vehicle, type AddVehicleData } from '~/stores/profile';
 import { IconArrowLeft, IconTruck, IconPencil, IconTrash, IconLoader2, IconRefresh, IconMapPin, IconCalendar, IconCurrencyEuro, IconInfoCircle } from '@tabler/icons-vue';
-import ProfileVehicleModal from '~/components/profile/ProfileVehicleModal.vue';
-import VehicleStatusModal from '~/components/profile/VehicleStatusModal.vue';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 

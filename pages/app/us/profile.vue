@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
     <!-- Corporate Banner -->
-    <ShipperProfileHeader :profile="profile" @open-security="showSecurityModal = true" @open-edit="openEditModal" />
+    <ProfileShipperHeader :profile="profile" @open-security="showSecurityModal = true" @open-edit="openEditModal" />
 
     <!-- Main Content -->
     <div class="container-custom mt-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -66,7 +66,7 @@
       <!-- Right Column -->
       <div class="lg:col-span-2 space-y-6">
         <!-- KPI Cards -->
-        <ShipperKpiCards :announcements="0" reliability="-" rating="-" payment="-" />
+        <ProfileShipperKpiCards :announcements="0" reliability="-" rating="-" payment="-" />
 
         <!-- Recent Activity -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -103,17 +103,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useProfileStore } from '~/stores/profile';
 import { IconPremiumRights, IconHistory, IconCertificate, IconPlus, IconFileCheck, IconLoader2, IconX, IconDownload, IconEye } from '@tabler/icons-vue';
-
-// Profile Components
-import ShipperProfileHeader from '~/components/profile/ShipperProfileHeader.vue';
-import ShipperKpiCards from '~/components/profile/ShipperKpiCards.vue';
-import ProfileAboutCard from '~/components/profile/ProfileAboutCard.vue';
-import ProfileSecurityCard from '~/components/profile/ProfileSecurityCard.vue';
-import ProfileEditModal from '~/components/profile/ProfileEditModal.vue';
-import ProfilePasswordModal from '~/components/profile/ProfilePasswordModal.vue';
-import ProfileEmailModal from '~/components/profile/ProfileEmailModal.vue';
-import ProfileSecurityModal from '~/components/profile/ProfileSecurityModal.vue';
-import ProfileKycModal from '~/components/profile/ProfileKycModal.vue';
 
 const profileStore = useProfileStore();
 const profile = computed(() => profileStore.profile);

@@ -56,7 +56,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useAnnouncementStore } from '~/stores/announcement';
-import AnnouncementCard from '~/components/announcement/AnnouncementCard.vue';
 import type { AnnouncementFilters } from '~/types';
 
 const announcementStore = useAnnouncementStore();

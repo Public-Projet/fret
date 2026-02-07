@@ -114,7 +114,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useProfileStore, type Vehicle, type AddVehicleData } from '~/stores/profile';
 import { IconTruck, IconPlus, IconLoader2, IconPencil, IconTrash } from '@tabler/icons-vue';
-import ProfileVehicleModal from '~/components/profile/ProfileVehicleModal.vue';
 
 const profileStore = useProfileStore();
 const vehicles = computed(() => profileStore.vehicles);

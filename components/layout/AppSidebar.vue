@@ -116,6 +116,12 @@ const menuItems = computed<MenuItem[]>(() => [
     icon: IconTruck,
     roles: [ROLES.Shipper]
   },
+  {
+    label: 'Disponibilités',
+    to: '/app/us/avail',
+    icon: IconTruck,
+    roles: [ROLES.Shipper]
+  },
 
   // Expediteur
   {

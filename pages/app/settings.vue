@@ -105,9 +105,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
 import { useProfileStore, type UpdatePasswordData, type UpdateEmailData } from '~/stores/profile';
-import ProfilePasswordModal from '~/components/profile/ProfilePasswordModal.vue';
-import ProfileEmailModal from '~/components/profile/ProfileEmailModal.vue';
-import AccountDeletionModal from '~/components/profile/AccountDeletionModal.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();

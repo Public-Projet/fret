@@ -14,17 +14,15 @@
       </div>
     </div>
 
-    <Header class="relative z-10" />
+    <LayoutHeader class="relative z-10" />
     <main class="flex-grow relative z-10">
       <slot />
     </main>
-    <Footer class="relative z-10" />
+    <LayoutFooter class="relative z-10" />
   </div>
 </template>
 
 <script setup lang="ts">
-import Header from '~/components/layout/Header.vue';
-import Footer from '~/components/layout/Footer.vue';
 import { useThemeStore } from '~/stores/theme';
 
 const themeStore = useThemeStore();

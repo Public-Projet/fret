@@ -97,8 +97,8 @@
       </div>
     </div>
 
-    <EditAnnouncementModal v-if="showEditModal" :announcement="announcementToEdit" @close="showEditModal = false"
-      @update="handleUpdate" />
+    <DashboardEditAnnouncementModal v-if="showEditModal" :announcement="announcementToEdit"
+      @close="showEditModal = false" @update="handleUpdate" />
   </div>
 </template>
 
@@ -107,7 +107,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
 import type { Announcement } from '~/types';
-import EditAnnouncementModal from '~/components/dashboard/EditAnnouncementModal.vue';
 import { IconCalendar, IconFileText, IconMapPin, IconPencil, IconPlus, IconTrash, IconEye } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();

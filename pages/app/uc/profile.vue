@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
     <!-- Header with Map Background Effect -->
-    <CarrierProfileHeader :profile="profile" />
+    <ProfileCarrierHeader :profile="profile" />
 
     <!-- Stats Bar -->
-    <CarrierStatsBar :missions="0" :rating="'-'" :vehicles="vehicles.length" @open-security="showSecurityModal = true"
-      @open-edit="openEditModal" />
+    <ProfileCarrierStatsBar :missions="0" :rating="'-'" :vehicles="vehicles.length"
+      @open-security="showSecurityModal = true" @open-edit="openEditModal" />
 
     <div class="container-custom mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Main Info -->
@@ -99,9 +99,10 @@
                   <div class="flex items-center space-x-2">
                     <p class="text-xs text-gray-500">Soumis le {{ formatDate(doc.uploadedAt) }}</p>
                     <span class="text-gray-300">•</span>
-                       <NuxtLink :to="`/app/uc/kyc/${doc.id}`" class="text-xs text-secondary-600 hover:text-secondary-700 font-medium flex items-center">
-                         <IconEye class="w-3 h-3 mr-1" /> Détails
-                       </NuxtLink>
+                    <NuxtLink :to="`/app/uc/kyc/${doc.id}`"
+                      class="text-xs text-secondary-600 hover:text-secondary-700 font-medium flex items-center">
+                      <IconEye class="w-3 h-3 mr-1" /> Détails
+                    </NuxtLink>
                   </div>
                 </div>
               </div>
@@ -163,20 +164,8 @@
 import { ref, computed, onMounted } from 'vue';
 import { useProfileStore, type AddVehicleData, type Vehicle } from '~/stores/profile';
 import {
-  IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconDownload, IconX, IconLoader2, IconEye, IconArrowLeft, IconFileDescription, IconAlertCircle, IconFileTypePdf
+  IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconX, IconLoader2, IconEye
 } from '@tabler/icons-vue';
-
-// Profile Components
-import CarrierProfileHeader from '~/components/profile/CarrierProfileHeader.vue';
-import CarrierStatsBar from '~/components/profile/CarrierStatsBar.vue';
-import ProfileContactCard from '~/components/profile/ProfileContactCard.vue';
-import ProfileSecurityCard from '~/components/profile/ProfileSecurityCard.vue';
-import ProfileEditModal from '~/components/profile/ProfileEditModal.vue';
-import ProfilePasswordModal from '~/components/profile/ProfilePasswordModal.vue';
-import ProfileEmailModal from '~/components/profile/ProfileEmailModal.vue';
-import ProfileSecurityModal from '~/components/profile/ProfileSecurityModal.vue';
-import ProfileVehicleModal from '~/components/profile/ProfileVehicleModal.vue';
-import ProfileKycModal from '~/components/profile/ProfileKycModal.vue';
 
 const profileStore = useProfileStore();
 const profile = computed(() => profileStore.profile);

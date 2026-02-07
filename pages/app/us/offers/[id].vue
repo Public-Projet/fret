@@ -165,7 +165,7 @@
       </div>
     </div>
 
-    <EditAnnouncementModal v-if="showEditModal" :announcement="announcement" @close="showEditModal = false"
+    <DashboardEditAnnouncementModal v-if="showEditModal" :announcement="announcement" @close="showEditModal = false"
       @update="handleUpdate" />
 
   </div>
@@ -176,7 +176,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAuthStore } from '~/stores/auth';
-import EditAnnouncementModal from '~/components/dashboard/EditAnnouncementModal.vue';
 import {
   IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled,
   IconCheck, IconMessage, IconBadge
