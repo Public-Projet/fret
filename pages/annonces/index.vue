@@ -217,6 +217,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { useAuthStore } from '~/stores/auth';
+import { useRoute } from 'vue-router';
 import {
   IconMapPin, IconCalendar, IconSearch, IconLoader2, IconTruckOff,
   IconTruck, IconMapPinFilled, IconStarFilled, IconPackage, IconRefresh, IconPackageOff
@@ -226,6 +227,7 @@ const availStore = useAvailabilityStore();
 const fretStore = useAnnouncementStore();
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 const activeTab = ref<'avail' | 'fret'>('avail');
 
@@ -238,6 +240,10 @@ const availFilters = ref({
 
 const filteredAvailabilities = computed(() => {
   return availStore.availabilities.filter(item => {
+    // Filter by User if provided in query
+    const matchUserId = !route.query.userId || item.carrier?.id === route.query.userId;
+    if (!matchUserId) return false;
+
     const matchOrigin = !availFilters.value.origin || item.origin.city.toLowerCase().includes(availFilters.value.origin.toLowerCase());
     const matchDest = !availFilters.value.destination || (item.destination?.city || '').toLowerCase().includes(availFilters.value.destination.toLowerCase());
     const matchDate = !availFilters.value.date || item.startDate.includes(availFilters.value.date);
@@ -313,11 +319,29 @@ const fetchData = async () => {
   }
 };
 
-watch(activeTab, () => {
+// Handle Query Params
+const handleQueryParams = () => {
+  if (route.query.tab === 'fret') {
+    activeTab.value = 'fret';
+  } else if (route.query.tab === 'avail') {
+    activeTab.value = 'avail';
+  }
+};
+
+watch(() => route.query.tab, (newTab) => {
+  if (newTab === 'fret' || newTab === 'avail') {
+    activeTab.value = newTab as 'avail' | 'fret';
+  }
+});
+
+watch(activeTab, (newTab) => {
+  // Sync tab to query without full reload if desired, or just fetch
+  // router.replace({ query: { ...route.query, tab: newTab } });
   fetchData();
 });
 
 onMounted(() => {
+  handleQueryParams();
   fetchData();
 });
 

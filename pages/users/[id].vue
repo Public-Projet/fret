@@ -109,7 +109,8 @@
             Ce transporteur propose des trajets réguliers et des services de logistique. Vous pouvez consulter ses
             disponibilités actuelles pour réserver une place.
           </p>
-          <NuxtLink to="/avail" class="btn btn-primary">Voir ses disponibilités</NuxtLink>
+          <NuxtLink :to="`/annonces?tab=avail&userId=${user.id}`" class="btn btn-primary">Voir ses disponibilités
+          </NuxtLink>
         </div>
 
         <!-- Rating Section -->

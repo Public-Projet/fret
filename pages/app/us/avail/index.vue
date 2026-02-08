@@ -97,7 +97,7 @@
 
           <!-- Actions -->
           <div class="flex space-x-2">
-            <NuxtLink :to="`/avail/${enrollment.availability?.id}`" class="btn btn-ghost btn-sm">
+            <NuxtLink :to="`/annonces/${enrollment.availability?.id}?type=avail`" class="btn btn-ghost btn-sm">
               Détails
             </NuxtLink>
             <NuxtLink :to="`/app/messages`" class="btn btn-outline btn-primary btn-sm">

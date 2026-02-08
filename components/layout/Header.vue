@@ -163,17 +163,13 @@ const headerLinks = computed(() => {
   if (authStore.isAuthenticated) {
     return [
       { label: 'Tableau de bord', to: authStore.isShipper ? '/app/us' : '/app/uc' },
-      { label: 'Disponibilités', to: '/avail' },
-      { label: 'Annonces', to: '/offers' },
-      { label: 'Demandes', to: '/annonces' },
+      { label: 'Marché', to: '/annonces' },
       { label: 'Annuaire', to: '/users' },
       { label: 'Messages', to: '/app/messages', badge: unreadCount.value }
     ];
   } else {
     return [
-      { label: 'Disponibilités', to: '/avail' },
-      { label: 'Annonces', to: '/offers' },
-      { label: 'Demandes', to: '/annonces' },
+      { label: 'Marché', to: '/annonces' },
       { label: 'Annuaire', to: '/users' },
       { label: 'Fonctionnalités', to: '/#features' },
       { label: 'Tarifs', to: '/pricing' }

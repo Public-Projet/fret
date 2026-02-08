@@ -103,7 +103,13 @@
                 </div>
                 <span class="text-xs font-medium text-gray-600">{{ item.carrier?.firstname }}</span>
               </div>
-              <NuxtLink :to="`/avail/${item.id}`" class="btn btn-primary btn-sm rounded-xl px-4">
+              <template v-if="availabilityStore.isEnrolled(item.id)">
+                <span class="text-xs font-bold text-green-600 flex items-center">
+                  <IconCheck class="w-4 h-4 mr-1" />
+                  Déjà inscrit
+                </span>
+              </template>
+              <NuxtLink v-else :to="`/annonces/${item.id}?type=avail`" class="btn btn-primary btn-sm rounded-xl px-4">
                 S'inscrire
               </NuxtLink>
             </div>
