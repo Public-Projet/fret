@@ -151,12 +151,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
+import { useAuthStore } from '~/stores/auth';
 import {
   IconMapPin, IconCalendar, IconSearch, IconLoader2, IconTruckOff,
   IconTruck, IconMapPinFilled, IconStarFilled
 } from '@tabler/icons-vue';
 
 const availabilityStore = useAvailabilityStore();
+const authStore = useAuthStore();
 const loading = computed(() => availabilityStore.loading);
 const availabilities = computed(() => availabilityStore.availabilities);
 

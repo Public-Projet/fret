@@ -48,8 +48,9 @@ export const useAvailabilityStore = defineStore('availability', {
   }),
 
   getters: {
-    isEnrolled: (state) => (availabilityId: string) => {
-      return state.enrollments.some(e => e.availability?.id === availabilityId && e.status !== 'cancelled');
+    isEnrolled: (state) => (availabilityId: string | number) => {
+      const idStr = String(availabilityId);
+      return state.enrollments.some(e => String(e.availability?.id) === idStr && e.status !== 'cancelled');
     }
   },
 
