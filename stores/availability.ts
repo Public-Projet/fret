@@ -29,6 +29,7 @@ export interface Availability {
     rating?: number;
     reviewsCount?: number;
   };
+  bookings?: any[];
 }
 
 export interface CreateAvailabilityData {

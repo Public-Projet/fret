@@ -134,11 +134,18 @@
                     {{ (item.carrier?.id === authStore.currentUser?.id && authStore.isCarrier) ? 'Vous' :
                       (item.carrier?.firstname + ' ' + item.carrier?.lastname) }}
                   </NuxtLink>
-                  <div class="flex text-yellow-500 items-center mt-0.5">
-                    <IconStarFilled v-for="i in 5" :key="i"
-                      :class="i <= Math.round(item.carrier?.rating || 0) ? 'text-yellow-500' : 'text-gray-200'"
-                      class="w-2.5 h-2.5" />
-                    <span class="text-[10px] text-gray-400 ml-1">({{ item.carrier?.rating || '0.0' }})</span>
+                  <div class="flex items-center mt-0.5">
+                    <div class="flex text-yellow-500 mr-1.5">
+                      <IconStarFilled v-for="i in 5" :key="i"
+                        :class="i <= Math.round(item.carrier?.rating || 0) ? 'text-yellow-500' : 'text-gray-200'"
+                        class="w-2.5 h-2.5" />
+                    </div>
+                    <span class="text-[10px] text-gray-400 font-bold">({{ item.carrier?.rating || '0.0' }})</span>
+
+                    <button v-if="authStore.isShipper" @click.stop.prevent="openRatingModal(item.carrier)"
+                      class="ml-2 text-[10px] font-black uppercase tracking-widest text-secondary-500 hover:text-secondary-600 transition-colors">
+                      Noter
+                    </button>
                   </div>
                 </div>
               </div>
@@ -150,6 +157,21 @@
           </div>
         </div>
       </div>
+      <!-- Rating Modal -->
+      <div v-if="showRatingModal && selectedCarrier"
+        class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+        @click.self="closeRatingModal">
+        <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
+          <div class="relative">
+            <button @click="closeRatingModal"
+              class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
+              Fermer
+              <IconX class="ml-2 w-5 h-5" />
+            </button>
+            <RatingForm :targetId="selectedCarrier.id" :targetRole="'carrier'" @success="handleRatingSuccess" />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -158,15 +180,20 @@
 import { ref, computed, onMounted } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
 import { useAuthStore } from '~/stores/auth';
+import RatingForm from '~/components/profile/RatingForm.vue';
 import {
   IconMapPin, IconCalendar, IconSearch, IconLoader2, IconTruckOff,
-  IconTruck, IconMapPinFilled, IconStarFilled
+  IconTruck, IconMapPinFilled, IconStarFilled, IconX
 } from '@tabler/icons-vue';
 
 const availabilityStore = useAvailabilityStore();
 const authStore = useAuthStore();
 const loading = computed(() => availabilityStore.loading);
 const availabilities = computed(() => availabilityStore.availabilities);
+
+// Rating state
+const showRatingModal = ref(false);
+const selectedCarrier = ref<any>(null);
 
 const filters = ref({
   origin: '',
@@ -198,6 +225,23 @@ const getStatusLabel = (status: string) => {
     prolonged: 'Prolongé'
   };
   return labels[status] || status;
+};
+
+const openRatingModal = (carrier: any) => {
+  selectedCarrier.value = carrier;
+  showRatingModal.value = true;
+};
+
+const closeRatingModal = () => {
+  showRatingModal.value = false;
+  selectedCarrier.value = null;
+};
+
+const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
+  if (selectedCarrier.value) {
+    selectedCarrier.value.rating = data.rating;
+    selectedCarrier.value.reviewsCount = data.reviewsCount;
+  }
 };
 
 onMounted(async () => {

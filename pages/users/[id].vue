@@ -81,7 +81,7 @@
                   <div>
                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Statut KYC</p>
                     <p class="text-sm font-bold capitalize">{{ user.kycStatus === 'verified' ? 'Certifié' : 'En cours'
-                      }}</p>
+                    }}</p>
                   </div>
                 </div>
                 <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-900/30 rounded-2xl">
@@ -111,27 +111,54 @@
           </p>
           <NuxtLink to="/avail" class="btn btn-primary">Voir ses disponibilités</NuxtLink>
         </div>
+
+        <!-- Rating Section -->
+        <div v-if="canRate" class="mt-8">
+          <RatingForm :targetId="user.id" :targetRole="user.role" @success="handleRatingSuccess" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '~/stores/user';
+import { useAuthStore } from '~/stores/auth';
 import {
   IconArrowLeft, IconLoader2, IconAlertCircle, IconShieldCheck,
-  IconStarFilled, IconCircleCheck, IconTruck
+  IconStarFilled, IconCircleCheck, IconTruck, IconStar
 } from '@tabler/icons-vue';
+import RatingForm from '~/components/profile/RatingForm.vue';
 
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const authStore = useAuthStore();
 
 const user = ref<any>(null);
 const loading = ref(true);
 const error = ref('');
+
+const isOwnProfile = computed(() => {
+  return authStore.user?.id === user.value?.id;
+});
+
+const canRate = computed(() => {
+  if (!authStore.isAuthenticated || isOwnProfile.value || !user.value) return false;
+  // Shippers rate Carriers, Carriers rate Shippers
+  if (authStore.isShipper && user.value.role === 'carrier') return true;
+  if (authStore.isCarrier && user.value.role === 'shipper') return true;
+  return false;
+});
+
+const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
+  if (user.value) {
+    user.value.rating = data.rating;
+    user.value.reviewsCount = data.reviewsCount;
+  }
+};
 
 onMounted(async () => {
   const id = route.params.id as string;

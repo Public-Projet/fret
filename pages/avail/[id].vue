@@ -195,34 +195,76 @@
           </div>
 
           <!-- Rating Section for Shipper -->
-          <div v-if="isShipper"
+          <div v-if="isShipper && item.carrier"
             class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
             <h3 class="font-bold text-gray-900 dark:text-white mb-6">Notez ce transporteur</h3>
+            <RatingForm :targetId="item.carrier.id" :targetRole="'carrier'" @success="handleRatingSuccess" />
+          </div>
 
-            <div v-if="ratingSuccess" class="text-center py-4">
-              <IconCheck class="w-10 h-10 text-green-500 mx-auto mb-2" />
-              <p class="text-sm font-bold text-green-700">Merci pour votre avis !</p>
-            </div>
-            <div v-else class="space-y-4">
-              <div class="flex justify-center space-x-2">
-                <button v-for="i in 5" :key="i" @click="ratingScore = i"
-                  class="focus:outline-none transition-transform hover:scale-110">
-                  <IconStarFilled v-if="i <= ratingScore" class="w-8 h-8 text-yellow-500" />
-                  <IconStar v-else class="w-8 h-8 text-gray-300 hover:text-yellow-200" />
-                </button>
+          <!-- Bookings List for Carrier Owner -->
+          <div v-if="isOwner" class="space-y-6">
+            <div
+              class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-gray-900 dark:text-white flex items-center">
+                  <IconUsers class="w-5 h-5 mr-2 text-secondary-500" />
+                  Demandes d'inscription ({{ item.bookings?.length || 0 }})
+                </h3>
               </div>
 
-              <textarea v-model="ratingComment" rows="2" class="input text-sm"
-                placeholder="Un petit commentaire ? (optionnel)"></textarea>
+              <div v-if="!item.bookings || item.bookings.length === 0" class="text-center py-8">
+                <p class="text-gray-500 italic">Aucune inscription pour le moment.</p>
+              </div>
 
-              <button @click="submitRating" :disabled="ratingLoading || ratingScore === 0"
-                class="btn btn-secondary btn-sm w-full">
-                <IconLoader2 v-if="ratingLoading" class="w-4 h-4 animate-spin mr-2" />
-                Envoyer ma note
-              </button>
+              <div v-else class="space-y-4">
+                <div v-for="booking in item.bookings" :key="booking.id"
+                  class="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800">
+                  <div class="flex items-center space-x-4">
+                    <div
+                      class="w-10 h-10 rounded-full bg-secondary-100 dark:bg-secondary-900/30 flex items-center justify-center text-secondary-600 font-bold">
+                      {{ booking.shipper?.firstname?.[0] }}{{ booking.shipper?.lastname?.[0] }}
+                    </div>
+                    <div>
+                      <p class="font-bold text-gray-900 dark:text-white">{{ booking.shipper?.firstname }} {{
+                        booking.shipper?.lastname }}</p>
+                      <div class="flex items-center mt-0.5">
+                        <IconStarFilled class="w-3 h-3 text-yellow-500 mr-1" />
+                        <span class="text-xs font-bold text-gray-600 dark:text-gray-400">
+                          {{ booking.shipper?.rating || '0.0' }} ({{ booking.shipper?.reviewsCount || 0 }})
+                        </span>
+                        <span class="mx-2 text-gray-300">•</span>
+                        <span class="badge badge-xs text-[8px]" :class="{
+                          'badge-success': booking.status === 'confirmed',
+                          'badge-warning': booking.status === 'pending',
+                          'badge-error': booking.status === 'cancelled'
+                        }">{{ booking.status }}</span>
+                      </div>
+                    </div>
+                  </div>
 
-              <p v-if="ratingError" class="text-xs text-red-500 text-center">{{ ratingError }}</p>
+                  <button @click="openRatingModal(booking)" class="btn btn-secondary btn-xs rounded-lg px-4">
+                    Noter
+                  </button>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rating Modal -->
+      <div v-if="showRatingModal && selectedBooking"
+        class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+        @click.self="closeRatingModal">
+        <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
+          <div class="relative">
+            <button @click="closeRatingModal"
+              class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
+              Fermer
+              <IconX class="ml-2 w-5 h-5" />
+            </button>
+            <RatingForm v-if="selectedBooking.shipper" :targetId="selectedBooking.shipper.id" :targetRole="'shipper'"
+              @success="handleRatingSuccess" />
           </div>
         </div>
       </div>
@@ -237,8 +279,10 @@ import { useAvailabilityStore } from '~/stores/availability';
 import { useAuthStore } from '~/stores/auth';
 import {
   IconArrowLeft, IconLoader2, IconAlertCircle, IconTruck,
-  IconShieldCheck, IconCheck, IconInfoCircle, IconStarFilled, IconStar
+  IconShieldCheck, IconCheck, IconInfoCircle, IconStarFilled, IconStar,
+  IconX, IconUsers
 } from '@tabler/icons-vue';
+import RatingForm from '~/components/profile/RatingForm.vue';
 import { useUserStore } from '~/stores/user';
 
 const route = useRoute();
@@ -256,11 +300,31 @@ const enrollError = ref('');
 const enrollSuccess = ref(false);
 
 // Rating state
-const ratingScore = ref(0);
-const ratingComment = ref('');
-const ratingLoading = ref(false);
-const ratingError = ref('');
-const ratingSuccess = ref(false);
+const showRatingModal = ref(false);
+const selectedBooking = ref<any>(null);
+
+const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
+  if (selectedBooking.value) {
+    // Carrier rating a Shipper
+    selectedBooking.value.shipper.rating = data.rating;
+    selectedBooking.value.shipper.reviewsCount = data.reviewsCount;
+    closeRatingModal();
+  } else if (item.value?.carrier) {
+    // Shipper rating a Carrier
+    item.value.carrier.rating = data.rating;
+    item.value.carrier.reviewsCount = data.reviewsCount;
+  }
+};
+
+const openRatingModal = (booking: any) => {
+  selectedBooking.value = booking;
+  showRatingModal.value = true;
+};
+
+const closeRatingModal = () => {
+  showRatingModal.value = false;
+  selectedBooking.value = null;
+};
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const isShipper = computed(() => authStore.isShipper);
@@ -269,7 +333,19 @@ const isOwner = computed(() => isCarrier.value && item.value?.carrier?.id === au
 const alreadyEnrolled = computed(() => availabilityStore.isEnrolled(route.params.id as string));
 
 onMounted(async () => {
-  const result = await availabilityStore.fetchPublicAvailability(route.params.id as string);
+  let result: any;
+
+  // If carrier, try fetching via carrier endpoint to get bookings
+  if (isCarrier.value) {
+    result = await availabilityStore.fetchAvailability(route.params.id as string);
+    // If not owner, this might return 403, we should then fallback to public
+    if (!result.success) {
+      result = await availabilityStore.fetchPublicAvailability(route.params.id as string);
+    }
+  } else {
+    result = await availabilityStore.fetchPublicAvailability(route.params.id as string);
+  }
+
   loading.value = false;
   if (result.success) {
     item.value = result.availability;
@@ -300,26 +376,6 @@ const handleEnroll = async () => {
   }
 };
 
-const submitRating = async () => {
-  if (ratingScore.value === 0) {
-    ratingError.value = "Veuillez sélectionner une note.";
-    return;
-  }
-
-  ratingLoading.value = true;
-  ratingError.value = '';
-
-  const result = await userStore.rateCarrier(item.value.carrier.id, ratingScore.value, ratingComment.value);
-  ratingLoading.value = false;
-
-  if (result.success && result.data) {
-    ratingSuccess.value = true;
-    item.value.carrier.rating = result.data.rating;
-    item.value.carrier.reviewsCount = result.data.reviewsCount;
-  } else {
-    ratingError.value = result.error?.message || "Erreur lors de l'enregistrement de la note.";
-  }
-};
 
 const getStatusLabel = (status: string) => {
   const labels: Record<string, string> = {

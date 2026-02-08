@@ -50,10 +50,12 @@
       </div>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <NuxtLink v-for="user in users" :key="user.id" :to="`/users/${user.id}?role=${activeTab}`"
-          class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all group flex flex-col items-center text-center">
+        <div v-for="user in users" :key="user.id"
+          class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all group flex flex-col items-center text-center relative overflow-hidden">
 
-          <div class="relative mb-4">
+          <NuxtLink :to="`/users/${user.id}?role=${activeTab}`" class="absolute inset-0 z-0"></NuxtLink>
+
+          <div class="relative mb-4 z-10">
             <div
               class="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden ring-4 ring-white dark:ring-gray-800 group-hover:ring-secondary-50 dark:group-hover:ring-secondary-900/10 transition-all">
               <img v-if="user.photoUrl" :src="user.photoUrl" class="w-full h-full object-cover" />
@@ -69,12 +71,13 @@
             </div>
           </div>
 
-          <h3 class="font-bold text-gray-900 dark:text-white mb-1 group-hover:text-secondary-600 transition-colors">
+          <h3
+            class="font-bold text-gray-900 dark:text-white mb-1 group-hover:text-secondary-600 transition-colors z-10">
             {{ user.firstname }} {{ user.lastname }}
           </h3>
-          <p class="text-xs text-gray-500 mb-3">@{{ user.username }}</p>
+          <p class="text-xs text-gray-500 mb-3 z-10">@{{ user.username }}</p>
 
-          <div class="flex items-center space-x-1 mb-4">
+          <div class="flex items-center justify-center space-x-1 mb-4 z-10">
             <template v-for="i in 5" :key="i">
               <IconStarFilled v-if="i <= Math.round(user.rating)" class="w-4 h-4 text-yellow-500" />
               <IconStar v-else class="w-4 h-4 text-gray-300" />
@@ -83,14 +86,41 @@
             <span class="text-xs text-gray-400">({{ user.reviewsCount }})</span>
           </div>
 
-          <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 h-10 italic">
+          <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 h-10 italic z-10">
             "{{ user.bio || 'Aucune biographie fournie.' }}"
           </p>
 
-          <div class="mt-auto w-full pt-4 border-t border-gray-50 dark:border-gray-700 flex justify-center">
-            <span class="text-xs font-bold uppercase tracking-wider text-secondary-500">Voir le profil</span>
+          <div
+            class="mt-auto w-full pt-4 border-t border-gray-50 dark:border-gray-700 flex items-center justify-between z-10">
+            <NuxtLink :to="`/users/${user.id}?role=${activeTab}`"
+              class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-secondary-600 transition-colors">
+              Profil
+            </NuxtLink>
+
+            <button v-if="canRateUser(user)" @click.stop.prevent="openRatingModal(user)"
+              class="btn btn-secondary btn-xs rounded-lg px-3">
+              Noter
+            </button>
           </div>
-        </NuxtLink>
+        </div>
+      </div>
+
+      <!-- Pagination remains same -->
+
+      <!-- Rating Modal -->
+      <div v-if="showRatingModal && selectedUser"
+        class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+        @click.self="closeRatingModal">
+        <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
+          <div class="relative">
+            <button @click="closeRatingModal"
+              class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
+              Fermer
+              <IconX class="ml-2 w-5 h-5" />
+            </button>
+            <RatingForm :targetId="selectedUser.id" :targetRole="activeTab" @success="handleRatingSuccess" />
+          </div>
+        </div>
       </div>
 
       <!-- Pagination -->
@@ -107,21 +137,53 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useUserStore } from '~/stores/user';
+import { useAuthStore } from '~/stores/auth';
+import RatingForm from '~/components/profile/RatingForm.vue';
 import {
   IconSearch, IconLoader2, IconUsers, IconStarFilled, IconStar,
-  IconShieldCheck
+  IconShieldCheck, IconX
 } from '@tabler/icons-vue';
 
 const userStore = useUserStore();
+const authStore = useAuthStore();
 const activeTab = ref<'carrier' | 'shipper'>('carrier');
 const searchQuery = ref('');
 const currentPage = ref(1);
 const limit = 12;
 
+// Modal state
+const showRatingModal = ref(false);
+const selectedUser = ref<any>(null);
+
 const loading = computed(() => userStore.loading);
 const users = computed(() => activeTab.value === 'carrier' ? userStore.carriers : userStore.shippers);
 const totalUsers = computed(() => activeTab.value === 'carrier' ? userStore.totalCarriers : userStore.totalShippers);
 const totalPages = computed(() => Math.ceil(totalUsers.value / limit));
+
+const canRateUser = (user: any) => {
+  if (!authStore.isAuthenticated || authStore.user?.id === user.id) return false;
+  // Shippers rate Carriers, Carriers rate Shippers
+  if (authStore.isShipper && activeTab.value === 'carrier') return true;
+  if (authStore.isCarrier && activeTab.value === 'shipper') return true;
+  return false;
+};
+
+const openRatingModal = (user: any) => {
+  selectedUser.value = user;
+  showRatingModal.value = true;
+};
+
+const closeRatingModal = () => {
+  showRatingModal.value = false;
+  selectedUser.value = null;
+};
+
+const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
+  if (selectedUser.value) {
+    selectedUser.value.rating = data.rating;
+    selectedUser.value.reviewsCount = data.reviewsCount;
+  }
+};
 
 const fetchUsers = async () => {
   if (activeTab.value === 'carrier') {
