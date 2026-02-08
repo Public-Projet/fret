@@ -8,7 +8,10 @@
             <span class="text-xs text-gray-500 uppercase">Missions</span>
           </div>
           <div class="text-center">
-            <span class="block text-xl font-bold text-gray-900 dark:text-white">{{ rating }}</span>
+            <div class="flex items-center justify-center">
+              <span class="block text-xl font-bold text-gray-900 dark:text-white">{{ rating }}</span>
+              <IconStarFilled class="w-4 h-4 text-yellow-500 ml-1 mb-1" />
+            </div>
             <span class="text-xs text-gray-500 uppercase">Note</span>
           </div>
           <div class="text-center">
@@ -32,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { IconLock, IconEdit } from '@tabler/icons-vue';
+import { IconLock, IconEdit, IconStarFilled } from '@tabler/icons-vue';
 
 withDefaults(defineProps<{
   missions?: number | string;

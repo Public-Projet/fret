@@ -15,7 +15,7 @@ export interface AuthUser {
   phone?: string;
   avatar?: string;
   rating?: number;
-  reviewCount?: number;
+  reviewsCount?: number;
   verified?: boolean;
   createdAt?: string;
 
@@ -43,6 +43,8 @@ export interface ApiUser {
   phone?: string;
   bio?: string;
   photoUrl?: string;
+  rating?: number;
+  reviewsCount?: number;
   kycDocuments?: any[];
   kycStatus?: string;
 }
@@ -96,6 +98,8 @@ export function mapApiUserToAuthUser(apiUser: ApiUser): AuthUser {
     status: apiUser.status,
     phone: apiUser.phone,
     avatar: apiUser.photoUrl,
+    rating: apiUser.rating,
+    reviewsCount: apiUser.reviewsCount,
     kycDocuments: apiUser.kycDocuments,
     kycStatus: apiUser.kycStatus as any,
   };

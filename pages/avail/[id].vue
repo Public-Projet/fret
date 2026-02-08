@@ -32,9 +32,19 @@
                     'badge-info': item.status === 'prolonged',
                     'badge-warning': item.status === 'full'
                   }">{{ getStatusLabel(item.status) }}</span>
-                  <span class="text-sm font-bold text-gray-700 dark:text-gray-300">
-                    Proposé par {{ isOwner ? 'Vous' : (item.carrier?.firstname + ' ' + item.carrier?.lastname) }}
+                  <span class="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center">
+                    Proposé par
+                    <NuxtLink :to="`/users/${item.carrier?.id}?role=carrier`"
+                      class="ml-1 text-primary-600 hover:underline">
+                      {{ isOwner ? 'Vous' : (item.carrier?.firstname + ' ' + item.carrier?.lastname) }}
+                    </NuxtLink>
                   </span>
+                  <div class="flex items-center text-yellow-500">
+                    <IconStarFilled v-for="i in 5" :key="i"
+                      :class="i <= Math.round(item.carrier?.rating || 0) ? 'text-yellow-500' : 'text-gray-200'"
+                      class="w-4 h-4" />
+                    <span class="text-xs font-bold text-gray-500 ml-1">({{ item.carrier?.rating || '0.0' }})</span>
+                  </div>
                   <span class="text-sm text-gray-500">ID: {{ item.id }}</span>
                 </div>
               </div>
@@ -183,6 +193,37 @@
               Ne payez jamais la totalité avant le chargement. Utilisez notre plateforme pour sécuriser vos échanges.
             </p>
           </div>
+
+          <!-- Rating Section for Shipper -->
+          <div v-if="isShipper"
+            class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
+            <h3 class="font-bold text-gray-900 dark:text-white mb-6">Notez ce transporteur</h3>
+
+            <div v-if="ratingSuccess" class="text-center py-4">
+              <IconCheck class="w-10 h-10 text-green-500 mx-auto mb-2" />
+              <p class="text-sm font-bold text-green-700">Merci pour votre avis !</p>
+            </div>
+            <div v-else class="space-y-4">
+              <div class="flex justify-center space-x-2">
+                <button v-for="i in 5" :key="i" @click="ratingScore = i"
+                  class="focus:outline-none transition-transform hover:scale-110">
+                  <IconStarFilled v-if="i <= ratingScore" class="w-8 h-8 text-yellow-500" />
+                  <IconStar v-else class="w-8 h-8 text-gray-300 hover:text-yellow-200" />
+                </button>
+              </div>
+
+              <textarea v-model="ratingComment" rows="2" class="input text-sm"
+                placeholder="Un petit commentaire ? (optionnel)"></textarea>
+
+              <button @click="submitRating" :disabled="ratingLoading || ratingScore === 0"
+                class="btn btn-secondary btn-sm w-full">
+                <IconLoader2 v-if="ratingLoading" class="w-4 h-4 animate-spin mr-2" />
+                Envoyer ma note
+              </button>
+
+              <p v-if="ratingError" class="text-xs text-red-500 text-center">{{ ratingError }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -196,13 +237,15 @@ import { useAvailabilityStore } from '~/stores/availability';
 import { useAuthStore } from '~/stores/auth';
 import {
   IconArrowLeft, IconLoader2, IconAlertCircle, IconTruck,
-  IconShieldCheck, IconCheck, IconInfoCircle
+  IconShieldCheck, IconCheck, IconInfoCircle, IconStarFilled, IconStar
 } from '@tabler/icons-vue';
+import { useUserStore } from '~/stores/user';
 
 const route = useRoute();
 const router = useRouter();
 const availabilityStore = useAvailabilityStore();
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const item = ref<any>(null);
 const loading = ref(true);
@@ -211,6 +254,13 @@ const notes = ref('');
 const enrolling = ref(false);
 const enrollError = ref('');
 const enrollSuccess = ref(false);
+
+// Rating state
+const ratingScore = ref(0);
+const ratingComment = ref('');
+const ratingLoading = ref(false);
+const ratingError = ref('');
+const ratingSuccess = ref(false);
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const isShipper = computed(() => authStore.isShipper);
@@ -247,6 +297,27 @@ const handleEnroll = async () => {
     }, 1500);
   } else {
     enrollError.value = result.error || 'Erreur lors de l\'inscription.';
+  }
+};
+
+const submitRating = async () => {
+  if (ratingScore.value === 0) {
+    ratingError.value = "Veuillez sélectionner une note.";
+    return;
+  }
+
+  ratingLoading.value = true;
+  ratingError.value = '';
+
+  const result = await userStore.rateCarrier(item.value.carrier.id, ratingScore.value, ratingComment.value);
+  ratingLoading.value = false;
+
+  if (result.success && result.data) {
+    ratingSuccess.value = true;
+    item.value.carrier.rating = result.data.rating;
+    item.value.carrier.reviewsCount = result.data.reviewsCount;
+  } else {
+    ratingError.value = result.error?.message || "Erreur lors de l'enregistrement de la note.";
   }
 };
 

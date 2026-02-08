@@ -129,12 +129,16 @@
                   <span v-else>{{ item.carrier?.firstname?.[0] || 'T' }}</span>
                 </div>
                 <div class="text-xs">
-                  <p class="font-bold text-gray-900 dark:text-white">
+                  <NuxtLink :to="`/users/${item.carrier?.id}?role=carrier`"
+                    class="font-bold text-gray-900 dark:text-white hover:text-primary-600 transition-colors">
                     {{ (item.carrier?.id === authStore.currentUser?.id && authStore.isCarrier) ? 'Vous' :
                       (item.carrier?.firstname + ' ' + item.carrier?.lastname) }}
-                  </p>
-                  <div class="flex text-yellow-500">
-                    <IconStarFilled v-for="i in 5" :key="i" class="w-2 h-2" />
+                  </NuxtLink>
+                  <div class="flex text-yellow-500 items-center mt-0.5">
+                    <IconStarFilled v-for="i in 5" :key="i"
+                      :class="i <= Math.round(item.carrier?.rating || 0) ? 'text-yellow-500' : 'text-gray-200'"
+                      class="w-2.5 h-2.5" />
+                    <span class="text-[10px] text-gray-400 ml-1">({{ item.carrier?.rating || '0.0' }})</span>
                   </div>
                 </div>
               </div>

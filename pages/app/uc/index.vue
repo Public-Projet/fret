@@ -60,9 +60,14 @@
         </div>
         <div>
           <p class="text-sm text-gray-500 dark:text-gray-400">Ma note</p>
-          <div class="flex items-center">
-            <p class="text-2xl font-bold text-gray-900 dark:text-white mr-2">{{ currentUser?.rating || 0 }}</p>
-            <span class="text-sm text-gray-500">({{ currentUser?.reviewCount || 0 }} avis)</span>
+          <div class="flex items-center mt-0.5">
+            <p class="text-2xl font-bold text-gray-900 dark:text-white mr-2">{{ currentUser?.rating || 0.0 }}</p>
+            <div class="flex text-yellow-500 mr-2">
+              <IconStarFilled v-for="i in 5" :key="i"
+                :class="i <= Math.round(currentUser?.rating || 0) ? 'text-yellow-500' : 'text-gray-200'"
+                class="w-4 h-4" />
+            </div>
+            <span class="text-xs text-gray-500">({{ currentUser?.reviewsCount || 0 }} avis)</span>
           </div>
         </div>
       </div>
@@ -146,7 +151,7 @@ import { computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAnnouncementStore } from '~/stores/announcement';
-import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconStar, IconTruck } from '@tabler/icons-vue';
+import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconStar, IconTruck, IconStarFilled } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const messagingStore = useMessagingStore();

@@ -26,6 +26,8 @@ export interface Availability {
     firstname: string;
     lastname: string;
     photoUrl?: string;
+    rating?: number;
+    reviewsCount?: number;
   };
 }
 
