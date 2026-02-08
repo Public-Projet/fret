@@ -114,7 +114,8 @@
 
         <!-- Rating Section -->
         <div v-if="canRate" class="mt-8">
-          <RatingForm :targetId="user.id" :targetRole="user.role" @success="handleRatingSuccess" />
+          <RatingForm :targetId="user.id" :targetRole="user.role" :initialData="user.myReview"
+            @success="handleRatingSuccess" />
         </div>
       </div>
     </div>

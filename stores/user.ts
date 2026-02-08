@@ -12,6 +12,7 @@ export interface PublicUser {
   reviewsCount: number;
   kycStatus: string;
   role: 'carrier' | 'shipper';
+  myReview?: { score: number, comment?: string } | null;
 }
 
 export const useUserStore = defineStore('user', {

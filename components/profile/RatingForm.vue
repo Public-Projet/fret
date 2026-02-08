@@ -47,7 +47,7 @@
           <IconLoader2 v-if="loading" class="w-5 h-5 animate-spin mr-2" />
           <IconSend v-else
             class="w-5 h-5 mr-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-          {{ loading ? 'Envoi en cours...' : 'Envoyer mon avis' }}
+          {{ loading ? 'Envoi en cours...' : submitButtonText }}
         </span>
       </button>
 
@@ -68,6 +68,7 @@ const props = defineProps<{
   targetId: string;
   targetRole: 'carrier' | 'shipper';
   title?: string;
+  initialData?: { score: number, comment?: string } | null;
 }>();
 
 const emit = defineEmits<{
@@ -75,13 +76,14 @@ const emit = defineEmits<{
 }>();
 
 const userStore = useUserStore();
-const score = ref(0);
-const comment = ref('');
+const score = ref(props.initialData?.score || 0);
+const comment = ref(props.initialData?.comment || '');
 const loading = ref(false);
 const error = ref('');
 const success = ref(false);
 
-const title = props.title || (props.targetRole === 'carrier' ? 'Noter ce transporteur' : 'Noter cet expéditeur');
+const title = props.title || (props.initialData ? 'Modifier ma note' : (props.targetRole === 'carrier' ? 'Noter ce transporteur' : 'Noter cet expéditeur'));
+const submitButtonText = props.initialData ? 'Modifier ma note' : 'Envoyer mon avis';
 
 const scoreLabels: Record<number, string> = {
   1: 'Très médiocre',

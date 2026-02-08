@@ -99,7 +99,7 @@
 
             <button v-if="canRateUser(user)" @click.stop.prevent="openRatingModal(user)"
               class="btn btn-secondary btn-xs rounded-lg px-3">
-              Noter
+              {{ user.myReview ? 'Modifier ma note' : 'Noter' }}
             </button>
           </div>
         </div>
@@ -118,7 +118,8 @@
               Fermer
               <IconX class="ml-2 w-5 h-5" />
             </button>
-            <RatingForm :targetId="selectedUser.id" :targetRole="activeTab" @success="handleRatingSuccess" />
+            <RatingForm :targetId="selectedUser.id" :targetRole="activeTab" :initialData="selectedUser.myReview"
+              @success="handleRatingSuccess" />
           </div>
         </div>
       </div>

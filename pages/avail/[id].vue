@@ -108,8 +108,7 @@
 
         <!-- Sidebar Actions -->
         <div class="space-y-6">
-          <div
-            class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 sticky top-24">
+          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
             <h3 class="font-bold text-gray-900 dark:text-white mb-6">Réserver cette place</h3>
 
             <div class="space-y-6">
