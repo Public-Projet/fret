@@ -74,7 +74,7 @@
           </div>
         </div>
       </div>
-      <NuxtLink :to="`/offers/${announcement.id}`" class="btn btn-primary btn-sm">
+      <NuxtLink :to="`${detailRoute || '/offers'}/${announcement.id}`" class="btn btn-primary btn-sm">
         Voir détails
       </NuxtLink>
     </div>
@@ -88,6 +88,7 @@ import { IconCalendar, IconCube, IconMapPin, IconScale, IconStar, IconTag, IconU
 
 const props = defineProps<{
   announcement: Announcement;
+  detailRoute?: string;
 }>();
 
 const statusClass = computed(() => {
@@ -152,12 +153,15 @@ const formatDate = (dateString: string) => {
 
 <style scoped>
 .btn-sm {
-  @apply px-3 py-1.5 text-sm;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
