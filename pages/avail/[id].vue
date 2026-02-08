@@ -33,7 +33,7 @@
                     'badge-warning': item.status === 'full'
                   }">{{ getStatusLabel(item.status) }}</span>
                   <span class="text-sm font-bold text-gray-700 dark:text-gray-300">
-                    Proposé par {{ item.carrier?.firstname }} {{ item.carrier?.lastname }}
+                    Proposé par {{ isOwner ? 'Vous' : (item.carrier?.firstname + ' ' + item.carrier?.lastname) }}
                   </span>
                   <span class="text-sm text-gray-500">ID: {{ item.id }}</span>
                 </div>
@@ -136,7 +136,7 @@
                 <div v-if="alreadyEnrolled"
                   class="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-100 text-center">
                   <IconCheck class="w-8 h-8 text-green-500 mx-auto mb-2" />
-                  <p class="text-sm font-bold text-green-700">Déjà inscrit</p>
+                  <p class="text-sm font-bold text-green-700">Vous vous êtes déjà inscrit pour cette offre</p>
                   <p class="text-xs text-green-600 mt-1">Votre demande est en cours de traitement par le transporteur.
                   </p>
                   <NuxtLink to="/app/us/avail" class="btn btn-success btn-sm w-full mt-4 text-white">Voir mes
