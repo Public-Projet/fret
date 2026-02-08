@@ -32,7 +32,7 @@
             <IconArrowRight class="w-6 h-6 group-hover:translate-x-2 transition-transform" />
           </NuxtLink>
 
-          <NuxtLink to="/offers"
+          <NuxtLink to="/annonces?tab=fret"
             class="px-10 py-5 border-4 border-white dark:border-gray-600 text-white dark:text-gray-200 rounded-2xl font-black text-xl hover:bg-white hover:text-blue-600 dark:hover:bg-gray-800 dark:hover:text-emerald-400 transition-all duration-300 hover:scale-110">
             Voir les annonces
           </NuxtLink>

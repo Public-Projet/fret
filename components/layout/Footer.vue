@@ -57,7 +57,7 @@ const footerSections = [
   {
     title: 'Liens rapides',
     links: [
-      { label: 'Annonces', to: '/offers' },
+      { label: 'Annonces', to: '/annonces?tab=fret' },
       { label: 'À propos', to: '/about' },
       { label: 'Comment ça marche', to: '/#features' },
       { label: 'Tarifs', to: '/pricing' }

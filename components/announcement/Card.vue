@@ -74,7 +74,8 @@
           </div>
         </div>
       </div>
-      <NuxtLink :to="`${detailRoute || '/offers'}/${announcement.id}`" class="btn btn-primary btn-sm">
+      <NuxtLink :to="detailRoute ? `${detailRoute}/${announcement.id}` : `/annonces/${announcement.id}?type=offer`"
+        class="btn btn-primary btn-sm">
         Voir détails
       </NuxtLink>
     </div>

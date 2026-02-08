@@ -71,9 +71,10 @@
               <p class="font-medium text-gray-900 dark:text-white">{{ announcement.title }}</p>
               <p class="text-xs text-gray-500">{{ formatDate(announcement.createdAt) }}</p>
             </div>
-            <NuxtLink :to="`/offers/${announcement.id}`" class="text-primary-600 text-sm font-medium">Voir</NuxtLink>
+            <NuxtLink :to="`/annonces/${announcement.id}?type=offer`" class="text-primary-600 text-sm font-medium">Voir
+            </NuxtLink>
           </div>
-          <NuxtLink to="/app/us/offers" class="block text-center text-primary-600 text-sm mt-4 hover:underline">
+          <NuxtLink to="/annonces?tab=fret" class="block text-center text-primary-600 text-sm mt-4 hover:underline">
             Voir toutes mes annonces</NuxtLink>
         </div>
       </div>

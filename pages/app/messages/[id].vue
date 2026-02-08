@@ -48,8 +48,8 @@
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <NuxtLink v-if="currentConversation?.announcementId" :to="`/offers/${currentConversation.announcementId}`"
-              class="btn btn-ghost btn-sm">
+            <NuxtLink v-if="currentConversation?.announcementId"
+              :to="`/annonces/${currentConversation.announcementId}?type=offer`" class="btn btn-ghost btn-sm">
               Voir l'annonce
             </NuxtLink>
           </div>

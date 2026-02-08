@@ -6,7 +6,7 @@
         <p class="text-gray-600 dark:text-gray-400">Tableau de bord Transporteur</p>
       </div>
       <div class="flex space-x-4 mt-4 md:mt-0">
-        <NuxtLink to="/offers" class="btn btn-outline flex items-center justify-center">
+        <NuxtLink to="/annonces?tab=fret" class="btn btn-outline flex items-center justify-center">
           <IconSearch class="w-5 h-5 mr-2" />
           Trouver du fret
         </NuxtLink>
@@ -80,7 +80,7 @@
 
         <div v-if="myOffers.length === 0" class="card p-8 text-center">
           <p class="text-gray-500 dark:text-gray-400">Vous n'avez fait aucune offre pour le moment.</p>
-          <NuxtLink to="/offers" class="text-primary-600 hover:underline mt-2 inline-block">
+          <NuxtLink to="/annonces?tab=fret" class="text-primary-600 hover:underline mt-2 inline-block">
             Voir les annonces disponibles
           </NuxtLink>
         </div>
@@ -104,7 +104,7 @@
                   {{ offer.message }}
                 </p>
               </div>
-              <NuxtLink :to="`/offers/${offer.announcementId}`" class="btn btn-ghost btn-sm">
+              <NuxtLink :to="`/annonces/${offer.announcementId}?type=offer`" class="btn btn-ghost btn-sm">
                 Voir l'annonce
               </NuxtLink>
             </div>
@@ -116,7 +116,7 @@
       <div class="space-y-6">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recommandé pour vous</h2>
-          <NuxtLink to="/offers" class="text-sm text-primary-600 hover:text-primary-500">
+          <NuxtLink to="/annonces?tab=fret" class="text-sm text-primary-600 hover:text-primary-500">
             Voir tout
           </NuxtLink>
         </div>
@@ -134,7 +134,7 @@
             </div>
             <div class="flex items-center justify-between mt-3">
               <span class="font-bold text-primary-600">{{ announcement.budget }}FCFA</span>
-              <NuxtLink :to="`/offers/${announcement.id}`"
+              <NuxtLink :to="`/annonces/${announcement.id}?type=offer`"
                 class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
                 Détails →
               </NuxtLink>
