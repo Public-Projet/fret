@@ -16,13 +16,13 @@
         <div class="flex flex-col space-y-6">
           <!-- Tabs Selection -->
           <div class="flex p-1 bg-gray-100 dark:bg-gray-700 rounded-xl w-fit self-center md:self-start">
-            <button @click="activeTab = 'avail'"
+            <button @click="switchTab('avail')"
               :class="activeTab === 'avail' ? 'bg-white dark:bg-gray-600 shadow-sm text-primary-600 dark:text-white' : 'text-gray-500 hover:text-gray-700'"
               class="px-6 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2">
               <IconTruck class="w-4 h-4" />
               Disponibilités
             </button>
-            <button @click="activeTab = 'fret'"
+            <button @click="switchTab('fret')"
               :class="activeTab === 'fret' ? 'bg-white dark:bg-gray-600 shadow-sm text-primary-600 dark:text-white' : 'text-gray-500 hover:text-gray-700'"
               class="px-6 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2">
               <IconPackage class="w-4 h-4" />
@@ -241,7 +241,7 @@ const availFilters = ref({
 const filteredAvailabilities = computed(() => {
   return availStore.availabilities.filter(item => {
     // Filter by User if provided in query
-    const matchUserId = !route.query.userId || item.carrier?.id === route.query.userId;
+    const matchUserId = !route.query.userId || String(item.carrier?.id) === String(route.query.userId);
     if (!matchUserId) return false;
 
     const matchOrigin = !availFilters.value.origin || item.origin.city.toLowerCase().includes(availFilters.value.origin.toLowerCase());
@@ -259,7 +259,13 @@ const fretFilters = ref({
   minBudget: undefined
 });
 
-const fretAnnouncements = computed(() => fretStore.filteredAnnouncements);
+const fretAnnouncements = computed(() => {
+  let filtered = fretStore.filteredAnnouncements;
+  if (route.query.userId) {
+    filtered = filtered.filter(a => String(a.userId) === String(route.query.userId));
+  }
+  return filtered;
+});
 
 const loading = computed(() => activeTab.value === 'avail' ? availStore.loading : fretStore.loading);
 const isEmpty = computed(() => {
@@ -304,6 +310,11 @@ const applyFretFilters = () => {
 const resetFretFilters = () => {
   fretFilters.value = { originCity: '', destinationCity: '', cargoType: '', minBudget: undefined };
   fretStore.resetFilters();
+};
+
+const switchTab = (tab: 'avail' | 'fret') => {
+  activeTab.value = tab;
+  router.push({ query: { tab } });
 };
 
 const navigateToDetail = (id: string) => {
