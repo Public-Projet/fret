@@ -47,6 +47,12 @@ export const useAvailabilityStore = defineStore('availability', {
     error: null as string | null
   }),
 
+  getters: {
+    isEnrolled: (state) => (availabilityId: string) => {
+      return state.enrollments.some(e => e.availability?.id === availabilityId && e.status !== 'cancelled');
+    }
+  },
+
   actions: {
     /**
      * Publique: Liste des disponibilités

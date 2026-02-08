@@ -32,6 +32,9 @@
                     'badge-info': item.status === 'prolonged',
                     'badge-warning': item.status === 'full'
                   }">{{ getStatusLabel(item.status) }}</span>
+                  <span class="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Proposé par {{ item.carrier?.firstname }} {{ item.carrier?.lastname }}
+                  </span>
                   <span class="text-sm text-gray-500">ID: {{ item.id }}</span>
                 </div>
               </div>
@@ -100,7 +103,27 @@
             <h3 class="font-bold text-gray-900 dark:text-white mb-6">Réserver cette place</h3>
 
             <div class="space-y-6">
-              <div v-if="!isShipper"
+              <!-- Carrier View: Restriction -->
+              <div v-if="isCarrier"
+                class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-900/30">
+                <div v-if="isOwner" class="text-center">
+                  <IconInfoCircle class="w-8 h-8 text-amber-500 mx-auto mb-2" />
+                  <p class="text-sm font-bold text-amber-700 dark:text-amber-400">C'est votre offre</p>
+                  <p class="text-xs text-amber-600 mt-1">Vous pouvez gérer cette disponibilité depuis votre tableau de
+                    bord.</p>
+                  <NuxtLink :to="`/app/uc/avail/${item.id}`" class="btn btn-outline btn-primary btn-sm w-full mt-4">
+                    Gérer</NuxtLink>
+                </div>
+                <div v-else class="text-center">
+                  <IconAlertCircle class="w-8 h-8 text-amber-500 mx-auto mb-2" />
+                  <p class="text-sm text-amber-700 dark:text-amber-400">
+                    En tant que transporteur, vous ne pouvez pas souscrire aux disponibilités d'autres transporteurs.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Guest View -->
+              <div v-else-if="!isAuthenticated"
                 class="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-900/30 text-center">
                 <p class="text-sm text-primary-700 dark:text-primary-300 mb-4">
                   Vous devez être connecté en tant qu'expéditeur pour réserver.
@@ -108,17 +131,32 @@
                 <NuxtLink to="/auth/login" class="btn btn-primary btn-sm w-full">Se connecter</NuxtLink>
               </div>
 
-              <div v-else class="space-y-4">
-                <div class="space-y-2">
-                  <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Notes pour le transporteur
-                    (optionnel)</label>
-                  <textarea v-model="notes" rows="3" class="input" placeholder="Détails de votre fret..."></textarea>
+              <!-- Shipper View -->
+              <div v-else-if="isShipper" class="space-y-4">
+                <div v-if="alreadyEnrolled"
+                  class="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-100 text-center">
+                  <IconCheck class="w-8 h-8 text-green-500 mx-auto mb-2" />
+                  <p class="text-sm font-bold text-green-700">Déjà inscrit</p>
+                  <p class="text-xs text-green-600 mt-1">Votre demande est en cours de traitement par le transporteur.
+                  </p>
+                  <NuxtLink to="/app/us/avail" class="btn btn-success btn-sm w-full mt-4 text-white">Voir mes
+                    inscriptions</NuxtLink>
                 </div>
+                <template v-else>
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Notes pour le transporteur
+                      (optionnel)</label>
+                    <textarea v-model="notes" rows="3" class="input" placeholder="Détails de votre fret..."></textarea>
+                  </div>
 
-                <button @click="handleEnroll" :disabled="enrolling" class="btn btn-primary w-full py-4 rounded-xl">
-                  <IconLoader2 v-if="enrolling" class="w-5 h-5 animate-spin mr-2" />
-                  S'inscrire à ce trajet
-                </button>
+                  <button @click="handleEnroll"
+                    :disabled="enrolling || item.status === 'full' || item.status === 'expired'"
+                    class="btn btn-primary w-full py-4 rounded-xl">
+                    <IconLoader2 v-if="enrolling" class="w-5 h-5 animate-spin mr-2" />
+                    {{ item.status === 'full' ? 'Complet' :
+                      (item.status === 'expired' ? 'Expiré' : 'S\'inscrire à ce trajet') }}
+                  </button>
+                </template>
 
                 <p v-if="enrollError" class="text-xs text-red-500 text-center">{{ enrollError }}</p>
                 <p v-if="enrollSuccess" class="text-xs text-green-500 text-center">Inscription réussie ! Redirection...
@@ -158,7 +196,7 @@ import { useAvailabilityStore } from '~/stores/availability';
 import { useAuthStore } from '~/stores/auth';
 import {
   IconArrowLeft, IconLoader2, IconAlertCircle, IconTruck,
-  IconShieldCheck
+  IconShieldCheck, IconCheck, IconInfoCircle
 } from '@tabler/icons-vue';
 
 const route = useRoute();
@@ -174,13 +212,22 @@ const enrolling = ref(false);
 const enrollError = ref('');
 const enrollSuccess = ref(false);
 
+const isAuthenticated = computed(() => authStore.isAuthenticated);
 const isShipper = computed(() => authStore.isShipper);
+const isCarrier = computed(() => authStore.isCarrier);
+const isOwner = computed(() => isCarrier.value && item.value?.carrier?.id === authStore.currentUser?.id);
+const alreadyEnrolled = computed(() => availabilityStore.isEnrolled(route.params.id as string));
 
 onMounted(async () => {
   const result = await availabilityStore.fetchPublicAvailability(route.params.id as string);
   loading.value = false;
   if (result.success) {
     item.value = result.availability;
+
+    // If shipper, fetch their enrollments to check if already enrolled
+    if (isShipper.value) {
+      await availabilityStore.fetchShipperEnrollments();
+    }
   } else {
     error.value = "Impossible de charger les détails de cette disponibilité.";
   }

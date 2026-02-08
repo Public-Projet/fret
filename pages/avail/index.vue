@@ -124,11 +124,13 @@
             <div class="mt-6 flex items-center justify-between">
               <div class="flex items-center">
                 <div
-                  class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-bold mr-2 uppercase">
-                  {{ item.carrier?.firstname?.[0] || 'T' }}
+                  class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-bold mr-2 uppercase overflow-hidden">
+                  <img v-if="item.carrier?.photoUrl" :src="item.carrier.photoUrl" class="w-full h-full object-cover" />
+                  <span v-else>{{ item.carrier?.firstname?.[0] || 'T' }}</span>
                 </div>
                 <div class="text-xs">
-                  <p class="font-bold text-gray-900 dark:text-white">Transporteur Vérifié</p>
+                  <p class="font-bold text-gray-900 dark:text-white">{{ item.carrier?.firstname }} {{
+                    item.carrier?.lastname }}</p>
                   <div class="flex text-yellow-500">
                     <IconStarFilled v-for="i in 5" :key="i" class="w-2 h-2" />
                   </div>
