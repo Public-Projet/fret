@@ -54,8 +54,14 @@
 
               <div class="flex items-center space-x-2 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl">
                 <div class="text-center px-4">
-                  <span class="block text-2xl font-black text-secondary-600">{{ user.rating || '0.0' }}</span>
-                  <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Note</span>
+                  <div class="flex items-center text-yellow-500 mb-1">
+                    <template v-for="i in 5" :key="i">
+                      <IconStarFilled v-if="i <= Math.round(user.rating || 0)" class="w-3 h-3" />
+                      <IconStar v-else class="w-3 h-3 text-gray-200" />
+                    </template>
+                  </div>
+                  <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Note ({{ user.rating ||
+                    '0.0' }})</span>
                 </div>
                 <div class="w-px h-8 bg-gray-200 dark:bg-gray-700"></div>
                 <div class="text-center px-4">
@@ -99,18 +105,84 @@
           </div>
         </div>
 
-        <div v-if="user.role === 'carrier'"
-          class="bg-blue-50 dark:bg-blue-900/10 p-8 rounded-3xl border border-blue-100 dark:border-blue-900/20">
-          <div class="flex items-center mb-6">
-            <IconTruck class="w-6 h-6 text-blue-600 mr-3" />
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Services de Transport</h2>
+        <!-- Role Specific Section: Carrier Availabilities -->
+        <div v-if="user.role === 'carrier'" class="space-y-6 mb-8">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <IconTruck class="w-6 h-6 text-blue-600 mr-3" />
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white">Ses Disponibilités</h2>
+            </div>
+            <NuxtLink :to="`/annonces?tab=avail&userId=${user.id}`" class="text-sm text-primary-600 hover:underline">
+              Voir tout</NuxtLink>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            Ce transporteur propose des trajets réguliers et des services de logistique. Vous pouvez consulter ses
-            disponibilités actuelles pour réserver une place.
-          </p>
-          <NuxtLink :to="`/annonces?tab=avail&userId=${user.id}`" class="btn btn-primary">Voir ses disponibilités
-          </NuxtLink>
+
+          <div v-if="user.availabilities && user.availabilities.length > 0"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div v-for="item in user.availabilities.slice(0, 4)" :key="item.id"
+              class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-xs font-bold text-primary-600">{{ item.origin.city }} → {{ item.destination?.city ||
+                  'Bénin' }}</span>
+                <span class="text-xs font-black">{{ item.price }} FCFA</span>
+              </div>
+              <div class="flex items-center text-[10px] text-gray-500 gap-3">
+                <span class="flex items-center">
+                  <IconCalendar class="w-3 h-3 mr-1" /> {{ formatDate(item.startDate) }}
+                </span>
+                <span class="flex items-center">
+                  <IconTruck class="w-3 h-3 mr-1" /> {{ item.vehicle?.type }}
+                </span>
+              </div>
+              <NuxtLink :to="`/annonces/${item.id}?type=avail`" class="btn btn-ghost btn-xs w-full mt-3 rounded-lg">
+                Détails</NuxtLink>
+            </div>
+          </div>
+          <div v-else
+            class="bg-blue-50 dark:bg-blue-900/10 p-8 rounded-3xl border border-blue-100 dark:border-blue-900/20 text-center">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Ce transporteur n'a pas de trajets planifiés pour le
+              moment.</p>
+          </div>
+        </div>
+
+        <!-- Role Specific Section: Shipper Offers -->
+        <div v-else-if="user.role === 'shipper'" class="space-y-6 mb-8">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <IconPackage class="w-6 h-6 text-orange-600 mr-3" />
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white">Ses Annonces Fret</h2>
+            </div>
+            <NuxtLink :to="`/annonces?tab=fret&userId=${user.id}`" class="text-sm text-primary-600 hover:underline">Voir
+              tout
+            </NuxtLink>
+          </div>
+
+          <div v-if="user.offers && user.offers.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div v-for="item in user.offers.slice(0, 4)" :key="item.id"
+              class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-xs font-bold text-orange-600">{{ item.availability?.origin?.city }} → {{
+                  item.availability?.destination?.city || 'Bénin' }}</span>
+                <span class="text-xs font-black">{{ item.availability?.price || '-' }} FCFA</span>
+              </div>
+              <p class="text-[10px] font-bold text-gray-900 dark:text-white truncate mb-2">Offre pour {{
+                item.availability?.vehicle?.type || 'Transport' }}</p>
+              <div class="flex items-center text-[10px] text-gray-500 gap-3">
+                <span class="flex items-center">
+                  <IconCalendar class="w-3 h-3 mr-1" /> {{ formatDate(item.createdAt) }}
+                </span>
+                <span class="flex items-center">
+                  <IconPackage class="w-3 h-3 mr-1" /> {{ item.status }}
+                </span>
+              </div>
+              <NuxtLink :to="`/annonces/${item.availability?.id}?type=avail`"
+                class="btn btn-ghost btn-xs w-full mt-3 rounded-lg">Détails</NuxtLink>
+            </div>
+          </div>
+          <div v-else
+            class="bg-orange-50 dark:bg-orange-900/10 p-8 rounded-3xl border border-orange-100 dark:border-orange-900/20 text-center">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Cet expéditeur n'a pas d'annonces actives pour le
+              moment.</p>
+          </div>
         </div>
 
         <!-- Rating Section -->
@@ -130,7 +202,7 @@ import { useUserStore } from '~/stores/user';
 import { useAuthStore } from '~/stores/auth';
 import {
   IconArrowLeft, IconLoader2, IconAlertCircle, IconShieldCheck,
-  IconStarFilled, IconCircleCheck, IconTruck, IconStar
+  IconStarFilled, IconCircleCheck, IconTruck, IconStar, IconCalendar, IconPackage
 } from '@tabler/icons-vue';
 import RatingForm from '~/components/profile/RatingForm.vue';
 
@@ -154,6 +226,14 @@ const canRate = computed(() => {
   if (authStore.isCarrier && user.value.role === 'shipper') return true;
   return false;
 });
+
+const formatDate = (date: string) => {
+  if (!date) return '-';
+  return new Date(date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short'
+  });
+};
 
 const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
   if (user.value) {

@@ -31,15 +31,16 @@
                       Proposé par
                       <NuxtLink :to="`/users/${item.carrier?.id}?role=carrier`"
                         class="ml-1 text-primary-600 hover:underline">
-                        {{ (isOwner || item.carrier?.id === authStore.user?.id) ? 'Vous' :
+                        {{ isOwner ? 'Vous' :
                           ((item.carrier?.firstname || item.carrier?.lastname) ? (item.carrier.firstname + ' ' +
                             item.carrier.lastname) : 'Transporteur') }}
                       </NuxtLink>
                     </span>
                     <div class="flex items-center text-yellow-500">
-                      <IconStarFilled v-for="i in 5" :key="i"
-                        :class="i <= Math.round(item.carrier?.rating || 0) ? 'text-yellow-500' : 'text-gray-200'"
-                        class="w-4 h-4" />
+                      <template v-for="i in 5" :key="i">
+                        <IconStarFilled v-if="i <= Math.round(item.carrier?.rating || 0)" class="w-4 h-4" />
+                        <IconStar v-else class="w-4 h-4 text-gray-200" />
+                      </template>
                       <span class="text-xs font-bold text-gray-500 ml-1">({{ item.carrier?.rating || '0.0' }})</span>
                     </div>
                   </div>
@@ -121,6 +122,12 @@
                 </div>
                 <button class="btn btn-outline w-full py-4 rounded-2xl">
                   Contacter le transporteur
+                </button>
+
+                <!-- Rating Action -->
+                <button v-if="canRate" @click="showRatingModal = true"
+                  class="btn btn-secondary btn-sm w-full rounded-xl">
+                  Noter ce transporteur
                 </button>
               </div>
               <div v-else class="text-center p-4">
@@ -236,19 +243,33 @@
                   {{ item.user?.firstName?.[0] || 'E' }}
                 </div>
                 <div>
-                  <p class="font-medium text-gray-900 dark:text-white">{{ item.user?.company || item.user?.firstName }}
+                  <p class="font-medium text-gray-900 dark:text-white">
+                    {{ isOwner ? 'Vous' : (item.user?.company || item.user?.firstName) }}
                   </p>
                   <div class="flex items-center text-sm text-gray-500">
-                    <IconStarFilled class="w-4 h-4 text-yellow-400 mr-1" />
-                    {{ item.user?.rating || '0.0' }} ({{ item.user?.reviewCount || 0 }} avis)
+                    <div class="flex mr-2">
+                      <template v-for="i in 5" :key="i">
+                        <IconStarFilled v-if="i <= Math.round(item.user?.rating || 0)"
+                          class="w-4 h-4 text-yellow-500" />
+                        <IconStar v-else class="w-4 h-4 text-gray-200" />
+                      </template>
+                    </div>
+                    <span class="font-bold">{{ item.user?.rating || '0.0' }}</span>
+                    <span class="ml-1">({{ item.user?.reviewCount || 0 }} avis)</span>
                   </div>
                 </div>
               </div>
-              <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+              <div class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
                 <div class="flex items-center">
                   <IconShieldCheck class="w-4 h-4 text-green-500 mr-2" />
                   Identité vérifiée
                 </div>
+
+                <!-- Rating Action -->
+                <button v-if="canRate" @click="showRatingModal = true"
+                  class="btn btn-secondary btn-sm w-full rounded-xl">
+                  Noter cet expéditeur
+                </button>
               </div>
             </div>
 
@@ -269,6 +290,24 @@
         <NuxtLink to="/annonces" class="btn btn-primary mt-4">Retour au marché</NuxtLink>
       </div>
     </div>
+
+    <!-- Rating Modal -->
+    <div v-if="showRatingModal"
+      class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+      @click.self="showRatingModal = false">
+      <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
+        <div class="relative">
+          <button @click="showRatingModal = false"
+            class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
+            Fermer
+            <IconX class="ml-2 w-5 h-5" />
+          </button>
+          <RatingForm :targetId="dataType === 'avail' ? item.carrier?.id : item.user?.id"
+            :targetRole="dataType === 'avail' ? 'carrier' : 'shipper'" :initialData="null"
+            @success="handleRatingSuccess" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -280,8 +319,9 @@ import { useAuthStore } from '~/stores/auth';
 import {
   IconArrowLeft, IconLoader2, IconAlertCircle, IconTruck,
   IconShieldCheck, IconCheck, IconStarFilled, IconMapPin, IconCalendar,
-  IconCube, IconScale, IconArrowsMaximize, IconCurrencyEuro
+  IconCube, IconScale, IconArrowsMaximize, IconCurrencyEuro, IconStar, IconX
 } from '@tabler/icons-vue';
+import RatingForm from '~/components/profile/RatingForm.vue';
 
 const route = useRoute();
 const availStore = useAvailabilityStore();
@@ -292,12 +332,17 @@ const id = route.params.id as string;
 const dataType = ref<'avail' | 'offer' | null>((route.query.type as any) || null);
 const item = ref<any>(null);
 const loading = ref(true);
+const showRatingModal = ref(false);
 
 const isOwner = computed(() => {
+  if (!authStore.isAuthenticated || !authStore.user?.id || !item.value) return false;
+
   if (dataType.value === 'avail') {
-    return authStore.isCarrier && item.value?.carrier?.id === authStore.currentUser?.id;
+    const carrierId = item.value?.carrier?.id;
+    return authStore.isCarrier && carrierId && String(carrierId) === String(authStore.user.id);
   }
-  return authStore.isShipper && item.value?.userId === authStore.currentUser?.id;
+  const userId = item.value?.userId;
+  return authStore.isShipper && userId && String(userId) === String(authStore.user.id);
 });
 
 const alreadyEnrolled = computed(() => {
@@ -306,6 +351,29 @@ const alreadyEnrolled = computed(() => {
   }
   return false;
 });
+
+const canRate = computed(() => {
+  if (!authStore.isAuthenticated || isOwner.value || !item.value) return false;
+  if (dataType.value === 'avail') {
+    return authStore.isShipper;
+  }
+  return authStore.isCarrier;
+});
+
+const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
+  showRatingModal.value = false;
+  if (dataType.value === 'avail') {
+    if (item.value.carrier) {
+      item.value.carrier.rating = data.rating;
+      item.value.carrier.reviewCount = data.reviewsCount;
+    }
+  } else {
+    if (item.value.user) {
+      item.value.user.rating = data.rating;
+      item.value.user.reviewCount = data.reviewsCount;
+    }
+  }
+};
 
 const getStatusLabel = (status: string) => {
   const labels: Record<string, string> = {

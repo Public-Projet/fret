@@ -188,8 +188,13 @@
                   <div class="text-xs">
                     <p class="font-bold">{{ item.carrier?.firstname }} {{ item.carrier?.lastname }}</p>
                     <div class="flex items-center text-yellow-500">
-                      <IconStarFilled class="w-2.5 h-2.5" />
-                      <span class="ml-1 text-gray-400">({{ item.carrier?.rating || '0.0' }})</span>
+                      <div class="flex mr-1">
+                        <template v-for="i in 5" :key="i">
+                          <IconStarFilled v-if="i <= Math.round(item.carrier?.rating || 0)" class="w-2.5 h-2.5" />
+                          <IconStar v-else class="w-2.5 h-2.5 text-gray-200" />
+                        </template>
+                      </div>
+                      <span class="text-[10px] text-gray-400 font-bold">({{ item.carrier?.rating || '0.0' }})</span>
                     </div>
                   </div>
                 </div>

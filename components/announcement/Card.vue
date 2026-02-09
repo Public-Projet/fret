@@ -66,10 +66,13 @@
           <p class="text-sm font-medium text-gray-900 dark:text-white">
             {{ announcement.user?.company || 'Entreprise' }}
           </p>
-          <div class="flex items-center space-x-1">
-            <IconStar class="w-3 h-3 text-yellow-400 fill-current" />
-            <span class="text-xs text-gray-600 dark:text-gray-400">
-              {{ announcement.user?.rating || 0 }} ({{ announcement.user?.reviewCount || 0 }})
+          <div class="flex items-center text-yellow-500">
+            <template v-for="i in 5" :key="i">
+              <IconStarFilled v-if="i <= Math.round(announcement.user?.rating || 0)" class="w-2.5 h-2.5" />
+              <IconStar v-else class="w-2.5 h-2.5 text-gray-200" />
+            </template>
+            <span class="text-[10px] text-gray-400 font-bold ml-1">
+              ({{ announcement.user?.rating || '0.0' }})
             </span>
           </div>
         </div>
@@ -85,7 +88,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Announcement } from '~/types';
-import { IconCalendar, IconCube, IconMapPin, IconScale, IconStar, IconTag, IconUser } from '@tabler/icons-vue';
+import { IconCalendar, IconCube, IconMapPin, IconScale, IconStar, IconStarFilled, IconTag, IconUser } from '@tabler/icons-vue';
 
 const props = defineProps<{
   announcement: Announcement;
