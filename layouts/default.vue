@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <!-- Mobile Header -->
-    <LayoutAppHeader :menu-open="mobileMenuOpen" @toggle-menu="mobileMenuOpen = !mobileMenuOpen" />
+    <LayoutDefaultHeader :menu-open="mobileMenuOpen" @toggle-menu="mobileMenuOpen = !mobileMenuOpen" />
 
     <!-- Mobile Menu Overlay -->
     <div v-if="mobileMenuOpen" class="lg:hidden fixed inset-0 z-20 bg-gray-900/50 backdrop-blur-sm"
@@ -24,14 +24,14 @@
             </div>
           </div>
         </div>
-        <LayoutAppNavigation :is-shipper="isShipper" :unread-count="unreadCount"
+        <LayoutDefaultNavigation :is-shipper="isShipper" :unread-count="unreadCount"
           @click.native="mobileMenuOpen = false" />
       </div>
     </div>
 
     <div class="flex flex-grow relative">
       <!-- Desktop Sidebar -->
-      <LayoutAppSidebar :user-initials="userInitials" :user-name="userName" :user-role="userRole"
+      <LayoutDefaultSidebar :user-initials="userInitials" :user-name="userName" :user-role="userRole"
         :user-email="currentUser?.email || ''" :is-shipper="isShipper" :unread-count="unreadCount"
         :collapsed="isSidebarCollapsed" @toggle-collapse="isSidebarCollapsed = !isSidebarCollapsed" />
 

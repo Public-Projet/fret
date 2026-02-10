@@ -24,7 +24,6 @@
         </div>
 
         <!-- Liens rapides -->
-        <!-- Sections dynamiques -->
         <div v-for="section in footerSections" :key="section.title">
           <h3 class="text-white font-semibold mb-4">{{ section.title }}</h3>
           <ul class="space-y-2">
