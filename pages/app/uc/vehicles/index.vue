@@ -105,7 +105,7 @@
     </div>
 
     <!-- Vehicle Modal -->
-    <ProfileVehicleModal :show="showModal" :vehicle="selectedVehicle" :loading="modalLoading" :error="modalError"
+    <ModalProfileVehicle :show="showModal" :vehicle="selectedVehicle" :loading="modalLoading" :error="modalError"
       :success="modalSuccess" @close="closeModal" @submit="handleSubmit" />
   </div>
 </template>

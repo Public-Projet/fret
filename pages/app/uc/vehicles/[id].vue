@@ -202,11 +202,11 @@
     </div>
 
     <!-- Edit Modal -->
-    <ProfileVehicleModal :show="showModal" :vehicle="vehicle" :loading="modalLoading" :error="modalError"
+    <ModalProfileVehicle :show="showModal" :vehicle="vehicle" :loading="modalLoading" :error="modalError"
       :success="modalSuccess" @close="closeModal" @submit="handleSubmit" />
 
     <!-- Status Modal -->
-    <ProfileVehicleStatusModal :show="showStatusModal" :current-status="vehicle?.status || 'available'"
+    <ModalProfileVehicleStatus :show="showStatusModal" :current-status="vehicle?.status || 'available'"
       :loading="statusLoading" :error="statusError" :success="statusSuccess" @close="showStatusModal = false"
       @submit="handleStatusChange" />
   </div>

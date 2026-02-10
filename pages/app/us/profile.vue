@@ -83,15 +83,15 @@
     <ProfileEditModal :show="showEditModal" :profile="profile" :loading="editLoading" :error="editError"
       :success="editSuccess" accent-color="primary" @close="showEditModal = false" @submit="handleUpdateProfile" />
 
-    <ProfilePasswordModal :show="showPasswordModal" :loading="passwordLoading" :error="passwordError"
+    <ModalProfilePassword :show="showPasswordModal" :loading="passwordLoading" :error="passwordError"
       :success="passwordSuccess" accent-color="primary" @close="showPasswordModal = false"
       @submit="handleUpdatePassword" />
 
-    <ProfileEmailModal :show="showEmailModal" :current-email="profile?.email" :loading="emailLoading"
+    <ModalProfileEmail :show="showEmailModal" :current-email="profile?.email" :loading="emailLoading"
       :error="emailError" :success="emailSuccess" accent-color="primary" @close="showEmailModal = false"
       @submit="handleUpdateEmail" />
 
-    <ProfileSecurityModal :show="showSecurityModal" :email="profile?.email" accent-color="primary"
+    <ModalProfileSecurity :show="showSecurityModal" :email="profile?.email" accent-color="primary"
       @close="showSecurityModal = false" @open-password="openPasswordModal" @open-email="openEmailModal" />
 
     <ProfileKycModal :show="showKycModal" :loading="kycLoading" :error="kycError" :success="kycSuccess" role="shipper"

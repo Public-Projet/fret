@@ -165,7 +165,7 @@
       </div>
     </div>
 
-    <DashboardEditAnnouncementModal v-if="showEditModal" :announcement="announcement" @close="showEditModal = false"
+    <ModalDashboardEditAnnounce v-if="showEditModal" :announcement="announcement" @close="showEditModal = false"
       @update="handleUpdate" />
 
   </div>

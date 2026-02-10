@@ -88,14 +88,14 @@
     </div>
 
     <!-- Modals -->
-    <ProfilePasswordModal :show="showPasswordModal" :loading="passwordLoading" :error="passwordError"
+    <ModalProfilePassword :show="showPasswordModal" :loading="passwordLoading" :error="passwordError"
       :success="passwordSuccess" @close="closePasswordModal" @submit="handlePasswordSubmit" />
 
-    <ProfileEmailModal :show="showEmailModal" :loading="emailLoading" :error="emailError" :success="emailSuccess"
+    <ModalProfileEmail :show="showEmailModal" :loading="emailLoading" :error="emailError" :success="emailSuccess"
       @close="closeEmailModal" @submit="handleEmailSubmit" />
 
-    <AccountDeletionModal :show="showDeleteModal" :loading="deleteLoading" :error="deleteError" :success="deleteSuccess"
-      @close="closeDeleteModal" @submit="handleDeleteSubmit" />
+    <ModalProfileAccountDeletion :show="showDeleteModal" :loading="deleteLoading" :error="deleteError"
+      :success="deleteSuccess" @close="closeDeleteModal" @submit="handleDeleteSubmit" />
 
   </div>
 </template>

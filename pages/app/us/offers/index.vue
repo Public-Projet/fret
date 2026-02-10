@@ -97,8 +97,8 @@
       </div>
     </div>
 
-    <DashboardEditAnnouncementModal v-if="showEditModal" :announcement="announcementToEdit"
-      @close="showEditModal = false" @update="handleUpdate" />
+    <ModalDashboardEditAnnounce v-if="showEditModal" :announcement="announcementToEdit" @close="showEditModal = false"
+      @update="handleUpdate" />
   </div>
 </template>
 
