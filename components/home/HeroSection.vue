@@ -70,9 +70,9 @@
 
             <!-- Stats -->
             <div class="grid grid-cols-3 gap-6 max-w-2xl">
-              <StatCard :value="shippers" label="Chargeurs actifs" />
-              <StatCard :value="carriers" label="Transporteurs" />
-              <StatCard :value="deliveries" label="Transports réussis" suffix="k+" />
+              <HomeStatCard :value="shippers" label="Chargeurs actifs" />
+              <HomeStatCard :value="carriers" label="Transporteurs" />
+              <HomeStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
             </div>
           </div>
         </div>
@@ -113,7 +113,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import StatCard from './StatCard.vue';
 import { IconArrowRight, IconChevronDown, IconSparkles, IconTruck, IconUsersGroup } from '@tabler/icons-vue';
 
 const shippers = ref(0);

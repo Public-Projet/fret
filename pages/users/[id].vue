@@ -186,7 +186,27 @@
         </div>
 
         <!-- Rating Section -->
-        <div v-if="canRate" class="mt-8">
+        <div v-if="canRate" class="mt-8 flex justify-center">
+          <button @click="showRatingModal = true"
+            class="btn btn-secondary w-full md:w-auto px-8 rounded-xl shadow-lg shadow-secondary-500/20">
+            <IconStarFilled class="w-5 h-5 mr-2" />
+            {{ ratingLabel }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div v-if="showRatingModal"
+      class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+      @click.self="showRatingModal = false">
+      <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
+        <div class="relative">
+          <button @click="showRatingModal = false"
+            class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
+            Fermer
+            <IconX class="ml-2 w-5 h-5" />
+          </button>
           <RatingForm :targetId="user.id" :targetRole="user.role" :initialData="user.myReview"
             @success="handleRatingSuccess" />
         </div>
@@ -202,7 +222,7 @@ import { useUserStore } from '~/stores/user';
 import { useAuthStore } from '~/stores/auth';
 import {
   IconArrowLeft, IconLoader2, IconAlertCircle, IconShieldCheck,
-  IconStarFilled, IconCircleCheck, IconTruck, IconStar, IconCalendar, IconPackage
+  IconStarFilled, IconCircleCheck, IconTruck, IconStar, IconCalendar, IconPackage, IconX
 } from '@tabler/icons-vue';
 import RatingForm from '~/components/profile/RatingForm.vue';
 
@@ -214,6 +234,7 @@ const authStore = useAuthStore();
 const user = ref<any>(null);
 const loading = ref(true);
 const error = ref('');
+const showRatingModal = ref(false);
 
 const isOwnProfile = computed(() => {
   return authStore.user?.id === user.value?.id;
@@ -227,6 +248,12 @@ const canRate = computed(() => {
   return false;
 });
 
+
+const ratingLabel = computed(() => {
+  if (user.value?.myReview) return 'Modifier ma note';
+  return user.value?.role === 'carrier' ? 'Noter ce transporteur' : 'Noter cet expéditeur';
+});
+
 const formatDate = (date: string) => {
   if (!date) return '-';
   return new Date(date).toLocaleDateString('fr-FR', {
@@ -235,10 +262,12 @@ const formatDate = (date: string) => {
   });
 };
 
-const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
+const handleRatingSuccess = (data: { rating: number, reviewsCount: number, myReview: any }) => {
   if (user.value) {
     user.value.rating = data.rating;
     user.value.reviewsCount = data.reviewsCount;
+    user.value.myReview = data.myReview;
+    showRatingModal.value = false;
   }
 };
 

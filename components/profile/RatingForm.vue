@@ -72,7 +72,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  'success': [result: { rating: number, reviewsCount: number }];
+  'success': [result: { rating: number, reviewsCount: number, myReview: { score: number, comment: string } }];
 }>();
 
 const userStore = useUserStore();
@@ -109,7 +109,10 @@ const handleSubmit = async () => {
 
     if (result.success && result.data) {
       success.value = true;
-      emit('success', result.data);
+      emit('success', {
+        ...result.data,
+        myReview: { score: score.value, comment: comment.value }
+      });
     } else {
       error.value = result.error?.message || "Une erreur est survenue lors de l'envoi de la note.";
     }

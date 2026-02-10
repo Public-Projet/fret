@@ -196,24 +196,46 @@
                       </div>
                       <span class="text-[10px] text-gray-400 font-bold">({{ item.carrier?.rating || '0.0' }})</span>
                     </div>
+                    <button v-if="canRateCarrier(item.carrier)" @click.stop.prevent="openRateModal(item.carrier)"
+                      class="text-[10px] bg-secondary-50 text-secondary-600 px-2 py-0.5 rounded-full mt-1 hover:bg-secondary-100 transition-colors font-medium">
+                      {{ item.carrier?.myReview ? 'Modifier avis' : 'Noter' }}
+                    </button>
                   </div>
                 </div>
-                <NuxtLink :to="`/annonces/${item.id}?type=avail`" class="btn btn-primary btn-sm rounded-xl">Détails
-                </NuxtLink>
+                <div class="mt-4 flex justify-end">
+                  <NuxtLink :to="`/annonces/${item.id}?type=avail`" class="btn btn-primary btn-sm rounded-xl">Détails
+                  </NuxtLink>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+
         <!-- Fret Announcements Grid -->
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnnouncementCard v-for="announcement in fretAnnouncements" :key="announcement.id"
-            :announcement="announcement" detailRoute="/annonces" />
+          <UtilsCard v-for="announcement in fretAnnouncements" :key="announcement.id" :announcement="announcement"
+            detailRoute="/annonces" />
         </div>
       </div>
     </div>
 
-    <!-- Modals (Rating, etc) could be added here if needed -->
+    <!-- Rating Modal -->
+    <div v-if="showRatingModal"
+      class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+      @click.self="showRatingModal = false">
+      <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
+        <div class="relative">
+          <button @click="showRatingModal = false"
+            class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
+            Fermer
+            <IconX class="ml-2 w-5 h-5" />
+          </button>
+          <RatingForm :targetId="rateTarget?.id" :targetRole="'carrier'" :initialData="rateTarget?.myReview"
+            @success="handleRateSuccess" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -225,14 +247,42 @@ import { useAuthStore } from '~/stores/auth';
 import { useRoute } from 'vue-router';
 import {
   IconMapPin, IconCalendar, IconSearch, IconLoader2, IconTruckOff,
-  IconTruck, IconMapPinFilled, IconStarFilled, IconPackage, IconRefresh, IconPackageOff
+  IconTruck, IconMapPinFilled, IconStarFilled, IconPackage, IconRefresh, IconPackageOff, IconX
 } from '@tabler/icons-vue';
+import RatingForm from '~/components/profile/RatingForm.vue';
 
 const availStore = useAvailabilityStore();
 const fretStore = useAnnouncementStore();
 const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
+
+const showRatingModal = ref(false);
+const rateTarget = ref<any>(null);
+
+const canRateCarrier = (carrier: any) => {
+  if (!authStore.isAuthenticated || !authStore.isShipper) return false;
+  return true;
+};
+
+const openRateModal = (carrier: any) => {
+  rateTarget.value = carrier;
+  showRatingModal.value = true;
+};
+
+const handleRateSuccess = (data: { rating: number, reviewsCount: number, myReview: any }) => {
+  if (rateTarget.value) {
+    rateTarget.value.rating = data.rating;
+    rateTarget.value.reviewsCount = data.reviewsCount;
+    // We might need to refresh strict data or update local state if myReview is returned
+    // Assuming backend returns compiled rating.
+    // Also update myReview locally to toggle button state
+    rateTarget.value.myReview = data.myReview;
+
+    // Also update in the list if necessary (though rateTarget is a reference to the item in list)
+  }
+  showRatingModal.value = false;
+};
 
 const activeTab = ref<'avail' | 'fret'>('avail');
 

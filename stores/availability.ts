@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useAPI } from '~/composables/useAPI';
+import { useUserStore } from '~/stores/user';
 import type { Vehicle } from '~/stores/profile';
 
 export interface Location {
@@ -28,8 +29,10 @@ export interface Availability {
     photoUrl?: string;
     rating?: number;
     reviewsCount?: number;
+    myReview?: { score: number; comment?: string } | null;
   };
   bookings?: any[];
+  myReview?: { score: number; comment?: string } | null;
 }
 
 export interface CreateAvailabilityData {
@@ -67,7 +70,17 @@ export const useAvailabilityStore = defineStore('availability', {
       try {
         const response = await api.get<{ availabilities: Availability[] }>('/public/availabilities');
         if (response.success && response.data) {
-          this.availabilities = response.data.availabilities;
+          const userStore = useUserStore();
+          this.availabilities = response.data.availabilities.map(a => {
+            if (a.carrier) {
+              if (a.carrier.myReview) {
+                userStore.myReviews[a.carrier.id] = a.carrier.myReview;
+              } else if (userStore.myReviews[a.carrier.id]) {
+                a.carrier.myReview = userStore.myReviews[a.carrier.id];
+              }
+            }
+            return a;
+          });
         }
       } catch (err) {
         console.error('Failed to fetch public availabilities', err);
@@ -84,7 +97,16 @@ export const useAvailabilityStore = defineStore('availability', {
       try {
         const response = await api.get<{ availability: Availability }>(`/public/availabilities/${id}`);
         if (response.success && response.data) {
-          return { success: true, availability: response.data.availability };
+          const avail = response.data.availability;
+          const userStore = useUserStore();
+          if (avail.carrier) {
+            if (avail.carrier.myReview) {
+              userStore.myReviews[avail.carrier.id] = avail.carrier.myReview;
+            } else if (userStore.myReviews[avail.carrier.id]) {
+              avail.carrier.myReview = userStore.myReviews[avail.carrier.id];
+            }
+          }
+          return { success: true, availability: avail };
         }
         return { success: false, error: response.error };
       } catch (err) {
@@ -135,7 +157,17 @@ export const useAvailabilityStore = defineStore('availability', {
       try {
         const response = await api.get<{ availabilities: Availability[] }>('/carrier/availability');
         if (response.success && response.data) {
-          this.availabilities = response.data.availabilities;
+          const userStore = useUserStore();
+          this.availabilities = response.data.availabilities.map(a => {
+            if (a.carrier) {
+              if (a.carrier.myReview) {
+                userStore.myReviews[a.carrier.id] = a.carrier.myReview;
+              } else if (userStore.myReviews[a.carrier.id]) {
+                a.carrier.myReview = userStore.myReviews[a.carrier.id];
+              }
+            }
+            return a;
+          });
         }
       } catch (err) {
         console.error('Failed to fetch availabilities', err);
@@ -149,7 +181,16 @@ export const useAvailabilityStore = defineStore('availability', {
       try {
         const response = await api.get<{ availability: Availability }>(`/carrier/availability/${id}`);
         if (response.success && response.data) {
-          return { success: true, availability: response.data.availability };
+          const avail = response.data.availability;
+          const userStore = useUserStore();
+          if (avail.carrier) {
+            if (avail.carrier.myReview) {
+              userStore.myReviews[avail.carrier.id] = avail.carrier.myReview;
+            } else if (userStore.myReviews[avail.carrier.id]) {
+              avail.carrier.myReview = userStore.myReviews[avail.carrier.id];
+            }
+          }
+          return { success: true, availability: avail };
         }
         return { success: false, error: response.error };
       } catch (err) {

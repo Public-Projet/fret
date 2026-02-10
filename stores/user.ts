@@ -23,7 +23,9 @@ export const useUserStore = defineStore('user', {
     loading: false,
     error: null as string | null,
     totalCarriers: 0,
-    totalShippers: 0
+
+    totalShippers: 0,
+    myReviews: {} as Record<string, { score: number, comment?: string } | null>
   }),
 
   actions: {
@@ -76,12 +78,18 @@ export const useUserStore = defineStore('user', {
     async rateCarrier(carrierId: string, score: number, comment?: string) {
       const api = useAPI();
       const result = await api.post<{ rating: number; reviewsCount: number }>(`/shipper/rate/${carrierId}`, { score, comment });
+      if (result.success) {
+        this.myReviews[carrierId] = { score, comment };
+      }
       return result;
     },
 
     async rateShipper(shipperId: string, score: number, comment?: string) {
       const api = useAPI();
       const result = await api.post<{ rating: number; reviewsCount: number }>(`/carrier/rate/${shipperId}`, { score, comment });
+      if (result.success) {
+        this.myReviews[shipperId] = { score, comment };
+      }
       return result;
     }
   }

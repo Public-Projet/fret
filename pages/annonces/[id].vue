@@ -268,7 +268,7 @@
                 <!-- Rating Action -->
                 <button v-if="canRate" @click="showRatingModal = true"
                   class="btn btn-secondary btn-sm w-full rounded-xl">
-                  Noter cet expéditeur
+                  {{ ratingLabel }}
                 </button>
               </div>
             </div>
@@ -357,20 +357,28 @@ const canRate = computed(() => {
   if (dataType.value === 'avail') {
     return authStore.isShipper;
   }
+
   return authStore.isCarrier;
 });
 
-const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
+const ratingLabel = computed(() => {
+  const hasReview = dataType.value === 'avail' ? item.value?.carrier?.myReview : item.value?.user?.myReview;
+  return hasReview ? 'Modifier mon avis' : 'Noter cet expéditeur';
+});
+
+const handleRatingSuccess = (data: { rating: number, reviewsCount: number, myReview: any }) => {
   showRatingModal.value = false;
   if (dataType.value === 'avail') {
     if (item.value.carrier) {
       item.value.carrier.rating = data.rating;
       item.value.carrier.reviewCount = data.reviewsCount;
+      item.value.carrier.myReview = data.myReview;
     }
   } else {
     if (item.value.user) {
       item.value.user.rating = data.rating;
       item.value.user.reviewCount = data.reviewsCount;
+      item.value.user.myReview = data.myReview;
     }
   }
 };
