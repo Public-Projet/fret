@@ -12,6 +12,8 @@ export interface PublicUser {
   reviewsCount: number;
   kycStatus: string;
   role: 'carrier' | 'shipper';
+  company?: string;
+  location?: string;
   myReview?: { score: number, comment?: string } | null;
 }
 

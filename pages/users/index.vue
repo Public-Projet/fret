@@ -1,212 +1,65 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-br from-secondary-600 to-secondary-800 text-white py-16">
-      <div class="container-custom">
-        <h1 class="text-3xl md:text-4xl font-bold mb-4">Annuaire des Utilisateurs</h1>
-        <p class="text-secondary-100 text-lg max-w-2xl">
-          Retrouvez tous les transporteurs et expéditeurs certifiés sur la plateforme.
-        </p>
-      </div>
-    </div>
+    <UsersHeroSection />
 
     <div class="container-custom -mt-10">
       <!-- Tabs & Search -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div class="flex p-1 bg-gray-100 dark:bg-gray-700 rounded-xl w-fit">
-            <button @click="activeTab = 'carrier'"
-              :class="activeTab === 'carrier' ? 'bg-white dark:bg-gray-600 shadow-sm text-secondary-600 dark:text-white' : 'text-gray-500 hover:text-gray-700'"
-              class="px-6 py-2 rounded-lg text-sm font-bold transition-all">
-              Transporteurs
-            </button>
-            <button @click="activeTab = 'shipper'"
-              :class="activeTab === 'shipper' ? 'bg-white dark:bg-gray-600 shadow-sm text-secondary-600 dark:text-white' : 'text-gray-500 hover:text-gray-700'"
-              class="px-6 py-2 rounded-lg text-sm font-bold transition-all">
-              Expéditeurs
-            </button>
-          </div>
+      <UsersFilters :active-tab="activeTab" :search-query="searchQuery" @update:active-tab="activeTab = $event"
+        @update:search-query="searchQuery = $event" />
 
-          <div class="relative flex-1 max-w-md">
-            <IconSearch class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input v-model="searchQuery" type="text"
-              :placeholder="`Rechercher un ${activeTab === 'carrier' ? 'transporteur' : 'expéditeur'}...`"
-              class="input pl-10 w-full" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Content -->
+      <!-- Loading State -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-20">
-        <IconLoader2 class="w-12 h-12 text-secondary-600 animate-spin mb-4" />
-        <p class="text-gray-500">Chargement des utilisateurs...</p>
+        <IconLoader2 class="w-12 h-12 text-primary-600 animate-spin mb-4" />
+        <p class="text-gray-500">Chargement de l'annuaire...</p>
       </div>
 
-      <div v-else-if="users.length === 0"
-        class="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
-        <IconUsers class="w-16 h-16 text-gray-300 mx-auto mb-4" />
+      <!-- Empty State -->
+      <div v-else-if="filteredUsers.length === 0" class="text-center py-20">
+        <IconUserOff class="w-16 h-16 text-gray-300 mx-auto mb-4" />
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Aucun utilisateur trouvé</h3>
-        <p class="text-gray-500">Essayez une autre recherche.</p>
+        <p class="text-gray-500">Essayez de modifier votre recherche.</p>
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <div v-for="user in users" :key="user.id"
-          class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all group flex flex-col items-center text-center relative overflow-hidden">
-
-          <NuxtLink :to="`/users/${user.id}?role=${activeTab}`" class="absolute inset-0 z-0"></NuxtLink>
-
-          <div class="relative mb-4 z-10">
-            <div
-              class="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden ring-4 ring-white dark:ring-gray-800 group-hover:ring-secondary-50 dark:group-hover:ring-secondary-900/10 transition-all">
-              <img v-if="user.photoUrl" :src="user.photoUrl" class="w-full h-full object-cover" />
-              <div v-else
-                class="w-full h-full flex items-center justify-center text-2xl font-black text-gray-300 uppercase">
-                {{ user.firstname[0] }}{{ user.lastname[0] }}
-              </div>
-            </div>
-            <div v-if="user.kycStatus === 'verified'"
-              class="absolute -right-1 -bottom-1 bg-green-500 text-white p-1 rounded-full border-2 border-white dark:border-gray-800"
-              title="Vérifié">
-              <IconShieldCheck class="w-4 h-4" />
-            </div>
-          </div>
-
-          <h3
-            class="font-bold text-gray-900 dark:text-white mb-1 group-hover:text-secondary-600 transition-colors z-10">
-            {{ user.firstname }} {{ user.lastname }}
-          </h3>
-          <p class="text-xs text-gray-500 mb-3 z-10">@{{ user.username }}</p>
-
-          <div class="flex items-center justify-center space-x-1 mb-4 z-10">
-            <template v-for="i in 5" :key="i">
-              <IconStarFilled v-if="i <= Math.round(user.rating)" class="w-4 h-4 text-yellow-500" />
-              <IconStar v-else class="w-4 h-4 text-gray-300" />
-            </template>
-            <span class="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">{{ user.rating || '0.0' }}</span>
-            <span class="text-xs text-gray-400">({{ user.reviewsCount }})</span>
-          </div>
-
-          <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 h-10 italic z-10">
-            "{{ user.bio || 'Aucune biographie fournie.' }}"
-          </p>
-
-          <div
-            class="mt-auto w-full pt-4 border-t border-gray-50 dark:border-gray-700 flex items-center justify-between z-10">
-            <NuxtLink :to="`/users/${user.id}?role=${activeTab}`"
-              class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-secondary-600 transition-colors">
-              Profil
-            </NuxtLink>
-
-            <button v-if="canRateUser(user)" @click.stop.prevent="openRatingModal(user)"
-              class="btn btn-secondary btn-xs rounded-lg px-3">
-              {{ user.myReview ? 'Modifier ma note' : 'Noter' }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pagination remains same -->
-
-      <!-- Rating Modal -->
-      <div v-if="showRatingModal && selectedUser"
-        class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
-        @click.self="closeRatingModal">
-        <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
-          <div class="relative">
-            <button @click="closeRatingModal"
-              class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
-              Fermer
-              <IconX class="ml-2 w-5 h-5" />
-            </button>
-            <RatingForm :targetId="selectedUser.id" :targetRole="activeTab" :initialData="selectedUser.myReview"
-              @success="handleRatingSuccess" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Pagination -->
-      <div v-if="totalPages > 1" class="mt-8 flex justify-center space-x-2">
-        <button @click="currentPage--" :disabled="currentPage === 1" class="btn btn-outline btn-sm">Précédent</button>
-        <span class="flex items-center px-4 text-sm font-medium">{{ currentPage }} / {{ totalPages }}</span>
-        <button @click="currentPage++" :disabled="currentPage === totalPages"
-          class="btn btn-outline btn-sm">Suivant</button>
-      </div>
+      <!-- Users Grid -->
+      <UsersGrid v-else :items="filteredUsers" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '~/stores/user';
-import { useAuthStore } from '~/stores/auth';
-import RatingForm from '~/components/profile/RatingForm.vue';
-import {
-  IconSearch, IconLoader2, IconUsers, IconStarFilled, IconStar,
-  IconShieldCheck, IconX
-} from '@tabler/icons-vue';
+import { IconLoader2, IconUserOff } from '@tabler/icons-vue';
 
 const userStore = useUserStore();
-const authStore = useAuthStore();
 const activeTab = ref<'carrier' | 'shipper'>('carrier');
 const searchQuery = ref('');
-const currentPage = ref(1);
-const limit = 12;
+const loading = ref(true);
 
-// Modal state
-const showRatingModal = ref(false);
-const selectedUser = ref<any>(null);
-
-const loading = computed(() => userStore.loading);
+// Instead of ref fetching, we use the store
 const users = computed(() => activeTab.value === 'carrier' ? userStore.carriers : userStore.shippers);
-const totalUsers = computed(() => activeTab.value === 'carrier' ? userStore.totalCarriers : userStore.totalShippers);
-const totalPages = computed(() => Math.ceil(totalUsers.value / limit));
 
-const canRateUser = (user: any) => {
-  if (!authStore.isAuthenticated || authStore.user?.id === user.id) return false;
-  // Shippers rate Carriers, Carriers rate Shippers
-  if (authStore.isShipper && activeTab.value === 'carrier') return true;
-  if (authStore.isCarrier && activeTab.value === 'shipper') return true;
-  return false;
-};
-
-const openRatingModal = (user: any) => {
-  selectedUser.value = user;
-  showRatingModal.value = true;
-};
-
-const closeRatingModal = () => {
-  showRatingModal.value = false;
-  selectedUser.value = null;
-};
-
-const handleRatingSuccess = (data: { rating: number, reviewsCount: number }) => {
-  if (selectedUser.value) {
-    selectedUser.value.rating = data.rating;
-    selectedUser.value.reviewsCount = data.reviewsCount;
-  }
-};
-
-const fetchUsers = async () => {
-  if (activeTab.value === 'carrier') {
-    await userStore.fetchPublicCarriers({ page: currentPage.value, limit, search: searchQuery.value });
-  } else {
-    await userStore.fetchPublicShippers({ page: currentPage.value, limit, search: searchQuery.value });
-  }
-};
-
-watch([activeTab, searchQuery], () => {
-  currentPage.value = 1;
-  fetchUsers();
+const filteredUsers = computed(() => {
+  if (!searchQuery.value) return users.value;
+  const query = searchQuery.value.toLowerCase();
+  return users.value.filter(user =>
+    (user.company?.toLowerCase().includes(query) || '') ||
+    (user.firstname?.toLowerCase().includes(query) || '') ||
+    (user.lastname?.toLowerCase().includes(query) || '') ||
+    (user.location?.toLowerCase().includes(query) || '')
+  );
 });
 
-watch(currentPage, () => {
-  fetchUsers();
-});
-
-onMounted(() => {
-  fetchUsers();
+onMounted(async () => {
+  loading.value = true;
+  await Promise.all([
+    userStore.fetchPublicCarriers(),
+    userStore.fetchPublicShippers()
+  ]);
+  loading.value = false;
 });
 
 definePageMeta({ layout: 'guest' });
-useHead({ title: 'Annuaire Utilisateurs - Bourse de Fret' });
+useHead({ title: 'Annuaire - Bourse de Fret' });
 </script>
