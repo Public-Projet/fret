@@ -2,7 +2,7 @@
   <section id="features" class="section bg-white dark:bg-gray-800 relative overflow-hidden">
     <div class="container-custom relative z-10">
       <div class="text-center mb-20">
-        <UtilsGradientBadge text="Processus Simple" />
+        <UiGradientBadge text="Processus Simple" />
         <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">
           Comment ça marche ?
         </h2>

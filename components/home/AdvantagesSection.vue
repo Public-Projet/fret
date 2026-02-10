@@ -4,7 +4,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <!-- Colonne gauche - Avantages -->
         <div>
-          <UtilsGradientBadge text="Nos Avantages" variant="green" />
+          <UiGradientBadge text="Nos Avantages" variant="green" />
           <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
             Pourquoi choisir
             <span class="block text-gradient">Bourse de Fret Bénin ?</span>
@@ -66,11 +66,10 @@
           </div>
 
           <!-- Stats flottantes -->
-          <UtilsFloatingStats value="98%" label="Satisfaction" :icon="IconCircleCheck"
-            position-classes="-top-6 -right-6" icon-bg-color="bg-green-100 dark:bg-green-900/30"
-            icon-color="text-green-600 dark:text-green-400" />
+          <UiFloatingStats value="98%" label="Satisfaction" :icon="IconCircleCheck" position-classes="-top-6 -right-6"
+            icon-bg-color="bg-green-100 dark:bg-green-900/30" icon-color="text-green-600 dark:text-green-400" />
 
-          <UtilsFloatingStats value="24/7" label="Support" :icon="IconBolt"
+          <UiFloatingStats value="24/7" label="Support" :icon="IconBolt"
             position-classes="-bottom-6 -left-6 animation-delay-2000" icon-bg-color="bg-blue-100 dark:bg-blue-900/30"
             icon-color="text-blue-600 dark:text-blue-400" />
         </div>

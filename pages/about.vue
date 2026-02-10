@@ -53,7 +53,7 @@
       <div class="container-custom">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <UtilsGradientBadge text="Notre Mission" variant="blue" />
+            <UiGradientBadge text="Notre Mission" variant="blue" />
             <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
               Connecter les acteurs du
               <span class="text-gradient">transport au Bénin</span>
@@ -116,7 +116,7 @@
     <section class="section bg-white dark:bg-gray-800">
       <div class="container-custom">
         <div class="text-center mb-16">
-          <UtilsGradientBadge text="Nos Valeurs" variant="green" />
+          <UiGradientBadge text="Nos Valeurs" variant="green" />
           <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">
             Ce qui nous guide au quotidien
           </h2>
@@ -140,7 +140,7 @@
     <section class="section bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <div class="container-custom">
         <div class="text-center mb-16">
-          <UtilsGradientBadge text="L'Équipe" variant="blue" />
+          <UiGradientBadge text="L'Équipe" variant="blue" />
           <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">
             Les visages derrière la plateforme
           </h2>
@@ -168,7 +168,7 @@
     <section class="section bg-white dark:bg-gray-800">
       <div class="container-custom">
         <div class="text-center mb-16">
-          <UtilsGradientBadge text="Nos Chiffres" variant="green" />
+          <UiGradientBadge text="Nos Chiffres" variant="green" />
           <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">
             Bourse de Fret en chiffres
           </h2>

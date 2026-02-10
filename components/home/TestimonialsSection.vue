@@ -2,7 +2,7 @@
   <section class="section bg-white dark:bg-gray-800">
     <div class="container-custom">
       <div class="text-center mb-16">
-        <UtilsGradientBadge text="Témoignages" />
+        <UiGradientBadge text="Témoignages" />
         <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">
           Ils nous font confiance
         </h2>
