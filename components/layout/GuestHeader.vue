@@ -49,20 +49,10 @@
                 leave-to-class="transform opacity-0 scale-95">
                 <div v-if="isUserMenuOpen"
                   class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1">
-                  <NuxtLink :to="isShipper ? '/app/us' : '/app/uc'"
+                  <NuxtLink v-for="link in userMenuLinks" :key="link.to" :to="link.to"
                     class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    @click="closeUserMenu">
-                    Tableau de bord
-                  </NuxtLink>
-                  <NuxtLink :to="isShipper ? '/app/us/profile' : '/app/uc/profile'"
-                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    @click="closeUserMenu">
-                    Mon profil
-                  </NuxtLink>
-                  <NuxtLink to="/app/settings"
-                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    @click="closeUserMenu">
-                    Paramètres
+                    @click="link.action">
+                    {{ link.label }}
                   </NuxtLink>
                   <hr class="my-1 border-gray-200 dark:border-gray-700" />
                   <button @click="handleLogout"
@@ -176,6 +166,24 @@ const headerLinks = computed(() => {
     ];
   }
 });
+
+const userMenuLinks = computed(() => [
+  {
+    label: 'Tableau de bord',
+    to: isShipper.value ? '/app/us' : '/app/uc',
+    action: closeUserMenu
+  },
+  {
+    label: 'Mon profil',
+    to: isShipper.value ? '/app/us/profile' : '/app/uc/profile',
+    action: closeUserMenu
+  },
+  {
+    label: 'Paramètres',
+    to: '/app/settings',
+    action: closeUserMenu
+  }
+]);
 
 const toggleTheme = () => {
   themeStore.toggleTheme();

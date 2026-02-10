@@ -26,33 +26,13 @@
           <div
             class="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700">
             <div class="space-y-6">
-              <div class="flex items-start gap-4">
-                <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-                  <IconTarget class="w-8 h-8 text-blue-600 dark:text-blue-400" />
+              <div v-for="(item, index) in missionItems" :key="index" class="flex items-start gap-4">
+                <div :class="['p-3 rounded-xl', item.bgClass]">
+                  <component :is="item.icon" :class="['w-8 h-8', item.iconColor]" />
                 </div>
                 <div>
-                  <h4 class="font-bold text-gray-900 dark:text-white mb-1">Vision</h4>
-                  <p class="text-gray-600 dark:text-gray-400">Devenir la référence du transport de fret en
-                    Afrique de l'Ouest</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-4">
-                <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
-                  <IconRocket class="w-8 h-8 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900 dark:text-white mb-1">Ambition</h4>
-                  <p class="text-gray-600 dark:text-gray-400">Digitaliser 100% du transport de marchandises au
-                    Bénin d'ici 2030</p>
-                </div>
-              </div>
-              <div class="flex items-start gap-4">
-                <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-                  <IconHeart class="w-8 h-8 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900 dark:text-white mb-1">Engagement</h4>
-                  <p class="text-gray-600 dark:text-gray-400">Support 24/7 et accompagnement personnalisé</p>
+                  <h4 class="font-bold text-gray-900 dark:text-white mb-1">{{ item.title }}</h4>
+                  <p class="text-gray-600 dark:text-gray-400">{{ item.description }}</p>
                 </div>
               </div>
             </div>
@@ -65,6 +45,30 @@
 
 <script setup lang="ts">
 import { IconTarget, IconRocket, IconHeart } from '@tabler/icons-vue';
+
+const missionItems = [
+  {
+    icon: IconTarget,
+    title: 'Vision',
+    description: "Devenir la référence du transport de fret en Afrique de l'Ouest",
+    bgClass: 'bg-blue-100 dark:bg-blue-900/30',
+    iconColor: 'text-blue-600 dark:text-blue-400'
+  },
+  {
+    icon: IconRocket,
+    title: 'Ambition',
+    description: "Digitaliser 100% du transport de marchandises au Bénin d'ici 2030",
+    bgClass: 'bg-green-100 dark:bg-green-900/30',
+    iconColor: 'text-green-600 dark:text-green-400'
+  },
+  {
+    icon: IconHeart,
+    title: 'Engagement',
+    description: "Support 24/7 et accompagnement personnalisé",
+    bgClass: 'bg-blue-100 dark:bg-blue-900/30',
+    iconColor: 'text-blue-600 dark:text-blue-400'
+  }
+];
 </script>
 
 <style scoped>
