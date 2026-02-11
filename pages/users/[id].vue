@@ -41,7 +41,7 @@
             Fermer
             <IconX class="ml-2 w-5 h-5" />
           </button>
-          <RatingForm :targetId="user?.id" :targetRole="user?.role" :initialData="user?.myReview"
+          <ProfileRatingForm :targetId="user?.id" :targetRole="user?.role" :initialData="user?.myReview"
             @success="handleRateSuccess" />
         </div>
       </div>
@@ -59,7 +59,6 @@ import { useRoute } from 'vue-router';
 import {
   IconArrowLeft, IconLoader2, IconAlertCircle, IconX
 } from '@tabler/icons-vue';
-import RatingForm from '~/components/profile/RatingForm.vue';
 
 const route = useRoute();
 const userStore = useUserStore();

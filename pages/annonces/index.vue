@@ -47,7 +47,7 @@
             Fermer
             <IconX class="ml-2 w-5 h-5" />
           </button>
-          <RatingForm :targetId="rateTarget?.id" :targetRole="'carrier'" :initialData="rateTarget?.myReview"
+          <ProfileRatingForm :targetId="rateTarget?.id" :targetRole="'carrier'" :initialData="rateTarget?.myReview"
             @success="handleRateSuccess" />
         </div>
       </div>
@@ -61,7 +61,6 @@ import { useAvailabilityStore } from '~/stores/availability';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { useRoute } from 'vue-router';
 import { IconLoader2, IconTruckOff, IconPackageOff, IconX } from '@tabler/icons-vue';
-import RatingForm from '~/components/profile/RatingForm.vue';
 
 const availStore = useAvailabilityStore();
 const fretStore = useAnnouncementStore();

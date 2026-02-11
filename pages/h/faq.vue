@@ -1,87 +1,20 @@
 <template>
   <div class="container-custom py-12 max-w-4xl">
     <div class="card p-8 md:p-12">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Questions fréquentes</h1>
-      <p class="text-gray-600 dark:text-gray-400 mb-8">
-        Retrouvez les réponses aux questions les plus posées par nos utilisateurs.
-      </p>
-
-      <!-- Category Tabs -->
-      <div class="flex flex-wrap gap-2 mb-8">
-        <button v-for="category in categories" :key="category" @click="activeCategory = category" :class="[
-          'px-4 py-2 rounded-full text-sm font-medium transition-all',
-          activeCategory === category
-            ? 'bg-primary-500 text-white'
-            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
-        ]">
-          {{ category }}
-        </button>
-      </div>
-
-      <!-- FAQ Items -->
-      <div class="space-y-4">
-        <div v-for="(faq, index) in filteredFaqs" :key="index"
-          class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
-          <button @click="toggleFaq(index)"
-            class="w-full flex items-center justify-between p-5 text-left bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-            <span class="font-semibold text-gray-900 dark:text-white pr-4">{{ faq.question }}</span>
-            <IconChevronDown
-              :class="['w-5 h-5 text-gray-500 transition-transform duration-300', openIndex === index ? 'rotate-180' : '']" />
-          </button>
-          <div class="grid transition-all duration-300 ease-in-out"
-            :class="openIndex === index ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
-            <div class="overflow-hidden">
-              <div class="p-5 pt-0 text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800">
-                {{ faq.answer }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- No Results -->
-      <div v-if="filteredFaqs.length === 0" class="text-center py-12">
-        <IconHelpCircle class="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p class="text-gray-500 dark:text-gray-400">Aucune question trouvée dans cette catégorie.</p>
-      </div>
-
-      <!-- Contact CTA -->
-      <div class="mt-12 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl text-center">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Vous n'avez pas trouvé votre réponse ?</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-4">Notre équipe est disponible pour répondre à toutes vos
-          questions.</p>
-        <div class="flex flex-col sm:flex-row gap-3 justify-center">
-          <NuxtLink to="/h/help"
-            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-            <IconHelp class="w-5 h-5" />
-            Centre d'aide
-          </NuxtLink>
-          <NuxtLink to="/h/contact"
-            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors">
-            <IconMail class="w-5 h-5" />
-            Nous contacter
-          </NuxtLink>
-        </div>
-      </div>
+      <HelpFaqHeader />
+      <HelpFaqCategories :categories="categories" :activeCategory="activeCategory"
+        @update:activeCategory="activeCategory = $event" />
+      <HelpFaqList :faqs="filteredFaqs" />
+      <HelpFaqContact />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { IconChevronDown, IconHelpCircle, IconHelp, IconMail } from '@tabler/icons-vue';
-
-useHead({
-  title: 'FAQ'
-});
-
-definePageMeta({
-  layout: 'guest'
-});
 
 const categories = ['Toutes', 'Général', 'Compte', 'Transport', 'Paiement', 'Sécurité'];
 const activeCategory = ref('Toutes');
-const openIndex = ref<number | null>(null);
 
 const faqs = [
   {
@@ -143,7 +76,11 @@ const filteredFaqs = computed(() => {
   return faqs.filter(faq => faq.category === activeCategory.value);
 });
 
-const toggleFaq = (index: number) => {
-  openIndex.value = openIndex.value === index ? null : index;
-};
+useHead({
+  title: 'FAQ'
+});
+
+definePageMeta({
+  layout: 'guest'
+});
 </script>

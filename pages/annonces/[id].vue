@@ -33,7 +33,7 @@
             Fermer
             <IconX class="ml-2 w-5 h-5" />
           </button>
-          <RatingForm :targetId="dataType === 'avail' ? item.carrier?.id : item.user?.id"
+          <ProfileRatingForm :targetId="dataType === 'avail' ? item.carrier?.id : item.user?.id"
             :targetRole="dataType === 'avail' ? 'carrier' : 'shipper'" :initialData="null"
             @success="handleRatingSuccess" />
         </div>
@@ -48,7 +48,6 @@ import { useAvailabilityStore } from '~/stores/availability';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { useAuthStore } from '~/stores/auth';
 import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
-import RatingForm from '~/components/profile/RatingForm.vue';
 
 const route = useRoute();
 const availStore = useAvailabilityStore();
