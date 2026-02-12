@@ -139,7 +139,7 @@ const handleSubmit = async () => {
   isLoading.value = true;
 
   try {
-    const response = await api.post<{ ticketNumber: string }>('/contact/submit', form);
+    const response = await api.post<{ ticketNumber: string }>('/public/contact/submit', form);
 
     if (response.success && response.data) {
       ticketNumber.value = response.data.ticketNumber;
