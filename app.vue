@@ -5,9 +5,10 @@
     </NuxtLayout>
 
     <!-- Global WhatsApp Floating Button -->
-    <a href="https://wa.me/2290166523639" target="_blank" rel="noopener noreferrer"
+    <a href="https://wa.me/2290166523639?text=Bonjour Equipe de la Bourse de Fret. J'aimerais en savoir plus sur vos services."
+      target="_blank" rel="noopener noreferrer"
       class="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 flex items-center justify-center">
-      <IconBrandWhatsapp class="w-8 h-8" />
+      <IconBrandWhatsapp class="w-4 h-4" />
     </a>
   </div>
 </template>
