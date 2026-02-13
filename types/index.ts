@@ -41,7 +41,9 @@ export interface Location {
 export interface Announcement {
   id: string;
   userId: string;
+  shipperId?: string;
   user?: User;
+  shipper?: User;
   title: string;
   description: string;
   cargoType: CargoType;
@@ -49,7 +51,7 @@ export interface Announcement {
   volume: number; // en m³
   origin: Location;
   destination: Location;
-  distance?: number; // en km
+  distance?: number; // en kg
   pickupDate: string;
   deliveryDate: string;
   budget: number; // en euros

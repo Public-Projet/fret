@@ -1,5 +1,6 @@
 <template>
-  <section class="section bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+  <section v-if="contentStore.loading.team || contentStore.team.length > 0"
+    class="section bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
     <div class="container-custom">
       <div class="text-center mb-16">
         <UiGradientBadge text="L'Équipe" variant="blue" />
@@ -11,16 +12,32 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-        <div v-for="member in TEAM" :key="member.initials"
+      <div v-if="contentStore.loading.team" class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div v-for="i in 3" :key="i"
+          class="bg-white dark:bg-gray-800 rounded-3xl p-8 animate-pulse shadow-lg border border-gray-200 dark:border-gray-700">
+          <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+          <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-3"></div>
+          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto mb-6"></div>
+          <div class="h-16 bg-gray-200 dark:bg-gray-700 rounded w-full mx-auto"></div>
+        </div>
+      </div>
+
+      <div v-else-if="contentStore.team.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div v-for="(member, index) in contentStore.team" :key="member.id"
           class="group bg-white dark:bg-gray-800 rounded-3xl p-8 text-center shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-300">
-          <div
-            :class="['w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300', member.avatarClass]">
-            <span class="text-3xl font-black text-white">{{ member.initials }}</span>
+
+          <div v-if="member.photo"
+            class="w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-lg group-hover:scale-110 transition-transform duration-300">
+            <img :src="member.photo" :alt="member.name" class="w-full h-full object-cover" />
           </div>
+          <div v-else
+            :class="['w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300', getAvatarClass(index)]">
+            <span class="text-3xl font-black text-white">{{ getInitials(member.name) }}</span>
+          </div>
+
           <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ member.name }}</h3>
-          <p :class="['font-semibold mb-3', member.roleClass]">{{ member.role }}</p>
-          <p class="text-gray-600 dark:text-gray-400 text-sm">{{ member.description }}</p>
+          <p :class="['font-semibold mb-3', getRoleClass(index)]">{{ member.role }}</p>
+          <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">{{ member.description }}</p>
         </div>
       </div>
     </div>
@@ -28,30 +45,11 @@
 </template>
 
 <script setup lang="ts">
-const TEAM = [
-  {
-    initials: 'SA',
-    name: 'Sylvestre AIZAN ALAGBE',
-    role: 'Co-fondateur & CEO',
-    description: "10 ans d'expérience dans la logistique et le transport au Bénin",
-    avatarClass: 'bg-gradient-to-br from-blue-500 to-blue-700',
-    roleClass: 'text-blue-600 dark:text-blue-400'
-  },
-  {
-    initials: 'HD',
-    name: 'Handel DOVOEDO',
-    role: 'Co-fondateur & CTO',
-    description: 'Expert en développement de plateformes digitales B2B',
-    avatarClass: 'bg-gradient-to-br from-green-500 to-green-700',
-    roleClass: 'text-green-600 dark:text-green-400'
-  },
-  {
-    initials: 'AK',
-    name: 'Amos KPOSSOU',
-    role: 'Directeur des Opérations',
-    description: 'Spécialiste en gestion de la relation client et qualité',
-    avatarClass: 'bg-gradient-to-br from-blue-500 to-green-500',
-    roleClass: 'text-blue-600 dark:text-blue-400'
-  }
-];
+import { useSiteContentStore, getInitials, getAvatarClass, getRoleClass } from '~/stores/siteContent';
+
+const contentStore = useSiteContentStore();
+
+onMounted(() => {
+  contentStore.fetchTeam();
+});
 </script>

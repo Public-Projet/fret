@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout name="auth"
-    bg-image="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-    quote="La rapidité et la fiabilité au service de votre logistique." author="L'équipe BourseFret">
+    bg-image="https://images.unsplash.com/photo-1700716465891-9e5e9f501d7d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGltcG9ydGF0aW9ufGVufDB8fDB8fHww"
+    quote="Le réseau qui fait circuler le fret sans perte de temps">
     <div class="w-full space-y-8">
       <div>
         <h2 class="mt-4 text-center text-3xl font-extrabold text-gray-900 dark:text-white">

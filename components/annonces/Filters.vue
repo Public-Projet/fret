@@ -46,10 +46,13 @@
               type="date" class="input pl-10" />
           </div>
         </div>
-        <div class="flex items-end">
-          <button class="btn btn-primary w-full h-[42px]">
+        <div class="flex items-end gap-2">
+          <button class="flex item-center btn btn-primary flex-1 h-[42px]">
             <IconSearch class="w-5 h-5 mr-2" />
             Rechercher
+          </button>
+          <button @click="$emit('resetAvailFilters')" class="btn btn-ghost h-[42px]" title="Réinitialiser">
+            <IconRefresh class="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -89,7 +92,7 @@
           </select>
         </div>
         <div class="flex items-end gap-2">
-          <button @click="$emit('applyFretFilters')" class="btn btn-primary flex-1 h-[42px]">
+          <button @click="$emit('applyFretFilters')" class="flex item-center btn btn-primary flex-1 h-[42px]">
             <IconSearch class="w-5 h-5 mr-2" />
             Filtrer
           </button>
@@ -126,5 +129,6 @@ defineEmits<{
   (e: 'update:fretFilters', value: any): void;
   (e: 'applyFretFilters'): void;
   (e: 'resetFretFilters'): void;
+  (e: 'resetAvailFilters'): void;
 }>();
 </script>

@@ -1,5 +1,6 @@
 <template>
-  <section class="section bg-white dark:bg-gray-800">
+  <section v-if="contentStore.loading.testimonials || contentStore.testimonials.length > 0"
+    class="section bg-white dark:bg-gray-800">
     <div class="container-custom">
       <div class="text-center mb-16">
         <UiGradientBadge text="Témoignages" />
@@ -8,19 +9,34 @@
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <HomeTestimonialCard
-          quote="Bourse de Fret Bénin a révolutionné notre logistique. Nous avons réduit nos coûts de 35% tout en améliorant nos délais de livraison."
-          name="Isaac Agossou" role="Directeur Logistique, IKEA" initials="IA" avatar-color="blue" />
+      <div v-if="contentStore.loading.testimonials" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div v-for="i in 3" :key="i" class="card p-8 animate-pulse bg-gray-50 dark:bg-gray-700/50">
+          <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-full mb-4"></div>
+          <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-5/6 mb-8"></div>
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-600"></div>
+            <div class="space-y-2">
+              <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-24"></div>
+              <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded w-32"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <HomeTestimonialCard
-          quote="Interface intuitive et transporteurs professionnels. J'ai trouvé mon transporteur en moins de 20 minutes!"
-          name="Jean Tossou" role="PDG, Azonnagbò" initials="JT" avatar-color="green" />
-
-        <HomeTestimonialCard
-          quote="Grâce à Bourse de Fret, j'ai multiplié mes contrats par 3. La plateforme est parfaite pour nous, transporteurs."
-          name="Pierre Cossou" role="Transporteur indépendant" initials="PC" avatar-color="yellow" />
+      <div v-else-if="contentStore.testimonials.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <HomeTestimonialCard v-for="(t, index) in contentStore.testimonials" :key="t.id" :quote="t.quote" :name="t.name"
+          :role="t.role" :photo="t.photo" :initials="getInitials(t.name)" :avatar-class="getAvatarClass(index)" />
       </div>
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+import { useSiteContentStore, getInitials, getAvatarClass } from '~/stores/siteContent';
+
+const contentStore = useSiteContentStore();
+
+onMounted(() => {
+  contentStore.fetchTestimonials();
+});
+</script>
