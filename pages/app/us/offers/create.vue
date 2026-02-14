@@ -21,13 +21,13 @@
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="label">Type de marchandise</label>
+                  <label class="label">Nature de marchandise</label>
                   <select v-model="form.cargoType" required class="input">
                     <option value="palettes">Palettes</option>
                     <option value="vrac">Vrac</option>
                     <option value="conteneur">Conteneur</option>
                     <option value="frigorifique">Frigorifique</option>
-                    <option value="dangereux">Dangereux</option>
+                    <option value="dangereux">Dangereux</option> 
                     <option value="autre">Autre</option>
                   </select>
                 </div>
@@ -59,7 +59,7 @@
                   </div>
                   <div>
                     <label class="label">Code postal</label>
-                    <input v-model="form.origin.postalCode" type="text" required class="input" />
+                    <input v-model="form.origin.postalCode" type="text" class="input" />
                   </div>
                 </div>
                 <div>
@@ -82,7 +82,7 @@
                   </div>
                   <div>
                     <label class="label">Code postal</label>
-                    <input v-model="form.destination.postalCode" type="text" required class="input" />
+                    <input v-model="form.destination.postalCode" type="text" class="input" />
                   </div>
                 </div>
                 <div>
@@ -147,13 +147,13 @@ const form = reactive({
     address: '',
     city: '',
     postalCode: '',
-    country: 'France',
+    country: 'Bénin',
   },
   destination: {
     address: '',
     city: '',
     postalCode: '',
-    country: 'France',
+    country: 'Bénin',
   },
   pickupDate: '',
   deliveryDate: '',
@@ -171,7 +171,6 @@ const handleSubmit = async () => {
       budget: form.budget || 0,
       weight: form.weight || 0,
       volume: form.volume || 0,
-      distance: Math.floor(Math.random() * 800) + 50, // Simulation distance
     });
 
     if (result.success) {

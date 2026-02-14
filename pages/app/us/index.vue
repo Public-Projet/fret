@@ -139,6 +139,6 @@ const formatDate = (dateString: string) => {
 };
 
 onMounted(() => {
-  announcementStore.fetchAnnouncements();
+  announcementStore.fetchMyAnnouncements();
 });
 </script>

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, AnnouncementStatus } from '~/types';
-import { mockAnnouncements } from '~/data/mock';
 import { useUserStore } from '~/stores/user';
+import { useAPI } from '~/composables/useAPI';
 
 interface AnnouncementState {
   announcements: Announcement[];
@@ -12,7 +12,7 @@ interface AnnouncementState {
 
 export const useAnnouncementStore = defineStore('announcement', {
   state: (): AnnouncementState => ({
-    announcements: [...mockAnnouncements],
+    announcements: [],
     currentAnnouncement: null,
     filters: {},
     loading: false,
@@ -88,30 +88,58 @@ export const useAnnouncementStore = defineStore('announcement', {
     /**
      * Charger toutes les annonces
      */
-    async fetchAnnouncements() {
+    async fetchAnnouncements(queryParams: any = {}) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 500));
-
+      const api = useAPI();
       const userStore = useUserStore();
-      this.announcements = mockAnnouncements.map(a => {
-        // Mock data usually doesn't have user object populated deeply like backend, 
-        // but if it did, or if we had userId, we could sync.
-        // Assuming announcement has userId
-        if (a.userId && userStore.myReviews[a.userId]) {
-          // In mock, we might not have a place to put myReview on the announcement object itself 
-          // unless we extend the type. 
-          // But let's assume the component will look up the userStore if needed?
-          // Or better, let's look at how Announcement is typed.
-          // It seems Announcement type in `types/index.ts` should check for user/myReview.
-          // For now, let's just leave mock as is, but if we were fetching real data:
-          // if (a.user?.myReview) userStore.myReviews[a.userId] = a.user.myReview;
-          // else if (userStore.myReviews[a.userId]) a.user.myReview = userStore.myReviews[a.userId];
+
+      try {
+        const queryString = new URLSearchParams(queryParams).toString();
+        const url = `/public/announcements${queryString ? `?${queryString}` : ''}`;
+
+        const response = await api.get<{ announcements: Announcement[], total: number }>(url);
+
+        if (response.success && response.data) {
+          const { announcements } = response.data;
+          this.announcements = announcements.map((a) => {
+            if (a.shipper && !a.userId) a.userId = a.shipper.id;
+
+            if (a.shipper && (a.shipper as any).myReview) {
+              userStore.myReviews[a.shipper.id] = (a.shipper as any).myReview;
+            }
+
+            return a;
+          });
+          return { success: true, total: response.data.total };
         }
-        return a;
-      });
-      this.announcements = [...mockAnnouncements]; // Revert to mock for now if type mismatch
-      this.loading = false;
+      } catch (error) {
+        console.error('Erreur lors du chargement des annonces:', error);
+        return { success: false, error };
+      } finally {
+        this.loading = false;
+      }
+      return { success: false };
+    },
+
+    /**
+     * Charger les annonces de l'utilisateur connecté (Shipper)
+     */
+    async fetchMyAnnouncements() {
+      this.loading = true;
+      const api = useAPI();
+      try {
+        const response = await api.get<Announcement[]>('/shipper/announcement');
+        if (response.success && response.data) {
+          this.announcements = response.data.map((a) => {
+            if (a.shipper && !a.userId) a.userId = a.shipper.id;
+            return a;
+          });
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement de mes annonces:', error);
+      } finally {
+        this.loading = false;
+      }
     },
 
     /**
@@ -119,25 +147,29 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async fetchAnnouncementById(id: string) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const api = useAPI();
+      const userStore = useUserStore();
 
-      const announcement = this.announcements.find(a => a.id === id);
-      if (announcement) {
-        const userStore = useUserStore();
-        // If we have a user object attached (depends on mock structure)
-        if ((announcement as any).user) {
-          const userId = (announcement as any).user.id || announcement.userId;
-          if (userStore.myReviews[userId]) {
-            (announcement as any).user.myReview = userStore.myReviews[userId];
+      try {
+        const response = await api.get<Announcement>(`/public/announcements/${id}`);
+
+        if (response.success && response.data) {
+          const announcement = response.data;
+          if (announcement.shipper && !announcement.userId) announcement.userId = announcement.shipper.id;
+
+          if (announcement.shipper && (announcement.shipper as any).myReview) {
+            userStore.myReviews[announcement.shipper.id] = (announcement.shipper as any).myReview;
           }
+
+          this.currentAnnouncement = announcement;
+          return { success: true, announcement };
         }
-        this.currentAnnouncement = announcement;
+      } catch (error) {
+        console.error('Erreur lors du chargement de l\'annonce:', error);
+      } finally {
         this.loading = false;
-        return { success: true, announcement };
       }
 
-      this.loading = false;
       return { success: false, error: 'Annonce non trouvée' };
     },
 
@@ -146,21 +178,21 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async createAnnouncement(announcementData: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt' | 'status'>) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      const newAnnouncement: Announcement = {
-        ...announcementData,
-        id: `ann-${Date.now()}`,
-        status: 'pending',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      this.announcements.unshift(newAnnouncement);
-      this.loading = false;
-
-      return { success: true, announcement: newAnnouncement };
+      const api = useAPI();
+      try {
+        const response = await api.post<Announcement>('/shipper/announcement', announcementData);
+        if (response.success && response.data) {
+          const newAnnouncement = response.data;
+          this.announcements.unshift(newAnnouncement);
+          return { success: true, announcement: newAnnouncement };
+        }
+        return { success: false, error: response.error };
+      } catch (error) {
+        console.error('Erreur lors de la création de l\'annonce:', error);
+        return { success: false, error: 'Erreur technique' };
+      } finally {
+        this.loading = false;
+      }
     },
 
     /**
@@ -168,27 +200,27 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async updateAnnouncement(id: string, updates: Partial<Announcement>) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const index = this.announcements.findIndex(a => a.id === id);
-      if (index !== -1) {
-        this.announcements[index] = {
-          ...this.announcements[index],
-          ...updates,
-          updatedAt: new Date().toISOString(),
-        };
-
-        if (this.currentAnnouncement?.id === id) {
-          this.currentAnnouncement = this.announcements[index];
+      const api = useAPI();
+      try {
+        const response = await api.patch<Announcement>(`/shipper/announcement/${id}`, updates);
+        if (response.success && response.data) {
+          const updated = response.data;
+          const index = this.announcements.findIndex(a => a.id === id);
+          if (index !== -1) {
+            this.announcements[index] = updated;
+          }
+          if (this.currentAnnouncement?.id === id) {
+            this.currentAnnouncement = updated;
+          }
+          return { success: true, announcement: updated };
         }
-
+        return { success: false, error: response.error };
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'annonce:', error);
+        return { success: false, error: 'Erreur technique' };
+      } finally {
         this.loading = false;
-        return { success: true, announcement: this.announcements[index] };
       }
-
-      this.loading = false;
-      return { success: false, error: 'Annonce non trouvée' };
     },
 
     /**
@@ -196,23 +228,23 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async deleteAnnouncement(id: string) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const index = this.announcements.findIndex(a => a.id === id);
-      if (index !== -1) {
-        this.announcements.splice(index, 1);
-
-        if (this.currentAnnouncement?.id === id) {
-          this.currentAnnouncement = null;
+      const api = useAPI();
+      try {
+        const response = await api.del(`/shipper/announcement/${id}`);
+        if (response.success) {
+          this.announcements = this.announcements.filter(a => a.id !== id);
+          if (this.currentAnnouncement?.id === id) {
+            this.currentAnnouncement = null;
+          }
+          return { success: true };
         }
-
+        return { success: false, error: response.error };
+      } catch (error) {
+        console.error('Erreur lors de la suppression de l\'annonce:', error);
+        return { success: false, error: 'Erreur technique' };
+      } finally {
         this.loading = false;
-        return { success: true };
       }
-
-      this.loading = false;
-      return { success: false, error: 'Annonce non trouvée' };
     },
 
     /**

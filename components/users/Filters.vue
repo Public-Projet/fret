@@ -18,12 +18,18 @@
       </div>
 
       <!-- Search -->
-      <div class="relative w-full md:w-96">
-        <IconSearch class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-        <input :value="searchQuery" @input="$emit('update:searchQuery', ($event.target as HTMLInputElement).value)"
-          type="text"
-          :placeholder="activeTab === 'carrier' ? 'Rechercher un transporteur...' : 'Rechercher un expéditeur...'"
-          class="input pl-12 rounded-xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 focus:bg-white dark:focus:bg-gray-800 transition-colors w-full" />
+      <div class="flex items-center gap-2 w-full md:w-[450px]">
+        <div class="relative flex-1">
+          <IconSearch class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input :value="searchQuery" @input="$emit('update:searchQuery', ($event.target as HTMLInputElement).value)"
+            @keyup.enter="$emit('search')" type="text"
+            :placeholder="activeTab === 'carrier' ? 'Rechercher un transporteur...' : 'Rechercher un expéditeur...'"
+            class="input pl-12 rounded-xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 focus:bg-white dark:focus:bg-gray-800 transition-colors w-full" />
+        </div>
+        <button @click="$emit('search')" class="btn btn-primary h-[42px] px-6 rounded-xl flex items-center gap-2">
+          <IconSearch class="w-4 h-4" />
+          <span>Rechercher</span>
+        </button>
       </div>
     </div>
   </div>
@@ -37,8 +43,5 @@ defineProps<{
   searchQuery: string;
 }>();
 
-defineEmits<{
-  (e: 'update:activeTab', value: 'carrier' | 'shipper'): void;
-  (e: 'update:searchQuery', value: string): void;
-}>();
+defineEmits(['update:activeTab', 'update:searchQuery', 'search']);
 </script>

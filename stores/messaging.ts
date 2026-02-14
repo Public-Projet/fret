@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Offer, Message, Conversation } from '~/types';
 import { mockOffers, mockMessages, mockConversations } from '~/data/mock';
+import { useAPI } from '~/composables/useAPI';
 
 interface MessagingState {
   offers: Offer[];
@@ -114,17 +115,47 @@ export const useMessagingStore = defineStore('messaging', {
     },
 
     /**
-     * Accepter une offre
+     * Charger les offres pour une annonce (Shipper)
      */
-    async acceptOffer(offerId: string) {
-      return this.updateOffer(offerId, { status: 'accepted' });
+    async fetchOffersForAnnouncement(announcementId: string) {
+      this.loading = true;
+      const api = useAPI();
+      try {
+        const response = await api.get(`/shipper/announcement/${announcementId}/offers`);
+        if (Array.isArray(response)) {
+          // Fusionner ou remplacer ? Pour une annonce spécifique on peut remplacer dans le state
+          // ou juste retourner. Ici on va mettre à jour le state des offres.
+          // On garde les offres des autres annonces?
+          const otherOffers = this.offers.filter(o => o.announcementId !== announcementId);
+          this.offers = [...otherOffers, ...response.map(o => ({
+            ...o,
+            announcementId: o.announcement // Adaptation structure backend model Offer.js
+          }))];
+        }
+      } catch (error) {
+        console.error('Erreur chargement offres:', error);
+      } finally {
+        this.loading = false;
+      }
     },
 
     /**
-     * Rejeter une offre
+     * Accepter une offre
      */
-    async rejectOffer(offerId: string) {
-      return this.updateOffer(offerId, { status: 'rejected' });
+    async acceptOffer(offerId: string) {
+      this.loading = true;
+      const api = useAPI();
+      try {
+        await api.post(`/shipper/offer/${offerId}/accept`);
+        const index = this.offers.findIndex(o => o.id === offerId);
+        if (index !== -1) this.offers[index].status = 'accepted';
+        return { success: true };
+      } catch (error) {
+        console.error('Erreur acceptation offre:', error);
+        return { success: false, error };
+      } finally {
+        this.loading = false;
+      }
     },
 
     /**

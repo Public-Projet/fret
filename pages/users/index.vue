@@ -6,7 +6,7 @@
     <div class="container-custom -mt-10">
       <!-- Tabs & Search -->
       <UsersFilters :active-tab="activeTab" :search-query="searchQuery" @update:active-tab="activeTab = $event"
-        @update:search-query="searchQuery = $event" />
+        @update:search-query="searchQuery = $event" @search="handleSearch" />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-20">
@@ -15,10 +15,18 @@
       </div>
 
       <!-- Empty State -->
-      <div v-else-if="filteredUsers.length === 0" class="text-center py-20">
-        <IconUserOff class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Aucun utilisateur trouvé</h3>
-        <p class="text-gray-500">Essayez de modifier votre recherche.</p>
+      <div v-else-if="filteredUsers.length === 0"
+        class="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
+        <IconTruckOff v-if="activeTab === 'carrier'" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
+        <IconCubeOff v-else class="w-16 h-16 text-gray-300 mx-auto mb-4" />
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ activeTab === 'carrier' ? 'Aucun transporteur trouvé' : 'Aucun expéditeur trouvé' }}
+        </h3>
+        <p class="text-gray-500 px-4">
+          {{ activeTab === 'carrier'
+            ? "Aucun transporteur ne correspond à votre recherche pour le moment."
+            : "Aucun expéditeur n'a été trouvé avec ces critères." }}
+        </p>
       </div>
 
       <!-- Users Grid -->
@@ -30,19 +38,24 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '~/stores/user';
-import { IconLoader2, IconUserOff } from '@tabler/icons-vue';
+import { IconLoader2, IconTruckOff, IconCubeOff } from '@tabler/icons-vue';
 
 const userStore = useUserStore();
 const activeTab = ref<'carrier' | 'shipper'>('carrier');
 const searchQuery = ref('');
+const validatedSearchQuery = ref('');
 const loading = ref(true);
+
+const handleSearch = () => {
+  validatedSearchQuery.value = searchQuery.value;
+};
 
 // Instead of ref fetching, we use the store
 const users = computed(() => activeTab.value === 'carrier' ? userStore.carriers : userStore.shippers);
 
 const filteredUsers = computed(() => {
-  if (!searchQuery.value) return users.value;
-  const query = searchQuery.value.toLowerCase();
+  if (!validatedSearchQuery.value) return users.value;
+  const query = validatedSearchQuery.value.toLowerCase();
   return users.value.filter(user =>
     (user.company?.toLowerCase().includes(query) || '') ||
     (user.firstname?.toLowerCase().includes(query) || '') ||

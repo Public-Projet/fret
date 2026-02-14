@@ -260,7 +260,8 @@ const viewCarrierProfile = (carrierId: string) => {
   alert("Voir le profil du transporteur (Fonctionnalité à venir)");
 };
 
-onMounted(() => {
-  announcementStore.fetchAnnouncementById(announcementId);
+onMounted(async () => {
+  await announcementStore.fetchAnnouncementById(announcementId);
+  await messagingStore.fetchOffersForAnnouncement(announcementId);
 });
 </script>

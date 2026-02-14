@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Review, Report, ReportType, ReportReason } from '~/types';
-import { mockReviews, mockReports } from '~/data/mock';
+import { useAPI } from '~/composables/useAPI';
 
 interface ReviewState {
   reviews: Review[];
@@ -10,8 +10,8 @@ interface ReviewState {
 
 export const useReviewStore = defineStore('review', {
   state: (): ReviewState => ({
-    reviews: [...mockReviews],
-    reports: [...mockReports],
+    reviews: [],
+    reports: [],
     loading: false,
   }),
 
@@ -58,30 +58,25 @@ export const useReviewStore = defineStore('review', {
      */
     async createReview(reviewData: Omit<Review, 'id' | 'createdAt'>) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const api = useAPI();
 
-      // Vérifier si l'utilisateur a déjà laissé un avis pour cette annonce
-      const existingReview = this.reviews.find(
-        r => r.fromUserId === reviewData.fromUserId &&
-          r.announcementId === reviewData.announcementId
-      );
+      try {
+        // En fonction du rôle de l'utilisateur, l'endpoint peut varier
+        // Mais en général, on utilise les endpoints de UserStore (rateCarrier / rateShipper)
+        // Si ce store est utilisé séparément :
+        const response = await api.post<Review>('/public/reviews', reviewData);
 
-      if (existingReview) {
+        if (response.success && response.data) {
+          this.reviews.push(response.data);
+          return { success: true, review: response.data };
+        }
+        return { success: false, error: response.error };
+      } catch (error) {
+        console.error('Erreur lors de la création de l\'avis:', error);
+        return { success: false, error: 'Erreur technique' };
+      } finally {
         this.loading = false;
-        return { success: false, error: 'Vous avez déjà laissé un avis pour cette annonce' };
       }
-
-      const newReview: Review = {
-        ...reviewData,
-        id: `rev-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-      };
-
-      this.reviews.push(newReview);
-      this.loading = false;
-
-      return { success: true, review: newReview };
     },
 
     /**
@@ -89,39 +84,48 @@ export const useReviewStore = defineStore('review', {
      */
     async createReport(reportData: Omit<Report, 'id' | 'createdAt' | 'status'>) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const api = useAPI();
 
-      const newReport: Report = {
-        ...reportData,
-        id: `rep-${Date.now()}`,
-        status: 'pending',
-        createdAt: new Date().toISOString(),
-      };
+      try {
+        const response = await api.post<Report>('/public/reports', reportData);
 
-      this.reports.push(newReport);
-      this.loading = false;
-
-      return { success: true, report: newReport };
+        if (response.success && response.data) {
+          this.reports.push(response.data);
+          return { success: true, report: response.data };
+        }
+        return { success: false, error: response.error };
+      } catch (error) {
+        console.error('Erreur lors du signalement:', error);
+        return { success: false, error: 'Erreur technique' };
+      } finally {
+        this.loading = false;
+      }
     },
 
     /**
-     * Mettre à jour le statut d'un signalement
+     * Mettre à jour le statut d'un signalement (Admin)
      */
     async updateReportStatus(reportId: string, status: Report['status']) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const api = useAPI();
 
-      const index = this.reports.findIndex(r => r.id === reportId);
-      if (index !== -1) {
-        this.reports[index].status = status;
+      try {
+        const response = await api.patch<Report>(`/admin/reports/${reportId}`, { status });
+
+        if (response.success && response.data) {
+          const index = this.reports.findIndex(r => r.id === reportId);
+          if (index !== -1) {
+            this.reports[index] = response.data;
+          }
+          return { success: true, report: response.data };
+        }
+        return { success: false, error: response.error };
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour du signalement:', error);
+        return { success: false, error: 'Erreur technique' };
+      } finally {
         this.loading = false;
-        return { success: true, report: this.reports[index] };
       }
-
-      this.loading = false;
-      return { success: false, error: 'Signalement non trouvé' };
     },
 
     /**
@@ -129,18 +133,22 @@ export const useReviewStore = defineStore('review', {
      */
     async deleteReview(reviewId: string) {
       this.loading = true;
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const api = useAPI();
 
-      const index = this.reviews.findIndex(r => r.id === reviewId);
-      if (index !== -1) {
-        this.reviews.splice(index, 1);
+      try {
+        const response = await api.del(`/admin/reviews/${reviewId}`);
+
+        if (response.success) {
+          this.reviews = this.reviews.filter(r => r.id !== reviewId);
+          return { success: true };
+        }
+        return { success: false, error: response.error };
+      } catch (error) {
+        console.error('Erreur lors de la suppression de l\'avis:', error);
+        return { success: false, error: 'Erreur technique' };
+      } finally {
         this.loading = false;
-        return { success: true };
       }
-
-      this.loading = false;
-      return { success: false, error: 'Avis non trouvé' };
     },
   },
 });

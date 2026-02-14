@@ -180,6 +180,6 @@ const handleUpdate = async (updatedData: Partial<Announcement>) => {
 };
 
 onMounted(() => {
-  announcementStore.fetchAnnouncements();
+  announcementStore.fetchMyAnnouncements();
 });
 </script>

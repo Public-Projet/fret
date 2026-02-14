@@ -6,7 +6,8 @@
     <div class="container-custom -mt-10">
       <!-- Search & Filters Card -->
       <AnnoncesFilters :active-tab="activeTab" v-model:avail-filters="availFilters" v-model:fret-filters="fretFilters"
-        @update:active-tab="switchTab" @apply-fret-filters="applyFretFilters" @reset-fret-filters="resetFretFilters" />
+        @update:active-tab="switchTab" @apply-fret-filters="applyFretFilters" @reset-fret-filters="resetFretFilters"
+        @reset-avail-filters="resetAvailFilters" />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-20">
@@ -20,9 +21,13 @@
         <IconTruckOff v-if="activeTab === 'avail'" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
         <IconPackageOff v-else class="w-16 h-16 text-gray-300 mx-auto mb-4" />
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-          {{ activeTab === 'avail' ? 'Aucune disponibilité trouvée' : 'Aucune annonce trouvée' }}
+          {{ activeTab === 'avail' ? 'Aucun véhicule disponible' : 'Aucune annonce de fret trouvée' }}
         </h3>
-        <p class="text-gray-500">Essayez de modifier vos filtres ou revenez plus tard.</p>
+        <p class="text-gray-500 px-4">
+          {{ activeTab === 'avail' ?
+            "Il n'y a pas de véhicules correspondant à vos critères pour le moment."
+            : "Aucun chargement n'est disponible avec ces filtres actuellement." }}
+        </p>
       </div>
 
       <!-- List Results -->
@@ -115,11 +120,13 @@ const fretFilters = ref({
 });
 
 const fretAnnouncements = computed(() => {
-  let filtered = fretStore.filteredAnnouncements;
-  if (route.query.userId) {
-    filtered = filtered.filter(a => String(a.userId) === String(route.query.userId));
-  }
-  return filtered;
+  return fretStore.allAnnouncements.map(a => {
+    return {
+      ...a,
+      user: a.shipper || a.user,
+      shipper: a.shipper
+    };
+  });
 });
 
 const loading = computed(() => activeTab.value === 'avail' ? availStore.loading : fretStore.loading);
@@ -139,6 +146,10 @@ const resetFretFilters = () => {
   fretStore.resetFilters();
 };
 
+const resetAvailFilters = () => {
+  availFilters.value = { origin: '', destination: '', date: '' };
+};
+
 const switchTab = (tab: 'avail' | 'fret') => {
   activeTab.value = tab;
   router.push({ query: { tab } });
@@ -149,7 +160,13 @@ const fetchData = async () => {
   if (activeTab.value === 'avail') {
     await availStore.fetchPublicAvailabilities();
   } else {
-    await fretStore.fetchAnnouncements();
+    const params: any = {};
+    if (fretFilters.value.originCity) params.originCity = fretFilters.value.originCity;
+    if (fretFilters.value.destinationCity) params.destinationCity = fretFilters.value.destinationCity;
+    if (fretFilters.value.cargoType) params.cargoType = fretFilters.value.cargoType;
+    if (fretFilters.value.minBudget) params.minBudget = fretFilters.value.minBudget;
+
+    await fretStore.fetchAnnouncements(params);
   }
 };
 
