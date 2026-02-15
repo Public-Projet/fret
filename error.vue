@@ -56,14 +56,14 @@
 
             <!-- Actions -->
             <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <button @click="handleError"
+              <NuxtLink to="/" @click.prevent="handleError"
                 class="group relative px-8 py-4 bg-primary-600 hover:bg-primary-500 text-white rounded-2xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(59,130,246,0.2)] dark:shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_15px_30px_rgba(59,130,246,0.4)] flex items-center gap-3 overflow-hidden">
                 <IconHome class="w-5 h-5 relative z-10 group-hover:scale-110 transition-transform" />
                 <span class="relative z-10">Retour à l'accueil</span>
                 <div
                   class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                 </div>
-              </button>
+              </NuxtLink>
 
               <button @click="router.back()"
                 class="px-8 py-4 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white border border-gray-200 dark:border-white/10 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 active:scale-95">
