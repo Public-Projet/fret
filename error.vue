@@ -111,7 +111,8 @@ const errorMessage = computed(() => {
 
 // Dynamic SEO Head
 useHead({
-  title: `${props.error.statusCode} - ${errorTitle.value} | Bourse de Fret Bénin`,
+  title: `${props.error.statusCode} - ${errorTitle.value}`,
+  titleTemplate: null,
   meta: [
     {
       name: 'description',
