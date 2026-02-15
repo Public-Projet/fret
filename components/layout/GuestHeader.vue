@@ -24,11 +24,7 @@
         <!-- Actions -->
         <div class="flex items-center space-x-4">
           <!-- Toggle Dark Mode -->
-          <button @click="toggleTheme" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            aria-label="Toggle dark mode">
-            <IconMoon v-if="!isDark" class="w-5 h-5 text-gray-700 dark:text-gray-300" />
-            <IconSun v-else class="w-5 h-5 text-gray-700 dark:text-gray-300" />
-          </button>
+          <UiThemeToggle />
 
           <!-- Notifications -->
           <LayoutNotificationDrop v-if="isAuthenticated" />
@@ -128,7 +124,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useThemeStore } from '~/stores/theme';
 import { useMessagingStore } from '~/stores/messaging';
-import { IconChevronDown, IconMenu2, IconMoon, IconSun, IconX } from '@tabler/icons-vue';
+import { IconChevronDown, IconMenu2, IconX } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const themeStore = useThemeStore();
@@ -187,10 +183,6 @@ const userMenuLinks = computed(() => [
     action: closeUserMenu
   }
 ]);
-
-const toggleTheme = () => {
-  themeStore.toggleTheme();
-};
 
 const toggleUserMenu = () => {
   isUserMenuOpen.value = !isUserMenuOpen.value;

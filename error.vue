@@ -14,6 +14,11 @@
       </div>
     </div>
 
+    <!-- Theme Toggle Overlay -->
+    <div class="absolute top-8 right-8 z-50">
+      <UiThemeToggle />
+    </div>
+
     <div class="container relative z-10 px-4">
       <div class="max-w-2xl mx-auto">
         <!-- Main Card -->

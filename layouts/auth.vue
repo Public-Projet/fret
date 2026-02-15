@@ -41,12 +41,7 @@
       <!-- Top Right Controls -->
       <div class="absolute top-4 right-4 flex items-center gap-3">
         <!-- Theme Toggle -->
-        <button @click="toggleTheme"
-          class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
-          aria-label="Toggle theme">
-          <IconMoon v-if="!isDark" class="w-5 h-5" />
-          <IconSun v-else class="w-5 h-5" />
-        </button>
+        <UiThemeToggle />
 
         <!-- Home Button -->
         <NuxtLink to="/"
@@ -79,8 +74,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useThemeStore } from '~/stores/theme';
-import { IconMoon, IconSun, IconHome } from '@tabler/icons-vue';
+import { IconHome } from '@tabler/icons-vue';
 
 interface Props {
   bgImage?: string;
@@ -93,8 +87,4 @@ const props = withDefaults(defineProps<Props>(), {
   quote: 'Connectez-vous pour accéder à la meilleure bourse de fret en temps réel.',
   author: 'L\'équipe BourseFret'
 });
-
-const themeStore = useThemeStore();
-const isDark = computed(() => themeStore.isDark);
-const toggleTheme = () => themeStore.toggleTheme();
 </script>
