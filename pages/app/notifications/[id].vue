@@ -87,7 +87,7 @@ const router = useRouter();
 const notificationStore = useNotificationStore();
 const id = route.params.id as string;
 
-const notification = computed(() => notificationStore.notifications.find(n => n.id === id));
+const notification = computed(() => notificationStore.notifications.find(n => String(n.id) === String(id)));
 const isLoading = ref(true);
 
 const getPriorityClass = (priority: string) => {

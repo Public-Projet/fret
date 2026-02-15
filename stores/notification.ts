@@ -17,7 +17,8 @@ export const useNotificationStore = defineStore('notification', {
     isLoading: false,
     page: 1,
     total: 0,
-    limit: 20
+    limit: 20,
+    refreshInterval: null as any | null
   }),
 
   actions: {
@@ -55,14 +56,16 @@ export const useNotificationStore = defineStore('notification', {
       const endpoint = role === 'shipper' ? `/shipper/notifications/${id}` : `/carrier/notifications/${id}`;
 
       try {
-        // The GET endpoint marks as read by default in our backend implementation
         const response = await api.get<any>(endpoint);
-        if (response.success) {
-          const index = this.notifications.findIndex(n => n.id === id);
+        if (response.success && response.data && response.data.notification) {
+          const notificationData = response.data.notification;
+          const index = this.notifications.findIndex(n => String(n.id) === String(id));
           if (index !== -1) {
-            this.notifications[index].status = 'read';
-            this.updateUnreadCount();
+            this.notifications[index] = notificationData;
+          } else {
+            this.notifications.push(notificationData);
           }
+          this.updateUnreadCount();
         }
       } catch (error) {
         console.error('Failed to mark notification as read:', error);
@@ -95,7 +98,7 @@ export const useNotificationStore = defineStore('notification', {
       try {
         const response = await api.del<any>(endpoint);
         if (response.success) {
-          this.notifications = this.notifications.filter(n => n.id !== id);
+          this.notifications = this.notifications.filter(n => String(n.id) !== String(id));
           this.updateUnreadCount();
         }
       } catch (error) {
@@ -105,6 +108,21 @@ export const useNotificationStore = defineStore('notification', {
 
     updateUnreadCount() {
       this.unreadCount = this.notifications.filter(n => n.status === 'unread').length;
+    },
+
+    startPolling() {
+      if (this.refreshInterval) return;
+      // Fetch every 60 seconds
+      this.refreshInterval = setInterval(() => {
+        this.fetchNotifications(1);
+      }, 60000);
+    },
+
+    stopPolling() {
+      if (this.refreshInterval) {
+        clearInterval(this.refreshInterval);
+        this.refreshInterval = null;
+      }
     }
   }
 });

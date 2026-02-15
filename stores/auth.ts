@@ -227,6 +227,10 @@ export const useAuthStore = defineStore('auth', {
       this.user = null;
       this.isAuthenticated = false;
 
+      // Arrêter le rafraîchissement des notifications
+      const notificationStore = useNotificationStore();
+      notificationStore.stopPolling();
+
       // Rediriger vers la page de connexion
       const router = useRouter();
       router.push('/auth/login');

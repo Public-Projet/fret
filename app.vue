@@ -27,7 +27,12 @@ onMounted(() => {
   authStore.restoreSession();
   if (authStore.isAuthenticated) {
     notificationStore.fetchNotifications();
+    notificationStore.startPolling();
   }
+});
+
+onUnmounted(() => {
+  notificationStore.stopPolling();
 });
 
 useHead({
