@@ -15,6 +15,9 @@
         <IconSun v-else class="w-5 h-5" />
       </button>
 
+      <!-- Notifications -->
+      <LayoutNotificationDrop />
+
       <!-- User Dropdown -->
       <div class="relative" ref="dropdownRef">
         <button @click="isDropdownOpen = !isDropdownOpen"

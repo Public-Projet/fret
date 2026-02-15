@@ -30,6 +30,9 @@
             <IconSun v-else class="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
 
+          <!-- Notifications -->
+          <LayoutNotificationDrop v-if="isAuthenticated" />
+
           <!-- User Menu -->
           <template v-if="isAuthenticated">
             <div class="relative" ref="userMenuRef">
