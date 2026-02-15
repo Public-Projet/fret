@@ -15,6 +15,19 @@ export interface Testimonial {
   photo?: string;
 }
 
+export interface LegalSection {
+  title: string;
+  paragraph: string;
+}
+
+export interface LegalPage {
+  id: string;
+  slug: 'terms' | 'privacy' | 'legal' | 'cookies';
+  title: string;
+  sections: LegalSection[];
+  lastUpdated?: string;
+}
+
 export interface TeamMember {
   id: string;
   name: string;
@@ -27,10 +40,12 @@ interface SiteContentState {
   partners: Partner[];
   testimonials: Testimonial[];
   team: TeamMember[];
+  legal: Record<string, LegalPage>;
   loading: {
     partners: boolean;
     testimonials: boolean;
     team: boolean;
+    legal: boolean;
   };
 }
 
@@ -82,10 +97,12 @@ export const useSiteContentStore = defineStore('siteContent', {
     partners: [],
     testimonials: [],
     team: [],
+    legal: {},
     loading: {
       partners: false,
       testimonials: false,
       team: false,
+      legal: false,
     },
   }),
 
@@ -139,6 +156,25 @@ export const useSiteContentStore = defineStore('siteContent', {
       } finally {
         this.loading.team = false;
       }
+    },
+
+    /** Récupérer un contenu légal par son slug */
+    async fetchLegalBySlug(slug: string) {
+      if (this.legal[slug]) return this.legal[slug];
+      this.loading.legal = true;
+      try {
+        const { get } = useAPI();
+        const res = await get<{ data: LegalPage }>(`/public/cms/legal/${slug}`);
+        if (res.success && res.data) {
+          this.legal[slug] = res.data.data;
+          return this.legal[slug];
+        }
+      } catch (e) {
+        console.error(`[siteContent] Erreur chargement page légale ${slug}:`, e);
+      } finally {
+        this.loading.legal = false;
+      }
+      return null;
     },
   },
 });

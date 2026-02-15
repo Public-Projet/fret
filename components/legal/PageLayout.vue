@@ -8,7 +8,8 @@
       </div>
 
       <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-        <p class="text-sm text-gray-500 dark:text-gray-400">Dernière mise à jour : {{ lastUpdate }}</p>
+        <p v-if="lastUpdate" class="text-sm text-gray-500 dark:text-gray-400">Dernière mise à jour : {{ new
+          Date(lastUpdate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }}</p>
       </div>
     </div>
   </div>
