@@ -28,6 +28,14 @@ export interface LegalPage {
   lastUpdated?: string;
 }
 
+export interface FaqItem {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+  order: number;
+}
+
 export interface TeamMember {
   id: string;
   name: string;
@@ -41,11 +49,13 @@ interface SiteContentState {
   testimonials: Testimonial[];
   team: TeamMember[];
   legal: Record<string, LegalPage>;
+  faqs: FaqItem[];
   loading: {
     partners: boolean;
     testimonials: boolean;
     team: boolean;
     legal: boolean;
+    faqs: boolean;
   };
 }
 
@@ -98,11 +108,13 @@ export const useSiteContentStore = defineStore('siteContent', {
     testimonials: [],
     team: [],
     legal: {},
+    faqs: [],
     loading: {
       partners: false,
       testimonials: false,
       team: false,
       legal: false,
+      faqs: false,
     },
   }),
 
@@ -175,6 +187,22 @@ export const useSiteContentStore = defineStore('siteContent', {
         this.loading.legal = false;
       }
       return null;
+    },
+    /** Récupérer la liste des FAQ */
+    async fetchFaqs() {
+      if (this.faqs.length > 0) return;
+      this.loading.faqs = true;
+      try {
+        const { get } = useAPI();
+        const res = await get<{ data: FaqItem[] }>('/public/cms/faq');
+        if (res.success && res.data) {
+          this.faqs = res.data.data;
+        }
+      } catch (e) {
+        console.error('[siteContent] Erreur chargement FAQ:', e);
+      } finally {
+        this.loading.faqs = false;
+      }
     },
   },
 });
