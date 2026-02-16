@@ -1,7 +1,8 @@
 <template>
   <div class="card p-8 hover:scale-105 transition-transform flex flex-col h-full">
     <div class="flex items-center space-x-1 mb-4">
-      <IconStar v-for="i in 5" :key="i" class="w-5 h-5 text-yellow-400 fill-current" />
+      <IconStar v-for="i in 5" :key="i"
+        :class="['w-5 h-5', i <= (rating || 5) ? 'text-yellow-400 fill-current' : 'text-gray-300 dark:text-gray-600']" />
     </div>
     <p class="text-gray-600 dark:text-gray-400 mb-6 italic flex-grow">
       {{ quote }}
@@ -15,7 +16,7 @@
         {{ initials }}
       </div>
       <div>
-        <p class="font-bold text-gray-900 dark:text-white leading-tight mb-0.5">{{ name }}</p>
+        <h4 class="font-bold text-gray-900 dark:text-white leading-tight mb-0.5">{{ name }}</h4>
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ role }}</p>
       </div>
     </div>
@@ -32,5 +33,6 @@ defineProps<{
   initials: string;
   avatarClass?: string;
   photo?: string;
+  rating?: number;
 }>();
 </script>

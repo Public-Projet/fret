@@ -3,7 +3,7 @@
     class="bg-gray-50 dark:bg-gray-900 py-12">
     <div class="container-custom">
       <p class="text-center text-gray-600 dark:text-gray-400 text-sm font-semibold mb-8 uppercase tracking-wider">
-        Ils nous font confiance
+        Nos Partenaires de Confiance
       </p>
 
       <div v-if="contentStore.loading.partners" class="flex justify-center items-center py-4">

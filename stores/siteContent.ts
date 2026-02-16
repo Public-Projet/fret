@@ -13,6 +13,7 @@ export interface Testimonial {
   name: string;
   role?: string;
   photo?: string;
+  rating?: number;
 }
 
 export interface LegalSection {
