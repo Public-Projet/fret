@@ -290,6 +290,19 @@ export const useSiteContentStore = defineStore('siteContent', {
         const res = await get<{ data: HelpArticle }>(`/public/cms/help/article/${slug}`);
         if (res.success && res.data) {
           this.currentArticle = res.data.data;
+
+          // Mettre à jour l'article dans la liste des catégories pour synchroniser les vues
+          const articleId = this.currentArticle.id;
+          this.helpCategories.forEach(cat => {
+            if (cat.articles) {
+              const artIndex = cat.articles.findIndex(a => a.id === articleId);
+              if (artIndex !== -1) {
+                // @ts-ignore - on met à jour partiellement pour les vues
+                cat.articles[artIndex].views = this.currentArticle?.views;
+              }
+            }
+          });
+
           return this.currentArticle;
         }
       } catch (e) {
