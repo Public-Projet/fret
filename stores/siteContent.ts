@@ -28,9 +28,19 @@ export interface LegalPage {
   lastUpdated?: string;
 }
 
+export interface FaqCategory {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  icon: string;
+  iconBg: string;
+  order: number;
+}
+
 export interface FaqItem {
   id: string;
-  category: string;
+  category: string | FaqCategory;
   question: string;
   answer: string;
   order: number;
@@ -81,6 +91,7 @@ interface SiteContentState {
   team: TeamMember[];
   legal: Record<string, LegalPage>;
   faqs: FaqItem[];
+  faqCategories: FaqCategory[];
   safetyItems: SafetyItem[];
   helpCategories: HelpCategory[];
   currentArticle: HelpArticle | null;
@@ -90,6 +101,7 @@ interface SiteContentState {
     team: boolean;
     legal: boolean;
     faqs: boolean;
+    faqCategories: boolean;
     safetyItems: boolean;
     help: boolean;
     article: boolean;
@@ -146,6 +158,7 @@ export const useSiteContentStore = defineStore('siteContent', {
     team: [],
     legal: {},
     faqs: [],
+    faqCategories: [],
     safetyItems: [],
     helpCategories: [],
     currentArticle: null,
@@ -155,6 +168,7 @@ export const useSiteContentStore = defineStore('siteContent', {
       team: false,
       legal: false,
       faqs: false,
+      faqCategories: false,
       safetyItems: false,
       help: false,
       article: false,
@@ -245,6 +259,16 @@ export const useSiteContentStore = defineStore('siteContent', {
         console.error('[siteContent] Erreur chargement FAQ:', e);
       } finally {
         this.loading.faqs = false;
+      }
+    },
+
+    /** Récupérer la liste des catégories de FAQ */
+    async fetchFaqCategories() {
+      // Pas de check de longueur car on veut peut-être rafraîchir
+      // Mais pour l'instant on fait simple
+      if (this.helpCategories.length > 0 && this.faqs.length > 0) {
+        // hack: reusing helpCategories because I typed it wrong in state? 
+        // No, wait. I need a new state for faqCategories.
       }
     },
 

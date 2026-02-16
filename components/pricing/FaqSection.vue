@@ -57,10 +57,17 @@ const filteredFaqs = computed(() => {
   // On filtre par la catégorie 'Paiement' comme demandé par l'utilisateur
   // On inclut aussi prix et abonnement car c'est pertinent pour la page pricing
   return store.faqs.filter(faq => {
-    const cat = faq.category.toLowerCase();
-    return cat.includes('paiement') || 
-           cat.includes('prix') || 
-           cat.includes('abonnement');
+    let cat = '';
+    if (typeof faq.category === 'string') {
+      cat = faq.category.toLowerCase();
+    } else if (faq.category && typeof faq.category === 'object') {
+      // Si c'est un objet, on utilise le titre ou le slug
+      cat = (faq.category.title || faq.category.slug || '').toLowerCase();
+    }
+
+    return cat.includes('paiement') ||
+      cat.includes('prix') ||
+      cat.includes('abonnement');
   });
 });
 
