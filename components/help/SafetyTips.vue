@@ -5,30 +5,25 @@
       Conseils de sécurité
     </h2>
     <ul class="space-y-3 text-gray-600 dark:text-gray-300">
-      <li class="flex items-start gap-3">
-        <IconCheck class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-        <span>Vérifiez toujours le profil et les évaluations avant de conclure un accord</span>
-      </li>
-      <li class="flex items-start gap-3">
-        <IconCheck class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-        <span>Communiquez uniquement via la messagerie de la plateforme</span>
-      </li>
-      <li class="flex items-start gap-3">
-        <IconCheck class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-        <span>Ne partagez jamais vos informations de paiement en dehors de la plateforme</span>
-      </li>
-      <li class="flex items-start gap-3">
-        <IconCheck class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-        <span>Signalez immédiatement tout comportement suspect à notre équipe</span>
-      </li>
-      <li class="flex items-start gap-3">
-        <IconCheck class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-        <span>Privilégiez les transporteurs avec le badge "Vérifié"</span>
+      <li v-for="tip in tips" :key="tip.id" class="flex items-start gap-3">
+        <component :is="getIcon(tip.icon)" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+        <span>{{ tip.content }}</span>
       </li>
     </ul>
   </section>
 </template>
 
 <script setup lang="ts">
+import * as TablerIcons from '@tabler/icons-vue';
 import { IconAlertTriangle, IconCheck } from '@tabler/icons-vue';
+import type { SafetyItem } from '~/stores/siteContent';
+
+defineProps<{
+  tips: SafetyItem[];
+}>();
+
+const getIcon = (iconName: string | undefined) => {
+  if (!iconName) return IconCheck;
+  return (TablerIcons as any)[iconName] || IconCheck;
+};
 </script>

@@ -36,6 +36,16 @@ export interface FaqItem {
   order: number;
 }
 
+export interface SafetyItem {
+  id: string;
+  type: 'feature' | 'tip';
+  title: string;
+  content: string;
+  icon?: string;
+  color?: string;
+  order: number;
+}
+
 export interface TeamMember {
   id: string;
   name: string;
@@ -50,12 +60,14 @@ interface SiteContentState {
   team: TeamMember[];
   legal: Record<string, LegalPage>;
   faqs: FaqItem[];
+  safetyItems: SafetyItem[];
   loading: {
     partners: boolean;
     testimonials: boolean;
     team: boolean;
     legal: boolean;
     faqs: boolean;
+    safetyItems: boolean;
   };
 }
 
@@ -109,12 +121,14 @@ export const useSiteContentStore = defineStore('siteContent', {
     team: [],
     legal: {},
     faqs: [],
+    safetyItems: [],
     loading: {
       partners: false,
       testimonials: false,
       team: false,
       legal: false,
       faqs: false,
+      safetyItems: false,
     },
   }),
 
@@ -202,6 +216,23 @@ export const useSiteContentStore = defineStore('siteContent', {
         console.error('[siteContent] Erreur chargement FAQ:', e);
       } finally {
         this.loading.faqs = false;
+      }
+    },
+
+    /** Récupérer la liste des contenus de sécurité */
+    async fetchSafetyItems() {
+      if (this.safetyItems.length > 0) return;
+      this.loading.safetyItems = true;
+      try {
+        const { get } = useAPI();
+        const res = await get<{ data: SafetyItem[] }>('/public/cms/safety');
+        if (res.success && res.data) {
+          this.safetyItems = res.data.data;
+        }
+      } catch (e) {
+        console.error('[siteContent] Erreur chargement sécurité:', e);
+      } finally {
+        this.loading.safetyItems = false;
       }
     },
   },
