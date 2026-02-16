@@ -18,23 +18,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { helpCategories, getPopularArticles, getArticleCountByCategory, searchArticles } from '~/data/help-articles';
+import { ref, computed, onMounted } from 'vue';
+import { useSiteContentStore } from '~/stores/siteContent';
 
+const store = useSiteContentStore();
 const searchQuery = ref('');
 
+onMounted(() => {
+  store.fetchHelp();
+});
+
 const categoriesWithCount = computed(() => {
-  return helpCategories.map(cat => ({
+  return store.helpCategories.map(cat => ({
     ...cat,
-    articleCount: getArticleCountByCategory(cat.slug)
+    articleCount: cat.articles?.length || 0
   }));
 });
 
-const popularArticles = computed(() => getPopularArticles(5));
+const popularArticles = computed(() => {
+  // Simple popularity based on views
+  const allArticles = store.helpCategories.flatMap(c => c.articles || []);
+  return [...allArticles]
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 5);
+});
 
 const searchResults = computed(() => {
   if (!searchQuery.value || searchQuery.value.length < 2) return [];
-  return searchArticles(searchQuery.value);
+  const query = searchQuery.value.toLowerCase();
+  const allArticles = store.helpCategories.flatMap(c => c.articles || []);
+  return allArticles.filter(a =>
+    a.title.toLowerCase().includes(query) ||
+    a.excerpt.toLowerCase().includes(query)
+  );
 });
 
 useHead({

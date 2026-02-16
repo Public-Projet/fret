@@ -56,27 +56,31 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { IconChevronRight, IconArrowLeft, IconFileOff, IconUser, IconTruck, IconCreditCard, IconShieldCheck, IconSettings, IconMessageCircle } from '@tabler/icons-vue';
-import { getCategoryBySlug, getArticlesByCategory } from '~/data/help-articles';
+import { computed, onMounted } from 'vue';
+import { IconChevronRight, IconArrowLeft, IconFileOff, IconUser } from '@tabler/icons-vue';
+import * as TablerIcons from '@tabler/icons-vue';
+import { useSiteContentStore } from '~/stores/siteContent';
 
 const route = useRoute();
+const store = useSiteContentStore();
 const categorySlug = route.params.category as string;
 
-const category = computed(() => getCategoryBySlug(categorySlug));
-const articles = computed(() => getArticlesByCategory(categorySlug));
+onMounted(() => {
+  store.fetchHelp();
+});
 
-const iconMap: Record<string, any> = {
-  IconUser,
-  IconTruck,
-  IconCreditCard,
-  IconShieldCheck,
-  IconSettings,
-  IconMessageCircle
-};
+const category = computed(() => {
+  return store.helpCategories.find(c => c.slug === categorySlug);
+});
+
+const articles = computed(() => {
+  return category.value?.articles || [];
+});
 
 const iconComponent = computed(() => {
-  return category.value ? iconMap[category.value.icon] : IconUser;
+  const iconName = category.value?.icon;
+  if (!iconName) return IconUser;
+  return (TablerIcons as any)[iconName] || IconUser;
 });
 
 useHead({

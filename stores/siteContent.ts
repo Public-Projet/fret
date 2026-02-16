@@ -54,6 +54,27 @@ export interface TeamMember {
   photo?: string;
 }
 
+export interface HelpCategory {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  icon: string;
+  iconBg: string;
+  articles?: HelpArticle[];
+}
+
+export interface HelpArticle {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string | HelpCategory;
+  views: number;
+  updatedAt: string;
+}
+
 interface SiteContentState {
   partners: Partner[];
   testimonials: Testimonial[];
@@ -61,6 +82,8 @@ interface SiteContentState {
   legal: Record<string, LegalPage>;
   faqs: FaqItem[];
   safetyItems: SafetyItem[];
+  helpCategories: HelpCategory[];
+  currentArticle: HelpArticle | null;
   loading: {
     partners: boolean;
     testimonials: boolean;
@@ -68,6 +91,8 @@ interface SiteContentState {
     legal: boolean;
     faqs: boolean;
     safetyItems: boolean;
+    help: boolean;
+    article: boolean;
   };
 }
 
@@ -122,6 +147,8 @@ export const useSiteContentStore = defineStore('siteContent', {
     legal: {},
     faqs: [],
     safetyItems: [],
+    helpCategories: [],
+    currentArticle: null,
     loading: {
       partners: false,
       testimonials: false,
@@ -129,6 +156,8 @@ export const useSiteContentStore = defineStore('siteContent', {
       legal: false,
       faqs: false,
       safetyItems: false,
+      help: false,
+      article: false,
     },
   }),
 
@@ -234,6 +263,41 @@ export const useSiteContentStore = defineStore('siteContent', {
       } finally {
         this.loading.safetyItems = false;
       }
+    },
+
+    /** Récupérer les catégories et articles du centre d'aide */
+    async fetchHelp() {
+      if (this.helpCategories.length > 0) return;
+      this.loading.help = true;
+      try {
+        const { get } = useAPI();
+        const res = await get<{ data: HelpCategory[] }>('/public/cms/help');
+        if (res.success && res.data) {
+          this.helpCategories = res.data.data;
+        }
+      } catch (e) {
+        console.error('[siteContent] Erreur chargement aide:', e);
+      } finally {
+        this.loading.help = false;
+      }
+    },
+
+    /** Récupérer un article par son slug */
+    async fetchArticleBySlug(slug: string) {
+      this.loading.article = true;
+      try {
+        const { get } = useAPI();
+        const res = await get<{ data: HelpArticle }>(`/public/cms/help/article/${slug}`);
+        if (res.success && res.data) {
+          this.currentArticle = res.data.data;
+          return this.currentArticle;
+        }
+      } catch (e) {
+        console.error(`[siteContent] Erreur chargement article ${slug}:`, e);
+      } finally {
+        this.loading.article = false;
+      }
+      return null;
     },
   },
 });

@@ -54,8 +54,7 @@
       <div class="mt-8" v-if="relatedArticles.length > 0">
         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Articles connexes</h3>
         <div class="space-y-3">
-          <NuxtLink v-for="related in relatedArticles" :key="related.id"
-            :to="`/h/help/${related.categorySlug}/${related.slug}`"
+          <NuxtLink v-for="related in relatedArticles" :key="related.id" :to="`/h/help/${categorySlug}/${related.slug}`"
             class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
             <span class="text-gray-900 dark:text-white font-medium">{{ related.title }}</span>
             <IconChevronRight class="w-5 h-5 text-gray-400" />
@@ -87,20 +86,37 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { IconChevronRight, IconArrowLeft, IconFileOff, IconEye, IconThumbUp, IconThumbDown } from '@tabler/icons-vue';
-import { getArticleBySlug, getCategoryBySlug, getArticlesByCategory } from '~/data/help-articles';
+import { computed, onMounted, ref, watch } from 'vue';
+import { IconChevronRight, IconArrowLeft, IconFileOff, IconEye, IconThumbUp, IconThumbDown, IconLoader2 } from '@tabler/icons-vue';
+import { useSiteContentStore } from '~/stores/siteContent';
 
 const route = useRoute();
-const categorySlug = route.params.category as string;
+const store = useSiteContentStore();
 const articleSlug = route.params.slug as string;
 
-const article = computed(() => getArticleBySlug(articleSlug));
-const category = computed(() => getCategoryBySlug(categorySlug));
+onMounted(async () => {
+  await store.fetchArticleBySlug(articleSlug);
+  // Also ensuring help categories are loaded for related articles
+  if (store.helpCategories.length === 0) {
+    await store.fetchHelp();
+  }
+});
+
+// Watch slug change for intra-navigation
+watch(() => route.params.slug, async (newSlug) => {
+  if (newSlug) await store.fetchArticleBySlug(newSlug as string);
+});
+
+const article = computed(() => store.currentArticle);
+const category = computed(() => article.value?.category as any);
+const categorySlug = computed(() => category.value?.slug || '');
 
 const relatedArticles = computed(() => {
-  if (!article.value) return [];
-  return getArticlesByCategory(categorySlug)
+  if (!article.value || !category.value) return [];
+  const catWithArticles = store.helpCategories.find(c => c.slug === categorySlug.value);
+  if (!catWithArticles || !catWithArticles.articles) return [];
+
+  return catWithArticles.articles
     .filter(a => a.id !== article.value?.id)
     .slice(0, 3);
 });
@@ -114,7 +130,7 @@ const categoryBadgeClass = computed(() => {
     parametres: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400',
     communication: 'bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400'
   };
-  return colors[categorySlug] || colors.compte;
+  return colors[categorySlug.value] || colors.compte;
 });
 
 // Simple markdown-like rendering (basic)
@@ -128,8 +144,8 @@ const renderedContent = computed(() => {
     // Bold
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900 dark:text-white">$1</strong>')
     // Lists
-    .replace(/^- (.*$)/gim, '<li class="ml-4">$1</li>')
-    .replace(/^(\d+)\. (.*$)/gim, '<li class="ml-4">$2</li>')
+    .replace(/^- (.*$)/gim, '<li class="ml-4 list-disc">$1</li>')
+    .replace(/^(\d+)\. (.*$)/gim, '<li class="ml-4 list-decimal">$2</li>')
     // Blockquotes
     .replace(/^> (.*$)/gim, '<blockquote class="border-l-4 border-primary-500 pl-4 py-2 my-4 bg-primary-50 dark:bg-primary-900/20 rounded-r-lg text-gray-700 dark:text-gray-300">$1</blockquote>')
     // Paragraphs
@@ -145,9 +161,10 @@ const formatDate = (dateStr: string) => {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 };
 
+const hasRated = ref(false);
 const rateArticle = (rating: 'yes' | 'no') => {
-  // Would typically send to API
-  console.log(`Article rated: ${rating}`);
+  if (hasRated.value) return;
+  hasRated.value = true;
   alert(rating === 'yes' ? 'Merci pour votre retour ! 🎉' : 'Nous allons améliorer cet article. Merci !');
 };
 

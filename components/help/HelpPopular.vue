@@ -5,7 +5,7 @@
       Articles populaires
     </h2>
     <div class="space-y-4">
-      <NuxtLink v-for="article in articles" :key="article.id" :to="`/h/help/${article.categorySlug}/${article.slug}`"
+      <NuxtLink v-for="article in articles" :key="article.id" :to="getArticleLink(article)"
         class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors group">
         <div class="flex items-center gap-4">
           <IconArticle class="w-5 h-5 text-gray-400" />
@@ -29,4 +29,8 @@ import { IconFlame, IconArticle, IconChevronRight } from '@tabler/icons-vue';
 defineProps<{
   articles: any[];
 }>();
+const getArticleLink = (article: any) => {
+  const catSlug = typeof article.category === 'object' ? article.category.slug : (article.categorySlug || 'aide');
+  return `/h/help/${catSlug}/${article.slug}`;
+};
 </script>

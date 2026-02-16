@@ -4,7 +4,7 @@
       Résultats de recherche ({{ results.length }})
     </h2>
     <div class="space-y-3">
-      <NuxtLink v-for="article in results" :key="article.id" :to="`/h/help/${article.categorySlug}/${article.slug}`"
+      <NuxtLink v-for="article in results" :key="article.id" :to="getArticleLink(article)"
         class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
         <div>
           <span class="text-gray-900 dark:text-white font-medium">{{ article.title }}</span>
@@ -28,4 +28,8 @@ defineProps<{
   results: any[];
   query: string;
 }>();
+const getArticleLink = (article: any) => {
+  const catSlug = typeof article.category === 'object' ? article.category.slug : (article.categorySlug || 'aide');
+  return `/h/help/${catSlug}/${article.slug}`;
+};
 </script>
