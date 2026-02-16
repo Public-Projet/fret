@@ -1,9 +1,9 @@
 <template>
   <footer class="bg-gray-900 text-gray-300">
     <div class="container-custom py-12">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
         <!-- À propos -->
-        <div>
+        <div class="lg:col-span-1">
           <div class="flex items-center space-x-2 mb-4">
             <span class="text-xl font-bold text-white">Bourse de Fret Bénin</span>
           </div>
@@ -23,7 +23,7 @@
           </div>
         </div>
 
-        <!-- Liens rapides -->
+        <!-- Sections Dynamiques -->
         <div v-for="section in footerSections" :key="section.title">
           <h3 class="text-white font-semibold mb-4">{{ section.title }}</h3>
           <ul class="space-y-2">
@@ -56,10 +56,19 @@ const footerSections = [
   {
     title: 'Liens rapides',
     links: [
-      { label: 'Annonces', to: '/annonces?tab=fret' },
       { label: 'À propos', to: '/about' },
       { label: 'Comment ça marche', to: '/#features' },
+      { label: 'Pourquoi choisir', to: '/#advantages' },
       { label: 'Tarifs', to: '/pricing' }
+    ]
+  },
+  {
+    title: 'Plateforme',
+    links: [
+      { label: 'Annonces', to: '/annonces?tab=fret' },
+      { label: 'Disponibilités', to: '/annonces?tab=avail' },
+      { label: 'Transporteurs', to: '/users?tab=carrier' },
+      { label: 'Expéditeurs', to: '/users?tab=shipper' }
     ]
   },
   {

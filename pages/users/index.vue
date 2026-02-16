@@ -41,6 +41,7 @@ import { useUserStore } from '~/stores/user';
 import { IconLoader2, IconTruckOff, IconCubeOff } from '@tabler/icons-vue';
 
 const userStore = useUserStore();
+const route = useRoute();
 const activeTab = ref<'carrier' | 'shipper'>('carrier');
 const searchQuery = ref('');
 const validatedSearchQuery = ref('');
@@ -49,6 +50,21 @@ const loading = ref(true);
 const handleSearch = () => {
   validatedSearchQuery.value = searchQuery.value;
 };
+
+// Handle Query Params
+const handleQueryParams = () => {
+  if (route.query.tab === 'shipper') {
+    activeTab.value = 'shipper';
+  } else if (route.query.tab === 'carrier') {
+    activeTab.value = 'carrier';
+  }
+};
+
+watch(() => route.query.tab, (newTab) => {
+  if (newTab === 'shipper' || newTab === 'carrier') {
+    activeTab.value = newTab as 'carrier' | 'shipper';
+  }
+});
 
 // Instead of ref fetching, we use the store
 const users = computed(() => activeTab.value === 'carrier' ? userStore.carriers : userStore.shippers);
@@ -65,6 +81,7 @@ const filteredUsers = computed(() => {
 });
 
 onMounted(async () => {
+  handleQueryParams();
   loading.value = true;
   await Promise.all([
     userStore.fetchPublicCarriers(),

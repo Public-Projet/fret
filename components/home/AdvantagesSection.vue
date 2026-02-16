@@ -1,5 +1,6 @@
 <template>
-  <section class="section bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+  <section id="advantages"
+    class="section bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
     <div class="container-custom">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <!-- Colonne gauche - Avantages -->
