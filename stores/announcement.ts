@@ -102,9 +102,10 @@ export const useAnnouncementStore = defineStore('announcement', {
         if (response.success && response.data) {
           const { announcements } = response.data;
           this.announcements = announcements.map((a) => {
-            if (a.shipper && !a.userId) a.userId = a.shipper.id;
+            const shipperId = typeof a.shipper === 'object' && a.shipper !== null ? a.shipper.id : a.shipper;
+            if (shipperId && !a.userId) a.userId = shipperId;
 
-            if (a.shipper && (a.shipper as any).myReview) {
+            if (a.shipper && typeof a.shipper === 'object' && (a.shipper as any).myReview) {
               userStore.myReviews[a.shipper.id] = (a.shipper as any).myReview;
             }
 
@@ -131,7 +132,9 @@ export const useAnnouncementStore = defineStore('announcement', {
         const response = await api.get<Announcement[]>('/shipper/announcement');
         if (response.success && response.data) {
           this.announcements = response.data.map((a) => {
-            if (a.shipper && !a.userId) a.userId = a.shipper.id;
+            // Extract shipper ID correctly whether it's an object or a string
+            const shipperId = typeof a.shipper === 'object' && a.shipper !== null ? a.shipper.id : a.shipper;
+            if (shipperId && !a.userId) a.userId = shipperId;
             return a;
           });
         }
