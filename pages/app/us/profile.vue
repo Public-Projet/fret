@@ -55,9 +55,14 @@
           class="bg-gradient-to-br from-primary-900 to-slate-900 text-white rounded-xl shadow-lg p-6 relative overflow-hidden">
           <div class="relative z-10">
             <h3 class="text-lg font-bold mb-1">Expéditeur</h3>
-            <p class="text-primary-200 text-sm mb-4">Compte {{ profile?.status === 'active' ? 'actif' : 'en attente'
-            }}
+            <p class="text-primary-200 text-sm mb-2">Compte {{ profile?.status === 'active' ? 'actif' : 'en attente' }}
             </p>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-primary-300">Statut KYC:</span>
+              <span class="badge badge-sm" :class="getKycStatusClass(profile?.kycStatus)">
+                {{ getKycStatusLabel(profile?.kycStatus) }}
+              </span>
+            </div>
           </div>
           <IconPremiumRights class="absolute -bottom-4 -right-4 w-32 h-32 text-white/5" />
         </div>
@@ -252,6 +257,28 @@ const getStatusLabel = (status: string) => {
     rejected: 'Rejeté'
   };
   return labels[status] || status;
+};
+
+const getKycStatusLabel = (status?: string) => {
+  const labels: Record<string, string> = {
+    none: 'Non soumis',
+    pending: 'En attente',
+    approved: 'Approuvé',
+    verified: 'Vérifié',
+    rejected: 'Rejeté'
+  };
+  return labels[status || 'none'] || 'Non soumis';
+};
+
+const getKycStatusClass = (status?: string) => {
+  const classes: Record<string, string> = {
+    none: 'badge-ghost',
+    pending: 'badge-warning',
+    approved: 'badge-success',
+    verified: 'badge-success',
+    rejected: 'badge-error'
+  };
+  return classes[status || 'none'] || 'badge-ghost';
 };
 
 definePageMeta({ layout: 'default' });

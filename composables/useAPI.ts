@@ -13,7 +13,7 @@ export function useAPI() {
    */
   async function request<T>(
     url: string,
-    options: RequestInit & { skipAuthRedirect?: boolean } = {}
+    options: RequestInit & { skipAuthRedirect?: boolean; responseType?: 'json' | 'blob' } = {}
   ): Promise<ApiResponse<T>> {
     const fullUrl = `${baseURL}${url}`;
 
@@ -22,6 +22,7 @@ export function useAPI() {
     const token = tokenCookie.value;
 
     const isFormData = options.body instanceof FormData;
+    const responseType = options.responseType || 'json';
 
     const defaultOptions: RequestInit = {
       credentials: 'include',
@@ -42,23 +43,21 @@ export function useAPI() {
         },
       });
 
-      // Parse la réponse JSON
-      let responseData: T | null = null;
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        responseData = await response.json();
+      // Parse la réponse
+      let responseData: any = null;
+      if (responseType === 'json') {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          responseData = await response.json();
+        }
+      } else {
+        responseData = await response.blob();
       }
 
       if (!response.ok) {
-        // Gestion des erreurs HTTP
-        const errorData = responseData as Record<string, unknown> | null;
-
-        // Redirection vers login si non authentifié (mais pas pour badCombo qui est une erreur de mot de passe incorrect)
+        // Redirection vers login si non authentifié
         if (response.status === 401) {
-          const errorData = responseData as Record<string, unknown> | null;
-          const isBadCombo = errorData && ('badCombo' in errorData);
-
-          // Check custom option to skip redirect
+          const isBadCombo = responseData && typeof responseData === 'object' && ('badCombo' in responseData);
           const skipRedirect = (options as any).skipAuthRedirect === true;
 
           if (!isBadCombo && !skipRedirect) {
@@ -70,16 +69,16 @@ export function useAPI() {
         return {
           data: null,
           error: {
-            message: (errorData?.message as string) || `Erreur HTTP ${response.status}`,
+            message: (responseData?.message as string) || `Erreur HTTP ${response.status}`,
             statusCode: response.status,
-            data: errorData ?? undefined,
+            data: responseData ?? undefined,
           },
           success: false,
         };
       }
 
       return {
-        data: responseData,
+        data: responseData as T,
         error: null,
         success: true,
       };
@@ -99,14 +98,14 @@ export function useAPI() {
   /**
    * Requête GET
    */
-  async function get<T>(url: string, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+  async function get<T>(url: string, options?: RequestInit & { skipAuthRedirect?: boolean; responseType?: 'json' | 'blob' }): Promise<ApiResponse<T>> {
     return request<T>(url, { ...options, method: 'GET' });
   }
 
   /**
    * Requête POST
    */
-  async function post<T>(url: string, data?: object | FormData, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+  async function post<T>(url: string, data?: object | FormData, options?: RequestInit & { skipAuthRedirect?: boolean; responseType?: 'json' | 'blob' }): Promise<ApiResponse<T>> {
     return request<T>(url, {
       ...options,
       method: 'POST',
@@ -117,7 +116,7 @@ export function useAPI() {
   /**
    * Requête PUT
    */
-  async function put<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+  async function put<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean; responseType?: 'json' | 'blob' }): Promise<ApiResponse<T>> {
     return request<T>(url, {
       ...options,
       method: 'PUT',
@@ -128,7 +127,7 @@ export function useAPI() {
   /**
    * Requête PATCH
    */
-  async function patch<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+  async function patch<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean; responseType?: 'json' | 'blob' }): Promise<ApiResponse<T>> {
     return request<T>(url, {
       ...options,
       method: 'PATCH',
@@ -139,7 +138,7 @@ export function useAPI() {
   /**
    * Requête DELETE
    */
-  async function del<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean }): Promise<ApiResponse<T>> {
+  async function del<T>(url: string, data?: object, options?: RequestInit & { skipAuthRedirect?: boolean; responseType?: 'json' | 'blob' }): Promise<ApiResponse<T>> {
     return request<T>(url, {
       ...options,
       method: 'DELETE',

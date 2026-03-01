@@ -129,7 +129,13 @@
         <div class="bg-secondary-600 text-white rounded-xl p-6 relative overflow-hidden">
           <div class="relative z-10">
             <h4 class="font-bold mb-2">Besoin d'aide ?</h4>
-            <p class="text-secondary-100 text-sm mb-4">Contactez le support pour mettre à jour vos documents.</p>
+            <p class="text-secondary-100 text-sm mb-2">Contactez le support pour mettre à jour vos documents.</p>
+            <div class="flex items-center space-x-2 mb-4">
+              <span class="text-xs text-secondary-200 font-medium">Statut KYC:</span>
+              <span class="badge badge-sm" :class="getKycStatusClass(profile?.kycStatus)">
+                {{ getKycStatusLabel(profile?.kycStatus) }}
+              </span>
+            </div>
             <NuxtLink to="/h/contact" class="btn bg-white text-secondary-700 border-0 btn-sm">Support</NuxtLink>
           </div>
           <IconHeadset class="absolute -bottom-4 -right-4 w-24 h-24 text-white/10" />
@@ -374,6 +380,28 @@ const getStatusLabel = (status: string) => {
     rejected: 'Rejeté'
   };
   return labels[status] || status;
+};
+
+const getKycStatusLabel = (status?: string) => {
+  const labels: Record<string, string> = {
+    none: 'Non soumis',
+    pending: 'En attente',
+    approved: 'Approuvé',
+    verified: 'Vérifié',
+    rejected: 'Rejeté'
+  };
+  return labels[status || 'none'] || 'Non soumis';
+};
+
+const getKycStatusClass = (status?: string) => {
+  const classes: Record<string, string> = {
+    none: 'badge-ghost text-secondary-100 border-secondary-400',
+    pending: 'bg-yellow-400 text-yellow-900 border-0',
+    approved: 'bg-green-400 text-green-900 border-0',
+    verified: 'bg-green-400 text-green-900 border-0',
+    rejected: 'bg-red-400 text-red-100 border-0'
+  };
+  return classes[status || 'none'] || 'badge-ghost';
 };
 
 const formatDate = (timestamp: number) => {
