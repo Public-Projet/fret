@@ -117,11 +117,16 @@ export const useAvailabilityStore = defineStore('availability', {
     /**
      * Expéditeur: S'inscrire à une disponibilité
      */
-    async enrollAvailability(id: string, notes?: string) {
+    async enrollAvailability(id: string, negotiationData: any = {}) {
       this.loading = true;
       const api = useAPI();
       try {
-        const response = await api.post(`/shipper/availabilities/${id}/enroll`, { notes });
+        const response = await api.post(`/shipper/availabilities/${id}/enroll`, {
+          notes: negotiationData.message,
+          proposedPrice: negotiationData.price,
+          proposedOrigin: negotiationData.origin,
+          proposedDestination: negotiationData.destination,
+        });
         if (response.success) {
           return { success: true };
         }
@@ -239,6 +244,26 @@ export const useAvailabilityStore = defineStore('availability', {
           return { success: true };
         }
         return { success: false, error: response.error };
+      } catch (err) {
+        return { success: false, error: 'Erreur technique' };
+      }
+    },
+
+    async acceptBooking(bookingId: string) {
+      const api = useAPI();
+      try {
+        const response = await api.post(`/carrier/booking/${bookingId}/accept`);
+        return response.success ? { success: true } : { success: false, error: response.error };
+      } catch (err) {
+        return { success: false, error: 'Erreur technique' };
+      }
+    },
+
+    async rejectBooking(bookingId: string) {
+      const api = useAPI();
+      try {
+        const response = await api.post(`/carrier/booking/${bookingId}/reject`);
+        return response.success ? { success: true } : { success: false, error: response.error };
       } catch (err) {
         return { success: false, error: 'Erreur technique' };
       }

@@ -86,6 +86,11 @@
             <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Description</h3>
             <p class="text-gray-600 dark:text-gray-400">{{ item.description }}</p>
           </div>
+
+          <!-- Negotiations (Owner only) -->
+          <div v-if="isOwner" class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-700">
+            <AnnoncesNegotiationList :items="item.offers" type="offer" @refresh="$emit('refresh')" />
+          </div>
         </div>
       </div>
 
@@ -130,7 +135,7 @@
         <div v-if="authStore.isCarrier && item.status === 'pending'"
           class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
           <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Faire une offre</h3>
-          <button class="btn btn-primary w-full py-4 rounded-2xl">
+          <button @click="$emit('enroll')" class="btn btn-primary w-full py-4 rounded-2xl">
             Proposer mes services
           </button>
         </div>
@@ -152,6 +157,8 @@ const props = defineProps<{
 
 defineEmits<{
   (e: 'showRatingModal'): void;
+  (e: 'enroll'): void;
+  (e: 'refresh'): void;
 }>();
 
 const authStore = useAuthStore();

@@ -89,6 +89,11 @@
               </div>
             </div>
           </div>
+
+          <!-- Negotiations (Owner only) -->
+          <div v-if="isOwner" class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-700">
+            <AnnoncesNegotiationList :items="item.bookings" type="avail" @refresh="$emit('refresh')" />
+          </div>
         </div>
       </div>
 
@@ -143,6 +148,7 @@ const props = defineProps<{
 defineEmits<{
   (e: 'enroll'): void;
   (e: 'showRatingModal'): void;
+  (e: 'refresh'): void;
 }>();
 
 const authStore = useAuthStore();

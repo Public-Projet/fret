@@ -270,5 +270,50 @@ export const useAnnouncementStore = defineStore('announcement', {
     async updateStatus(id: string, status: AnnouncementStatus) {
       return this.updateAnnouncement(id, { status });
     },
+
+    /**
+     * Transporteur: Faire une offre sur une annonce
+     */
+    async createOffer(announcementId: string, negotiationData: any) {
+      this.loading = true;
+      const api = useAPI();
+      try {
+        const response = await api.post(`/carrier/announcement/${announcementId}/offer`, {
+          price: negotiationData.price,
+          message: negotiationData.message,
+          proposedOrigin: negotiationData.origin,
+          proposedDestination: negotiationData.destination,
+        });
+        if (response.success) {
+          return { success: true };
+        }
+        return { success: false, error: response.error };
+      } catch (error) {
+        console.error('Erreur lors de la création de l\'offre:', error);
+        return { success: false, error: 'Erreur technique' };
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async acceptOffer(offerId: string) {
+      const api = useAPI();
+      try {
+        const response = await api.post(`/shipper/offer/${offerId}/accept`);
+        return response.success ? { success: true } : { success: false, error: response.error };
+      } catch (err) {
+        return { success: false, error: 'Erreur technique' };
+      }
+    },
+
+    async rejectOffer(offerId: string) {
+      const api = useAPI();
+      try {
+        const response = await api.post(`/shipper/offer/${offerId}/reject`);
+        return response.success ? { success: true } : { success: false, error: response.error };
+      } catch (err) {
+        return { success: false, error: 'Erreur technique' };
+      }
+    },
   },
 });

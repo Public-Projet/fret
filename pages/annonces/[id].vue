@@ -9,11 +9,12 @@
       <!-- Availability View -->
       <AnnoncesAvailDetails v-else-if="dataType === 'avail' && item" :item="item" :is-owner="isOwner"
         :already-enrolled="alreadyEnrolled" :can-rate="canRate" @enroll="enroll"
-        @show-rating-modal="showRatingModal = true" />
+        @show-rating-modal="showRatingModal = true" @refresh="fetchData" />
 
       <!-- Offer View -->
-      <AnnoncesOfferDetails v-else-if="dataType === 'offer' && item" :item="item" :is-owner="isOwner"
-        :can-rate="canRate" :rating-label="ratingLabel" @show-rating-modal="showRatingModal = true" />
+      <AnnoncesOfferDetails v-else-if="(dataType === 'offer' || dataType === 'fret') && item" :item="item"
+        :is-owner="isOwner" :can-rate="canRate" :rating-label="ratingLabel" @show-rating-modal="showRatingModal = true"
+        @enroll="enroll" @refresh="fetchData" />
 
       <div v-else class="text-center py-20">
         <IconAlertCircle class="w-12 h-12 text-red-500 mx-auto mb-4" />
@@ -21,6 +22,11 @@
         <NuxtLink to="/annonces" class="btn btn-primary mt-4">Retour au marché</NuxtLink>
       </div>
     </div>
+
+    <!-- Negotiation Modal -->
+    <AnnoncesNegotiationModal v-if="showNegotiationModal" :original-price="item?.price || item?.budget"
+      :original-origin="item?.origin" :original-destination="item?.destination" :loading="negotiating"
+      @close="showNegotiationModal = false" @submit="handleNegotiationSubmit" />
 
     <!-- Rating Modal -->
     <div v-if="showRatingModal"
@@ -55,10 +61,38 @@ const fretStore = useAnnouncementStore();
 const authStore = useAuthStore();
 
 const id = route.params.id as string;
-const dataType = ref<'avail' | 'offer' | null>((route.query.type as any) || null);
+const dataType = ref<'avail' | 'fret' | 'offer' | null>((route.query.type as any) || null);
 const item = ref<any>(null);
 const loading = ref(true);
+const negotiating = ref(false);
 const showRatingModal = ref(false);
+const showNegotiationModal = ref(false);
+
+const handleNegotiationSubmit = async (data: any) => {
+  negotiating.value = true;
+  try {
+    let res;
+    if (dataType.value === 'avail') {
+      res = await availStore.enrollAvailability(id, data);
+    } else {
+      res = await fretStore.createOffer(id, data);
+    }
+
+    if (res.success) {
+      showNegotiationModal.value = false;
+      await fetchData();
+      if (authStore.isAuthenticated && authStore.isShipper) {
+        await availStore.fetchShipperEnrollments();
+      }
+    } else {
+      alert(res.error || "Une erreur est survenue lors de l'envoi de votre proposition.");
+    }
+  } catch (err) {
+    console.error('Negotiation error:', err);
+  } finally {
+    negotiating.value = false;
+  }
+};
 
 const isOwner = computed(() => {
   if (!authStore.isAuthenticated || !authStore.user?.id || !item.value) return false;
@@ -109,10 +143,8 @@ const handleRatingSuccess = (data: { rating: number, reviewsCount: number, myRev
   }
 };
 
-const enroll = async () => {
-  if (dataType.value === 'avail') {
-    await availStore.enrollAvailability(id);
-  }
+const enroll = () => {
+  showNegotiationModal.value = true;
 };
 
 const fetchData = async () => {
@@ -122,7 +154,7 @@ const fetchData = async () => {
   if (dataType.value === 'avail') {
     const res = await availStore.fetchPublicAvailability(id);
     if (res.success) item.value = res.availability;
-  } else if (dataType.value === 'offer') {
+  } else if (dataType.value === 'offer' || dataType.value === 'fret') {
     const res = await fretStore.fetchAnnouncementById(id);
     // Announcement store might update its state directly
     item.value = fretStore.currentAnnouncement;
@@ -146,6 +178,9 @@ const fetchData = async () => {
 
 onMounted(() => {
   fetchData();
+  if (authStore.isAuthenticated && authStore.isShipper) {
+    availStore.fetchShipperEnrollments();
+  }
 });
 
 definePageMeta({ layout: 'guest' });
