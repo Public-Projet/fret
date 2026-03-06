@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, AnnouncementStatus } from '~/types';
-import { useUserStore } from '~/stores/user';
-import { useAPI } from '~/composables/useAPI';
 
 interface AnnouncementState {
   announcements: Announcement[];
@@ -90,36 +88,26 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async fetchAnnouncements(queryParams: any = {}) {
       this.loading = true;
-      const api = useAPI();
-      const userStore = useUserStore();
 
       try {
         const queryString = new URLSearchParams(queryParams).toString();
-        const url = `/public/announcements${queryString ? `?${queryString}` : ''}`;
+        const url = `/api/announcements${queryString ? `?${queryString}` : ''}`;
 
-        const response = await api.get<{ announcements: Announcement[], total: number }>(url);
+        const response = await $fetch<{ announcements: Announcement[], total: number }>(url);
 
-        if (response.success && response.data) {
-          const { announcements } = response.data;
-          this.announcements = announcements.map((a) => {
-            const shipperId = typeof a.shipper === 'object' && a.shipper !== null ? a.shipper.id : a.shipper;
-            if (shipperId && !a.userId) a.userId = shipperId;
-
-            if (a.shipper && typeof a.shipper === 'object' && (a.shipper as any).myReview) {
-              userStore.myReviews[a.shipper.id] = (a.shipper as any).myReview;
-            }
-
-            return a;
-          });
-          return { success: true, total: response.data.total };
-        }
+        const { announcements } = response;
+        this.announcements = announcements.map((a) => {
+          const shipperId = typeof a.shipper === 'object' && a.shipper !== null ? a.shipper.id : a.shipper;
+          if (shipperId && !a.userId) a.userId = shipperId;
+          return a;
+        });
+        return { success: true, total: response.total };
       } catch (error) {
         console.error('Erreur lors du chargement des annonces:', error);
         return { success: false, error };
       } finally {
         this.loading = false;
       }
-      return { success: false };
     },
 
     /**
@@ -127,17 +115,13 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async fetchMyAnnouncements() {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.get<Announcement[]>('/shipper/announcement');
-        if (response.success && response.data) {
-          this.announcements = response.data.map((a) => {
-            // Extract shipper ID correctly whether it's an object or a string
-            const shipperId = typeof a.shipper === 'object' && a.shipper !== null ? a.shipper.id : a.shipper;
-            if (shipperId && !a.userId) a.userId = shipperId;
-            return a;
-          });
-        }
+        const response = await $fetch<Announcement[]>('/api/announcements/mine');
+        this.announcements = (Array.isArray(response) ? response : []).map((a) => {
+          const shipperId = typeof a.shipper === 'object' && a.shipper !== null ? a.shipper.id : a.shipper;
+          if (shipperId && !a.userId) a.userId = shipperId;
+          return a;
+        });
       } catch (error) {
         console.error('Erreur lors du chargement de mes annonces:', error);
       } finally {
@@ -150,30 +134,18 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async fetchAnnouncementById(id: string) {
       this.loading = true;
-      const api = useAPI();
-      const userStore = useUserStore();
-
       try {
-        const response = await api.get<Announcement>(`/public/announcements/${id}`);
-
-        if (response.success && response.data) {
-          const announcement = response.data;
-          if (announcement.shipper && !announcement.userId) announcement.userId = announcement.shipper.id;
-
-          if (announcement.shipper && (announcement.shipper as any).myReview) {
-            userStore.myReviews[announcement.shipper.id] = (announcement.shipper as any).myReview;
-          }
-
-          this.currentAnnouncement = announcement;
-          return { success: true, announcement };
-        }
+        const response = await $fetch<Announcement>(`/api/announcements/${id}`);
+        const announcement = response;
+        if (announcement.shipper && !announcement.userId) announcement.userId = announcement.shipper.id;
+        this.currentAnnouncement = announcement;
+        return { success: true, announcement };
       } catch (error) {
         console.error('Erreur lors du chargement de l\'annonce:', error);
+        return { success: false, error: 'Annonce non trouvée' };
       } finally {
         this.loading = false;
       }
-
-      return { success: false, error: 'Annonce non trouvée' };
     },
 
     /**
@@ -181,18 +153,16 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async createAnnouncement(announcementData: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt' | 'status'>) {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.post<Announcement>('/shipper/announcement', announcementData);
-        if (response.success && response.data) {
-          const newAnnouncement = response.data;
-          this.announcements.unshift(newAnnouncement);
-          return { success: true, announcement: newAnnouncement };
-        }
-        return { success: false, error: response.error };
-      } catch (error) {
+        const newAnnouncement = await $fetch<Announcement>('/api/announcements', {
+          method: 'POST',
+          body: announcementData,
+        });
+        this.announcements.unshift(newAnnouncement);
+        return { success: true, announcement: newAnnouncement };
+      } catch (error: any) {
         console.error('Erreur lors de la création de l\'annonce:', error);
-        return { success: false, error: 'Erreur technique' };
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
       } finally {
         this.loading = false;
       }
@@ -203,24 +173,22 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async updateAnnouncement(id: string, updates: Partial<Announcement>) {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.patch<Announcement>(`/shipper/announcement/${id}`, updates);
-        if (response.success && response.data) {
-          const updated = response.data;
-          const index = this.announcements.findIndex(a => a.id === id);
-          if (index !== -1) {
-            this.announcements[index] = updated;
-          }
-          if (this.currentAnnouncement?.id === id) {
-            this.currentAnnouncement = updated;
-          }
-          return { success: true, announcement: updated };
+        const updated = await $fetch<Announcement>(`/api/announcements/${id}`, {
+          method: 'PATCH',
+          body: updates,
+        });
+        const index = this.announcements.findIndex(a => a.id === id);
+        if (index !== -1) {
+          this.announcements[index] = updated;
         }
-        return { success: false, error: response.error };
-      } catch (error) {
+        if (this.currentAnnouncement?.id === id) {
+          this.currentAnnouncement = updated;
+        }
+        return { success: true, announcement: updated };
+      } catch (error: any) {
         console.error('Erreur lors de la mise à jour de l\'annonce:', error);
-        return { success: false, error: 'Erreur technique' };
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
       } finally {
         this.loading = false;
       }
@@ -231,20 +199,16 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async deleteAnnouncement(id: string) {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.del(`/shipper/announcement/${id}`);
-        if (response.success) {
-          this.announcements = this.announcements.filter(a => a.id !== id);
-          if (this.currentAnnouncement?.id === id) {
-            this.currentAnnouncement = null;
-          }
-          return { success: true };
+        await $fetch(`/api/announcements/${id}`, { method: 'DELETE' });
+        this.announcements = this.announcements.filter(a => a.id !== id);
+        if (this.currentAnnouncement?.id === id) {
+          this.currentAnnouncement = null;
         }
-        return { success: false, error: response.error };
-      } catch (error) {
+        return { success: true };
+      } catch (error: any) {
         console.error('Erreur lors de la suppression de l\'annonce:', error);
-        return { success: false, error: 'Erreur technique' };
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
       } finally {
         this.loading = false;
       }
@@ -276,54 +240,52 @@ export const useAnnouncementStore = defineStore('announcement', {
      */
     async createOffer(announcementId: string, negotiationData: any) {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.post(`/carrier/announcement/${announcementId}/offer`, {
-          price: negotiationData.price,
-          message: negotiationData.message,
-          proposedOrigin: negotiationData.origin,
-          proposedDestination: negotiationData.destination,
+        await $fetch(`/api/announcements/${announcementId}/offer`, {
+          method: 'POST',
+          body: {
+            price: negotiationData.price,
+            message: negotiationData.message,
+            proposedOrigin: negotiationData.origin,
+            proposedDestination: negotiationData.destination,
+          },
         });
-        if (response.success) {
-          return { success: true };
-        }
-        return { success: false, error: response.error };
-      } catch (error) {
+        return { success: true };
+      } catch (error: any) {
         console.error('Erreur lors de la création de l\'offre:', error);
-        return { success: false, error: 'Erreur technique' };
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
       } finally {
         this.loading = false;
       }
     },
 
     async acceptOffer(offerId: string) {
-      const api = useAPI();
       try {
-        const response = await api.post(`/shipper/offer/${offerId}/accept`);
-        return response.success ? { success: true } : { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        await $fetch(`/api/offers/${offerId}/accept`, { method: 'POST' });
+        return { success: true };
+      } catch (error: any) {
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
       }
     },
 
     async rejectOffer(offerId: string) {
-      const api = useAPI();
       try {
-        const response = await api.post(`/shipper/offer/${offerId}/reject`);
-        return response.success ? { success: true } : { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        await $fetch(`/api/offers/${offerId}/reject`, { method: 'POST' });
+        return { success: true };
+      } catch (error: any) {
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
       }
     },
 
     async counterOffer(offerId: string, role: 'shipper' | 'carrier', data: any) {
-      const api = useAPI();
-      const endpoint = role === 'shipper' ? `/shipper/offer/${offerId}/counter` : `/carrier/offer/${offerId}/counter`;
       try {
-        const response = await api.post(endpoint, data);
-        return response.success ? { success: true } : { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        await $fetch(`/api/offers/${offerId}/counter`, {
+          method: 'POST',
+          body: { ...data, role },
+        });
+        return { success: true };
+      } catch (error: any) {
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
       }
     },
   },

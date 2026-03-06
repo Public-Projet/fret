@@ -1,49 +1,6 @@
 import { defineStore } from 'pinia';
-import { useAPI } from '~/composables/useAPI';
-import { useUserStore } from '~/stores/user';
-import type { Vehicle } from '~/stores/profile';
-
-export interface Location {
-  city: string;
-  country: string;
-  address?: string;
-  postalCode?: string;
-}
-
-export interface Availability {
-  id: string;
-  vehicle: Vehicle;
-  origin: Location;
-  destination?: Location;
-  startDate: string;
-  endDate: string;
-  price?: number;
-  status: 'active' | 'expired' | 'full' | 'prolonged';
-  maxRequests?: number;
-  currentRequests: number;
-  createdAt: string;
-  carrier?: {
-    id: string;
-    firstname: string;
-    lastname: string;
-    photoUrl?: string;
-    rating?: number;
-    reviewsCount?: number;
-    myReview?: { score: number; comment?: string } | null;
-  };
-  bookings?: any[];
-  myReview?: { score: number; comment?: string } | null;
-}
-
-export interface CreateAvailabilityData {
-  vehicleId: string;
-  origin: Location;
-  destination?: Location;
-  startDate: string;
-  endDate: string;
-  price?: number;
-  maxRequests?: number;
-}
+import type { StoreAvailability as Availability, StoreLocation as Location, CreateAvailabilityData, } from '~/types';
+export type { Availability, Location, CreateAvailabilityData };
 
 export const useAvailabilityStore = defineStore('availability', {
   state: () => ({
@@ -66,21 +23,10 @@ export const useAvailabilityStore = defineStore('availability', {
      */
     async fetchPublicAvailabilities() {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.get<{ availabilities: Availability[] }>('/public/availabilities');
-        if (response.success && response.data) {
-          const userStore = useUserStore();
-          this.availabilities = response.data.availabilities.map(a => {
-            if (a.carrier) {
-              if (a.carrier.myReview) {
-                userStore.myReviews[a.carrier.id] = a.carrier.myReview;
-              } else if (userStore.myReviews[a.carrier.id]) {
-                a.carrier.myReview = userStore.myReviews[a.carrier.id];
-              }
-            }
-            return a;
-          });
+        const response = await $fetch<{ availabilities: Availability[] }>('/api/availabilities');
+        if (response?.availabilities) {
+          this.availabilities = response.availabilities;
         }
       } catch (err) {
         console.error('Failed to fetch public availabilities', err);
@@ -93,24 +39,14 @@ export const useAvailabilityStore = defineStore('availability', {
      * Publique: Une disponibilité
      */
     async fetchPublicAvailability(id: string) {
-      const api = useAPI();
       try {
-        const response = await api.get<{ availability: Availability }>(`/public/availabilities/${id}`);
-        if (response.success && response.data) {
-          const avail = response.data.availability;
-          const userStore = useUserStore();
-          if (avail.carrier) {
-            if (avail.carrier.myReview) {
-              userStore.myReviews[avail.carrier.id] = avail.carrier.myReview;
-            } else if (userStore.myReviews[avail.carrier.id]) {
-              avail.carrier.myReview = userStore.myReviews[avail.carrier.id];
-            }
-          }
-          return { success: true, availability: avail };
+        const response = await $fetch<{ availability: Availability }>(`/api/availabilities/${id}`);
+        if (response?.availability) {
+          return { success: true, availability: response.availability };
         }
-        return { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        return { success: false, error: 'Disponibilité non trouvée' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
 
@@ -119,20 +55,19 @@ export const useAvailabilityStore = defineStore('availability', {
      */
     async enrollAvailability(id: string, negotiationData: any = {}) {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.post(`/shipper/availabilities/${id}/enroll`, {
-          notes: negotiationData.message,
-          proposedPrice: negotiationData.price,
-          proposedOrigin: negotiationData.origin,
-          proposedDestination: negotiationData.destination,
+        await ($fetch as any)(`/api/availabilities/${id}/enroll`, {
+          method: 'POST',
+          body: {
+            notes: negotiationData.message,
+            proposedPrice: negotiationData.price,
+            proposedOrigin: negotiationData.origin,
+            proposedDestination: negotiationData.destination,
+          },
         });
-        if (response.success) {
-          return { success: true };
-        }
-        return { success: false, error: this.extractErrorMessage(response.error) };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique lors de l\'inscription' };
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique lors de l\'inscription' };
       } finally {
         this.loading = false;
       }
@@ -143,11 +78,10 @@ export const useAvailabilityStore = defineStore('availability', {
      */
     async fetchShipperEnrollments() {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.get<{ enrollments: any[] }>('/shipper/enrollments');
-        if (response.success && response.data) {
-          this.enrollments = response.data.enrollments;
+        const response = await $fetch<{ enrollments: any[] }>('/api/availabilities/enrollments');
+        if (response?.enrollments) {
+          this.enrollments = response.enrollments;
         }
       } catch (err) {
         console.error('Failed to fetch shipper enrollments', err);
@@ -158,21 +92,10 @@ export const useAvailabilityStore = defineStore('availability', {
 
     async fetchAvailabilities() {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.get<{ availabilities: Availability[] }>('/carrier/availability');
-        if (response.success && response.data) {
-          const userStore = useUserStore();
-          this.availabilities = response.data.availabilities.map(a => {
-            if (a.carrier) {
-              if (a.carrier.myReview) {
-                userStore.myReviews[a.carrier.id] = a.carrier.myReview;
-              } else if (userStore.myReviews[a.carrier.id]) {
-                a.carrier.myReview = userStore.myReviews[a.carrier.id];
-              }
-            }
-            return a;
-          });
+        const response = await $fetch<{ availabilities: Availability[] }>('/api/availabilities/mine');
+        if (response?.availabilities) {
+          this.availabilities = response.availabilities;
         }
       } catch (err) {
         console.error('Failed to fetch availabilities', err);
@@ -182,101 +105,89 @@ export const useAvailabilityStore = defineStore('availability', {
     },
 
     async fetchAvailability(id: string) {
-      const api = useAPI();
       try {
-        const response = await api.get<{ availability: Availability }>(`/carrier/availability/${id}`);
-        if (response.success && response.data) {
-          const avail = response.data.availability;
-          const userStore = useUserStore();
-          if (avail.carrier) {
-            if (avail.carrier.myReview) {
-              userStore.myReviews[avail.carrier.id] = avail.carrier.myReview;
-            } else if (userStore.myReviews[avail.carrier.id]) {
-              avail.carrier.myReview = userStore.myReviews[avail.carrier.id];
-            }
-          }
-          return { success: true, availability: avail };
+        const response = await $fetch<{ availability: Availability }>(`/api/availabilities/mine/${id}`);
+        if (response?.availability) {
+          return { success: true, availability: response.availability };
         }
-        return { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        return { success: false, error: 'Disponibilité non trouvée' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
 
     async updateAvailability(id: string, data: Partial<CreateAvailabilityData> & { status?: string }) {
-      const api = useAPI();
       try {
-        const response = await api.patch<{ availability: Availability }>(`/carrier/availability/${id}`, data);
-        if (response.success && response.data?.availability) {
-          // Update list if exists
+        const response = await $fetch<{ availability: Availability }>(`/api/availabilities/${id}`, {
+          method: 'PATCH',
+          body: data,
+        });
+        if (response?.availability) {
           const index = this.availabilities.findIndex(a => a.id === id);
           if (index !== -1) {
-            this.availabilities[index] = response.data.availability;
+            this.availabilities[index] = response.availability;
           }
-          return { success: true, availability: response.data.availability };
+          return { success: true, availability: response.availability };
         }
-        return { success: false, error: response.error };
-      } catch (err) {
         return { success: false, error: 'Erreur technique' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
 
     async addAvailability(data: CreateAvailabilityData) {
-      const api = useAPI();
       try {
-        const response = await api.post<{ availability: Availability }>('/carrier/availability', data);
-        if (response.success && response.data?.availability) {
-          this.availabilities.unshift(response.data.availability);
+        const response = await $fetch<{ availability: Availability }>('/api/availabilities', {
+          method: 'POST',
+          body: data,
+        });
+        if (response?.availability) {
+          this.availabilities.unshift(response.availability);
           return { success: true };
         }
-        return { success: false, error: response.error };
-      } catch (err) {
         return { success: false, error: 'Erreur technique' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
 
     async deleteAvailability(id: string) {
-      const api = useAPI();
       try {
-        const response = await api.del(`/carrier/availability/${id}`);
-        if (response.success) {
-          this.availabilities = this.availabilities.filter(a => a.id !== id);
-          return { success: true };
-        }
-        return { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        await $fetch(`/api/availabilities/${id}`, { method: 'DELETE' });
+        this.availabilities = this.availabilities.filter(a => a.id !== id);
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
 
     async acceptBooking(bookingId: string) {
-      const api = useAPI();
       try {
-        const response = await api.post(`/carrier/booking/${bookingId}/accept`);
-        return response.success ? { success: true } : { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        await $fetch(`/api/bookings/${bookingId}/accept`, { method: 'POST' });
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
 
     async rejectBooking(bookingId: string) {
-      const api = useAPI();
       try {
-        const response = await api.post(`/carrier/booking/${bookingId}/reject`);
-        return response.success ? { success: true } : { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        await $fetch(`/api/bookings/${bookingId}/reject`, { method: 'POST' });
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
 
     async counterBooking(bookingId: string, role: 'shipper' | 'carrier', data: any) {
-      const api = useAPI();
-      const endpoint = role === 'shipper' ? `/shipper/booking/${bookingId}/counter` : `/carrier/booking/${bookingId}/counter`;
       try {
-        const response = await api.post(endpoint, data);
-        return response.success ? { success: true } : { success: false, error: response.error };
-      } catch (err) {
-        return { success: false, error: 'Erreur technique' };
+        await $fetch(`/api/bookings/${bookingId}/counter`, {
+          method: 'POST',
+          body: { ...data, role },
+        });
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
 

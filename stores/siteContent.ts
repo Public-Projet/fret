@@ -1,90 +1,5 @@
 import { defineStore } from 'pinia';
-
-export interface Partner {
-  id: string;
-  name: string;
-  logo?: string;
-  description?: string;
-}
-
-export interface Testimonial {
-  id: string;
-  quote: string;
-  name: string;
-  role?: string;
-  photo?: string;
-  rating?: number;
-}
-
-export interface LegalSection {
-  title: string;
-  paragraph: string;
-}
-
-export interface LegalPage {
-  id: string;
-  slug: 'terms' | 'privacy' | 'legal' | 'cookies';
-  title: string;
-  sections: LegalSection[];
-  lastUpdated?: string;
-}
-
-export interface FaqCategory {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  icon: string;
-  iconBg: string;
-  order: number;
-}
-
-export interface FaqItem {
-  id: string;
-  category: string | FaqCategory;
-  question: string;
-  answer: string;
-  order: number;
-}
-
-export interface SafetyItem {
-  id: string;
-  type: 'feature' | 'tip';
-  title: string;
-  content: string;
-  icon?: string;
-  color?: string;
-  order: number;
-}
-
-export interface TeamMember {
-  id: string;
-  name: string;
-  role: string;
-  description?: string;
-  photo?: string;
-}
-
-export interface HelpCategory {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  icon: string;
-  iconBg: string;
-  articles?: HelpArticle[];
-}
-
-export interface HelpArticle {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  category: string | HelpCategory;
-  views: number;
-  updatedAt: string;
-}
+import type { Partner, Testimonial, LegalPage, FaqCategory, FaqItem, SafetyItem, TeamMember, HelpCategory, HelpArticle } from '~/types';
 
 interface SiteContentState {
   partners: Partner[];
@@ -179,13 +94,12 @@ export const useSiteContentStore = defineStore('siteContent', {
   actions: {
     /** Récupérer la liste des partenaires */
     async fetchPartners() {
-      if (this.partners.length > 0) return; // Déjà chargé
+      if (this.partners.length > 0) return;
       this.loading.partners = true;
       try {
-        const { get } = useAPI();
-        const res = await get<{ data: Partner[] }>('/public/cms/partners');
-        if (res.success && res.data) {
-          this.partners = res.data.data;
+        const res = await $fetch<{ data: Partner[] }>('/api/cms', { query: { resource: 'partners' } });
+        if (res?.data) {
+          this.partners = res.data;
         }
       } catch (e) {
         console.error('[siteContent] Erreur chargement partenaires:', e);
@@ -199,10 +113,9 @@ export const useSiteContentStore = defineStore('siteContent', {
       if (this.testimonials.length > 0) return;
       this.loading.testimonials = true;
       try {
-        const { get } = useAPI();
-        const res = await get<{ data: Testimonial[] }>('/public/cms/testimonials');
-        if (res.success && res.data) {
-          this.testimonials = res.data.data;
+        const res = await $fetch<{ data: Testimonial[] }>('/api/cms', { query: { resource: 'testimonials' } });
+        if (res?.data) {
+          this.testimonials = res.data;
         }
       } catch (e) {
         console.error('[siteContent] Erreur chargement témoignages:', e);
@@ -216,10 +129,9 @@ export const useSiteContentStore = defineStore('siteContent', {
       if (this.team.length > 0) return;
       this.loading.team = true;
       try {
-        const { get } = useAPI();
-        const res = await get<{ data: TeamMember[] }>('/public/cms/team');
-        if (res.success && res.data) {
-          this.team = res.data.data;
+        const res = await $fetch<{ data: TeamMember[] }>('/api/cms', { query: { resource: 'team' } });
+        if (res?.data) {
+          this.team = res.data;
         }
       } catch (e) {
         console.error('[siteContent] Erreur chargement équipe:', e);
@@ -233,10 +145,9 @@ export const useSiteContentStore = defineStore('siteContent', {
       if (this.legal[slug]) return this.legal[slug];
       this.loading.legal = true;
       try {
-        const { get } = useAPI();
-        const res = await get<{ data: LegalPage }>(`/public/cms/legal/${slug}`);
-        if (res.success && res.data) {
-          this.legal[slug] = res.data.data;
+        const res = await $fetch<{ data: LegalPage }>(`/api/cms/legal/${slug}`);
+        if (res?.data) {
+          this.legal[slug] = res.data;
           return this.legal[slug];
         }
       } catch (e) {
@@ -246,15 +157,15 @@ export const useSiteContentStore = defineStore('siteContent', {
       }
       return null;
     },
+
     /** Récupérer la liste des FAQ */
     async fetchFaqs() {
       if (this.faqs.length > 0) return;
       this.loading.faqs = true;
       try {
-        const { get } = useAPI();
-        const res = await get<{ data: FaqItem[] }>('/public/cms/faq');
-        if (res.success && res.data) {
-          this.faqs = res.data.data;
+        const res = await $fetch<{ data: FaqItem[] }>('/api/cms', { query: { resource: 'faq' } });
+        if (res?.data) {
+          this.faqs = res.data;
         }
       } catch (e) {
         console.error('[siteContent] Erreur chargement FAQ:', e);
@@ -265,12 +176,7 @@ export const useSiteContentStore = defineStore('siteContent', {
 
     /** Récupérer la liste des catégories de FAQ */
     async fetchFaqCategories() {
-      // Pas de check de longueur car on veut peut-être rafraîchir
-      // Mais pour l'instant on fait simple
-      if (this.helpCategories.length > 0 && this.faqs.length > 0) {
-        // hack: reusing helpCategories because I typed it wrong in state? 
-        // No, wait. I need a new state for faqCategories.
-      }
+      // Placeholder — pas encore implémenté côté backend
     },
 
     /** Récupérer la liste des contenus de sécurité */
@@ -278,10 +184,9 @@ export const useSiteContentStore = defineStore('siteContent', {
       if (this.safetyItems.length > 0) return;
       this.loading.safetyItems = true;
       try {
-        const { get } = useAPI();
-        const res = await get<{ data: SafetyItem[] }>('/public/cms/safety');
-        if (res.success && res.data) {
-          this.safetyItems = res.data.data;
+        const res = await $fetch<{ data: SafetyItem[] }>('/api/cms', { query: { resource: 'safety' } });
+        if (res?.data) {
+          this.safetyItems = res.data;
         }
       } catch (e) {
         console.error('[siteContent] Erreur chargement sécurité:', e);
@@ -295,10 +200,9 @@ export const useSiteContentStore = defineStore('siteContent', {
       if (this.helpCategories.length > 0) return;
       this.loading.help = true;
       try {
-        const { get } = useAPI();
-        const res = await get<{ data: HelpCategory[] }>('/public/cms/help');
-        if (res.success && res.data) {
-          this.helpCategories = res.data.data;
+        const res = await $fetch<{ data: HelpCategory[] }>('/api/cms', { query: { resource: 'help' } });
+        if (res?.data) {
+          this.helpCategories = res.data;
         }
       } catch (e) {
         console.error('[siteContent] Erreur chargement aide:', e);
@@ -311,10 +215,9 @@ export const useSiteContentStore = defineStore('siteContent', {
     async fetchArticleBySlug(slug: string) {
       this.loading.article = true;
       try {
-        const { get } = useAPI();
-        const res = await get<{ data: HelpArticle }>(`/public/cms/help/article/${slug}`);
-        if (res.success && res.data) {
-          this.currentArticle = res.data.data;
+        const res = await $fetch<{ data: HelpArticle }>(`/api/cms/help/article/${slug}`);
+        if (res?.data) {
+          this.currentArticle = res.data;
 
           // Mettre à jour l'article dans la liste des catégories pour synchroniser les vues
           const articleId = this.currentArticle.id;

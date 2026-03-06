@@ -1,8 +1,5 @@
 import { defineStore } from 'pinia';
-import type { UserRole } from '~/types';
-import type {
-  AuthUser, AuthState, LoginResponse, RegisterResponse, RegisterData, ApiUser, mapApiUserToAuthUser
-} from '~/types/auth';
+import type { UserRole, AuthUser, AuthState, LoginResponse, RegisterResponse, RegisterData, ApiUser } from '~/types';
 import { mapApiUserToAuthUser as mapUser } from '~/types/auth';
 
 export const useAuthStore = defineStore('auth', {
@@ -43,21 +40,23 @@ export const useAuthStore = defineStore('auth', {
         return { success: false, error: 'Aucune session active' };
       }
 
-      // Charger les données utilisateur depuis l'API
+      // Charger les données utilisateur depuis l'API server
       this.isLoading = true;
-      const api = useAPI();
-      const endpoint = roleCookie.value === 'shipper' ? '/shipper/me' : '/carrier/me';
 
       try {
-        const response = await api.get<{ user: ApiUser }>(endpoint);
+        const response = await $fetch<{ user: ApiUser }>('/api/auth/me', {
+          query: { role: roleCookie.value },
+          headers: {
+            'Authorization': `Bearer ${tokenCookie.value}`,
+          },
+        });
 
-        if (response.success && response.data?.user) {
-          this.user = mapUser(response.data.user);
+        if (response?.user) {
+          this.user = mapUser(response.user);
           this.isAuthenticated = true;
           this.isLoading = false;
           return { success: true };
         } else {
-          // Token invalide ou expiré, nettoyer les cookies
           tokenCookie.value = null;
           roleCookie.value = null;
           this.user = null;
@@ -74,78 +73,76 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
-     * Connexion utilisateur (appel API réel)
+     * Connexion utilisateur
      */
     async login(email: string, password: string, role: UserRole, rememberMe: boolean = false) {
       this.isLoading = true;
 
-      const api = useAPI();
-      const endpoint = role === 'shipper'
-        ? '/shipper/auth/login'
-        : '/carrier/auth/login';
+      try {
+        const responseData = await $fetch<LoginResponse>('/api/auth/login', {
+          method: 'POST',
+          body: { email, password, rememberMe, role },
+        });
 
-      const response = await api.post<LoginResponse>(endpoint, { email, password, rememberMe });
+        this.isLoading = false;
 
-      this.isLoading = false;
+        const { token, user: apiUser } = responseData;
 
-      if (!response.success || !response.data) {
-        // Extraire le message d'erreur de manière plus intelligente
+        // Mapper l'utilisateur API vers le format frontend
+        const user = mapUser(apiUser);
+
+        // Stocker dans les cookies
+        const tokenCookie = useCookie('auth_token', {
+          maxAge: 60 * 60 * 24 * 7,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax'
+        });
+        const roleCookie = useCookie<UserRole>('auth_role', {
+          maxAge: 60 * 60 * 24 * 7,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax'
+        });
+        const lastRoleCookie = useCookie<UserRole>('last_connected_role', {
+          maxAge: 60 * 60 * 24 * 365,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax'
+        });
+        const lastAtCookie = useCookie<string>('last_connected_at', {
+          maxAge: 60 * 60 * 24 * 365,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax'
+        });
+
+        tokenCookie.value = token;
+        roleCookie.value = user.role;
+        lastRoleCookie.value = user.role;
+        lastAtCookie.value = new Date().toISOString();
+
+        // Mettre à jour le state
+        this.user = user;
+        this.isAuthenticated = true;
+        this.lastConnectedRole = user.role;
+        this.lastConnectedAt = lastAtCookie.value;
+
+        return { success: true, user };
+      } catch (error: any) {
+        this.isLoading = false;
+
         let errorMessage = 'Erreur de connexion';
+        const errorData = error?.data?.data || error?.data;
 
-        if (response.error?.data) {
-          const errorData = response.error.data as Record<string, unknown>;
-          // Chercher un message dans les différentes structures possibles
+        if (errorData) {
           if (errorData.badCombo && typeof errorData.badCombo === 'object') {
             errorMessage = (errorData.badCombo as { message?: string }).message || errorMessage;
           } else if (errorData.message) {
             errorMessage = errorData.message as string;
           }
-        } else if (response.error?.message && !response.error.message.startsWith('Erreur HTTP')) {
-          errorMessage = response.error.message;
+        } else if (error?.message && !error.message.startsWith('Erreur HTTP')) {
+          errorMessage = error.message;
         }
 
         return { success: false, error: errorMessage };
       }
-
-      const { token, user: apiUser } = response.data;
-
-      // Mapper l'utilisateur API vers le format frontend
-      const user = mapUser(apiUser);
-
-      // Stocker dans les cookies
-      const tokenCookie = useCookie('auth_token', {
-        maxAge: 60 * 60 * 24 * 7, // 7 jours
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
-      });
-      const roleCookie = useCookie<UserRole>('auth_role', {
-        maxAge: 60 * 60 * 24 * 7,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
-      });
-      const lastRoleCookie = useCookie<UserRole>('last_connected_role', {
-        maxAge: 60 * 60 * 24 * 365, // 1 an - persistant
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
-      });
-      const lastAtCookie = useCookie<string>('last_connected_at', {
-        maxAge: 60 * 60 * 24 * 365,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
-      });
-
-      tokenCookie.value = token;
-      roleCookie.value = user.role;
-      lastRoleCookie.value = user.role;
-      lastAtCookie.value = new Date().toISOString();
-
-      // Mettre à jour le state
-      this.user = user;
-      this.isAuthenticated = true;
-      this.lastConnectedRole = user.role;
-      this.lastConnectedAt = lastAtCookie.value;
-
-      return { success: true, user };
     },
 
     /**
@@ -154,23 +151,25 @@ export const useAuthStore = defineStore('auth', {
     async register(userData: RegisterData, role: UserRole) {
       this.isLoading = true;
 
-      const api = useAPI();
-      const endpoint = role === 'shipper'
-        ? '/shipper/auth/register'
-        : '/carrier/auth/register';
+      try {
+        const responseData = await $fetch<RegisterResponse>('/api/auth/register', {
+          method: 'POST',
+          body: { ...userData, role },
+        });
 
-      const response = await api.post<RegisterResponse>(endpoint, userData);
+        this.isLoading = false;
 
-      this.isLoading = false;
+        return {
+          success: true,
+          message: responseData.message || 'Inscription réussie. Vérifiez votre email.'
+        };
+      } catch (error: any) {
+        this.isLoading = false;
 
-      if (!response.success || !response.data) {
-        // Extraire le message d'erreur de manière plus intelligente
         let errorMessage = 'Erreur lors de l\'inscription';
+        const errorData = error?.data?.data || error?.data;
 
-        if (response.error?.data) {
-          const errorData = response.error.data as Record<string, unknown>;
-
-          // Chercher dans les différentes structures d'erreur possibles
+        if (errorData) {
           if (errorData.emailAlreadyInUse) {
             const emailError = errorData.emailAlreadyInUse;
             errorMessage = typeof emailError === 'object' && emailError !== null
@@ -189,31 +188,32 @@ export const useAuthStore = defineStore('auth', {
           } else if (errorData.message) {
             errorMessage = errorData.message as string;
           }
-        } else if (response.error?.message && !response.error.message.startsWith('Erreur HTTP')) {
-          errorMessage = response.error.message;
+        } else if (error?.message && !error.message.startsWith('Erreur HTTP')) {
+          errorMessage = error.message;
         }
 
         return { success: false, error: errorMessage };
       }
-
-      return {
-        success: true,
-        message: response.data.message || 'Inscription réussie. Vérifiez votre email.'
-      };
     },
 
     /**
-     * Déconnexion (appel API réel)
+     * Déconnexion
      */
     async logout() {
-      const api = useAPI();
       const role = this.user?.role;
 
       if (role) {
-        const endpoint = role === 'shipper'
-          ? '/shipper/auth/logout'
-          : '/carrier/auth/logout';
-        await api.post(endpoint);
+        try {
+          await $fetch('/api/auth/logout', {
+            method: 'POST',
+            body: { role },
+            headers: {
+              'Authorization': `Bearer ${useCookie('auth_token').value}`,
+            },
+          });
+        } catch (e) {
+          // Ignorer les erreurs de logout
+        }
       }
 
       // Supprimer les cookies de session

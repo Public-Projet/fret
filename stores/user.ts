@@ -1,21 +1,5 @@
 import { defineStore } from 'pinia';
-import { useAPI } from '~/composables/useAPI';
-
-export interface PublicUser {
-  id: string;
-  firstname: string;
-  lastname: string;
-  username: string;
-  photoUrl?: string;
-  bio?: string;
-  rating: number;
-  reviewsCount: number;
-  kycStatus: string;
-  role: 'carrier' | 'shipper';
-  company?: string;
-  location?: string;
-  myReview?: { score: number, comment?: string } | null;
-}
+import type { PublicUser } from '~/types';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -25,7 +9,6 @@ export const useUserStore = defineStore('user', {
     loading: false,
     error: null as string | null,
     totalCarriers: 0,
-
     totalShippers: 0,
     myReviews: {} as Record<string, { score: number, comment?: string } | null>
   }),
@@ -33,66 +16,105 @@ export const useUserStore = defineStore('user', {
   actions: {
     async fetchPublicCarriers(params: { page?: number; limit?: number; search?: string } = {}) {
       this.loading = true;
-      const api = useAPI();
-      const query = new URLSearchParams();
-      if (params.page) query.append('page', params.page.toString());
-      if (params.limit) query.append('limit', params.limit.toString());
-      if (params.search) query.append('search', params.search);
+      try {
+        const query: Record<string, string> = { role: 'carriers' };
+        if (params.page) query.page = params.page.toString();
+        if (params.limit) query.limit = params.limit.toString();
+        if (params.search) query.search = params.search;
 
-      const result = await api.get<{ carriers: PublicUser[]; total: number }>(`/public/carriers?${query.toString()}`);
-      this.loading = false;
-      if (result.success && result.data) {
-        this.carriers = result.data.carriers;
-        this.totalCarriers = result.data.total;
+        const result = await $fetch<{ carriers: PublicUser[]; total: number }>('/api/users', { query });
+
+        if (result?.carriers) {
+          this.carriers = result.carriers;
+          this.totalCarriers = result.total;
+        }
+        this.loading = false;
+        return { success: true, data: result };
+      } catch (err: any) {
+        this.loading = false;
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
-      return result;
     },
 
     async fetchPublicShippers(params: { page?: number; limit?: number; search?: string } = {}) {
       this.loading = true;
-      const api = useAPI();
-      const query = new URLSearchParams();
-      if (params.page) query.append('page', params.page.toString());
-      if (params.limit) query.append('limit', params.limit.toString());
-      if (params.search) query.append('search', params.search);
+      try {
+        const query: Record<string, string> = { role: 'shippers' };
+        if (params.page) query.page = params.page.toString();
+        if (params.limit) query.limit = params.limit.toString();
+        if (params.search) query.search = params.search;
 
-      const result = await api.get<{ shippers: PublicUser[]; total: number }>(`/public/shippers?${query.toString()}`);
-      this.loading = false;
-      if (result.success && result.data) {
-        this.shippers = result.data.shippers;
-        this.totalShippers = result.data.total;
+        const result = await $fetch<{ shippers: PublicUser[]; total: number }>('/api/users', { query });
+
+        if (result?.shippers) {
+          this.shippers = result.shippers;
+          this.totalShippers = result.total;
+        }
+        this.loading = false;
+        return { success: true, data: result };
+      } catch (err: any) {
+        this.loading = false;
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
-      return result;
     },
 
     async fetchPublicProfile(id: string, role: 'carrier' | 'shipper') {
       this.loading = true;
-      const api = useAPI();
-      const endpoint = role === 'carrier' ? `/public/carriers/${id}` : `/public/shippers/${id}`;
-      const result = await api.get<{ carrier?: PublicUser; shipper?: PublicUser }>(endpoint);
-      this.loading = false;
-      if (result.success && result.data) {
-        this.currentUserProfile = role === 'carrier' ? (result.data.carrier || null) : (result.data.shipper || null);
+      try {
+        const pluralRole = role === 'carrier' ? 'carriers' : 'shippers';
+        const result = await $fetch<{ carrier?: PublicUser; shipper?: PublicUser }>(`/api/users/${id}`, {
+          query: { role: pluralRole },
+        });
+
+        if (result) {
+          this.currentUserProfile = role === 'carrier' ? (result.carrier || null) : (result.shipper || null);
+        }
+        this.loading = false;
+        return { success: true, data: result };
+      } catch (err: any) {
+        this.loading = false;
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
-      return result;
     },
 
     async rateCarrier(carrierId: string, score: number, comment?: string) {
-      const api = useAPI();
-      const result = await api.post<{ rating: number; reviewsCount: number }>(`/shipper/rate/${carrierId}`, { score, comment });
-      if (result.success) {
-        this.myReviews[carrierId] = { score, comment };
+      try {
+        const result = await $fetch<{ rating: number; reviewsCount: number }>(`/api/users/${carrierId}/rate`, {
+          method: 'POST',
+          body: { role: 'shipper', score, comment },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (result) {
+          this.myReviews[carrierId] = { score, comment };
+          return { success: true, data: result };
+        }
+        return { success: false, error: 'Erreur technique' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
-      return result;
     },
 
     async rateShipper(shipperId: string, score: number, comment?: string) {
-      const api = useAPI();
-      const result = await api.post<{ rating: number; reviewsCount: number }>(`/carrier/rate/${shipperId}`, { score, comment });
-      if (result.success) {
-        this.myReviews[shipperId] = { score, comment };
+      try {
+        const result = await $fetch<{ rating: number; reviewsCount: number }>(`/api/users/${shipperId}/rate`, {
+          method: 'POST',
+          body: { role: 'carrier', score, comment },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (result) {
+          this.myReviews[shipperId] = { score, comment };
+          return { success: true, data: result };
+        }
+        return { success: false, error: 'Erreur technique' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
-      return result;
     }
   }
 });

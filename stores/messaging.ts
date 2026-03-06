@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
-import type { Offer, Message, Conversation } from '~/types';
+import type { Offer, Message, Conversation, User } from '~/types';
 import { mockOffers, mockMessages, mockConversations } from '~/data/mock';
-import { useAPI } from '~/composables/useAPI';
 
 interface MessagingState {
   offers: Offer[];
@@ -50,7 +49,7 @@ export const useMessagingStore = defineStore('messaging', {
      */
     userConversations: (state) => (userId: string) => {
       return state.conversations.filter(c =>
-        c.participants.some(p => p.id === userId)
+        c.participants.some((p: User) => p.id === userId)
       );
     },
 
@@ -68,18 +67,17 @@ export const useMessagingStore = defineStore('messaging', {
      */
     unreadCount: (state) => (userId: string) => {
       return state.conversations
-        .filter(c => c.participants.some(p => p.id === userId))
+        .filter(c => c.participants.some((p: User) => p.id === userId))
         .reduce((total, conv) => total + conv.unreadCount, 0);
     },
   },
 
   actions: {
     /**
-     * Créer une nouvelle offre
+     * Créer une nouvelle offre (mock)
      */
     async createOffer(offerData: Omit<Offer, 'id' | 'createdAt' | 'status'>) {
       this.loading = true;
-      // Simulation d'un appel API
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const newOffer: Offer = {
@@ -96,11 +94,10 @@ export const useMessagingStore = defineStore('messaging', {
     },
 
     /**
-     * Mettre à jour une offre
+     * Mettre à jour une offre (mock)
      */
     async updateOffer(id: string, updates: Partial<Offer>) {
       this.loading = true;
-      // Simulation d'un appel API
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const index = this.offers.findIndex(o => o.id === id);
@@ -115,21 +112,17 @@ export const useMessagingStore = defineStore('messaging', {
     },
 
     /**
-     * Charger les offres pour une annonce (Shipper)
+     * Charger les offres pour une annonce (Shipper) — via server API
      */
     async fetchOffersForAnnouncement(announcementId: string) {
       this.loading = true;
-      const api = useAPI();
       try {
-        const response = await api.get(`/shipper/announcement/${announcementId}/offers`);
+        const response = await $fetch<any[]>(`/api/messaging/offers/${announcementId}`);
         if (Array.isArray(response)) {
-          // Fusionner ou remplacer ? Pour une annonce spécifique on peut remplacer dans le state
-          // ou juste retourner. Ici on va mettre à jour le state des offres.
-          // On garde les offres des autres annonces?
           const otherOffers = this.offers.filter(o => o.announcementId !== announcementId);
           this.offers = [...otherOffers, ...response.map(o => ({
             ...o,
-            announcementId: o.announcement // Adaptation structure backend model Offer.js
+            announcementId: o.announcement
           }))];
         }
       } catch (error) {
@@ -140,13 +133,12 @@ export const useMessagingStore = defineStore('messaging', {
     },
 
     /**
-     * Accepter une offre
+     * Accepter une offre — via server API
      */
     async acceptOffer(offerId: string) {
       this.loading = true;
-      const api = useAPI();
       try {
-        await api.post(`/shipper/offer/${offerId}/accept`);
+        await $fetch(`/api/messaging/offers/${offerId}/accept`, { method: 'POST' });
         const index = this.offers.findIndex(o => o.id === offerId);
         if (index !== -1) this.offers[index].status = 'accepted';
         return { success: true };
@@ -159,21 +151,18 @@ export const useMessagingStore = defineStore('messaging', {
     },
 
     /**
-     * Créer ou récupérer une conversation
+     * Créer ou récupérer une conversation (mock)
      */
     async getOrCreateConversation(announcementId: string, participantIds: string[]) {
       this.loading = true;
-      // Simulation d'un appel API
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      // Chercher une conversation existante
       let conversation = this.conversations.find(c =>
         c.announcementId === announcementId &&
-        c.participants.every(p => participantIds.includes(p.id))
+        c.participants.every((p: User) => participantIds.includes(p.id))
       );
 
       if (!conversation) {
-        // Créer une nouvelle conversation
         const { mockUsers } = await import('~/data/mock');
         const participants = mockUsers.filter(u => participantIds.includes(u.id));
 
@@ -197,11 +186,10 @@ export const useMessagingStore = defineStore('messaging', {
     },
 
     /**
-     * Envoyer un message
+     * Envoyer un message (mock)
      */
     async sendMessage(conversationId: string, senderId: string, content: string) {
       this.loading = true;
-      // Simulation d'un appel API
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const newMessage: Message = {
@@ -215,7 +203,6 @@ export const useMessagingStore = defineStore('messaging', {
 
       this.messages.push(newMessage);
 
-      // Mettre à jour la conversation
       const convIndex = this.conversations.findIndex(c => c.id === conversationId);
       if (convIndex !== -1) {
         this.conversations[convIndex].lastMessage = newMessage;
@@ -228,19 +215,16 @@ export const useMessagingStore = defineStore('messaging', {
     },
 
     /**
-     * Marquer les messages comme lus
+     * Marquer les messages comme lus (mock)
      */
     async markAsRead(conversationId: string, userId: string) {
       this.loading = true;
-      // Simulation d'un appel API
       await new Promise(resolve => setTimeout(resolve, 200));
 
-      // Marquer tous les messages de la conversation comme lus
       this.messages
         .filter(m => m.conversationId === conversationId && m.senderId !== userId)
         .forEach(m => m.read = true);
 
-      // Réinitialiser le compteur de messages non lus
       const convIndex = this.conversations.findIndex(c => c.id === conversationId);
       if (convIndex !== -1) {
         this.conversations[convIndex].unreadCount = 0;
@@ -251,11 +235,10 @@ export const useMessagingStore = defineStore('messaging', {
     },
 
     /**
-     * Mettre à jour le statut d'une conversation
+     * Mettre à jour le statut d'une conversation (mock)
      */
     async updateConversationStatus(conversationId: string, status: Conversation['status']) {
       this.loading = true;
-      // Simulation d'un appel API
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const index = this.conversations.findIndex(c => c.id === conversationId);

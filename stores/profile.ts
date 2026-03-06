@@ -1,74 +1,5 @@
 import { defineStore } from 'pinia';
-import { useAPI } from '~/composables/useAPI';
-import type { UserRole } from '~/types';
-import type { Availability } from './availability';
-
-// Interface pour le profil utilisateur
-export interface UserProfile {
-  id: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-  username: string;
-  phone?: string;
-  role: UserRole;
-  bio?: string;
-  photoUrl?: string;
-  status: 'pending' | 'active' | 'suspended';
-  kycDocuments?: {
-    id: string;
-    type: string;
-    name: string;
-    status: 'pending' | 'verified' | 'rejected';
-    uploadedAt: number;
-    url: string;
-  }[];
-  kycStatus?: 'none' | 'pending' | 'verified' | 'rejected';
-}
-
-// Interface pour les données de mise à jour du profil
-export interface UpdateProfileData {
-  firstname?: string;
-  lastname?: string;
-  phone?: string;
-  photoUrl?: string;
-  bio?: string;
-}
-
-// Interface pour les données de mise à jour du mot de passe
-export interface UpdatePasswordData {
-  currentPassword: string;
-  newPassword: string;
-}
-
-// Interface pour les données de mise à jour de l'email
-export interface UpdateEmailData {
-  newEmail: string;
-  password: string;
-}
-
-// Interface pour les véhicules
-export interface Vehicle {
-  id: string;
-  type: 'truck' | 'van' | 'pickup' | 'semi' | 'other';
-  licensePlate: string;
-  brand?: string;
-  model?: string;
-  capacity?: number;
-  volume?: number;
-  status: 'available' | 'in_transit' | 'maintenance';
-  availability?: Availability | null;
-  history?: Availability[];
-}
-
-export interface AddVehicleData {
-  type: string;
-  licensePlate: string;
-  brand?: string;
-  model?: string;
-  capacity?: number;
-  volume?: number;
-}
+import type { UserRole, UserProfile, UpdateProfileData, UpdatePasswordData, UpdateEmailData, Vehicle, AddVehicleData, StoreAvailability as Availability, } from '~/types';
 
 interface ProfileState {
   profile: UserProfile | null;
@@ -87,7 +18,6 @@ export const useProfileStore = defineStore('profile', {
     vehiclesLoading: false,
   }),
 
-  // ... existing getters ...
   getters: {
     fullName: (state) => {
       if (!state.profile) return '';
@@ -101,34 +31,33 @@ export const useProfileStore = defineStore('profile', {
   },
 
   actions: {
-    // ... existing profile actions ...
     /**
      * Récupérer le profil utilisateur
      */
-    async fetchProfile(role: UserRole, requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
+    async fetchProfile(role: UserRole, _requestOptions: any = {}) {
       this.isLoading = true;
       this.error = null;
 
-      const api = useAPI();
-      const endpoint = role === 'shipper' ? '/shipper/me' : '/carrier/me';
-
       try {
-        const response = await api.get<{ message: string; user: UserProfile }>(endpoint, requestOptions);
+        const response = await $fetch<{ message: string; user: UserProfile }>('/api/profile', {
+          query: { role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
 
-        if (response.success && response.data?.user) {
-          this.profile = response.data.user;
-          // Si c'est un transporteur, charger aussi ses véhicules
+        if (response?.user) {
+          this.profile = response.user;
           if (role === 'carrier') {
-            await this.fetchVehicles(requestOptions);
+            await this.fetchVehicles();
           }
           return { success: true, profile: this.profile };
         } else {
-          const errorMessage = this.extractErrorMessage(response.error);
-          this.error = errorMessage;
-          return { success: false, error: errorMessage };
+          this.error = 'Profil non trouvé';
+          return { success: false, error: 'Profil non trouvé' };
         }
-      } catch (e) {
-        const errorMessage = 'Erreur lors de la récupération du profil';
+      } catch (e: any) {
+        const errorMessage = e?.data?.message || 'Erreur lors de la récupération du profil';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -136,27 +65,29 @@ export const useProfileStore = defineStore('profile', {
       }
     },
 
-    // ... updatedProfile, updatedPassword, updateEmail actions (unchanged logic, just kept in file) ...
-    async updateProfile(role: UserRole, data: UpdateProfileData, requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
+    async updateProfile(role: UserRole, data: UpdateProfileData, _requestOptions: any = {}) {
       this.isLoading = true;
       this.error = null;
 
-      const api = useAPI();
-      const endpoint = role === 'shipper' ? '/shipper/update-profile' : '/carrier/update-profile';
-
       try {
-        const response = await api.patch<{ message: string; user: UserProfile }>(endpoint, data, requestOptions);
+        const response = await $fetch<{ message: string; user: UserProfile }>('/api/profile/update', {
+          method: 'PATCH',
+          body: { ...data, role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
 
-        if (response.success && response.data?.user) {
-          this.profile = response.data.user;
-          return { success: true, message: response.data.message, profile: this.profile };
+        if (response?.user) {
+          this.profile = response.user;
+          return { success: true, message: response.message, profile: this.profile };
         } else {
-          const errorMessage = this.extractErrorMessage(response.error);
+          const errorMessage = 'Erreur de mise à jour';
           this.error = errorMessage;
           return { success: false, error: errorMessage };
         }
-      } catch (e) {
-        const errorMessage = 'Erreur lors de la mise à jour du profil';
+      } catch (e: any) {
+        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du profil';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -164,25 +95,25 @@ export const useProfileStore = defineStore('profile', {
       }
     },
 
-    async updatePassword(role: UserRole, data: UpdatePasswordData, requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
+    async updatePassword(role: UserRole, data: UpdatePasswordData, _requestOptions: any = {}) {
       this.isLoading = true;
       this.error = null;
 
-      const api = useAPI();
-      const endpoint = role === 'shipper' ? '/shipper/update-password' : '/carrier/update-password';
-
       try {
-        const response = await api.patch<{ message: string }>(endpoint, data, requestOptions);
+        const response = await $fetch<{ message: string }>('/api/profile/password', {
+          method: 'PATCH',
+          body: { ...data, role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
 
-        if (response.success && response.data) {
-          return { success: true, message: response.data.message };
-        } else {
-          const errorMessage = this.extractErrorMessage(response.error);
-          this.error = errorMessage;
-          return { success: false, error: errorMessage };
+        if (response?.message) {
+          return { success: true, message: response.message };
         }
-      } catch (e) {
-        const errorMessage = 'Erreur lors de la mise à jour du mot de passe';
+        return { success: false, error: 'Erreur de mise à jour' };
+      } catch (e: any) {
+        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du mot de passe';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -190,28 +121,29 @@ export const useProfileStore = defineStore('profile', {
       }
     },
 
-    async updateEmail(role: UserRole, data: UpdateEmailData, requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
+    async updateEmail(role: UserRole, data: UpdateEmailData, _requestOptions: any = {}) {
       this.isLoading = true;
       this.error = null;
 
-      const api = useAPI();
-      const endpoint = role === 'shipper' ? '/shipper/update-email' : '/carrier/update-email';
-
       try {
-        const response = await api.patch<{ message: string }>(endpoint, {
-          email: data.newEmail,
-          password: data.password
-        }, requestOptions);
+        const response = await $fetch<{ message: string }>('/api/profile/email', {
+          method: 'PATCH',
+          body: {
+            email: data.newEmail,
+            password: data.password,
+            role,
+          },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
 
-        if (response.success && response.data) {
-          return { success: true, message: response.data.message };
-        } else {
-          const errorMessage = this.extractErrorMessage(response.error);
-          this.error = errorMessage;
-          return { success: false, error: errorMessage };
+        if (response?.message) {
+          return { success: true, message: response.message };
         }
-      } catch (e) {
-        const errorMessage = 'Erreur lors de la mise à jour de l\'email';
+        return { success: false, error: 'Erreur de mise à jour' };
+      } catch (e: any) {
+        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la mise à jour de l\'email';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -222,20 +154,23 @@ export const useProfileStore = defineStore('profile', {
     /**
      * Récupérer les véhicules
      */
-    async fetchVehicles(requestOptions: RequestInit & { skipAuthRedirect?: boolean } = {}) {
+    async fetchVehicles(_requestOptions: any = {}) {
       this.vehiclesLoading = true;
-      const api = useAPI();
 
       try {
-        const response = await api.get<{ vehicles: Vehicle[] }>('/carrier/vehicles', requestOptions);
-        if (response.success && response.data?.vehicles) {
-          this.vehicles = response.data.vehicles;
+        const response = await $fetch<{ vehicles: Vehicle[] }>('/api/vehicles', {
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.vehicles) {
+          this.vehicles = response.vehicles;
           return { success: true, vehicles: this.vehicles };
-        } else {
-          return { success: false, error: this.extractErrorMessage(response.error) };
         }
-      } catch (e) {
-        return { success: false, error: 'Erreur lors du chargement des véhicules' };
+        return { success: false, error: 'Erreur chargement véhicules' };
+      } catch (e: any) {
+        return { success: false, error: e?.data?.message || 'Erreur lors du chargement des véhicules' };
       } finally {
         this.vehiclesLoading = false;
       }
@@ -246,18 +181,23 @@ export const useProfileStore = defineStore('profile', {
      */
     async addVehicle(data: AddVehicleData) {
       this.vehiclesLoading = true;
-      const api = useAPI();
 
       try {
-        const response = await api.post<{ message: string; vehicle: Vehicle }>('/carrier/vehicle', data);
-        if (response.success && response.data?.vehicle) {
-          this.vehicles.push(response.data.vehicle);
-          return { success: true, message: response.data.message };
-        } else {
-          return { success: false, error: this.extractErrorMessage(response.error) };
+        const response = await $fetch<{ message: string; vehicle: Vehicle }>('/api/vehicles', {
+          method: 'POST',
+          body: data,
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.vehicle) {
+          this.vehicles.push(response.vehicle);
+          return { success: true, message: response.message };
         }
-      } catch (e) {
-        return { success: false, error: 'Erreur lors de l\'ajout du véhicule' };
+        return { success: false, error: 'Erreur ajout véhicule' };
+      } catch (e: any) {
+        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de l\'ajout du véhicule' };
       } finally {
         this.vehiclesLoading = false;
       }
@@ -267,17 +207,18 @@ export const useProfileStore = defineStore('profile', {
      * Supprimer un véhicule
      */
     async deleteVehicle(id: string) {
-      const api = useAPI();
       try {
-        const response = await api.del<{ message: string }>(`/carrier/vehicle/${id}`);
-        if (response.success) {
-          this.vehicles = this.vehicles.filter(v => v.id !== id);
-          return { success: true, message: response.data?.message || 'Véhicule supprimé' };
-        } else {
-          return { success: false, error: this.extractErrorMessage(response.error) };
-        }
-      } catch (e) {
-        return { success: false, error: 'Erreur lors de la suppression' };
+        const response = await $fetch<{ message: string }>(`/api/vehicles/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        this.vehicles = this.vehicles.filter(v => v.id !== id);
+        return { success: true, message: response?.message || 'Véhicule supprimé' };
+      } catch (e: any) {
+        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la suppression' };
       }
     },
 
@@ -286,24 +227,27 @@ export const useProfileStore = defineStore('profile', {
      */
     async fetchVehicle(id: string) {
       this.vehiclesLoading = true;
-      const api = useAPI();
 
       try {
-        const response = await api.get<{ vehicle: Vehicle; availability: Availability | null; history: Availability[] }>(`/carrier/vehicle/${id}`);
-        if (response.success && response.data) {
+        const response = await $fetch<{ vehicle: Vehicle; availability: Availability | null; history: Availability[] }>(`/api/vehicles/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.vehicle) {
           return {
             success: true,
             vehicle: {
-              ...response.data.vehicle,
-              availability: response.data.availability,
-              history: response.data.history
+              ...response.vehicle,
+              availability: response.availability,
+              history: response.history
             }
           };
-        } else {
-          return { success: false, error: this.extractErrorMessage(response.error) };
         }
-      } catch (e) {
-        return { success: false, error: 'Erreur lors du chargement du véhicule' };
+        return { success: false, error: 'Véhicule non trouvé' };
+      } catch (e: any) {
+        return { success: false, error: e?.data?.message || 'Erreur lors du chargement du véhicule' };
       } finally {
         this.vehiclesLoading = false;
       }
@@ -315,25 +259,28 @@ export const useProfileStore = defineStore('profile', {
     async uploadKycDocument(type: string, file: File, role: UserRole = 'carrier') {
       this.isLoading = true;
       this.error = null;
-      const api = useAPI();
-      const endpoint = role === 'shipper' ? '/shipper/kyc' : '/carrier/kyc';
 
       try {
         const formData = new FormData();
         formData.append('type', type);
         formData.append('document', file);
+        formData.append('role', role);
 
-        const response = await api.post<{ message: string; document: any }>(endpoint, formData);
+        const response = await $fetch<{ message: string; document: any }>('/api/kyc/upload', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
 
-        if (response.success && response.data) {
-          // Refresh profile to get updated kycDocuments
+        if (response?.message) {
           await this.fetchProfile(role);
-          return { success: true, message: response.data.message };
-        } else {
-          return { success: false, error: this.extractErrorMessage(response.error) };
+          return { success: true, message: response.message };
         }
-      } catch (e) {
-        return { success: false, error: 'Erreur lors de l\'envoi du document' };
+        return { success: false, error: 'Erreur envoi document' };
+      } catch (e: any) {
+        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de l\'envoi du document' };
       } finally {
         this.isLoading = false;
       }
@@ -344,40 +291,48 @@ export const useProfileStore = defineStore('profile', {
      */
     async fetchKycDocument(role: UserRole, docId: string) {
       this.isLoading = true;
-      const api = useAPI();
-      const endpoint = role === 'shipper' ? `/shipper/kyc-document/${docId}` : `/carrier/kyc-document/${docId}`;
 
       try {
-        const response = await api.get<{ document: any }>(endpoint);
-        if (response.success && response.data?.document) {
-          return { success: true, document: response.data.document };
-        } else {
-          return { success: false, error: this.extractErrorMessage(response.error) };
+        const response = await $fetch<{ document: any }>(`/api/kyc/${docId}`, {
+          query: { role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.document) {
+          return { success: true, document: response.document };
         }
-      } catch (e) {
-        return { success: false, error: 'Erreur lors de la récupération du document' };
+        return { success: false, error: 'Document non trouvé' };
+      } catch (e: any) {
+        return { success: false, error: e?.data?.message || 'Erreur lors de la récupération du document' };
       } finally {
         this.isLoading = false;
       }
     },
+
     async updateVehicle(id: string, data: Partial<AddVehicleData>) {
       this.vehiclesLoading = true;
-      const api = useAPI();
 
       try {
-        const response = await api.patch<{ message: string; vehicle: Vehicle }>(`/carrier/vehicle/${id}`, data);
-        if (response.success && response.data?.vehicle) {
-          // Update local state
+        const response = await $fetch<{ message: string; vehicle: Vehicle }>(`/api/vehicles/${id}`, {
+          method: 'PATCH',
+          body: data,
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.vehicle) {
           const index = this.vehicles.findIndex(v => v.id === id);
           if (index !== -1) {
-            this.vehicles[index] = response.data.vehicle;
+            this.vehicles[index] = response.vehicle;
           }
-          return { success: true, message: response.data.message };
-        } else {
-          return { success: false, error: this.extractErrorMessage(response.error) };
+          return { success: true, message: response.message };
         }
-      } catch (e) {
-        return { success: false, error: 'Erreur lors de la mise à jour du véhicule' };
+        return { success: false, error: 'Erreur de mise à jour' };
+      } catch (e: any) {
+        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du véhicule' };
       } finally {
         this.vehiclesLoading = false;
       }
@@ -387,22 +342,25 @@ export const useProfileStore = defineStore('profile', {
      * Mettre à jour le statut d'un véhicule
      */
     async updateVehicleStatus(id: string, status: 'available' | 'in_transit' | 'maintenance') {
-      const api = useAPI(); // Don't block UI with global loading for status toggle
-
       try {
-        const response = await api.patch<{ message: string; vehicle: Vehicle }>(`/carrier/vehicle/${id}/status`, { status });
-        if (response.success && response.data?.vehicle) {
-          // Update local state
+        const response = await $fetch<{ message: string; vehicle: Vehicle }>(`/api/vehicles/${id}/status`, {
+          method: 'PATCH',
+          body: { status },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.vehicle) {
           const index = this.vehicles.findIndex(v => v.id === id);
           if (index !== -1) {
-            this.vehicles[index] = response.data.vehicle;
+            this.vehicles[index] = response.vehicle;
           }
-          return { success: true, message: response.data.message, vehicle: response.data.vehicle };
-        } else {
-          return { success: false, error: this.extractErrorMessage(response.error) };
+          return { success: true, message: response.message, vehicle: response.vehicle };
         }
-      } catch (e) {
-        return { success: false, error: 'Erreur lors de la mise à jour du statut' };
+        return { success: false, error: 'Erreur de mise à jour' };
+      } catch (e: any) {
+        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du statut' };
       }
     },
 
@@ -422,10 +380,10 @@ export const useProfileStore = defineStore('profile', {
     extractErrorMessage(error: any): string {
       if (!error) return 'Une erreur est survenue';
 
-      if (error.data) {
-        const errorData = error.data as Record<string, unknown>;
+      // Erreur $fetch (error.data contient les données d'erreur)
+      const errorData = error?.data?.data || error?.data;
 
-        // Chercher dans les différentes structures d'erreur
+      if (errorData && typeof errorData === 'object') {
         const errorKeys = ['badCombo', 'invalidPhoneFormat', 'passwordFormatInvalid', 'notFound', 'invalidEmail', 'emailAlreadyInUse', 'licensePlateAlreadyInUse'];
         for (const key of errorKeys) {
           if (errorData[key] && typeof errorData[key] === 'object') {

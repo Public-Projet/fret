@@ -49,9 +49,8 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    public: {
-      baseAPI: process.env.API_URL,
-    }
+    apiBaseUrl: process.env.API_URL,
+    public: {}
   },
 
   googleFonts: {

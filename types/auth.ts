@@ -1,7 +1,7 @@
 import type { UserRole } from './index';
 
 /**
- * Interface utilisateur normalisée pour le frontend (camelCase)
+ * Interface utilisateur normalisée pour le frontend
  */
 export interface AuthUser {
   id: string;
@@ -31,7 +31,7 @@ export interface AuthUser {
 }
 
 /**
- * Interface utilisateur retournée par l'API (lowercase)
+ * Interface utilisateur retournée par l'API
  */
 export interface ApiUser {
   id: string;

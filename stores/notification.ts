@@ -1,14 +1,5 @@
 import { defineStore } from 'pinia';
-
-export interface Notification {
-  id: string;
-  title: string;
-  content: string;
-  status: 'read' | 'unread';
-  priority: 'low' | 'normal' | 'high' | 'urgent';
-  createdAt: number;
-  metadata?: any;
-}
+import type { Notification } from '~/types';
 
 export const useNotificationStore = defineStore('notification', {
   state: () => ({
@@ -24,21 +15,29 @@ export const useNotificationStore = defineStore('notification', {
   actions: {
     async fetchNotifications(page = 1) {
       this.isLoading = true;
-      const api = useAPI();
       const authStore = useAuthStore();
       const role = authStore.user?.role;
-      const baseUrl = role === 'shipper' ? '/shipper/notifications' : '/carrier/notifications';
-      const endpoint = `${baseUrl}?page=${page}&limit=${this.limit}`;
+
+      if (!role) {
+        this.isLoading = false;
+        return;
+      }
 
       try {
-        const response = await api.get<any>(endpoint);
-        if (response.success && response.data) {
+        const response = await $fetch<any>('/api/notifications', {
+          query: { role, page, limit: this.limit },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.notifications) {
           if (page === 1) {
-            this.notifications = response.data.notifications;
+            this.notifications = response.notifications;
           } else {
-            this.notifications = [...this.notifications, ...response.data.notifications];
+            this.notifications = [...this.notifications, ...response.notifications];
           }
-          this.total = response.data.meta.total;
+          this.total = response.meta?.total || 0;
           this.page = page;
           this.updateUnreadCount();
         }
@@ -50,20 +49,25 @@ export const useNotificationStore = defineStore('notification', {
     },
 
     async markAsRead(id: string) {
-      const api = useAPI();
       const authStore = useAuthStore();
       const role = authStore.user?.role;
-      const endpoint = role === 'shipper' ? `/shipper/notifications/${id}` : `/carrier/notifications/${id}`;
+
+      if (!role) return;
 
       try {
-        const response = await api.get<any>(endpoint);
-        if (response.success && response.data && response.data.notification) {
-          const notificationData = response.data.notification;
+        const response = await $fetch<any>(`/api/notifications/${id}`, {
+          query: { role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.notification) {
           const index = this.notifications.findIndex(n => String(n.id) === String(id));
           if (index !== -1) {
-            this.notifications[index] = notificationData;
+            this.notifications[index] = response.notification;
           } else {
-            this.notifications.push(notificationData);
+            this.notifications.push(response.notification);
           }
           this.updateUnreadCount();
         }
@@ -73,34 +77,44 @@ export const useNotificationStore = defineStore('notification', {
     },
 
     async markAllAsRead() {
-      const api = useAPI();
       const authStore = useAuthStore();
       const role = authStore.user?.role;
-      const endpoint = role === 'shipper' ? '/shipper/notifications/mark-all-read' : '/carrier/notifications/mark-all-read';
+
+      if (!role) return;
 
       try {
-        const response = await api.patch<any>(endpoint);
-        if (response.success) {
-          this.notifications.forEach(n => n.status = 'read');
-          this.unreadCount = 0;
-        }
+        await $fetch('/api/notifications/mark-all-read', {
+          method: 'PATCH',
+          body: { role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        this.notifications.forEach(n => n.status = 'read');
+        this.unreadCount = 0;
       } catch (error) {
         console.error('Failed to mark all notifications as read:', error);
       }
     },
 
     async deleteNotification(id: string) {
-      const api = useAPI();
       const authStore = useAuthStore();
       const role = authStore.user?.role;
-      const endpoint = role === 'shipper' ? `/shipper/notifications/${id}` : `/carrier/notifications/${id}`;
+
+      if (!role) return;
 
       try {
-        const response = await api.del<any>(endpoint);
-        if (response.success) {
-          this.notifications = this.notifications.filter(n => String(n.id) !== String(id));
-          this.updateUnreadCount();
-        }
+        await $fetch(`/api/notifications/${id}`, {
+          method: 'DELETE',
+          query: { role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        this.notifications = this.notifications.filter(n => String(n.id) !== String(id));
+        this.updateUnreadCount();
       } catch (error) {
         console.error('Failed to delete notification:', error);
       }
@@ -112,7 +126,6 @@ export const useNotificationStore = defineStore('notification', {
 
     startPolling() {
       if (this.refreshInterval) return;
-      // Fetch every 60 seconds
       this.refreshInterval = setInterval(() => {
         this.fetchNotifications(1);
       }, 60000);
