@@ -70,9 +70,9 @@
 
             <!-- Stats -->
             <div class="grid grid-cols-3 gap-6 max-w-2xl">
-              <HomeStatCard :value="shippers" label="Chargeurs actifs" />
-              <HomeStatCard :value="carriers" label="Transporteurs" />
-              <HomeStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
+              <UiStatCard :value="shippers" label="Chargeurs actifs" />
+              <UiStatCard :value="carriers" label="Transporteurs" />
+              <UiStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
             </div>
           </div>
         </div>

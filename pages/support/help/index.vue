@@ -54,7 +54,7 @@ const searchResults = computed(() => {
 });
 
 useHead({
-  title: 'Centre d\'aide - Bourse de Fret',
+  title: 'Centre d\'aide',
   meta: [
     { name: 'description', content: 'Besoin d\'aide ? Trouvez des articles, des guides et des tutoriels pour utiliser au mieux la plateforme Bourse de Fret.' },
     { name: 'robots', content: 'index, follow' }

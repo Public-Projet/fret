@@ -19,19 +19,19 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          <HomeFeatureCard number="01" :icon="IconFileText" title="Publiez votre annonce"
+          <UiFeatureCard number="01" :icon="IconFileText" title="Publiez votre annonce"
             description="Décrivez votre besoin en quelques clics : origine, destination, type de marchandise, délai et budget."
             highlight="2 minutes chrono" :highlight-icon="IconClock"
             gradient-class="bg-gradient-to-br from-blue-500 to-blue-700"
             time-class="text-blue-600 dark:text-blue-400" />
 
-          <HomeFeatureCard number="02" :icon="IconSearch" title="Recevez des offres"
+          <UiFeatureCard number="02" :icon="IconSearch" title="Recevez des offres"
             description="Les transporteurs qualifiés consultent votre annonce et vous proposent leurs meilleurs tarifs en temps réel."
             highlight="Jusqu'à 20 offres" :highlight-icon="IconBolt"
             gradient-class="bg-gradient-to-br from-green-500 to-green-700"
             time-class="text-green-600 dark:text-green-400" />
 
-          <HomeFeatureCard number="03" :icon="IconCircleCheck" title="Choisissez et validez"
+          <UiFeatureCard number="03" :icon="IconCircleCheck" title="Choisissez et validez"
             description="Comparez, négociez et sélectionnez le transporteur qui correspond le mieux à vos besoins et budget."
             highlight="100% sécurisé" :highlight-icon="IconShieldCheck"
             gradient-class="bg-gradient-to-br from-blue-500 to-blue-700"
