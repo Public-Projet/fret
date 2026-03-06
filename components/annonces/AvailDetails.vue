@@ -108,12 +108,18 @@
             <button v-if="!alreadyEnrolled" @click="$emit('enroll')" class="btn btn-primary w-full py-4 rounded-2xl">
               S'inscrire sur le trajet
             </button>
-            <div v-else
-              class="bg-green-50 dark:bg-green-900/20 p-4 rounded-2xl border border-green-100 dark:border-green-900/30">
-              <p class="text-green-700 dark:text-green-400 font-bold flex items-center">
-                <IconCheck class="w-5 h-5 mr-2" />
-                Déjà inscrit !
-              </p>
+            <div v-else class="space-y-4">
+              <div
+                class="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl border border-blue-100 dark:border-blue-900/20">
+                <p class="text-blue-700 dark:text-blue-400 font-bold flex items-center mb-4">
+                  <IconCheck class="w-5 h-5 mr-2" />
+                  {{ getMyEnrollmentStatusText() }}
+                </p>
+                <div v-if="myEnrollment" class="mt-4 border-t border-blue-200 dark:border-blue-800/50 pt-4">
+                  <AnnoncesNegotiationList :items="[myEnrollment]" type="avail" @refresh="$emit('refresh')"
+                    @counter="$emit('counter', $event)" />
+                </div>
+              </div>
             </div>
             <button class="btn btn-outline w-full py-4 rounded-2xl">
               Contacter le transporteur
@@ -135,8 +141,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { IconArrowLeft, IconStarFilled, IconStar, IconTruck, IconCheck } from '@tabler/icons-vue';
 import { useAuthStore } from '~/stores/auth';
+import { useAvailabilityStore } from '~/stores/availability';
 
 const props = defineProps<{
   item: any;
@@ -149,9 +157,23 @@ defineEmits<{
   (e: 'enroll'): void;
   (e: 'showRatingModal'): void;
   (e: 'refresh'): void;
+  (e: 'counter', proposal: any): void;
 }>();
 
 const authStore = useAuthStore();
+const availStore = useAvailabilityStore();
+
+const getMyEnrollmentStatusText = () => {
+  const enrollment = availStore.enrollments.find((e: any) => String(e.availability?.id) === String(props.item.id) || String(e.availability) === String(props.item.id));
+  if (enrollment && ['accepted', 'confirmed'].includes(enrollment.status)) {
+    return 'Contrat validé !';
+  }
+  return 'Proposition soumise';
+};
+
+const myEnrollment = computed(() => {
+  return availStore.enrollments.find((e: any) => String(e.availability?.id) === String(props.item.id) || String(e.availability) === String(props.item.id));
+});
 
 const getStatusLabel = (status: string) => {
   const labels: Record<string, string> = {

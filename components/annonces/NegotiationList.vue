@@ -46,13 +46,20 @@
               <span v-if="proposal.proposedOrigin || proposal.proposedDestination"
                 class="px-3 py-1 bg-secondary-50 dark:bg-secondary-900/40 text-secondary-700 dark:text-secondary-300 rounded-lg text-sm font-medium">
                 {{ proposal.proposedOrigin?.city || 'Origine' }} → {{ proposal.proposedDestination?.city ||
-                'Destination' }}
+                  'Destination' }}
               </span>
             </div>
-            <p v-if="proposal.notes || proposal.message"
+            <div v-if="proposal.notes || proposal.message"
               class="text-sm text-gray-600 dark:text-gray-400 italic bg-gray-100/50 dark:bg-gray-900/40 p-3 rounded-xl border-l-4 border-primary-400">
               "{{ proposal.notes || proposal.message }}"
-            </p>
+            </div>
+            <div v-if="proposal.contractPath" class="mt-2">
+              <a :href="`${backendUrl}/api/v1/public/contracts/download/${proposal.contractPath.split('/').pop().replace('.pdf', '')}`"
+                target="_blank" class="inline-flex items-center text-xs font-bold text-primary-600 hover:underline">
+                <IconFileDownload class="w-4 h-4 mr-1" />
+                Télécharger le contrat PDF
+              </a>
+            </div>
           </div>
 
           <!-- Right: Actions -->
@@ -61,14 +68,31 @@
               {{ getStatusLabel(proposal.status) }}
             </span>
 
-            <div v-if="proposal.status === 'pending'" class="flex gap-2 w-full">
-              <button @click="handleReject(proposal.id)" :disabled="loading"
-                class="flex-1 btn btn-outline btn-sm text-red-600 hover:bg-red-50 py-2">
-                Refuser
-              </button>
-              <button @click="handleAccept(proposal.id)" :disabled="loading" class="flex-1 btn btn-primary btn-sm py-2">
-                Valider
-              </button>
+            <div v-if="proposal.status === 'pending'" class="flex flex-col gap-2 w-full">
+              <!-- If last proposal was by the OTHER person, show Accept/Reject/Counter -->
+              <template v-if="canRespond(proposal)">
+                <div class="flex gap-2">
+                  <button @click="handleReject(proposal.id)" :disabled="loading"
+                    class="flex-1 btn btn-outline btn-sm text-red-600 hover:bg-red-50 py-2">
+                    Refuser
+                  </button>
+                  <button @click="handleAccept(proposal.id)" :disabled="loading"
+                    class="flex-1 btn btn-primary btn-sm py-2">
+                    Valider
+                  </button>
+                </div>
+                <button @click="$emit('counter', proposal)" :disabled="loading"
+                  class="btn btn-secondary btn-sm w-full py-2">
+                  Contre-proposer
+                </button>
+              </template>
+              <template v-else>
+                <p class="text-xs text-gray-400 italic text-right">En attente de leur réponse...</p>
+                <button @click="$emit('counter', proposal)" :disabled="loading"
+                  class="btn btn-outline btn-sm w-full py-2">
+                  Modifier ma proposition
+                </button>
+              </template>
             </div>
           </div>
         </div>
@@ -78,21 +102,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { IconGavel, IconInbox, IconStarFilled } from '@tabler/icons-vue';
+import { ref, computed } from 'vue';
+import { IconGavel, IconInbox, IconStarFilled, IconFileDownload } from '@tabler/icons-vue';
 import { useAvailabilityStore } from '~/stores/availability';
 import { useAnnouncementStore } from '~/stores/announcement';
+import { useAuthStore } from '~/stores/auth';
 
 const props = defineProps<{
   items: any[];
   type: 'avail' | 'offer' | 'fret';
 }>();
 
-const emit = defineEmits(['refresh']);
+const emit = defineEmits(['refresh', 'counter']);
 
 const availStore = useAvailabilityStore();
 const fretStore = useAnnouncementStore();
+const authStore = useAuthStore();
 const loading = ref(false);
+
+const backendUrl = 'http://localhost:1337'; // TODO: Get from config if possible
+
+const canRespond = (proposal: any) => {
+  if (!authStore.isAuthenticated) return false;
+
+  // If I am the owner of the main item (Carrier for avail, Shipper for announcement)
+  // I can respond if the LAST proposal was NOT by me.
+
+  // For Availability: Carrier is owner. If lastProposedBy is 'shipper', carrier can respond.
+  if (props.type === 'avail') {
+    return proposal.lastProposedBy === 'shipper';
+  }
+
+  // For Offer: Shipper is owner. If lastProposedBy is 'carrier', shipper can respond.
+  return proposal.lastProposedBy === 'carrier';
+};
 
 const getUserName = (proposal: any) => {
   const user = proposal.shipper || proposal.carrier;

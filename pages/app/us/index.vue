@@ -5,7 +5,11 @@
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Bienvenue, {{ currentUser?.firstName }}</h1>
         <p class="text-gray-600 dark:text-gray-400">Tableau de bord Chargeur</p>
       </div>
-      <div class="flex space-x-4 mt-4 md:mt-0">
+      <div class="flex flex-wrap gap-4 mt-4 md:mt-0">
+        <NuxtLink to="/app/us/avail" class="btn btn-outline flex items-center justify-center">
+          <IconTicket class="w-5 h-5 mr-2" />
+          Mes souscriptions
+        </NuxtLink>
         <NuxtLink to="/app/us/offers" class="btn btn-outline flex items-center justify-center">
           <IconList class="w-5 h-5 mr-2" />
           Mes annonces
@@ -95,7 +99,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
-import { IconCircleCheck, IconCurrencyEuro, IconFileText, IconMessage, IconPlus, IconList, IconRocket } from '@tabler/icons-vue';
+import { IconCircleCheck, IconCurrencyEuro, IconFileText, IconMessage, IconPlus, IconList, IconRocket, IconTicket } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const announcementStore = useAnnouncementStore();

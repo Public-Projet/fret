@@ -105,6 +105,7 @@ const props = defineProps<{
   originalPrice?: number;
   originalOrigin: any;
   originalDestination?: any;
+  initialData?: any;
   loading?: boolean;
 }>();
 
@@ -114,10 +115,10 @@ const emit = defineEmits<{
 }>();
 
 const form = reactive({
-  price: props.originalPrice || undefined,
-  origin: { ...props.originalOrigin },
-  destination: props.originalDestination ? { ...props.originalDestination } : { city: '', country: props.originalOrigin.country },
-  message: ''
+  price: props.initialData?.proposedPrice || props.initialData?.price || props.originalPrice || undefined,
+  origin: props.initialData?.proposedOrigin ? { ...props.initialData.proposedOrigin } : { ...props.originalOrigin },
+  destination: props.initialData?.proposedDestination ? { ...props.initialData.proposedDestination } : (props.originalDestination ? { ...props.originalDestination } : { city: '', country: props.originalOrigin.country }),
+  message: props.initialData?.notes || props.initialData?.message || ''
 });
 
 const handleSubmit = () => {

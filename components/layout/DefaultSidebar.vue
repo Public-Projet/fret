@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IconTruck, IconDashboard, IconMessage, IconSettings, IconChevronLeft, IconChevronRight } from '@tabler/icons-vue';
+import { IconTruck, IconDashboard, IconMessage, IconSettings, IconChevronLeft, IconChevronRight, IconListCheck } from '@tabler/icons-vue';
 import { ROLES } from '~/utils/roles';
 import { useAuthStore } from '~/stores/auth';
 
@@ -117,9 +117,9 @@ const menuItems = computed<MenuItem[]>(() => [
     roles: [ROLES.Shipper]
   },
   {
-    label: 'Disponibilités',
+    label: 'Mes Souscriptions',
     to: '/app/us/avail',
-    icon: IconTruck,
+    icon: IconListCheck,
     roles: [ROLES.Shipper]
   },
 

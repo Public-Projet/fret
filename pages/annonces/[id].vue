@@ -9,12 +9,12 @@
       <!-- Availability View -->
       <AnnoncesAvailDetails v-else-if="dataType === 'avail' && item" :item="item" :is-owner="isOwner"
         :already-enrolled="alreadyEnrolled" :can-rate="canRate" @enroll="enroll"
-        @show-rating-modal="showRatingModal = true" @refresh="fetchData" />
+        @show-rating-modal="showRatingModal = true" @refresh="fetchData" @counter="startCounterNegotiation" />
 
       <!-- Offer View -->
       <AnnoncesOfferDetails v-else-if="(dataType === 'offer' || dataType === 'fret') && item" :item="item"
         :is-owner="isOwner" :can-rate="canRate" :rating-label="ratingLabel" @show-rating-modal="showRatingModal = true"
-        @enroll="enroll" @refresh="fetchData" />
+        @enroll="enroll" @refresh="fetchData" @counter="startCounterNegotiation" />
 
       <div v-else class="text-center py-20">
         <IconAlertCircle class="w-12 h-12 text-red-500 mx-auto mb-4" />
@@ -26,7 +26,7 @@
     <!-- Negotiation Modal -->
     <AnnoncesNegotiationModal v-if="showNegotiationModal" :original-price="item?.price || item?.budget"
       :original-origin="item?.origin" :original-destination="item?.destination" :loading="negotiating"
-      @close="showNegotiationModal = false" @submit="handleNegotiationSubmit" />
+      :initial-data="selectedProposalForCounter" @close="closeNegotiationModal" @submit="handleNegotiationSubmit" />
 
     <!-- Rating Modal -->
     <div v-if="showRatingModal"
@@ -67,19 +67,42 @@ const loading = ref(true);
 const negotiating = ref(false);
 const showRatingModal = ref(false);
 const showNegotiationModal = ref(false);
+const selectedProposalForCounter = ref<any>(null);
 
 const handleNegotiationSubmit = async (data: any) => {
   negotiating.value = true;
   try {
     let res;
-    if (dataType.value === 'avail') {
-      res = await availStore.enrollAvailability(id, data);
+    if (selectedProposalForCounter.value) {
+      // It's a counter-proposal
+      const role = authStore.isShipper ? 'shipper' : 'carrier';
+      if (dataType.value === 'avail') {
+        res = await availStore.counterBooking(selectedProposalForCounter.value.id, role, {
+          proposedPrice: data.price,
+          proposedOrigin: data.origin,
+          proposedDestination: data.destination,
+          notes: data.message
+        });
+      } else {
+        res = await fretStore.counterOffer(selectedProposalForCounter.value.id, role, {
+          price: data.price,
+          proposedOrigin: data.origin,
+          proposedDestination: data.destination,
+          message: data.message
+        });
+      }
     } else {
-      res = await fretStore.createOffer(id, data);
+      // It's a new proposal
+      if (dataType.value === 'avail') {
+        res = await availStore.enrollAvailability(id, data);
+      } else {
+        res = await fretStore.createOffer(id, data);
+      }
     }
 
     if (res.success) {
       showNegotiationModal.value = false;
+      selectedProposalForCounter.value = null;
       await fetchData();
       if (authStore.isAuthenticated && authStore.isShipper) {
         await availStore.fetchShipperEnrollments();
@@ -92,6 +115,16 @@ const handleNegotiationSubmit = async (data: any) => {
   } finally {
     negotiating.value = false;
   }
+};
+
+const startCounterNegotiation = (proposal: any) => {
+  selectedProposalForCounter.value = proposal;
+  showNegotiationModal.value = true;
+};
+
+const closeNegotiationModal = () => {
+  showNegotiationModal.value = false;
+  selectedProposalForCounter.value = null;
 };
 
 const isOwner = computed(() => {

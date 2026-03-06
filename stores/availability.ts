@@ -269,6 +269,17 @@ export const useAvailabilityStore = defineStore('availability', {
       }
     },
 
+    async counterBooking(bookingId: string, role: 'shipper' | 'carrier', data: any) {
+      const api = useAPI();
+      const endpoint = role === 'shipper' ? `/shipper/booking/${bookingId}/counter` : `/carrier/booking/${bookingId}/counter`;
+      try {
+        const response = await api.post(endpoint, data);
+        return response.success ? { success: true } : { success: false, error: response.error };
+      } catch (err) {
+        return { success: false, error: 'Erreur technique' };
+      }
+    },
+
     extractErrorMessage(error: any): string {
       if (error?.data?.message) return error.data.message;
       if (error?.message) return error.message;

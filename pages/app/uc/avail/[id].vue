@@ -99,6 +99,12 @@
               </div>
             </div>
           </div>
+
+          <!-- Negotiations -->
+          <div class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-700">
+            <AnnoncesNegotiationList :items="availability.bookings || []" type="avail" @refresh="loadAvailability"
+              @counter="startCounterNegotiation" />
+          </div>
         </div>
       </div>
     </div>
@@ -165,6 +171,11 @@
     </div>
 
   </div>
+
+  <!-- Negotiation Modal -->
+  <AnnoncesNegotiationModal v-if="showNegotiationModal" :original-price="availability?.price"
+    :original-origin="availability?.origin" :original-destination="availability?.destination" :loading="negotiating"
+    :initial-data="selectedProposalForCounter" @close="closeNegotiationModal" @submit="handleNegotiationSubmit" />
 </template>
 
 <script setup lang="ts">
@@ -183,6 +194,46 @@ const loading = ref(true);
 const error = ref('');
 const isEditing = ref(false);
 const submitting = ref(false);
+const showNegotiationModal = ref(false);
+const selectedProposalForCounter = ref<any>(null);
+const negotiating = ref(false);
+
+const startCounterNegotiation = (proposal: any) => {
+  selectedProposalForCounter.value = proposal;
+  showNegotiationModal.value = true;
+};
+
+const closeNegotiationModal = () => {
+  showNegotiationModal.value = false;
+  selectedProposalForCounter.value = null;
+};
+
+const handleNegotiationSubmit = async (data: any) => {
+  if (!selectedProposalForCounter.value) return;
+
+  negotiating.value = true;
+  try {
+    const role = 'carrier';
+    const res = await store.counterBooking(selectedProposalForCounter.value.id, role, {
+      proposedPrice: data.price,
+      proposedOrigin: data.origin,
+      proposedDestination: data.destination,
+      notes: data.message
+    });
+
+    if (res.success) {
+      showNegotiationModal.value = false;
+      selectedProposalForCounter.value = null;
+      await loadAvailability();
+    } else {
+      alert(res.error || "Une erreur est survenue lors de l'envoi de votre proposition.");
+    }
+  } catch (err) {
+    console.error('Negotiation error:', err);
+  } finally {
+    negotiating.value = false;
+  }
+};
 
 const form = reactive({
   startDate: '',

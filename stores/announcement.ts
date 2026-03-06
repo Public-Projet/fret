@@ -315,5 +315,16 @@ export const useAnnouncementStore = defineStore('announcement', {
         return { success: false, error: 'Erreur technique' };
       }
     },
+
+    async counterOffer(offerId: string, role: 'shipper' | 'carrier', data: any) {
+      const api = useAPI();
+      const endpoint = role === 'shipper' ? `/shipper/offer/${offerId}/counter` : `/carrier/offer/${offerId}/counter`;
+      try {
+        const response = await api.post(endpoint, data);
+        return response.success ? { success: true } : { success: false, error: response.error };
+      } catch (err) {
+        return { success: false, error: 'Erreur technique' };
+      }
+    },
   },
 });

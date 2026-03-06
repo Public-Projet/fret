@@ -73,8 +73,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center space-x-2 mb-2">
               <span class="text-xs font-bold text-gray-400">ID: {{ enrollment.availability?.id }}</span>
-              <span :class="['badge badge-sm', getStatusClass(enrollment.status)]">{{ getStatusLabel(enrollment.status)
-              }}</span>
+              <span :class="['badge badge-sm', getStatusClass(enrollment)]">{{ getStatusLabel(enrollment) }}</span>
             </div>
             <div class="flex items-center space-x-3">
               <p class="font-black text-lg text-gray-900 dark:text-white truncate">
@@ -122,24 +121,29 @@ const availabilityStore = useAvailabilityStore();
 const loading = computed(() => availabilityStore.loading);
 const enrollments = computed(() => availabilityStore.enrollments);
 
-const pendingCount = computed(() => enrollments.value.filter(e => e.status === 'pending').length);
-const confirmedCount = computed(() => enrollments.value.filter(e => e.status === 'confirmed').length);
+const pendingCount = computed(() => enrollments.value.filter(e => e.status === 'pending' || e.status === 'countered').length);
+const confirmedCount = computed(() => enrollments.value.filter(e => e.status === 'confirmed' || e.status === 'accepted').length);
 
-const getStatusLabel = (status: string) => {
+const getStatusLabel = (enrollment: any) => {
+  if (enrollment.status === 'pending' || enrollment.status === 'countered') {
+    return enrollment.lastProposedBy === 'carrier' ? 'Contre-offre reçue (Action requise)' : 'En attente transporteur';
+  }
   const labels: Record<string, string> = {
-    pending: 'En attente',
+    accepted: 'Contrat Validé',
     confirmed: 'Confirmé',
-    cancelled: 'Annulé'
+    cancelled: 'Annulé',
+    rejected: 'Refusé'
   };
-  return labels[status] || status;
+  return labels[enrollment.status] || enrollment.status;
 };
 
-const getStatusClass = (status: string) => {
-  return {
-    'badge-warning': status === 'pending',
-    'badge-success': status === 'confirmed',
-    'badge-error': status === 'cancelled'
-  };
+const getStatusClass = (enrollment: any) => {
+  if (enrollment.status === 'pending' || enrollment.status === 'countered') {
+    return enrollment.lastProposedBy === 'carrier' ? 'badge-primary' : 'badge-warning';
+  }
+  if (['confirmed', 'accepted'].includes(enrollment.status)) return 'badge-success';
+  if (['cancelled', 'rejected'].includes(enrollment.status)) return 'badge-error';
+  return 'badge-neutral';
 };
 
 const formatDate = (date: string) => {
