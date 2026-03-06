@@ -13,7 +13,11 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Contact'
+  title: 'Contactez-nous',
+  meta: [
+    { name: 'description', content: 'Une question ou besoin d\'assistance ? Contactez l\'équipe de Bourse de Fret via notre formulaire ou nos coordonnées directes.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 
 definePageMeta({

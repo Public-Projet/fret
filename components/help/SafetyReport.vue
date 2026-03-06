@@ -5,7 +5,7 @@
       Si vous remarquez un comportement suspect, une arnaque potentielle ou tout autre problème de sécurité,
       contactez-nous immédiatement.
     </p>
-    <NuxtLink to="/h/contact"
+    <NuxtLink to="/support/contact"
       class="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors">
       <IconAlertCircle class="w-5 h-5" />
       Signaler un problème

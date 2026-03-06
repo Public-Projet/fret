@@ -91,5 +91,11 @@ onMounted(async () => {
 });
 
 definePageMeta({ layout: 'guest' });
-useHead({ title: 'Annuaire - Bourse de Fret' });
+useHead({
+  title: 'Annuaire',
+  meta: [
+    { name: 'description', content: 'Consultez notre annuaire complet et trouvez des partenaires de confiance. Recherchez des transporteurs qualifiés ou des expéditeurs actifs au Bénin.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
+});
 </script>

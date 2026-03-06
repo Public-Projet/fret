@@ -32,7 +32,11 @@ const features = computed(() => store.safetyItems.filter(i => i.type === 'featur
 const tips = computed(() => store.safetyItems.filter(i => i.type === 'tip'));
 
 useHead({
-  title: 'Sécurité & Confiance'
+  title: 'Sécurité et confiance',
+  meta: [
+    { name: 'description', content: 'Apprenez comment nous assurons la sécurité de vos transactions et de vos données sur Bourse de Fret pour une expérience sans risque.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 
 definePageMeta({

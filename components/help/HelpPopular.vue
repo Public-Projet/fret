@@ -31,6 +31,6 @@ defineProps<{
 }>();
 const getArticleLink = (article: any) => {
   const catSlug = typeof article.category === 'object' ? article.category.slug : (article.categorySlug || 'aide');
-  return `/h/help/${catSlug}/${article.slug}`;
+  return `/support/help/${catSlug}/${article.slug}`;
 };
 </script>

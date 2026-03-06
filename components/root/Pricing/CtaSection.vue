@@ -19,7 +19,7 @@
               class="btn bg-white dark:bg-emerald-500 text-primary-600 dark:text-white hover:bg-gray-50 dark:hover:bg-emerald-600 border-none font-bold py-3 px-8 rounded-xl shadow-lg dark:shadow-emerald-500/20">
               Commencer gratuitement
             </NuxtLink>
-            <NuxtLink to="/h/contact"
+            <NuxtLink to="/support/contact"
               class="btn bg-transparent border-2 border-white dark:border-gray-500 text-white dark:text-gray-200 hover:bg-white/10 dark:hover:bg-white/5 font-bold py-3 px-8 rounded-xl">
               Parler à un expert
             </NuxtLink>

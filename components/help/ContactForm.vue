@@ -58,7 +58,7 @@
           <input id="privacy" type="checkbox" v-model="form.privacy" required
             class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer">
           <label for="privacy" class="ml-2 block text-sm text-gray-600 dark:text-gray-400">
-            J'accepte la <NuxtLink to="/l/privacy" class="text-primary-600 hover:underline">politique de
+            J'accepte la <NuxtLink to="/legal/privacy" class="text-primary-600 hover:underline">politique de
               confidentialité</NuxtLink>.
           </label>
         </div>

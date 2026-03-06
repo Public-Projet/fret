@@ -65,7 +65,11 @@ const filteredFaqs = computed(() => {
 });
 
 useHead({
-  title: 'FAQ'
+  title: 'Questions fréquente',
+  meta: [
+    { name: 'description', content: 'Trouvez des réponses rapides aux questions les plus fréquentes sur le fonctionnement de Bourse de Fret, les paiements et le transport.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 
 definePageMeta({

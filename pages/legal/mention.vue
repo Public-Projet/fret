@@ -1,5 +1,5 @@
 <template>
-  <LegalPageLayout :title="content?.title || 'Conditions d\'utilisation'" :last-update="content?.lastUpdated">
+  <LegalPageLayout :title="content?.title || 'Mentions légales'" :last-update="content?.lastUpdated">
     <div v-if="loading" class="animate-pulse space-y-4">
       <div v-for="i in 5" :key="i" class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
     </div>
@@ -23,12 +23,16 @@ const loading = ref(true);
 const content = ref<any>(null);
 
 onMounted(async () => {
-  content.value = await contentStore.fetchLegalBySlug('terms');
+  content.value = await contentStore.fetchLegalBySlug('legal');
   loading.value = false;
 });
 
 useHead({
-  title: 'Conditions d\'utilisation'
+  title: 'Mentions légales',
+  meta: [
+    { name: 'description', content: 'Consultez les mentions légales de Bourse de Fret. Informations sur l\'éditeur, l\'hébergeur et la propriété intellectuelle.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 
 definePageMeta({

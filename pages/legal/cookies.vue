@@ -1,5 +1,5 @@
 <template>
-  <LegalPageLayout :title="content?.title || 'Politique de confidentialité'" :last-update="content?.lastUpdated">
+  <LegalPageLayout :title="content?.title || 'Politique de cookies'" :last-update="content?.lastUpdated">
     <div v-if="loading" class="animate-pulse space-y-4">
       <div v-for="i in 5" :key="i" class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
     </div>
@@ -23,12 +23,16 @@ const loading = ref(true);
 const content = ref<any>(null);
 
 onMounted(async () => {
-  content.value = await contentStore.fetchLegalBySlug('privacy');
+  content.value = await contentStore.fetchLegalBySlug('cookies');
   loading.value = false;
 });
 
 useHead({
-  title: 'Politique de confidentialité'
+  title: 'Politique de cookies',
+  meta: [
+    { name: 'description', content: 'Apprenez comment nous utilisons les cookies pour améliorer votre expérience.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 
 definePageMeta({

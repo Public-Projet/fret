@@ -74,19 +74,19 @@ const footerSections = [
   {
     title: 'Support',
     links: [
-      { label: "Centre d'aide", to: '/h/help' },
-      { label: 'Contact', to: '/h/contact' },
-      { label: 'FAQ', to: '/h/faq' },
-      { label: 'Sécurité', to: '/h/safety' }
+      { label: "Centre d'aide", to: '/support/help' },
+      { label: 'Contact', to: '/support/contact' },
+      { label: 'FAQ', to: '/support/faq' },
+      { label: 'Sécurité', to: '/support/safety' }
     ]
   },
   {
     title: 'Légal',
     links: [
-      { label: "Conditions d'utilisation", to: '/l/terms' },
-      { label: 'Politique de confidentialité', to: '/l/privacy' },
-      { label: 'Cookies', to: '/l/cookies' },
-      { label: 'Mentions légales', to: '/l/legal' }
+      { label: "Conditions d'utilisation", to: '/legal/terms' },
+      { label: 'Politique de confidentialité', to: '/legal/privacy' },
+      { label: 'Cookies', to: '/legal/cookies' },
+      { label: 'Mentions légales', to: '/legal/mention' }
     ]
   }
 ];

@@ -1,5 +1,5 @@
 <template>
-  <LegalPageLayout :title="content?.title || 'Politique de cookies'" :last-update="content?.lastUpdated">
+  <LegalPageLayout :title="content?.title || 'Conditions d\'utilisation'" :last-update="content?.lastUpdated">
     <div v-if="loading" class="animate-pulse space-y-4">
       <div v-for="i in 5" :key="i" class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
     </div>
@@ -23,12 +23,16 @@ const loading = ref(true);
 const content = ref<any>(null);
 
 onMounted(async () => {
-  content.value = await contentStore.fetchLegalBySlug('cookies');
+  content.value = await contentStore.fetchLegalBySlug('terms');
   loading.value = false;
 });
 
 useHead({
-  title: 'Politique de cookies'
+  title: 'Conditions d\'utilisation',
+  meta: [
+    { name: 'description', content: 'Lisez les conditions d\'utilisation régissant l\'accès et l\'usage de la plateforme Bourse de Fret pour tous les utilisateurs.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 
 definePageMeta({

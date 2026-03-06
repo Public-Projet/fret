@@ -2,9 +2,9 @@
   <div class="container-custom py-12 max-w-4xl">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6 flex-wrap">
-      <NuxtLink to="/h/help" class="hover:text-primary-600 dark:hover:text-primary-400">Centre d'aide</NuxtLink>
+      <NuxtLink to="/support/help" class="hover:text-primary-600 dark:hover:text-primary-400">Centre d'aide</NuxtLink>
       <IconChevronRight class="w-4 h-4" />
-      <NuxtLink :to="`/h/help/${categorySlug}`" class="hover:text-primary-600 dark:hover:text-primary-400">
+      <NuxtLink :to="`/support/help/${categorySlug}`" class="hover:text-primary-600 dark:hover:text-primary-400">
         {{ category?.title }}
       </NuxtLink>
       <IconChevronRight class="w-4 h-4" />
@@ -54,7 +54,8 @@
       <div class="mt-8" v-if="relatedArticles.length > 0">
         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Articles connexes</h3>
         <div class="space-y-3">
-          <NuxtLink v-for="related in relatedArticles" :key="related.id" :to="`/h/help/${categorySlug}/${related.slug}`"
+          <NuxtLink v-for="related in relatedArticles" :key="related.id"
+            :to="`/support/help/${categorySlug}/${related.slug}`"
             class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
             <span class="text-gray-900 dark:text-white font-medium">{{ related.title }}</span>
             <IconChevronRight class="w-5 h-5 text-gray-400" />
@@ -64,7 +65,7 @@
 
       <!-- Back Link -->
       <div class="mt-8">
-        <NuxtLink :to="`/h/help/${categorySlug}`"
+        <NuxtLink :to="`/support/help/${categorySlug}`"
           class="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline">
           <IconArrowLeft class="w-4 h-4" />
           Retour à {{ category?.title }}
@@ -77,7 +78,7 @@
       <IconFileOff class="w-16 h-16 text-gray-400 mx-auto mb-4" />
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Article introuvable</h2>
       <p class="text-gray-600 dark:text-gray-400 mb-6">L'article que vous recherchez n'existe pas ou a été déplacé.</p>
-      <NuxtLink to="/h/help"
+      <NuxtLink to="/support/help"
         class="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors">
         Retour au centre d'aide
       </NuxtLink>
@@ -168,11 +169,15 @@ const rateArticle = (rating: 'yes' | 'no') => {
   alert(rating === 'yes' ? 'Merci pour votre retour ! 🎉' : 'Nous allons améliorer cet article. Merci !');
 };
 
-useHead({
-  title: computed(() => `${article.value?.title || 'Article'} - Centre d'aide`)
-});
-
 definePageMeta({
   layout: 'guest'
+});
+
+useHead({
+  title: computed(() => `${article.value?.title || 'Article'} - Centre d'aide`),
+  meta: [
+    { name: 'description', content: computed(() => article.value ? article.value.excerpt : 'Consultez cet article de notre centre d\'aide pour en savoir plus.') },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 </script>

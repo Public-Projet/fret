@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-    <NuxtLink v-for="category in categories" :key="category.slug" :to="`/h/help/${category.slug}`"
+    <NuxtLink v-for="category in categories" :key="category.slug" :to="`/support/support/${category.slug}`"
       class="group p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition-all">
       <div :class="['w-12 h-12 rounded-xl flex items-center justify-center mb-4', category.iconBg]">
         <component :is="getIcon(category.icon)" class="w-6 h-6 text-white" />

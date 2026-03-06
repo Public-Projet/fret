@@ -1,7 +1,7 @@
 <template>
   <header class="sticky top-0 z-50 transition-all duration-300 border-b" :class="[
     isScrolled
-      ? 'glass-dark py-2'
+      ? (isDark ? 'glass-dark py-2' : 'glass-light py-2')
       : 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-4 border-gray-200/50 dark:border-gray-700/50'
   ]">
     <nav class="container-custom">
@@ -309,6 +309,10 @@ onUnmounted(() => {
 <style scoped>
 .glass-dark {
   @apply bg-gray-900/80 backdrop-blur-xl border-white/5;
+}
+
+.glass-light {
+  @apply bg-white/80 backdrop-blur-xl border-gray-200/50;
 }
 
 .text-gradient {

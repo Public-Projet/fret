@@ -1,5 +1,5 @@
 <template>
-  <LegalPageLayout :title="content?.title || 'Mentions légales'" :last-update="content?.lastUpdated">
+  <LegalPageLayout :title="content?.title || 'Politique de confidentialité'" :last-update="content?.lastUpdated">
     <div v-if="loading" class="animate-pulse space-y-4">
       <div v-for="i in 5" :key="i" class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
     </div>
@@ -23,12 +23,16 @@ const loading = ref(true);
 const content = ref<any>(null);
 
 onMounted(async () => {
-  content.value = await contentStore.fetchLegalBySlug('legal');
+  content.value = await contentStore.fetchLegalBySlug('privacy');
   loading.value = false;
 });
 
 useHead({
-  title: 'Mentions légales'
+  title: 'Politique de confidentialité',
+  meta: [
+    { name: 'description', content: 'Consultez notre politique de confidentialité pour comprendre comment nous protégeons et gérons vos données personnelles.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 
 definePageMeta({

@@ -99,7 +99,7 @@
           <div class="flex items-baseline mb-6">
             <span class="text-4xl font-extrabold text-gray-900 dark:text-white">Sur devis</span>
           </div>
-          <NuxtLink to="/h/contact"
+          <NuxtLink to="/support/contact"
             class="w-full btn bg-white dark:bg-transparent border-2 border-primary-600 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl py-3 font-semibold mb-8">
             Contacter l'équipe
           </NuxtLink>

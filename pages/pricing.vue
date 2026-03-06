@@ -10,13 +10,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-useHead({
-  title: 'Tarification'
-});
-
 definePageMeta({
   layout: 'guest'
 });
 
 const isAnnual = ref(true);
+
+useHead({
+  title: 'Tarification',
+  meta: [
+    { name: 'description', content: 'Découvrez nos offres et tarifs transparents pour les transporteurs et expéditeurs.' },
+    { name: 'robots', content: 'index, follow' }
+  ]
+});
 </script>

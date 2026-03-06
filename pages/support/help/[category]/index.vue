@@ -2,7 +2,7 @@
   <div class="container-custom py-12 max-w-4xl">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
-      <NuxtLink to="/h/help" class="hover:text-primary-600 dark:hover:text-primary-400">Centre d'aide</NuxtLink>
+      <NuxtLink to="/support/help" class="hover:text-primary-600 dark:hover:text-primary-400">Centre d'aide</NuxtLink>
       <IconChevronRight class="w-4 h-4" />
       <span class="text-gray-900 dark:text-white font-medium">{{ category?.title }}</span>
     </nav>
@@ -21,7 +21,7 @@
 
       <!-- Articles List -->
       <div class="space-y-4">
-        <NuxtLink v-for="article in articles" :key="article.id" :to="`/h/help/${categorySlug}/${article.slug}`"
+        <NuxtLink v-for="article in articles" :key="article.id" :to="`/support/help/${categorySlug}/${article.slug}`"
           class="flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors group">
           <div class="flex-1">
             <h3
@@ -45,7 +45,7 @@
 
       <!-- Back Link -->
       <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-        <NuxtLink to="/h/help"
+        <NuxtLink to="/support/help"
           class="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline">
           <IconArrowLeft class="w-4 h-4" />
           Retour au centre d'aide
@@ -84,7 +84,11 @@ const iconComponent = computed(() => {
 });
 
 useHead({
-  title: computed(() => `${category.value?.title || 'Catégorie'} - Centre d'aide`)
+  title: computed(() => `${category.value?.title || 'Catégorie'} - Centre d'aide`),
+  meta: [
+    { name: 'description', content: computed(() => category.value ? `Parcourez les articles d'aide pour la catégorie ${category.value.title}. Trouvez des guides et des solutions.` : 'Explorez les catégories de notre centre d\'aide.') },
+    { name: 'robots', content: 'index, follow' }
+  ]
 });
 
 definePageMeta({

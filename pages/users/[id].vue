@@ -56,9 +56,7 @@ import { useAuthStore } from '~/stores/auth';
 import { useAvailabilityStore } from '~/stores/availability';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { useRoute } from 'vue-router';
-import {
-  IconArrowLeft, IconLoader2, IconAlertCircle, IconX
-} from '@tabler/icons-vue';
+import { IconArrowLeft, IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
 const userStore = useUserStore();
@@ -126,5 +124,11 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: 'guest' });
-useHead({ title: 'Profil Utilisateur - Bourse de Fret' });
+useHead({
+  title: computed(() => user.value ? `${user.value.firstname} ${user.value.lastname}` : 'Profil Utilisateur'),
+  meta: [
+    { name: 'description', content: computed(() => user.value ? `Consultez le profil de ${user.value.firstname} ${user.value.lastname}. Voir les évaluations et les offres disponibles.` : 'Consultez les profils des utilisateurs.') },
+    { name: 'robots', content: 'index, follow' }
+  ]
+});
 </script>

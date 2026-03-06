@@ -136,7 +136,7 @@
                 {{ getKycStatusLabel(profile?.kycStatus) }}
               </span>
             </div>
-            <NuxtLink to="/h/contact" class="btn bg-white text-secondary-700 border-0 btn-sm">Support</NuxtLink>
+            <NuxtLink to="/support/contact" class="btn bg-white text-secondary-700 border-0 btn-sm">Support</NuxtLink>
           </div>
           <IconHeadset class="absolute -bottom-4 -right-4 w-24 h-24 text-white/10" />
         </div>
