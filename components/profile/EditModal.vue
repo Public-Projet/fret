@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import { reactive, watch, computed } from 'vue';
 import { IconX, IconLoader2, IconCheck } from '@tabler/icons-vue';
-import type { UserProfile } from '~/stores/profile';
+import type { UserProfile } from '~/types';
 
 const props = defineProps<{
   show: boolean;

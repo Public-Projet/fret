@@ -215,7 +215,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useProfileStore, type Vehicle, type AddVehicleData } from '~/stores/profile';
+import { useProfileStore } from '~/stores/profile';
+import type { Vehicle, AddVehicleData } from '~/types';
 import { IconArrowLeft, IconTruck, IconPencil, IconTrash, IconLoader2, IconRefresh, IconMapPin, IconCalendar, IconCurrencyEuro, IconInfoCircle } from '@tabler/icons-vue';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';

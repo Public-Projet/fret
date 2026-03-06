@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { IconMail, IconPhone } from '@tabler/icons-vue';
-import type { UserProfile } from '~/stores/profile';
+import type { UserProfile } from '~/types';
 
 const props = defineProps<{
   profile: UserProfile | null;

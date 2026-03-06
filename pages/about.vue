@@ -1,11 +1,11 @@
 <template>
   <div class="overflow-hidden">
-    <AboutHeroSection />
-    <AboutMissionSection />
-    <AboutValuesSection />
-    <AboutTeamSection />
-    <AboutStatsSection />
-    <AboutCtaSection />
+    <RootAboutHeroSection />
+    <RootAboutMissionSection />
+    <RootAboutValuesSection />
+    <RootAboutTeamSection />
+    <RootAboutStatsSection />
+    <RootAboutCtaSection />
   </div>
 </template>
 

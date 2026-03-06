@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { IconRosetteDiscountCheck } from '@tabler/icons-vue';
-import type { UserProfile } from '~/stores/profile';
+import type { UserProfile } from '~/types';
 
 defineProps<{
   profile: UserProfile | null;

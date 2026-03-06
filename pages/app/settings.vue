@@ -104,7 +104,8 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
-import { useProfileStore, type UpdatePasswordData, type UpdateEmailData } from '~/stores/profile';
+import { useProfileStore } from '~/stores/profile';
+import type { UpdatePasswordData, UpdateEmailData } from '~/types';
 
 const router = useRouter();
 const authStore = useAuthStore();

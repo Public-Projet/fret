@@ -168,7 +168,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useProfileStore, type AddVehicleData, type Vehicle } from '~/stores/profile';
+import { useProfileStore } from '~/stores/profile';
+import type { AddVehicleData, Vehicle } from '~/types';
 import {
   IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconX, IconLoader2, IconEye
 } from '@tabler/icons-vue';

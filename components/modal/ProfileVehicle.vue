@@ -85,7 +85,7 @@
 <script setup lang="ts">
 import { reactive, watch, computed } from 'vue';
 import { IconX, IconTruck, IconLoader2, IconCheck } from '@tabler/icons-vue';
-import type { AddVehicleData, Vehicle } from '~/stores/profile';
+import type { AddVehicleData, Vehicle } from '~/types';
 
 const props = defineProps<{
   show: boolean;

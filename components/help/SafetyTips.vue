@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import * as TablerIcons from '@tabler/icons-vue';
 import { IconAlertTriangle, IconCheck } from '@tabler/icons-vue';
-import type { SafetyItem } from '~/stores/siteContent';
+import type { SafetyItem } from '~/types';
 
 defineProps<{
   tips: SafetyItem[];
