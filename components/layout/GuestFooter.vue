@@ -11,15 +11,13 @@
             La plateforme moderne de mise en relation entre chargeurs et transporteurs.
           </p>
           <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-              <IconBrandFacebook class="w-5 h-5" />
-            </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-              <IconBrandX class="w-5 h-5" />
-            </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-              <IconBrandLinkedin class="w-5 h-5" />
-            </a>
+            <template v-for="link in store.socialLinks" :key="link.id">
+              <a v-if="link.isActive" :href="link.url" target="_blank" rel="noopener noreferrer"
+                class="group text-gray-400 hover:text-white transition-all transform hover:scale-110"
+                :title="link.label">
+                <component :is="getIconComponent(link.icon)" class="w-6 h-6" />
+              </a>
+            </template>
           </div>
         </div>
 
@@ -47,10 +45,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { IconBrandFacebook, IconBrandLinkedin, IconBrandX } from '@tabler/icons-vue';
+import { computed, onMounted } from 'vue';
+import * as Icons from '@tabler/icons-vue';
+import { useSiteContentStore } from '~/stores/siteContent';
 
+const store = useSiteContentStore();
 const currentYear = computed(() => new Date().getFullYear());
+
+// Fetch social links (works for both SSR and Client)
+await store.fetchSocialLinks();
+
+const getIconComponent = (iconName: string) => {
+  return (Icons as any)[iconName] || Icons.IconShare;
+};
 
 const footerSections = [
   {

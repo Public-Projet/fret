@@ -83,3 +83,13 @@ export interface HelpArticle {
   views: number;
   updatedAt: string;
 }
+
+export interface SocialLink {
+  id: string;
+  label: string;
+  url: string;
+  icon: string;
+  platform: string;
+  order: number;
+  isActive: boolean;
+}

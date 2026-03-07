@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { Partner, Testimonial, LegalPage, FaqCategory, FaqItem, SafetyItem, TeamMember, HelpCategory, HelpArticle } from '~/types';
+import type { Partner, Testimonial, LegalPage, FaqCategory, FaqItem, SafetyItem, TeamMember, HelpCategory, HelpArticle, SocialLink } from '~/types';
 
 interface SiteContentState {
   partners: Partner[];
@@ -10,6 +10,7 @@ interface SiteContentState {
   faqCategories: FaqCategory[];
   safetyItems: SafetyItem[];
   helpCategories: HelpCategory[];
+  socialLinks: SocialLink[];
   currentArticle: HelpArticle | null;
   loading: {
     partners: boolean;
@@ -21,6 +22,7 @@ interface SiteContentState {
     safetyItems: boolean;
     help: boolean;
     article: boolean;
+    socialLinks: boolean;
   };
 }
 
@@ -77,6 +79,7 @@ export const useSiteContentStore = defineStore('siteContent', {
     faqCategories: [],
     safetyItems: [],
     helpCategories: [],
+    socialLinks: [],
     currentArticle: null,
     loading: {
       partners: false,
@@ -88,10 +91,27 @@ export const useSiteContentStore = defineStore('siteContent', {
       safetyItems: false,
       help: false,
       article: false,
+      socialLinks: false,
     },
   }),
 
   actions: {
+    /** Récupérer la liste des liens sociaux */
+    async fetchSocialLinks() {
+      if (this.socialLinks.length > 0) return;
+      this.loading.socialLinks = true;
+      try {
+        const res = await $fetch<{ data: SocialLink[] }>('/api/cms', { query: { resource: 'social-links' } });
+        if (res?.data) {
+          this.socialLinks = res.data;
+        }
+      } catch (e) {
+        console.error('[siteContent] Erreur chargement liens sociaux:', e);
+      } finally {
+        this.loading.socialLinks = false;
+      }
+    },
+
     /** Récupérer la liste des partenaires */
     async fetchPartners() {
       if (this.partners.length > 0) return;
