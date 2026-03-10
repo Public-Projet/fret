@@ -152,5 +152,9 @@ onMounted(async () => {
 
 useHead({
   title: 'Vérification Email Transporteur - Bourse de Fret',
+  meta: [
+    { name: 'description', content: 'Vérifiez votre adresse email pour activer votre compte transporteur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
 });
 </script>

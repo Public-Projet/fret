@@ -356,4 +356,11 @@ const handleDelete = async () => {
 };
 
 definePageMeta({ layout: 'default' });
+useHead({
+  title: 'Détails du véhicule',
+  meta: [
+    { name: 'description', content: 'Consultez et modifiez les détails de votre véhicule enregistré.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

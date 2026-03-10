@@ -182,4 +182,11 @@ const handleUpdate = async (updatedData: Partial<Announcement>) => {
 onMounted(() => {
   announcementStore.fetchMyAnnouncements();
 });
+useHead({
+  title: 'Mes annonces de fret',
+  meta: [
+    { name: 'description', content: 'Gérez l\'ensemble de vos offres de fret sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

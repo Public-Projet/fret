@@ -13,7 +13,6 @@
         <HelpFaqCategories :categories="categories" :activeCategory="activeCategory"
           @update:activeCategory="activeCategory = $event" />
         <HelpFaqList :faqs="filteredFaqs" />
-
       </template>
 
       <HelpFaqContact />

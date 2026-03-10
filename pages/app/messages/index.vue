@@ -103,4 +103,11 @@ const startMockConversation = async () => {
     router.push(`/app/messages/${result.conversation.id}`);
   }
 };
+useHead({
+  title: 'Messagerie',
+  meta: [
+    { name: 'description', content: 'Accédez à toutes vos conversations sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

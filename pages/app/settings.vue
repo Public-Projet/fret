@@ -262,4 +262,11 @@ const handleDeleteSubmit = async (data: { password: string; confirmation: string
   }
 };
 
+useHead({
+  title: 'Paramètres',
+  meta: [
+    { name: 'description', content: 'Gérez les paramètres de votre compte.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

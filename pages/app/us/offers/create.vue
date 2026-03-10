@@ -27,7 +27,7 @@
                     <option value="vrac">Vrac</option>
                     <option value="conteneur">Conteneur</option>
                     <option value="frigorifique">Frigorifique</option>
-                    <option value="dangereux">Dangereux</option> 
+                    <option value="dangereux">Dangereux</option>
                     <option value="autre">Autre</option>
                   </select>
                 </div>
@@ -182,4 +182,11 @@ const handleSubmit = async () => {
     loading.value = false;
   }
 };
+useHead({
+  title: 'Publier une offre de fret',
+  meta: [
+    { name: 'description', content: 'Créez une nouvelle annonce de fret pour vos expéditions.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

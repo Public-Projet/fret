@@ -217,5 +217,13 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: 'guest' });
-useHead({ title: 'Détails - Bourse de Fret' });
+useHead({
+  title: computed(() => item.value ? `Détails de l'annonce` : 'Détails'),
+  meta: [
+    {
+      name: 'description',
+      content: 'Consultez les détails de cette annonce de fret ou de véhicule disponible sur Bourse de Fret pour trouver votre partenaire idéal.'
+    }
+  ]
+});
 </script>

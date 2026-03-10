@@ -166,5 +166,11 @@ onMounted(async () => {
 });
 
 definePageMeta({ layout: 'default' });
-useHead({ title: 'Opportunités - Bourse de Fret' });
+useHead({
+  title: 'Opportunités',
+  meta: [
+    { name: 'description', content: 'Trouvez et parcourez les véhicules disponibles pour vos expéditions.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

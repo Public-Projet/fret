@@ -220,4 +220,11 @@ const formatDate = (dateString: string) => {
 onMounted(() => {
   announcementStore.fetchAnnouncements();
 });
+useHead({
+  title: 'Tableau de bord Transporteur',
+  meta: [
+    { name: 'description', content: 'Accédez à votre tableau de bord transporteur sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

@@ -117,6 +117,13 @@ onMounted(async () => {
   await notificationStore.markAsRead(id);
   isLoading.value = false;
 });
+useHead({
+  title: 'Détails de la notification',
+  meta: [
+    { name: 'description', content: 'Consultez les détails de votre notification sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>
 
 <style scoped>

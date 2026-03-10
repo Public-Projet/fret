@@ -110,4 +110,11 @@ const handleDelete = async (id: string) => {
   if (!confirm('Voulez-vous vraiment supprimer cette disponibilité ?')) return;
   await availabilityStore.deleteAvailability(id);
 };
+useHead({
+  title: 'Mes disponibilités',
+  meta: [
+    { name: 'description', content: 'Gérez vos véhicules disponibles sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

@@ -416,5 +416,11 @@ const formatDate = (timestamp: number) => {
 
 
 definePageMeta({ layout: 'default' });
-useHead({ title: 'Mon Profil Transporteur - Bourse de Fret' });
+useHead({
+  title: 'Mon Profil Transporteur',
+  meta: [
+    { name: 'description', content: 'Gérez les informations de votre profil transporteur.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

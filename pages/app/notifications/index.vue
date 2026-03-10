@@ -129,4 +129,11 @@ const formatDate = (timestamp: number) => {
 onMounted(() => {
   notificationStore.fetchNotifications(1);
 });
+useHead({
+  title: 'Notifications',
+  meta: [
+    { name: 'description', content: 'Consultez toutes vos notifications sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

@@ -356,4 +356,11 @@ const handleDelete = async () => {
 };
 
 definePageMeta({ layout: 'default' });
+useHead({
+  title: 'Détails de la disponibilité',
+  meta: [
+    { name: 'description', content: 'Consultez les détails de votre disponibilité de véhicule.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

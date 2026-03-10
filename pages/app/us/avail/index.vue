@@ -160,5 +160,11 @@ onMounted(async () => {
 });
 
 definePageMeta({ layout: 'default' });
-useHead({ title: 'Mes Inscriptions - Bourse de Fret' });
+useHead({
+  title: 'Mes Inscriptions',
+  meta: [
+    { name: 'description', content: 'Retrouvez toutes vos inscriptions aux différentes disponibilités.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

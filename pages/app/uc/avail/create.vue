@@ -194,4 +194,11 @@ const submitAvailability = async () => {
     error.value = typeof result.error === 'string' ? result.error : 'Une erreur est survenue';
   }
 };
+useHead({
+  title: 'Déclarer une disponibilité',
+  meta: [
+    { name: 'description', content: 'Déclarez rapidement un véhicule disponible sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

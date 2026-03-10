@@ -163,4 +163,11 @@ onMounted(() => {
 watch(messages, () => {
   scrollToBottom();
 });
+useHead({
+  title: 'Conversation',
+  meta: [
+    { name: 'description', content: 'Gérez votre conversation en cours sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

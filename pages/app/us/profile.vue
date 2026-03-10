@@ -282,5 +282,11 @@ const getKycStatusClass = (status?: string) => {
 };
 
 definePageMeta({ layout: 'default' });
-useHead({ title: 'Mon Profil Expéditeur - Bourse de Fret' });
+useHead({
+  title: 'Mon Profil Expéditeur',
+  meta: [
+    { name: 'description', content: 'Gérez les informations de votre profil expéditeur.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

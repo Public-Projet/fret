@@ -264,4 +264,11 @@ onMounted(async () => {
   await announcementStore.fetchAnnouncementById(announcementId);
   await messagingStore.fetchOffersForAnnouncement(announcementId);
 });
+useHead({
+  title: 'Détails de l\'offre',
+  meta: [
+    { name: 'description', content: 'Gérez les détails de votre offre de fret publiée.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

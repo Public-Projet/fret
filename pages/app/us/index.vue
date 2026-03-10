@@ -145,4 +145,11 @@ const formatDate = (dateString: string) => {
 onMounted(() => {
   announcementStore.fetchMyAnnouncements();
 });
+useHead({
+  title: 'Tableau de bord Expéditeur',
+  meta: [
+    { name: 'description', content: 'Accédez à votre tableau de bord expéditeur sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

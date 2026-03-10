@@ -195,5 +195,13 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: 'guest' });
-useHead({ title: 'Marché du Fret - Bourse de Fret' });
+useHead({
+  title: 'Marché du Fret',
+  meta: [
+    {
+      name: 'description',
+      content: 'Trouvez et proposez des offres de fret et des véhicules disponibles. Connectez-vous avec des transporteurs et expéditeurs de confiance.'
+    }
+  ]
+});
 </script>

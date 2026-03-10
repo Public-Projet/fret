@@ -5,11 +5,7 @@ Disallow: /auth/
 Disallow: /app/
 
 # NUXT & ARCHITECTURE
-Disallow: /_nuxt/
 Disallow: /_payload.json
-Disallow: /api/
-
-# PREVENT DUPLICATE CONTENT
 Disallow: /*?*
 Disallow: /*&*
 

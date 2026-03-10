@@ -192,5 +192,11 @@ const handleDelete = async (id: string) => {
 };
 
 definePageMeta({ layout: 'default' });
-useHead({ title: 'Mes Véhicules - Bourse de Fret' });
+useHead({
+  title: 'Mes Véhicules',
+  meta: [
+    { name: 'description', content: 'Gérez l\'ensemble de votre flotte de véhicules sur Bourse de Fret.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>

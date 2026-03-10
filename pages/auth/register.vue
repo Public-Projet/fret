@@ -192,5 +192,9 @@ const handleRegister = async () => {
 
 useHead({
   title: 'Inscription - Bourse de Fret',
+  meta: [
+    { name: 'description', content: 'Créez votre compte Bourse de Fret pour commencer à expédier ou transporter des marchandises.' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
 });
 </script>
