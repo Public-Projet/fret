@@ -6,7 +6,7 @@
         <!-- Colonne gauche - Avantages -->
         <div>
           <UiGradientBadge text="Nos Avantages" variant="green" />
-          <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
+          <h2 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
             Pourquoi choisir
             <span class="block text-gradient">Bourse de Fret Bénin ?</span>
           </h2>
@@ -39,7 +39,7 @@
 
           <!-- Mockup principal -->
           <div
-            class="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700">
+            class="relative bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-2xl border border-gray-200 dark:border-gray-700">
             <div class="space-y-4">
               <!-- En-tête mockup -->
               <div class="flex items-center justify-between mb-6">
@@ -67,11 +67,11 @@
           </div>
 
           <!-- Stats flottantes -->
-          <UiFloatingStats value="98%" label="Satisfaction" :icon="IconCircleCheck" position-classes="-top-6 -right-6"
+          <UiFloatingStats value="98%" label="Satisfaction" :icon="IconCircleCheck" position-classes="-top-6 -right-6 hidden sm:flex"
             icon-bg-color="bg-green-100 dark:bg-green-900/30" icon-color="text-green-600 dark:text-green-400" />
 
           <UiFloatingStats value="24/7" label="Support" :icon="IconBolt"
-            position-classes="-bottom-6 -left-6 animation-delay-2000" icon-bg-color="bg-blue-100 dark:bg-blue-900/30"
+            position-classes="-bottom-6 -left-6 animation-delay-2000 hidden sm:flex" icon-bg-color="bg-blue-100 dark:bg-blue-900/30"
             icon-color="text-blue-600 dark:text-blue-400" />
         </div>
       </div>

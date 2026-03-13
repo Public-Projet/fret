@@ -23,8 +23,8 @@
     </div>
 
     <!-- Contenu Hero -->
-    <div class="container-custom relative z-10 py-20">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+    <div class="container-custom relative z-10 py-12 lg:py-20">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-center">
         <!-- TEXTE -->
         <div class="lg:col-span-2">
           <div class="text-left max-w-3xl">
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Titre principal -->
-            <h1 class="text-5xl md:text-7xl font-black text-white dark:text-gray-100 mb-6 leading-tight">
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white dark:text-gray-100 mb-6 leading-tight">
               Révolutionnez votre
               <span
                 class="block mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">
@@ -52,16 +52,16 @@
             </p>
 
             <!-- CTA Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-16">
+            <div class="flex flex-col sm:flex-row gap-4 mb-12 lg:mb-16">
               <NuxtLink to="/auth/register?role=shipper"
-                class="group relative px-8 py-4 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 flex items-center space-x-3 dark:border dark:border-gray-700">
+                class="group relative px-6 py-4 lg:px-8 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 flex items-center justify-center sm:justify-start space-x-3 dark:border dark:border-gray-700">
                 <IconTruck class="w-6 h-6 group-hover:rotate-12 transition-transform" />
                 <span>Je suis chargeur</span>
                 <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </NuxtLink>
 
               <NuxtLink to="/auth/register?role=carrier"
-                class="group relative px-8 py-4 bg-green-500 dark:bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 dark:hover:shadow-emerald-400/40 transition-all duration-300 hover:scale-105 flex items-center space-x-3">
+                class="group relative px-6 py-4 lg:px-8 bg-green-500 dark:bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 dark:hover:shadow-emerald-400/40 transition-all duration-300 hover:scale-105 flex items-center justify-center sm:justify-start space-x-3">
                 <IconUsersGroup class="w-6 h-6 group-hover:scale-110 transition-transform" />
                 <span>Je suis transporteur</span>
                 <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
@@ -69,7 +69,7 @@
             </div>
 
             <!-- Stats -->
-            <div class="grid grid-cols-3 gap-6 max-w-2xl">
+            <div class="grid grid-cols-1 xs:grid-cols-3 gap-4 lg:gap-6 max-w-2xl">
               <UiStatCard :value="shippers" label="Chargeurs actifs" />
               <UiStatCard :value="carriers" label="Transporteurs" />
               <UiStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
@@ -78,7 +78,7 @@
         </div>
 
         <!-- IMAGE -->
-        <div class="lg:col-span-1 flex justify-center">
+        <div class="hidden lg:flex lg:col-span-1 justify-center">
           <div class="relative max-w-md w-full animate-slide-right">
             <img src="https://developers.google.com/static/maps/solutions/images/store_locator.png"
               alt="Transport Logistics" class="w-full h-auto" />
