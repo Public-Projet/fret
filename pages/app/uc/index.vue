@@ -1,73 +1,86 @@
 <template>
-  <div class="container-custom py-8">
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+  <div class="container-custom py-6 lg:py-10">
+    <!-- Header Section -->
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Bienvenue, {{ currentUser?.firstName }}</h1>
-        <p class="text-gray-600 dark:text-gray-400">Tableau de bord Transporteur</p>
+        <h1 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-tight">
+          Bienvenue, <span class="text-primary-600 dark:text-primary-400">{{ currentUser?.firstName }}</span>
+        </h1>
+        <p class="text-lg text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+          Tableau de bord Transporteur
+        </p>
       </div>
-      <div class="flex space-x-4 mt-4 md:mt-0">
-        <NuxtLink to="/annonces?tab=fret" class="btn btn-outline flex items-center justify-center">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
+        <NuxtLink to="/annonces?tab=fret" class="btn-outline flex items-center justify-center py-3 px-6 rounded-2xl font-bold text-sm">
           <IconSearch class="w-5 h-5 mr-2" />
           Trouver du fret
         </NuxtLink>
-        <button @click="publishAvailability" class="btn btn-primary flex items-center justify-center">
+        <button @click="publishAvailability" class="btn-primary flex items-center justify-center py-3 px-6 rounded-2xl font-bold text-sm shadow-lg shadow-primary-500/20 active:scale-95 transition-all">
           <IconPlus class="w-5 h-5 mr-2" />
           Publier ma disponibilité
         </button>
       </div>
     </div>
 
-    <div class="mb-6 flex justify-end">
+    <!-- Quick Navigation -->
+    <div class="mb-8 flex justify-end">
       <NuxtLink to="/app/uc/avail"
-        class="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center">
-        <IconTruck class="w-4 h-4 mr-1" />
-        Gérer mes disponibilités
+        class="group text-sm font-black text-primary-600 dark:text-primary-400 flex items-center gap-2 hover:translate-x-1 transition-transform">
+        <IconTruck class="w-5 h-5" />
+        GÉRER MES DISPONIBILITÉS →
       </NuxtLink>
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <div class="card p-6 flex items-center space-x-4">
-        <div class="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-          <IconSend class="w-6 h-6" />
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12">
+      <div class="group bg-gradient-to-br from-blue-500 to-indigo-700 p-6 rounded-[2rem] shadow-xl shadow-blue-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
+          <IconSend class="w-24 h-24" />
         </div>
+        <IconSend class="w-8 h-8 text-white/90 mb-4" />
         <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Offres en cours</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ activeOffersCount }}</p>
+          <p class="text-xs lg:text-sm font-bold text-blue-100 uppercase tracking-wider mb-1">Offres en cours</p>
+          <p class="text-3xl lg:text-4xl font-black text-white">{{ activeOffersCount }}</p>
         </div>
       </div>
-      <div class="card p-6 flex items-center space-x-4">
-        <div class="p-3 rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-          <IconCircleCheck class="w-6 h-6" />
+
+      <div class="group bg-gradient-to-br from-emerald-500 to-teal-700 p-6 rounded-[2rem] shadow-xl shadow-emerald-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
+          <IconCircleCheck class="w-24 h-24" />
         </div>
+        <IconCircleCheck class="w-8 h-8 text-white/90 mb-4" />
         <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Missions acceptées</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ acceptedOffersCount }}</p>
+          <p class="text-xs lg:text-sm font-bold text-emerald-50/90 uppercase tracking-wider mb-1">Missions</p>
+          <p class="text-3xl lg:text-4xl font-black text-white">{{ acceptedOffersCount }}</p>
         </div>
       </div>
-      <div class="card p-6 flex items-center space-x-4">
-        <div class="p-3 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
-          <IconCurrencyEuro class="w-6 h-6" />
+
+      <div class="group bg-gradient-to-br from-purple-500 to-indigo-800 p-6 rounded-[2rem] shadow-xl shadow-purple-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
+          <IconCurrencyEuro class="w-24 h-24" />
         </div>
+        <IconCurrencyEuro class="w-8 h-8 text-white/90 mb-4" />
         <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">CA potentiel</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ potentialRevenue }}FCFA</p>
+          <p class="text-xs lg:text-sm font-bold text-purple-50/90 uppercase tracking-wider mb-1">CA Potentiel</p>
+          <p class="text-2xl lg:text-3xl font-black text-white leading-tight">{{ potentialRevenue.toLocaleString() }} <span class="text-sm">FCFA</span></p>
         </div>
       </div>
-      <div class="card p-6 flex items-center space-x-4">
-        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400">
-          <IconStar class="w-6 h-6" />
-        </div>
-        <div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">Ma note</p>
-          <div class="flex items-center mt-0.5">
-            <p class="text-2xl font-bold text-gray-900 dark:text-white mr-2">{{ currentUser?.rating || 0.0 }}</p>
-            <div class="flex text-yellow-500 mr-2">
+
+      <div class="group bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-700/50 relative overflow-hidden transition-all hover:scale-[1.02]">
+        <div class="flex flex-col h-full justify-between">
+          <p class="text-xs lg:text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Ma note</p>
+          <div class="mt-2">
+            <div class="flex items-end gap-2 mb-2">
+              <span class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-none">{{ currentUser?.rating || '0.0' }}</span>
+              <span class="text-xs font-bold text-gray-400 dark:text-gray-500 mb-1">/ 5</span>
+            </div>
+            <div class="flex gap-1 mb-2">
               <IconStarFilled v-for="i in 5" :key="i"
-                :class="i <= Math.round(currentUser?.rating || 0) ? 'text-yellow-500' : 'text-gray-200'"
+                :class="i <= Math.round(currentUser?.rating || 0) ? 'text-yellow-400' : 'text-gray-200 dark:text-gray-700'"
                 class="w-4 h-4" />
             </div>
-            <span class="text-xs text-gray-500">({{ currentUser?.reviewsCount || 0 }} avis)</span>
+            <p class="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-widest">{{ currentUser?.reviewsCount || 0 }} avis</p>
           </div>
         </div>
       </div>
@@ -76,70 +89,91 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Mes offres récentes -->
       <div class="lg:col-span-2 space-y-6">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Mes offres récentes</h2>
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-black text-gray-900 dark:text-white">Mes offres récentes</h2>
+          <NuxtLink to="/annonces?tab=fret" class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors">Explorer →</NuxtLink>
+        </div>
 
-        <div v-if="myOffers.length === 0" class="card p-8 text-center">
-          <p class="text-gray-500 dark:text-gray-400">Vous n'avez fait aucune offre pour le moment.</p>
-          <NuxtLink to="/annonces?tab=fret" class="text-primary-600 hover:underline mt-2 inline-block">
-            Voir les annonces disponibles
+        <div v-if="myOffers.length === 0" class="bg-white dark:bg-gray-800 rounded-[2rem] p-12 text-center border border-gray-100 dark:border-gray-700/50 shadow-xl">
+          <div class="w-20 h-20 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <IconSend class="w-10 h-10 text-gray-300 dark:text-gray-600" />
+          </div>
+          <p class="text-gray-500 dark:text-gray-400 font-medium mb-6">Vous n'avez fait aucune offre pour le moment.</p>
+          <NuxtLink to="/annonces?tab=fret" class="btn-primary px-8 py-3 rounded-2xl font-black inline-block active:scale-95 transition-all">
+            VOIR LES ANNONCES
           </NuxtLink>
         </div>
 
         <div v-else class="space-y-4">
-          <div v-for="offer in myOffers" :key="offer.id" class="card p-4 hover:shadow-md transition-shadow">
-            <div class="flex justify-between items-start">
+          <div v-for="offer in myOffers" :key="offer.id" 
+            class="group bg-white dark:bg-gray-800 p-5 rounded-2xl hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <IconSend class="w-6 h-6 text-primary-500" />
+              </div>
               <div>
-                <div class="flex items-center space-x-2 mb-1">
-                  <span :class="getOfferStatusClass(offer.status)">
+                <div class="flex flex-wrap items-center gap-2 mb-1">
+                  <span :class="getOfferStatusClass(offer.status)" class="text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider">
                     {{ getOfferStatusLabel(offer.status) }}
                   </span>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
+                  <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">
                     {{ formatDate(offer.createdAt) }}
                   </span>
                 </div>
-                <h3 class="font-medium text-gray-900 dark:text-white">
-                  Offre de {{ offer.price }}FCFA
+                <h3 class="font-black text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
+                  Offre de {{ offer.price.toLocaleString() }} <span class="text-xs">FCFA</span>
                 </h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1 mt-1 font-medium">
                   {{ offer.message }}
                 </p>
               </div>
-              <NuxtLink :to="`/annonces/${offer.announcementId}?type=offer`" class="btn btn-ghost btn-sm">
-                Voir l'annonce
-              </NuxtLink>
             </div>
+            <NuxtLink :to="`/annonces/${offer.announcementId}?type=offer`" 
+              class="w-full sm:w-auto px-6 py-2.5 bg-gray-50 dark:bg-gray-900 rounded-xl text-xs font-black text-gray-600 dark:text-gray-300 border border-gray-100 dark:border-gray-700 group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-all text-center">
+              DÉTAILS
+            </NuxtLink>
           </div>
         </div>
       </div>
 
       <!-- Annonces recommandées -->
       <div class="space-y-6">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recommandé pour vous</h2>
-          <NuxtLink to="/annonces?tab=fret" class="text-sm text-primary-600 hover:text-primary-500">
-            Voir tout
-          </NuxtLink>
-        </div>
+        <h2 class="text-xl font-black text-gray-900 dark:text-white">Pour vous</h2>
 
         <div class="space-y-4">
-          <div v-for="announcement in recommendedAnnouncements" :key="announcement.id" class="card p-4">
-            <div class="mb-2">
-              <h3 class="font-medium text-gray-900 dark:text-white line-clamp-1">
+          <div v-for="announcement in recommendedAnnouncements" :key="announcement.id" 
+            class="group bg-white dark:bg-gray-800 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-primary-500/5 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-150"></div>
+            
+            <div class="relative z-10">
+              <h3 class="font-black text-gray-900 dark:text-white line-clamp-1 mb-4 text-lg">
                 {{ announcement.title }}
               </h3>
-              <div class="flex items-center text-xs text-gray-500 mt-1">
-                <IconMapPin class="w-3 h-3 mr-1" />
-                <span>{{ announcement.origin.city }} → {{ announcement.destination.city }}</span>
+              
+              <div class="flex items-center gap-3 mb-6 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-2xl">
+                <div class="w-8 h-8 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center shadow-sm">
+                  <IconMapPin class="w-4 h-4 text-primary-500" />
+                </div>
+                <div class="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                  {{ announcement.origin.city }} → {{ announcement.destination.city }}
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-black text-primary-600">{{ announcement.budget.toLocaleString() }} <span class="text-xs">FCFA</span></span>
+                <NuxtLink :to="`/annonces/${announcement.id}?type=offer`"
+                  class="w-10 h-10 bg-primary-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 hover:bg-primary-500 active:scale-90 transition-all">
+                  →
+                </NuxtLink>
               </div>
             </div>
-            <div class="flex items-center justify-between mt-3">
-              <span class="font-bold text-primary-600">{{ announcement.budget }}FCFA</span>
-              <NuxtLink :to="`/annonces/${announcement.id}?type=offer`"
-                class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-                Détails →
-              </NuxtLink>
-            </div>
           </div>
+          
+          <!-- View More Card -->
+          <NuxtLink to="/annonces?tab=fret" 
+            class="block p-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-[2rem] text-center hover:border-primary-500 transition-all group">
+            <p class="text-gray-500 font-bold group-hover:text-primary-600">Voir toutes les annonces de fret</p>
+          </NuxtLink>
         </div>
       </div>
     </div>

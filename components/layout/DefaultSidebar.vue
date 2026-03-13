@@ -118,7 +118,7 @@ const menuItems = computed<MenuItem[]>(() => [
     roles: [ROLES.Shipper]
   },
   {
-    label: 'Mes Souscriptions',
+    label: 'Souscriptions',
     to: '/app/us/avail',
     icon: IconListCheck,
     roles: [ROLES.Shipper]
