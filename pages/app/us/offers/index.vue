@@ -1,93 +1,111 @@
 <template>
-  <div class="container-custom py-8">
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+  <div class="container-custom py-8 min-h-screen bg-gray-50/50 dark:bg-gray-900/50">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mes annonces</h1>
-        <p class="text-gray-600 dark:text-gray-400">Gérez vos demandes de transport</p>
+        <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Mes annonces</h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-1">Gérez et suivez vos demandes de transport en temps réel</p>
       </div>
-      <NuxtLink to="/app/us/offers/create" class="btn btn-primary mt-4 md:mt-0 flex items-center justify-center">
-        <IconPlus class="w-5 h-5 mr-2" />
+      <NuxtLink to="/app/us/offers/create" 
+        class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-2xl font-bold transition-all hover:shadow-lg hover:shadow-primary-500/25 flex items-center justify-center group active:scale-95">
+        <IconPlus class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
         Créer une annonce
       </NuxtLink>
     </div>
 
     <!-- Filtres et Liste -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 dark:shadow-none border border-white dark:border-gray-700 overflow-hidden">
       <div
-        class="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div class="flex space-x-2 overflow-x-auto pb-2 sm:pb-0">
+        class="p-6 border-b border-gray-100 dark:border-gray-700">
+        <div class="flex space-x-2 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide">
           <button v-for="status in ['all', 'pending', 'negotiating', 'accepted', 'completed', 'cancelled']"
-            :key="status" @click="currentFilter = status" :class="[
-              'px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
+            :key="status" @click="currentFilter = status" 
+            :class="[
+              'px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300',
               currentFilter === status
-                ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+                ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30'
+                : 'text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700/50'
             ]">
             {{ getStatusLabel(status) }}
           </button>
         </div>
       </div>
 
-      <div v-if="loading" class="p-12 text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+      <div v-if="loading" class="p-20 text-center">
+        <div class="relative w-16 h-16 mx-auto">
+          <div class="absolute inset-0 border-4 border-primary-100 dark:border-primary-900/30 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-primary-600 rounded-full border-t-transparent animate-spin"></div>
+        </div>
+        <p class="mt-4 text-gray-500 font-medium">Chargement de vos annonces...</p>
       </div>
 
-      <div v-else-if="filteredAnnouncements.length === 0" class="p-12 text-center">
-        <div class="mx-auto h-12 w-12 text-gray-400 mb-4">
-          <IconFileText />
+      <div v-else-if="filteredAnnouncements.length === 0" class="p-20 text-center">
+        <div class="mx-auto h-20 w-20 bg-gray-50 dark:bg-gray-700/50 rounded-3xl flex items-center justify-center text-gray-300 mb-6">
+          <IconFileText class="w-10 h-10" />
         </div>
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Aucune annonce trouvée</h3>
-        <p class="mt-1 text-gray-500 dark:text-gray-400">Commencez par créer votre première annonce de transport.</p>
-        <div class="mt-6">
-          <NuxtLink to="/app/us/offers/create" class="btn btn-primary">
-            Créer une annonce
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Aucune annonce trouvée</h3>
+        <p class="mt-2 text-gray-500 dark:text-gray-400 max-w-sm mx-auto">Vous n'avez pas encore d'annonces correspondant à ce filtre.</p>
+        <div v-if="currentFilter === 'all'" class="mt-8 px-4">
+          <NuxtLink to="/app/us/offers/create" class="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black transition-all hover:shadow-xl hover:shadow-primary-500/30 active:scale-95 inline-flex items-center justify-center w-full sm:w-auto">
+            Créer ma première annonce
           </NuxtLink>
         </div>
       </div>
 
-      <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
+      <div v-else class="divide-y divide-gray-100 dark:divide-gray-700">
         <div v-for="announcement in filteredAnnouncements" :key="announcement.id"
-          class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div class="flex-1">
-              <div class="flex items-center justify-between md:justify-start md:space-x-4 mb-2">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-                  <NuxtLink :to="`/app/us/offers/${announcement.id}`" class="hover:text-primary-600">
-                    {{ announcement.title }}
-                  </NuxtLink>
-                </h3>
+          class="p-6 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-all group">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
                 <span :class="getStatusClass(announcement.status)">
                   {{ getStatusLabel(announcement.status) }}
                 </span>
+                <span class="text-xs font-medium text-gray-400 tabular-nums">ID: #{{ announcement.id.slice(0, 8) }}</span>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <div class="flex items-center space-x-2">
-                  <IconMapPin class="w-4 h-4" />
-                  <span>{{ announcement.origin.city }} → {{ announcement.destination.city }}</span>
+              
+              <h3 class="text-xl font-black text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 transition-colors">
+                <NuxtLink :to="`/app/us/offers/${announcement.id}`">
+                  {{ announcement.title }}
+                </NuxtLink>
+              </h3>
+
+              <div class="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                <div class="flex items-center bg-gray-100 dark:bg-gray-700/50 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-700">
+                  <IconMapPin class="w-4 h-4 mr-2 text-primary-500" />
+                  <span class="font-bold text-gray-700 dark:text-gray-300 truncate">{{ announcement.origin.city }}</span>
+                  <IconArrowRight class="w-3 h-3 mx-2" />
+                  <span class="font-bold text-gray-700 dark:text-gray-300 truncate">{{ announcement.destination.city }}</span>
                 </div>
-                <div class="flex items-center space-x-2">
-                  <IconCalendar class="w-4 h-4" />
-                  <span>{{ formatDate(announcement.pickupDate) }}</span>
+                <div class="flex items-center px-1">
+                  <IconCalendar class="w-4 h-4 mr-2 text-primary-500" />
+                  <span>Enlèvement le <span class="font-bold text-gray-700 dark:text-gray-300">{{ formatDate(announcement.pickupDate) }}</span></span>
                 </div>
               </div>
             </div>
 
-            <div class="flex items-center justify-between md:justify-end space-x-4">
-              <div class="text-right">
-                <p class="text-sm text-gray-500 dark:text-gray-400">Budget</p>
-                <p class="text-lg font-bold text-gray-900 dark:text-white">{{ announcement.budget }}FCFA</p>
+            <div class="flex items-center justify-between lg:flex-col lg:items-end lg:justify-center gap-4 pt-4 lg:pt-0 border-t lg:border-t-0 border-gray-100 dark:border-gray-700">
+              <div class="text-left lg:text-right">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Budget total</p>
+                <p class="text-2xl font-black text-primary-600 leading-none">
+                  {{ announcement.budget.toLocaleString() }} <span class="text-sm font-bold">FCFA</span>
+                </p>
               </div>
-              <div class="flex space-x-2">
-                <NuxtLink :to="`/app/us/offers/${announcement.id}`" class="btn btn-ghost p-2" title="Voir détails">
+
+              <div class="flex items-center gap-2">
+                <NuxtLink :to="`/app/us/offers/${announcement.id}`" 
+                  class="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-primary-600 hover:text-white transition-all active:scale-90" 
+                  title="Voir détails">
                   <IconEye class="w-5 h-5" />
                 </NuxtLink>
                 <button v-if="announcement.status === 'pending'" @click="handleEdit(announcement)"
-                  class="btn btn-ghost p-2 text-blue-600 hover:bg-blue-50" title="Modifier">
+                  class="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-600 hover:text-white transition-all active:scale-90" 
+                  title="Modifier">
                   <IconPencil class="w-5 h-5" />
                 </button>
                 <button v-if="announcement.status === 'pending'" @click="handleDelete(announcement.id)"
-                  class="btn btn-ghost p-2 text-red-600 hover:bg-red-50" title="Annuler">
+                  class="p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-600 hover:text-white transition-all active:scale-90" 
+                  title="Supprimer">
                   <IconTrash class="w-5 h-5" />
                 </button>
               </div>

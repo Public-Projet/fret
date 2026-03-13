@@ -1,89 +1,156 @@
 <template>
-  <div class="container-custom py-8">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Paramètres</h1>
-
-    <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-      <div class="border-b border-gray-200 dark:border-gray-700">
-        <nav class="flex -mb-px">
-          <button v-for="tab in tabs" :key="tab.id" @click="currentTab = tab.id" :class="[
-            'px-6 py-4 text-sm font-medium border-b-2 transition-colors',
-            currentTab === tab.id
-              ? 'border-primary-600 text-primary-600 dark:text-primary-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-          ]">
-            {{ tab.name }}
-          </button>
-        </nav>
+  <div class="min-h-screen bg-gray-50/50 dark:bg-gray-900/50 pb-20 pt-10">
+    <div class="container-custom max-w-5xl">
+      <!-- Header -->
+      <div class="mb-10">
+        <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Paramètres</h1>
+        <p class="text-gray-500 font-medium mt-1">Gérez vos informations personnelles et vos préférences</p>
       </div>
 
-      <div class="p-6">
-        <!-- Profile Settings -->
-        <div v-if="currentTab === 'profile'" class="space-y-6">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white">Informations personnelles</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="label">Prénom</label>
-              <input type="text" :value="getFirstName(userProfile)" class="input" disabled />
-            </div>
-            <div>
-              <label class="label">Nom</label>
-              <input type="text" :value="getLastName(userProfile)" class="input" disabled />
-            </div>
-            <div>
-              <label class="label">Email</label>
-              <input type="email" :value="userProfile?.email" class="input" disabled />
-            </div>
-            <div>
-              <label class="label">Téléphone</label>
-              <input type="tel" :value="userProfile?.phone" class="input" disabled />
-            </div>
-          </div>
-        </div>
-
-        <!-- Notification Settings -->
-        <div v-if="currentTab === 'notifications'" class="space-y-6">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white">Préférences de notification</h2>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Notifications par email</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Recevoir des emails pour les nouvelles offres</p>
-              </div>
-              <input type="checkbox" checked
-                class="h-6 w-11 rounded-full border-gray-300 text-primary-600 focus:ring-primary-500" />
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Notifications push</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Recevoir des notifications sur le navigateur</p>
-              </div>
-              <input type="checkbox" checked
-                class="h-6 w-11 rounded-full border-gray-300 text-primary-600 focus:ring-primary-500" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Security Settings -->
-        <!-- Security Settings -->
-        <div v-if="currentTab === 'security'" class="space-y-6">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white">Sécurité</h2>
-          <div class="space-y-4">
-            <button @click="showPasswordModal = true" class="btn btn-outline w-full sm:w-auto">
-              Changer le mot de passe
+      <div class="flex flex-col lg:flex-row gap-10">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full lg:w-72 shrink-0">
+          <nav class="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 scrollbar-hide">
+            <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" 
+              :class="[
+                'flex items-center space-x-3 px-6 py-4 rounded-2xl font-bold transition-all duration-300 whitespace-nowrap lg:w-full',
+                activeTab === tab.id
+                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30 -translate-x-1'
+                  : 'text-gray-500 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white hover:shadow-sm'
+              ]">
+              <component :is="tab.icon" class="w-5 h-5 shrink-0" />
+              <span>{{ tab.label }}</span>
             </button>
-            <button @click="showEmailModal = true" class="btn btn-outline w-full sm:w-auto">
-              Changer l'email
-            </button>
-            <div class="pt-4 border-t border-gray-100 dark:border-gray-700">
-              <h3 class="text-sm font-medium text-red-600 mb-2">Zone danger</h3>
-              <button @click="handleDeleteAccount"
-                class="btn btn-outline text-red-600 hover:bg-red-50 border-red-200 w-full sm:w-auto">
-                Supprimer mon compte
-              </button>
+          </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1">
+          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-gray-200/50 dark:shadow-none border border-white dark:border-gray-700 overflow-hidden">
+            <!-- Profile Tab -->
+            <div v-if="activeTab === 'profile'" class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div class="flex items-center space-x-6 mb-12">
+                <div class="relative group">
+                  <div class="w-24 h-24 rounded-[2rem] bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 text-4xl font-black shadow-inner overflow-hidden">
+                    <span v-if="!currentUser?.avatar">{{ currentUser?.firstName?.[0] }}</span>
+                    <img v-else :src="currentUser.avatar" class="w-full h-full object-cover" />
+                  </div>
+                  <button class="absolute -bottom-2 -right-2 p-2 bg-white dark:bg-gray-700 rounded-xl shadow-lg border border-gray-100 dark:border-gray-600 text-primary-600 hover:scale-110 transition-transform">
+                    <IconCamera class="w-5 h-5" />
+                  </button>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-black text-gray-900 dark:text-white">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h2>
+                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px] mt-1">{{ currentUser?.role }}</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="space-y-2">
+                  <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Prénom</label>
+                  <input v-model="profileForm.firstname" type="text" 
+                    class="w-full px-5 py-3.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-700 rounded-2xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none font-bold text-gray-900 dark:text-white" />
+                </div>
+                <div class="space-y-2">
+                  <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Nom</label>
+                  <input v-model="profileForm.lastname" type="text"
+                    class="w-full px-5 py-3.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-700 rounded-2xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none font-bold text-gray-900 dark:text-white" />
+                </div>
+                <div class="space-y-2 md:col-span-2">
+                  <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                  <div class="flex items-center space-x-3">
+                    <input :value="currentUser?.email" type="email" disabled
+                      class="flex-1 px-5 py-3.5 bg-gray-100 dark:bg-gray-900/50 border border-transparent rounded-2xl font-bold text-gray-400 cursor-not-allowed" />
+                    <button @click="showEmailModal = true" class="px-6 py-3.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl font-bold text-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">Modifier</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end pt-8 border-t border-gray-100 dark:border-gray-700">
+                <button @click="updateProfile" :disabled="loading"
+                  class="px-10 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black transition-all hover:shadow-xl hover:shadow-primary-500/30 flex items-center justify-center active:scale-95 disabled:opacity-50">
+                  <IconLoader2 v-if="loading" class="w-5 h-5 mr-3 animate-spin" />
+                  Enregistrer les modifications
+                </button>
+              </div>
+            </div>
+
+            <!-- Notifications Tab -->
+            <div v-if="activeTab === 'notifications'" class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-8 flex items-center">
+                <IconBell class="w-7 h-7 mr-3 text-primary-500" /> Préférences de notifications
+              </h2>
+
+              <div class="space-y-6">
+                <!-- Example notification toggles -->
+                <div class="flex items-center justify-between p-6 bg-gray-50/50 dark:bg-gray-900/30 rounded-3xl border border-gray-100 dark:border-gray-700 group hover:border-primary-100 dark:hover:border-primary-900/30 transition-all">
+                  <div>
+                    <h3 class="font-bold text-gray-900 dark:text-white">Nouvelles offres</h3>
+                    <p class="text-sm text-gray-500 mt-0.5">Recevez des emails pour chaque nouvelle offre correspondant à votre profil</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" checked class="sr-only peer">
+                    <div class="w-14 h-8 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-600 shadow-inner"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between p-6 bg-gray-50/50 dark:bg-gray-900/30 rounded-3xl border border-gray-100 dark:border-gray-700 group hover:border-primary-100 dark:hover:border-primary-900/30 transition-all">
+                  <div>
+                    <h3 class="font-bold text-gray-900 dark:text-white">Messages instantanés</h3>
+                    <p class="text-sm text-gray-500 mt-0.5">Être alerté lors de la réception d'un nouveau message</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" checked class="sr-only peer">
+                    <div class="w-14 h-8 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-600 shadow-inner"></div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex justify-end mt-12 pt-8 border-t border-gray-100 dark:border-gray-700">
+                <button class="px-10 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black transition-all hover:shadow-xl hover:shadow-primary-500/30 active:scale-95">
+                  Sauvegarder les préférences
+                </button>
+              </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div v-if="activeTab === 'security'" class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-10 flex items-center">
+                <IconShieldLock class="w-7 h-7 mr-3 text-primary-500" /> Sécurité du compte
+              </h2>
+
+              <div class="space-y-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 p-8 bg-gray-50/50 dark:bg-gray-900/30 rounded-[2.5rem] border border-gray-100 dark:border-gray-700">
+                  <div class="flex items-center space-x-5">
+                    <div class="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-2xl text-blue-600">
+                      <IconKey class="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-gray-900 dark:text-white">Mot de passe</h3>
+                      <p class="text-sm text-gray-500 mt-0.5">Dernière modification il y a 3 mois</p>
+                    </div>
+                  </div>
+                  <button @click="showPasswordModal = true" class="px-8 py-3.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl font-black text-sm hover:shadow-lg transition-all active:scale-95">
+                    Modifier le mot de passe
+                  </button>
+                </div>
+
+                <div class="mt-20">
+                  <h3 class="text-xs font-black text-red-500 uppercase tracking-widest mb-6 ml-1 flex items-center">
+                    <IconAlertTriangle class="w-4 h-4 mr-2" /> Zone de danger
+                  </h3>
+                  <div class="p-8 bg-red-50/30 dark:bg-red-900/10 rounded-[2.5rem] border border-red-100 dark:border-red-900/30">
+                    <h4 class="font-black text-gray-900 dark:text-white mb-2">Supprimer le compte</h4>
+                    <p class="text-sm text-gray-500 mb-8 max-w-xl">Une fois votre compte supprimé, toutes vos données (profil, annonces, messages) seront définitivement effacées. Cette opération est irréversible.</p>
+                    <button @click="handleDeleteAccount" 
+                      class="px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black text-sm transition-all hover:shadow-xl hover:shadow-red-500/30 active:scale-95">
+                      Supprimer mon compte
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
 
@@ -96,13 +163,22 @@
 
     <ModalProfileAccountDeletion :show="showDeleteModal" :loading="deleteLoading" :error="deleteError"
       :success="deleteSuccess" @close="closeDeleteModal" @submit="handleDeleteSubmit" />
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { 
+  IconUser, 
+  IconBell, 
+  IconShieldLock, 
+  IconCamera, 
+  IconLoader2, 
+  IconKey, 
+  IconAlertTriangle,
+  IconChevronRight 
+} from '@tabler/icons-vue';
 import { useAuthStore } from '~/stores/auth';
 import { useProfileStore } from '~/stores/profile';
 import type { UpdatePasswordData, UpdateEmailData } from '~/types';
@@ -112,31 +188,37 @@ const authStore = useAuthStore();
 const profileStore = useProfileStore();
 const currentUser = computed(() => authStore.currentUser);
 
+const activeTab = ref('profile');
+const loading = ref(false);
+
 const tabs = [
-  { id: 'profile', name: 'Profil' },
-  { id: 'notifications', name: 'Notifications' },
-  { id: 'security', name: 'Sécurité' }
+  { id: 'profile', label: 'Profil', icon: IconUser },
+  { id: 'notifications', label: 'Notifications', icon: IconBell },
+  { id: 'security', label: 'Sécurité', icon: IconShieldLock }
 ];
 
-const currentTab = ref('profile');
-
-const userProfile = computed(() => profileStore.profile || currentUser.value);
-
-const getFirstName = (user: any) => {
-  if (!user) return '';
-  return user.firstname || user.firstName || '';
-};
-
-const getLastName = (user: any) => {
-  if (!user) return '';
-  return user.lastname || user.lastName || '';
-};
+const profileForm = reactive({
+  firstname: currentUser.value?.firstName || '',
+  lastname: currentUser.value?.lastName || ''
+});
 
 onMounted(async () => {
   if (currentUser.value) {
     await profileStore.fetchProfile(currentUser.value.role);
+    profileForm.firstname = currentUser.value.firstName || '';
+    profileForm.lastname = currentUser.value.lastName || '';
   }
 });
+
+const updateProfile = async () => {
+  if (!currentUser.value) return;
+  loading.value = true;
+  // Implement actual update logic via profileStore if needed
+  setTimeout(() => {
+    loading.value = false;
+    alert('Profil mis à jour (Démo)');
+  }, 1000);
+};
 
 // Password Modal
 const showPasswordModal = ref(false);
@@ -156,7 +238,6 @@ const deleteLoading = ref(false);
 const deleteError = ref('');
 const deleteSuccess = ref('');
 
-// Password Handlers
 const closePasswordModal = () => {
   showPasswordModal.value = false;
   setTimeout(() => {
@@ -170,24 +251,16 @@ const handlePasswordSubmit = async (data: UpdatePasswordData) => {
   passwordLoading.value = true;
   passwordError.value = '';
   passwordSuccess.value = '';
-
-  const result = await profileStore.updatePassword(currentUser.value.role, data, { skipAuthRedirect: true }); // Skip global redirect to handle 401 manually inside store if needed? Actually store handles it via error message usually or we catch it.
-
-  // Note: updatePassword action returns success/error message string directly or error string.
-
+  const result = await profileStore.updatePassword(currentUser.value.role, data, { skipAuthRedirect: true });
   if (result.success) {
     passwordSuccess.value = result.message || 'Mot de passe mis à jour.';
-    setTimeout(() => {
-      closePasswordModal();
-    }, 1500);
+    setTimeout(() => closePasswordModal(), 1500);
   } else {
     passwordError.value = result.error || 'Erreur lors de la mise à jour.';
   }
   passwordLoading.value = false;
 };
 
-
-// Email Handlers
 const closeEmailModal = () => {
   showEmailModal.value = false;
   setTimeout(() => {
@@ -201,22 +274,16 @@ const handleEmailSubmit = async (data: UpdateEmailData) => {
   emailLoading.value = true;
   emailError.value = '';
   emailSuccess.value = '';
-
   const result = await profileStore.updateEmail(currentUser.value.role, data, { skipAuthRedirect: true });
-
   if (result.success) {
     emailSuccess.value = result.message || 'Email mis à jour.';
-    // Optionally logout or refresh profile
-    setTimeout(() => {
-      closeEmailModal();
-    }, 1500);
+    setTimeout(() => closeEmailModal(), 1500);
   } else {
     emailError.value = result.error || 'Erreur lors de la mise à jour.';
   }
   emailLoading.value = false;
 };
 
-// Delete Account Handlers
 const closeDeleteModal = () => {
   showDeleteModal.value = false;
   setTimeout(() => {
@@ -231,21 +298,14 @@ const handleDeleteAccount = () => {
 
 const handleDeleteSubmit = async (data: { password: string; confirmation: string }) => {
   if (!currentUser.value) return;
-
   deleteLoading.value = true;
   deleteError.value = '';
   deleteSuccess.value = '';
-
   try {
     const api = useAPI();
     const userRole = currentUser.value.role;
     const endpoint = userRole === 'shipper' ? '/shipper/profile' : '/carrier/profile';
-    console.log('Account Deletion - Role:', userRole);
-    console.log('Account Deletion - Endpoint:', endpoint);
-    console.log('Account Deletion - Data:', data);
-
     const response = await api.del(endpoint, data);
-
     if (response.success) {
       deleteSuccess.value = 'Votre compte a été supprimé.';
       setTimeout(async () => {

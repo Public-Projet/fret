@@ -29,7 +29,10 @@
         <NuxtLink v-for="item in filteredMenuItems" :key="item.to" :to="item.to"
           class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group relative"
           active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium shadow-sm ring-1 ring-primary-100 dark:ring-primary-900/30"
-          :class="{ 'justify-center px-2': collapsed }" :title="collapsed ? item.label : ''">
+          :class="{ 
+            'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium shadow-sm ring-1 ring-primary-100 dark:ring-primary-900/30': item.label === 'Tableau de bord' ? $route.path === item.to : $route.path.startsWith(item.to),
+            'justify-center px-2': collapsed 
+          }" :title="collapsed ? item.label : ''">
 
           <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
 

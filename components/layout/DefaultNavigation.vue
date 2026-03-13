@@ -6,7 +6,10 @@
       <NuxtLink :to="item.to"
         class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200"
         active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium shadow-sm ring-1 ring-primary-100 dark:ring-primary-900/30"
-        :class="{ 'justify-center px-2': collapsed }">
+        :class="{ 
+          'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium shadow-sm ring-1 ring-primary-100 dark:ring-primary-900/30': item.label === 'Tableau de bord' ? $route.path === item.to : $route.path.startsWith(item.to),
+          'justify-center px-2': collapsed 
+        }">
         <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
 
         <template v-if="!collapsed">
@@ -27,7 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import { IconHome, IconMessage, IconSettings, IconTruck, IconDashboard } from '@tabler/icons-vue';
+import { computed } from 'vue';
+import { IconDashboard, IconTruck, IconMessage, IconSettings, IconListCheck } from '@tabler/icons-vue';
+import { ROLES } from '~/utils/roles';
+import { useAuthStore } from '~/stores/auth';
 
 const props = defineProps<{
   isShipper: boolean;
@@ -35,44 +41,72 @@ const props = defineProps<{
   collapsed?: boolean;
 }>();
 
-const navigationItems = computed(() => [
-  {
-    label: 'Accueil',
-    to: '/',
-    icon: IconHome,
-    exact: true
-  },
-  {
-    label: "Vue d'ensemble",
-    to: props.isShipper ? '/app/us' : '/app/uc',
-    icon: IconDashboard
-  },
-  {
-    label: props.isShipper ? 'Mes Expéditions' : 'Mes Trajets',
-    to: props.isShipper ? '/app/us' : '/app/uc', // Note: this seems to duplicate the path of "Vue d'ensemble" in the original code? 
-    // Checking original code: 
-    // Vue d'ensemble -> isShipper ? '/app/us' : '/app/uc'
-    // Mes Expéditions -> '/app/us'
-    // Mes Trajets -> '/app/uc'
-    // It seems they point to the same root path in the original code too?
-    // Wait, let me check the original file content again carefully from the read.
-    // Line 13: Vue d'ensemble -> isShipper ? '/app/us' : '/app/uc'
-    // Line 22: Mes Expéditions -> '/app/us'
-    // Line 32: Mes Trajets -> '/app/uc'
-    // Yes, they point to the same place. I will preserve this behavior.
-    icon: IconTruck
-  },
-  {
-    label: 'Messages',
-    to: '/app/messages',
-    icon: IconMessage,
-    badge: props.unreadCount,
-    badgeColor: 'bg-red-500' // Added for extensibility, though hardcoded in template originally
-  },
-  {
-    label: 'Paramètres',
-    to: '/app/settings',
-    icon: IconSettings
-  }
-]);
+const authStore = useAuthStore();
+
+const navigationItems = computed(() => {
+  const items = [
+    // Shipper Specific
+    {
+      label: 'Tableau de bord',
+      to: '/app/us',
+      icon: IconDashboard,
+      roles: [ROLES.Shipper]
+    },
+    {
+      label: 'Annonces',
+      to: '/app/us/offers',
+      icon: IconTruck,
+      roles: [ROLES.Shipper]
+    },
+    {
+      label: 'Souscriptions',
+      to: '/app/us/avail',
+      icon: IconListCheck,
+      roles: [ROLES.Shipper]
+    },
+
+    // Carrier Specific
+    {
+      label: 'Tableau de bord',
+      to: '/app/uc',
+      icon: IconDashboard,
+      roles: [ROLES.Carrier]
+    },
+    {
+      label: 'Véhicules',
+      to: '/app/uc/vehicles',
+      icon: IconTruck,
+      roles: [ROLES.Carrier]
+    },
+    {
+      label: 'Disponibilités',
+      to: '/app/uc/avail',
+      icon: IconTruck,
+      roles: [ROLES.Carrier]
+    },
+
+    // Shared
+    {
+      label: 'Messages',
+      to: '/app/messages',
+      icon: IconMessage,
+      roles: ['all'],
+      badge: props.unreadCount
+    },
+    {
+      label: 'Paramètres',
+      to: '/app/settings',
+      icon: IconSettings,
+      roles: ['all']
+    }
+  ];
+
+  if (!authStore.currentUser) return [];
+  const userRole = authStore.currentUser.role;
+
+  return items.filter(item => {
+    if (item.roles.includes('all')) return true;
+    return item.roles.includes(userRole);
+  });
+});
 </script>
