@@ -1,201 +1,200 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
-    <div class="container-custom py-8">
+  <div class="min-h-screen bg-gray-50/50 dark:bg-gray-900/50 pb-20 pt-10">
+    <div class="container-custom">
       <!-- Back Link -->
       <NuxtLink to="/app/uc/vehicles"
-        class="inline-flex items-center text-gray-500 hover:text-secondary-600 dark:text-gray-400 dark:hover:text-secondary-400 mb-6 transition-colors">
-        <IconArrowLeft class="w-5 h-5 mr-1" />
+        class="inline-flex items-center text-gray-400 hover:text-secondary-600 font-bold mb-8 transition-all group">
+        <div class="p-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 mr-3 group-hover:bg-secondary-50 dark:group-hover:bg-secondary-900/30 transition-colors">
+          <IconArrowLeft class="w-5 h-5" />
+        </div>
         Retour à ma flotte
       </NuxtLink>
 
-      <div v-if="loading" class="flex justify-center py-12">
-        <IconLoader2 class="w-10 h-10 animate-spin text-secondary-600" />
+      <div v-if="loading" class="flex flex-col items-center justify-center py-24">
+        <div class="relative w-16 h-16 mb-6">
+          <div class="absolute inset-0 border-4 border-secondary-100 dark:border-secondary-900/30 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-secondary-600 rounded-full border-t-transparent animate-spin"></div>
+        </div>
+        <p class="text-gray-500 font-bold">Chargement du véhicule...</p>
       </div>
 
       <div v-else-if="error"
-        class="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-6 rounded-xl text-center">
-        <p class="mb-4">{{ error }}</p>
-        <NuxtLink to="/app/uc/vehicles" class="btn btn-outline btn-sm">Retour à la liste</NuxtLink>
+        class="bg-red-50/80 dark:bg-red-900/20 backdrop-blur-xl border border-red-100 dark:border-red-800/50 p-12 rounded-[2.5rem] text-center max-w-2xl mx-auto shadow-xl">
+        <div class="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-[1.5rem] flex items-center justify-center text-red-600 mx-auto mb-6">
+          <IconAlertCircle class="w-10 h-10" />
+        </div>
+        <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-2">Une erreur est survenue</h3>
+        <p class="text-red-600/70 font-medium mb-10">{{ error }}</p>
+        <NuxtLink to="/app/uc/vehicles" class="inline-flex px-8 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all active:scale-95 shadow-lg shadow-red-500/20">
+          Retour à la liste
+        </NuxtLink>
       </div>
 
-      <div v-else-if="vehicle" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div v-else-if="vehicle" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <!-- Main Info -->
-        <div class="lg:col-span-2 space-y-6">
-          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div class="lg:col-span-2 space-y-8">
+          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] border border-white dark:border-gray-700 p-8 lg:p-12 shadow-xl shadow-gray-200/50 dark:shadow-none">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-8">
               <div class="flex items-center">
                 <div
-                  class="w-16 h-16 rounded-2xl bg-secondary-50 dark:bg-secondary-900/20 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mr-5">
-                  <IconTruck class="w-8 h-8" />
+                  class="w-20 h-20 rounded-[1.5rem] bg-secondary-50 dark:bg-secondary-900/30 flex items-center justify-center text-secondary-600 shadow-inner mr-6">
+                  <IconTruck class="w-10 h-10" />
                 </div>
                 <div>
-                  <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ vehicle.brand }} {{ vehicle.model }}
-                  </h1>
-                  <p class="text-gray-500 dark:text-gray-400 font-mono mt-1">{{ vehicle.licensePlate }}</p>
+                  <h1 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white tracking-tight">{{ vehicle.brand }} {{ vehicle.model }}</h1>
+                  <div class="inline-flex items-center px-3 py-1 bg-gray-100 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-700 mt-2">
+                    <span class="text-xs font-black text-gray-500 dark:text-gray-400 font-mono tracking-wider">{{ vehicle.licensePlate }}</span>
+                  </div>
                 </div>
               </div>
-              <div class="flex space-x-3">
-                <button @click="openStatusModal" class="btn btn-outline btn-sm">
-                  <IconRefresh class="w-4 h-4 mr-2" />
-                  Statut
+              <div class="flex flex-wrap gap-3 w-full md:w-auto">
+                <button @click="openStatusModal" class="flex-1 md:flex-none px-5 py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-all active:scale-95 flex items-center justify-center">
+                  <IconRefresh class="w-4 h-4 mr-2" /> Statut
                 </button>
-                <button @click="openEditModal" class="btn btn-outline btn-sm">
-                  <IconPencil class="w-4 h-4 mr-2" />
-                  Modifier
+                <button @click="openEditModal" class="flex-1 md:flex-none px-5 py-3 rounded-xl bg-primary-600 text-white font-bold text-sm hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/20 active:scale-95 flex items-center justify-center">
+                  <IconPencil class="w-4 h-4 mr-2" /> Modifier
                 </button>
                 <button @click="handleDelete"
-                  class="btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 dark:border-red-900/50 dark:hover:bg-red-900/20 btn-sm">
-                  <IconTrash class="w-4 h-4 mr-2" />
-                  Supprimer
+                  class="flex-1 md:flex-none px-5 py-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 font-bold text-sm hover:bg-red-600 hover:text-white transition-all active:scale-95 flex items-center justify-center">
+                  <IconTrash class="w-4 h-4 mr-2" /> Supprimer
                 </button>
               </div>
             </div>
 
             <div
-              class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 border-t border-gray-100 dark:border-gray-700 pt-8">
-              <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Type</h3>
-                <p class="text-lg font-medium text-gray-900 dark:text-white capitalize flex items-center">
-                  {{ vehicle.type }}
-                </p>
+              class="grid grid-cols-1 sm:grid-cols-2 gap-10 border-t border-gray-50 dark:border-gray-700/50 pt-10">
+              <div class="group">
+                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Type de véhicule</h3>
+                <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-900/30 rounded-2xl border border-gray-100 dark:border-gray-800 group-hover:border-secondary-200 transition-all">
+                  <IconTruck class="w-6 h-6 text-secondary-500 mr-4" />
+                  <span class="text-lg font-black text-gray-900 dark:text-white capitalize">{{ vehicle.type }}</span>
+                </div>
               </div>
 
-              <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Statut
-                </h3>
-                <span class="badge" :class="{
-                  'badge-success': vehicle.status === 'available',
-                  'badge-warning': vehicle.status === 'in_transit',
-                  'badge-error': vehicle.status === 'maintenance'
-                }">
-                  {{ formatStatus(vehicle.status) }}
-                </span>
+              <div class="group">
+                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Statut opérationnel</h3>
+                <div :class="['flex items-center p-4 rounded-2xl border transition-all', getStatusClass(vehicle.status)]">
+                  <IconSettings class="w-6 h-6 mr-4" />
+                  <span class="text-lg font-black tracking-tight">{{ formatStatus(vehicle.status) }}</span>
+                </div>
               </div>
 
-              <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Capacité
-                </h3>
-                <p class="text-lg font-medium text-gray-900 dark:text-white">{{ vehicle.capacity || '-' }} Tonnes</p>
+              <div class="group">
+                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Capacité de charge</h3>
+                <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-900/30 rounded-2xl border border-gray-100 dark:border-gray-800 group-hover:border-secondary-200 transition-all">
+                  <IconWeight class="w-6 h-6 text-secondary-500 mr-4" />
+                  <span class="text-lg font-black text-gray-900 dark:text-white">{{ vehicle.capacity || '-' }} <span class="text-xs text-gray-400 uppercase ml-1">Tonnes</span></span>
+                </div>
               </div>
 
-              <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Volume
-                </h3>
-                <p class="text-lg font-medium text-gray-900 dark:text-white">{{ vehicle.volume || '-' }} m³</p>
+              <div class="group">
+                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Volume utile</h3>
+                <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-900/30 rounded-2xl border border-gray-100 dark:border-gray-800 group-hover:border-secondary-200 transition-all">
+                  <IconPackage class="w-6 h-6 text-secondary-500 mr-4" />
+                  <span class="text-lg font-black text-gray-900 dark:text-white">{{ vehicle.volume || '-' }} <span class="text-xs text-gray-400 uppercase ml-1">m³</span></span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Sidebar / Availability & History -->
-        <div class="space-y-6">
+        <div class="space-y-8">
           <!-- Active Availability -->
           <div v-if="vehicle.availability"
-            class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="font-bold text-gray-900 dark:text-white">Disponibilité actuelle</h3>
-              <span class="badge badge-success badge-sm">Active</span>
+            class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] border border-white dark:border-gray-700 p-8 shadow-xl shadow-gray-200/50 dark:shadow-none relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl -mr-16 -mt-16"></div>
+            
+            <div class="flex items-center justify-between mb-8 relative">
+              <h3 class="font-black text-gray-900 dark:text-white tracking-tight">Disponibilité actuelle</h3>
+              <span class="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 text-[10px] font-black uppercase tracking-wider border border-emerald-100 dark:border-emerald-800/50 shadow-sm">Active</span>
             </div>
 
-            <div class="space-y-6">
+            <div class="space-y-8 relative">
               <!-- Route -->
-              <div class="flex items-start space-x-3">
-                <div class="mt-1 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600 dark:text-blue-400">
-                  <IconMapPin class="w-5 h-5" />
+              <div class="flex items-start space-x-4">
+                <div class="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-2xl text-blue-600 shadow-inner">
+                  <IconMapPin class="w-6 h-6" />
                 </div>
                 <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wider font-medium">Itinéraire</p>
-                  <p class="text-sm font-semibold text-gray-900 dark:text-white mt-0.5">
+                  <p class="text-[10px] text-gray-400 uppercase tracking-widest font-black">Itinéraire</p>
+                  <p class="text-lg font-black text-gray-900 dark:text-white mt-1 leading-tight">
                     {{ vehicle.availability.origin.city }}
-                    <span class="text-gray-400 mx-1">→</span>
-                    {{ vehicle.availability.destination?.city || 'Partout' }}
+                    <IconArrowRight class="w-4 h-4 text-primary-500 inline-block mx-1" />
+                    <span class="text-primary-600">{{ vehicle.availability.destination?.city || 'Partout' }}</span>
                   </p>
                 </div>
               </div>
 
               <!-- Dates -->
-              <div class="flex items-start space-x-3">
-                <div
-                  class="mt-1 p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600 dark:text-purple-400">
-                  <IconCalendar class="w-5 h-5" />
+              <div class="flex items-start space-x-4">
+                <div class="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-2xl text-purple-600 shadow-inner">
+                  <IconCalendar class="w-6 h-6" />
                 </div>
                 <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wider font-medium">Période</p>
-                  <p class="text-sm font-semibold text-gray-900 dark:text-white mt-0.5">
-                    {{ formatDate(vehicle.availability.startDate) }} - {{ formatDate(vehicle.availability.endDate) }}
+                  <p class="text-[10px] text-gray-400 uppercase tracking-widest font-black">Période</p>
+                  <p class="text-sm font-bold text-gray-900 dark:text-white mt-1">
+                    Du {{ formatDateShort(vehicle.availability.startDate) }} au {{ formatDateShort(vehicle.availability.endDate) }}
                   </p>
                 </div>
               </div>
 
               <!-- Price -->
-              <div class="flex items-start space-x-3">
-                <div
-                  class="mt-1 p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
-                  <IconCurrencyEuro class="w-5 h-5" />
+              <div class="flex items-start space-x-4">
+                <div class="p-3 bg-emerald-50 dark:bg-emerald-900/30 rounded-2xl text-emerald-600 shadow-inner">
+                  <IconCurrencyEuro class="w-6 h-6" />
                 </div>
                 <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wider font-medium">Prix estimé</p>
-                  <p class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 text-lg">
-                    {{ vehicle.availability.price ? vehicle.availability.price + ' €' : 'Sur devis' }}
-                  </p>
-                </div>
-              </div>
-
-              <!-- Info -->
-              <div v-if="vehicle.availability.currentRequests > 0" class="flex items-start space-x-3">
-                <div class="mt-1 p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-amber-600 dark:text-amber-400">
-                  <IconInfoCircle class="w-5 h-5" />
-                </div>
-                <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wider font-medium">Requêtes</p>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white mt-0.5">
-                    {{ vehicle.availability.currentRequests }} requêtes reçues
-                    <span v-if="vehicle.availability.maxRequests"> / {{ vehicle.availability.maxRequests }}</span>
+                  <p class="text-[10px] text-gray-400 uppercase tracking-widest font-black">Tarif estimé</p>
+                  <p class="text-2xl font-black text-emerald-600 mt-1">
+                    {{ vehicle.availability.price?.toLocaleString() || 'Sur devis' }} <span v-if="vehicle.availability.price" class="text-sm font-bold ml-1">FCFA</span>
                   </p>
                 </div>
               </div>
             </div>
 
-            <div class="mt-8 border-t border-gray-100 dark:border-gray-700 pt-6">
-              <NuxtLink :to="`/app/uc/avail`" class="btn btn-outline btn-sm w-full">
-                Gérer
+            <div class="mt-10 pt-8 border-t border-gray-50 dark:border-gray-700/50 relative">
+              <NuxtLink :to="`/app/uc/avail/${vehicle.availability.id}`" 
+                class="block w-full py-4 bg-gray-100 dark:bg-gray-700/50 hover:bg-secondary-600 hover:text-white text-gray-700 dark:text-gray-300 font-black rounded-2xl transition-all text-center active:scale-95">
+                Gérer la disponibilité
               </NuxtLink>
             </div>
           </div>
 
           <!-- History -->
           <div v-if="vehicle.history && vehicle.history.length > 0"
-            class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <h3 class="font-bold text-gray-900 dark:text-white mb-4 italic text-sm opacity-70">Disponibilités passées
-            </h3>
-            <div class="space-y-4">
+            class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] border border-white dark:border-gray-700 p-8 shadow-xl shadow-gray-200/50 dark:shadow-none">
+            <h3 class="font-black text-gray-400 uppercase tracking-widest text-[10px] mb-6">Disponibilités passées</h3>
+            <div class="space-y-6">
               <div v-for="item in vehicle.history" :key="item.id"
-                class="border-b border-gray-50 dark:border-gray-700/50 pb-3 last:border-0 last:pb-0">
-                <div class="flex justify-between items-start mb-1">
-                  <p class="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                    {{ item.origin.city }} → {{ item.destination?.city || 'Partout' }}
+                class="flex flex-col border-b border-gray-50 dark:border-gray-700/50 pb-4 last:border-0 last:pb-0 hover:translate-x-1 transition-transform cursor-default">
+                <div class="flex justify-between items-center mb-1">
+                  <p class="text-sm font-black text-gray-900 dark:text-white">
+                    {{ item.origin.city }} <IconArrowRight class="w-3 h-3 text-gray-400 inline mx-1" /> {{ item.destination?.city || 'Partout' }}
                   </p>
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-500 uppercase">
+                  <span class="px-2 py-0.5 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-400 text-[8px] font-black uppercase tracking-wider border border-gray-100 dark:border-gray-600">
                     {{ item.status }}
                   </span>
                 </div>
-                <p class="text-[11px] text-gray-500">
-                  {{ formatDate(item.startDate) }}
+                <p class="text-[10px] text-gray-400 font-bold">
+                  {{ formatDateShort(item.startDate) }}
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- Empty State -->
-          <div v-if="!vehicle.availability && (!vehicle.history || vehicle.history.length === 0)"
-            class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <h3 class="font-bold text-gray-900 dark:text-white mb-4">Disponibilité</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Ce véhicule n'a aucune disponibilité active publiée.</p>
-            <div class="mt-6">
-              <NuxtLink to="/app/uc/avail" class="btn btn-secondary btn-sm w-full">
-                Publier une disponibilité
-              </NuxtLink>
+          <!-- Empty State Availability -->
+          <div v-else-if="!vehicle.availability"
+            class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] border border-white dark:border-gray-700 p-8 text-center shadow-xl shadow-gray-200/50 dark:shadow-none">
+            <div class="w-16 h-16 bg-gray-50 dark:bg-gray-700 rounded-2xl flex items-center justify-center text-gray-300 mx-auto mb-4">
+              <IconTruck class="w-8 h-8 opacity-30" />
             </div>
+            <h3 class="text-lg font-black text-gray-900 dark:text-white mb-2">Aucune activité</h3>
+            <p class="text-gray-500 text-sm font-medium mb-8">Ce véhicule est actuellement hors ligne. Publiez son trajet pour être visible.</p>
+            <NuxtLink to="/app/uc/avail/create" 
+              class="block w-full py-4 bg-secondary-600 text-white font-black rounded-2xl hover:bg-secondary-700 transition-all shadow-lg shadow-secondary-500/20 active:scale-95">
+              Publier un trajet
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -217,9 +216,12 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProfileStore } from '~/stores/profile';
 import type { Vehicle, AddVehicleData } from '~/types';
-import { IconArrowLeft, IconTruck, IconPencil, IconTrash, IconLoader2, IconRefresh, IconMapPin, IconCalendar, IconCurrencyEuro, IconInfoCircle } from '@tabler/icons-vue';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { 
+  IconArrowLeft, IconTruck, IconPencil, IconTrash, 
+  IconLoader2, IconRefresh, IconMapPin, IconCalendar, 
+  IconCurrencyEuro, IconInfoCircle, IconAlertCircle,
+  IconWeight, IconPackage, IconSettings, IconArrowRight
+} from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -242,14 +244,11 @@ const modalLoading = ref(false);
 const modalError = ref('');
 const modalSuccess = ref('');
 
-// ... existing functions
-
 onMounted(async () => {
   await loadVehicle();
 });
 
 const loadVehicle = async () => {
-  // If loading for the first time
   if (!vehicle.value) loading.value = true;
   error.value = '';
 
@@ -282,7 +281,7 @@ const handleStatusChange = async (newStatus: string) => {
   if (result.success && result.vehicle) {
     vehicle.value = result.vehicle;
     statusSuccess.value = 'Statut mis à jour !';
-    await loadVehicle(); // Ensure sync
+    await loadVehicle();
     setTimeout(() => {
       showStatusModal.value = false;
     }, 1000);
@@ -291,23 +290,31 @@ const handleStatusChange = async (newStatus: string) => {
   }
 };
 
-
 const formatStatus = (status: string) => {
   const map: Record<string, string> = {
     available: 'Disponible',
     in_transit: 'En transit',
-    maintenance: 'Maintenance'
+    maintenance: 'En maintenance'
   };
   return map[status] || status;
 };
 
-const formatDate = (date: string | number) => {
-  if (!date) return '-';
-  try {
-    return format(new Date(date), 'dd MMMM yyyy', { locale: fr });
-  } catch (e) {
-    return '-';
+const getStatusClass = (status: string) => {
+  switch (status) {
+    case 'available': return 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 border border-emerald-100 dark:border-emerald-800/50';
+    case 'in_transit': return 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 border border-amber-100 dark:border-amber-800/50';
+    case 'maintenance': return 'bg-red-50 dark:bg-red-900/30 text-red-600 border border-red-100 dark:border-red-800/50';
+    default: return 'bg-gray-50 dark:bg-gray-900/30 text-gray-600 border border-gray-100 dark:border-gray-800/50';
   }
+};
+
+const formatDateShort = (dateString: string | number) => {
+  if (!dateString) return '-';
+  return new Date(dateString).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
 };
 
 const openEditModal = () => {
@@ -330,12 +337,11 @@ const handleSubmit = async (data: AddVehicleData) => {
   modalSuccess.value = '';
 
   const result = await profileStore.updateVehicle(vehicleId, data);
-
   modalLoading.value = false;
 
   if (result.success) {
     modalSuccess.value = result.message || 'Véhicule mis à jour !';
-    await loadVehicle(); // Reload to show updates
+    await loadVehicle();
     setTimeout(() => {
       closeModal();
     }, 1500);

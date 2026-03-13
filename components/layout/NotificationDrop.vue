@@ -17,7 +17,7 @@
       leave-from-class="transform opacity-100 scale-100 translate-y-0"
       leave-to-class="transform opacity-0 scale-95 translate-y-2">
       <div v-if="isOpen"
-        class="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 py-2 origin-top-right overflow-hidden z-50">
+        class="fixed inset-x-4 top-20 sm:top-auto sm:absolute sm:right-0 sm:mt-2 sm:w-96 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 py-2 origin-top sm:origin-top-right overflow-hidden z-50">
         <div
           class="px-4 py-3 border-b border-gray-100 dark:border-gray-700/50 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
           <h3 class="text-sm font-bold text-gray-900 dark:text-white">Notifications</h3>

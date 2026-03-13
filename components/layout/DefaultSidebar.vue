@@ -152,12 +152,6 @@ const menuItems = computed<MenuItem[]>(() => [
     icon: IconMessage,
     roles: ['all'],
     badge: props.unreadCount
-  },
-  {
-    label: 'Paramètres',
-    to: '/app/settings',
-    icon: IconSettings,
-    roles: ['all']
   }
 ]);
 
