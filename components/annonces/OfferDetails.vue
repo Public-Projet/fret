@@ -6,10 +6,9 @@
       Retour au marché
     </NuxtLink>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-          <div class="flex justify-between items-start mb-4">
+    <div class="space-y-8">
+      <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+        <div class="flex justify-between items-start mb-4">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ item.title }}</h1>
             <span :class="getStatusBadgeClass(item.status)" class="badge">
               {{ getStatusLabel(item.status) }}
@@ -87,17 +86,12 @@
             <p class="text-gray-600 dark:text-gray-400">{{ item.description }}</p>
           </div>
 
-          <!-- Negotiations (Owner only) -->
-          <div v-if="isOwner" class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-700">
-            <AnnoncesNegotiationList :items="item.offers" type="offer" @refresh="$emit('refresh')" />
-          </div>
-        </div>
       </div>
 
-      <!-- Sidebar for Offer -->
-      <div class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-          <h3 class="font-semibold text-gray-900 dark:text-white mb-4">À propos de l'expéditeur</h3>
+      <!-- Actions & Info (Moved from Sidebar) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">À propos de l'expéditeur</h3>
           <div class="flex items-center space-x-3 mb-4">
             <div
               class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold text-xl uppercase">
@@ -126,20 +120,28 @@
             </div>
 
             <!-- Rating Action -->
-            <button v-if="canRate" @click="$emit('showRatingModal')" class="btn btn-secondary btn-sm w-full rounded-xl">
+            <button v-if="canRate" @click="$emit('showRatingModal')" class="btn btn-secondary w-full rounded-xl py-3 mt-4">
               {{ ratingLabel }}
             </button>
           </div>
         </div>
 
         <div v-if="authStore.isCarrier && item.status === 'pending'"
-          class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-          <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Faire une offre</h3>
-          <button @click="$emit('enroll')" class="btn btn-primary w-full py-4 rounded-2xl">
+          class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Faire une offre</h3>
+          <p class="text-gray-500 mb-6 font-medium">Proposez vos services pour ce transport et entamez la négociation avec l'expéditeur.</p>
+          <button @click="$emit('enroll')" class="btn btn-primary w-full py-4 rounded-2xl shadow-md shadow-primary-500/20">
             Proposer mes services
           </button>
         </div>
       </div>
+
+      <!-- Negotiations (Owner only) -->
+      <div v-if="isOwner" class="mt-8 flex flex-col gap-4">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white px-2">Tableau de Bord des Négociations</h3>
+        <AnnoncesNegotiationList :items="item.offers" type="offer" @refresh="$emit('refresh')" />
+      </div>
+
     </div>
   </div>
 </template>

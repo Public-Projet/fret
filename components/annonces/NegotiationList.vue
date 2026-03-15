@@ -19,82 +19,80 @@
 
     <div v-else class="divide-y divide-gray-100 dark:divide-gray-700">
       <div v-for="proposal in items" :key="proposal.id"
-        class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
-        <div class="flex flex-col md:flex-row justify-between gap-4">
-          <!-- Left: User Info -->
-          <div class="flex items-start gap-4">
+        class="p-4 md:p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        
+        <!-- Header: User and Status -->
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center gap-3">
             <div
-              class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center font-bold text-gray-600">
+              class="w-10 h-10 md:w-12 md:h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center font-bold text-gray-600 dark:text-gray-300 shrink-0">
               {{ getUserName(proposal)[0] }}
             </div>
             <div>
-              <p class="font-bold text-gray-900 dark:text-white">{{ getUserName(proposal) }}</p>
-              <div class="flex items-center text-xs text-yellow-500 mt-0.5">
-                <IconStarFilled class="w-3 h-3 mr-1" />
+              <p class="font-bold text-gray-900 dark:text-white leading-tight">{{ getUserName(proposal) }}</p>
+              <div class="flex items-center text-xs text-yellow-500 mt-1">
+                <IconStarFilled class="w-3.5 h-3.5 mr-1" />
                 <span>{{ getUserRating(proposal) }}</span>
               </div>
             </div>
           </div>
+          <span :class="getStatusClass(proposal.status)" class="badge shrink-0 text-xs md:text-sm">
+            {{ getStatusLabel(proposal.status) }}
+          </span>
+        </div>
 
-          <!-- Middle: Negotiation Data -->
-          <div class="flex-1 space-y-2">
-            <div class="flex flex-wrap gap-2">
-              <span
-                class="px-3 py-1 bg-primary-50 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg text-sm font-black">
-                {{ proposal.proposedPrice || proposal.price }} FCFA
-              </span>
-              <span v-if="proposal.proposedOrigin || proposal.proposedDestination"
-                class="px-3 py-1 bg-secondary-50 dark:bg-secondary-900/40 text-secondary-700 dark:text-secondary-300 rounded-lg text-sm font-medium">
-                {{ proposal.proposedOrigin?.city || 'Origine' }} → {{ proposal.proposedDestination?.city ||
-                  'Destination' }}
-              </span>
+        <!-- Body: Proposal Details -->
+        <div class="bg-gray-50 dark:bg-gray-900/30 rounded-2xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+            <div class="flex w-fit items-center text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/40 px-3 py-1.5 rounded-xl font-black text-lg">
+              <IconCash class="w-5 h-5 mr-1" />
+              {{ proposal.proposedPrice || proposal.price }} FCFA
             </div>
-            <div v-if="proposal.notes || proposal.message"
-              class="text-sm text-gray-600 dark:text-gray-400 italic bg-gray-100/50 dark:bg-gray-900/40 p-3 rounded-xl border-l-4 border-primary-400">
-              "{{ proposal.notes || proposal.message }}"
-            </div>
-            <div v-if="proposal.contractPath" class="mt-2">
-              <a :href="`${backendUrl}/api/v1/public/contracts/download/${proposal.contractPath.split('/').pop().replace('.pdf', '')}`"
-                target="_blank" class="inline-flex items-center text-xs font-bold text-primary-600 hover:underline">
-                <IconFileDownload class="w-4 h-4 mr-1" />
-                Télécharger le contrat PDF
-              </a>
+            
+            <div v-if="proposal.proposedOrigin || proposal.proposedDestination" class="flex w-fit items-center text-secondary-700 dark:text-secondary-300 bg-secondary-50 dark:bg-secondary-900/40 px-3 py-1.5 rounded-xl font-medium text-sm">
+              <IconMapPin class="w-4 h-4 mr-1 shrink-0" />
+              <span class="truncate">{{ proposal.proposedOrigin?.city || 'Origine' }} &rarr; {{ proposal.proposedDestination?.city || 'Destination' }}</span>
             </div>
           </div>
 
-          <!-- Right: Actions -->
-          <div class="flex flex-col items-end gap-3 min-w-[150px]">
-            <span :class="getStatusClass(proposal.status)" class="badge mb-2">
-              {{ getStatusLabel(proposal.status) }}
-            </span>
-
-            <div v-if="proposal.status === 'pending'" class="flex flex-col gap-2 w-full">
-              <!-- If last proposal was by the OTHER person, show Accept/Reject/Counter -->
-              <template v-if="canRespond(proposal)">
-                <div class="flex gap-2">
-                  <button @click="handleReject(proposal.id)" :disabled="loading"
-                    class="flex-1 btn btn-outline btn-sm text-red-600 hover:bg-red-50 py-2">
-                    Refuser
-                  </button>
-                  <button @click="handleAccept(proposal.id)" :disabled="loading"
-                    class="flex-1 btn btn-primary btn-sm py-2">
-                    Valider
-                  </button>
-                </div>
-                <button @click="$emit('counter', proposal)" :disabled="loading"
-                  class="btn btn-secondary btn-sm w-full py-2">
-                  Contre-proposer
-                </button>
-              </template>
-              <template v-else>
-                <p class="text-xs text-gray-400 italic text-right">En attente de leur réponse...</p>
-                <button @click="$emit('counter', proposal)" :disabled="loading"
-                  class="btn btn-outline btn-sm w-full py-2">
-                  Modifier ma proposition
-                </button>
-              </template>
-            </div>
+          <div v-if="proposal.notes || proposal.message" class="text-sm text-gray-600 dark:text-gray-400 italic bg-white dark:bg-gray-800 p-3 rounded-xl border-l-4 border-primary-400 shadow-sm">
+            "{{ proposal.notes || proposal.message }}"
           </div>
+
+          <div v-if="proposal.contractPath">
+            <a :href="`${backendUrl}/api/v1/public/contracts/download/${proposal.contractPath.split('/').pop().replace('.pdf', '')}`"
+                target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-colors">
+                <IconFileDownload class="w-4 h-4 mr-2" />
+                Télécharger le contrat
+            </a>
+          </div>
+        </div>
+
+        <!-- Footer: Actions -->
+        <div v-if="proposal.status === 'pending'" class="flex flex-col sm:flex-row items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700/50">
+          <template v-if="canRespond(proposal)">
+            <button @click="handleReject(proposal.id)" :disabled="loading"
+              class="w-full sm:w-auto flex-1 btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 py-2.5">
+              Refuser
+            </button>
+            <button @click="$emit('counter', proposal)" :disabled="loading"
+              class="w-full sm:w-auto flex-1 btn btn-secondary py-2.5">
+              Contre-proposer
+            </button>
+            <button @click="handleAccept(proposal.id)" :disabled="loading"
+              class="w-full sm:w-auto flex-1 btn btn-primary py-2.5 shadow-md shadow-primary-500/20">
+              Valider l'offre
+            </button>
+          </template>
+          <template v-else>
+            <div class="flex-1 w-full text-sm text-gray-500 dark:text-gray-400 italic flex items-center justify-center sm:justify-start mb-2 sm:mb-0">
+              <IconClock class="w-4 h-4 mr-1.5" /> En attente de leur réponse...
+            </div>
+            <button @click="$emit('counter', proposal)" :disabled="loading"
+              class="w-full sm:w-auto btn btn-outline py-2.5">
+              Modifier ma proposition
+            </button>
+          </template>
         </div>
       </div>
     </div>
@@ -103,7 +101,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { IconGavel, IconInbox, IconStarFilled, IconFileDownload } from '@tabler/icons-vue';
+import { IconGavel, IconInbox, IconStarFilled, IconFileDownload, IconMapPin, IconCash, IconClock } from '@tabler/icons-vue';
 import { useAvailabilityStore } from '~/stores/availability';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { useAuthStore } from '~/stores/auth';

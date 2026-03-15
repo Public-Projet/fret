@@ -6,11 +6,10 @@
       Retour au marché
     </NuxtLink>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="space-y-8">
       <!-- Main Info -->
-      <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
-          <div class="flex flex-wrap justify-between items-start gap-4 mb-8">
+      <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 lg:p-8">
+        <div class="flex flex-wrap justify-between items-start gap-4 mb-8">
             <div>
               <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-2">
                 Trajet : {{ item.origin?.city }} → {{ item.destination?.city || 'Toutes destinations' }}
@@ -90,18 +89,12 @@
             </div>
           </div>
 
-          <!-- Negotiations (Owner only) -->
-          <div v-if="isOwner" class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-700">
-            <AnnoncesNegotiationList :items="item.bookings" type="avail" @refresh="$emit('refresh')" />
-          </div>
-        </div>
       </div>
 
-      <!-- Sidebar for Availability -->
-      <div class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-          <h3 class="font-bold text-gray-900 dark:text-white mb-4">Actions</h3>
-          <div v-if="isOwner" class="space-y-3">
+      <!-- Actions (Moved from Sidebar) -->
+      <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 lg:p-8">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Actions & Informations</h3>
+        <div v-if="isOwner" class="space-y-3">
             <p class="text-sm text-gray-500 italic">Vous êtes le propriétaire de cette disponibilité.</p>
           </div>
           <div v-else-if="authStore.isShipper" class="space-y-4">
@@ -130,19 +123,25 @@
               Noter ce transporteur
             </button>
           </div>
-          <div v-else class="text-center p-4">
+          <div v-else class="text-center p-8 bg-gray-50 dark:bg-gray-900/50 rounded-2xl max-w-sm mx-auto">
+            <IconUser class="w-8 h-8 mx-auto text-gray-400 mb-2" />
             <p class="text-sm text-gray-500">Connectez-vous en tant qu'expéditeur pour réserver.</p>
-            <NuxtLink to="/auth/login" class="btn btn-primary btn-sm mt-4">Connexion</NuxtLink>
+            <NuxtLink to="/auth/login" class="btn btn-primary mt-4">Connexion</NuxtLink>
           </div>
         </div>
       </div>
+      <!-- Negotiations (Owner only) -->
+      <div v-if="isOwner" class="mt-8 flex flex-col gap-4">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white px-2">Tableau de Bord des Négociations</h3>
+        <AnnoncesNegotiationList :items="item.bookings" type="avail" @refresh="$emit('refresh')" />
+      </div>
+
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IconArrowLeft, IconStarFilled, IconStar, IconTruck, IconCheck } from '@tabler/icons-vue';
+import { IconArrowLeft, IconStarFilled, IconStar, IconTruck, IconCheck, IconUser } from '@tabler/icons-vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAvailabilityStore } from '~/stores/availability';
 
