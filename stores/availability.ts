@@ -116,6 +116,21 @@ export const useAvailabilityStore = defineStore('availability', {
       }
     },
 
+    /**
+     * Expéditeur: Une disponibilité
+     */
+    async fetchShipperAvailabilityById(id: string) {
+      try {
+        const response = await $fetch<{ data: Availability }>(`/api/shipper/availabilities/${id}`);
+        if (response?.data) {
+          return { success: true, availability: response.data };
+        }
+        return { success: false, error: 'Disponibilité non trouvée' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
+      }
+    },
+
     async updateAvailability(id: string, data: Partial<CreateAvailabilityData> & { status?: string }) {
       try {
         const response = await $fetch<{ availability: Availability }>(`/api/availabilities/${id}`, {
