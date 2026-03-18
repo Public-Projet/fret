@@ -77,6 +77,16 @@
           </div>
         </div>
       </div>
+      <div class="flex items-center space-x-3 text-sm text-gray-500 mr-4">
+        <div class="flex items-center" title="Vues totales">
+          <IconEye class="w-4 h-4 mr-1 text-primary-500/70" />
+          <span class="font-bold">{{ announcement.views || 0 }}</span>
+        </div>
+        <div class="flex items-center" title="Vues uniques">
+          <IconUsers class="w-4 h-4 mr-1 text-primary-500/70" />
+          <span class="font-bold">{{ announcement.uniqueViews || 0 }}</span>
+        </div>
+      </div>
       <NuxtLink
         :to="detailRoute ? `${detailRoute}/${announcement.id}?type=fret` : `/annonces/${announcement.id}?type=fret`"
         class="btn btn-primary btn-sm">
@@ -89,7 +99,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Announcement } from '~/types';
-import { IconCalendar, IconCube, IconMapPin, IconScale, IconStar, IconStarFilled, IconTag, IconUser } from '@tabler/icons-vue';
+import { IconCalendar, IconCube, IconMapPin, IconScale, IconStar, IconStarFilled, IconTag, IconUser, IconEye, IconUsers } from '@tabler/icons-vue';
 
 const props = defineProps<{
   announcement: Announcement;

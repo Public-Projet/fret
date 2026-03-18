@@ -76,6 +76,16 @@
               </button>
             </div>
           </div>
+          <div class="mt-4 flex items-center justify-end gap-3 mr-3">
+            <div class="flex items-center text-xs text-gray-500" title="Vues totales">
+              <IconEye class="w-3.5 h-3.5 mr-1 text-primary-500/70" />
+              <span class="font-bold">{{ item.views || 0 }}</span>
+            </div>
+            <div class="flex items-center text-xs text-gray-500" title="Vues uniques">
+              <IconUsers class="w-3.5 h-3.5 mr-1 text-primary-500/70" />
+              <span class="font-bold">{{ item.uniqueViews || 0 }}</span>
+            </div>
+          </div>
           <div class="mt-4 flex justify-end">
             <NuxtLink :to="`/annonces/${item.id}?type=avail`" class="btn btn-primary btn-sm rounded-xl">Détails
             </NuxtLink>
@@ -87,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { IconMapPin, IconMapPinFilled, IconCalendar, IconTruck, IconStarFilled, IconStar } from '@tabler/icons-vue';
+import { IconMapPin, IconMapPinFilled, IconCalendar, IconTruck, IconStarFilled, IconStar, IconEye, IconUsers } from '@tabler/icons-vue';
 import { useAuthStore } from '~/stores/auth';
 
 const props = defineProps<{

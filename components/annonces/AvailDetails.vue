@@ -9,12 +9,12 @@
     <div class="space-y-8">
       <!-- Main Info -->
       <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 lg:p-8">
-        <div class="flex flex-wrap justify-between items-start gap-4 mb-8">
-            <div>
-              <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-2">
+        <div class="flex flex-col lg:flex-row justify-between items-start gap-6 mb-8">
+            <div class="flex-1">
+              <h1 class="text-xl md:text-2xl lg:text-3xl font-black text-gray-900 dark:text-white mb-3 leading-tight">
                 Trajet : {{ item.origin?.city }} → {{ item.destination?.city || 'Toutes destinations' }}
               </h1>
-              <div class="flex items-center space-x-4">
+              <div class="flex flex-wrap items-center gap-3">
                 <span class="badge" :class="getStatusBadgeClass(item.status)">{{ getStatusLabel(item.status)
                 }}</span>
                 <span class="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center">
@@ -35,10 +35,12 @@
                 </div>
               </div>
             </div>
-            <div class="text-right">
-              <p class="text-3xl font-black text-primary-600">
-                {{ item.price ? item.price + ' FCFA' : 'Prix sur devis' }}</p>
-              <p class="text-sm text-gray-400 italic mb-2">Tarif indicatif</p>
+            <div class="w-full lg:w-auto flex flex-row lg:flex-col justify-between items-end lg:text-right border-t lg:border-t-0 pt-4 lg:pt-0 border-gray-100 dark:border-gray-700">
+              <div>
+                <p class="text-2xl md:text-3xl font-black text-primary-600">
+                  {{ item.price ? item.price + ' FCFA' : 'Prix sur devis' }}</p>
+                <p class="text-sm text-gray-400 italic">Tarif indicatif</p>
+              </div>
               <div class="flex items-center justify-end gap-3 text-sm text-gray-500">
                 <div class="flex items-center" title="Vues totales">
                   <IconEye class="w-4 h-4 mr-1 text-primary-500/70" />

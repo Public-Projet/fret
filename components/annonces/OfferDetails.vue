@@ -8,28 +8,28 @@
 
     <div class="space-y-8">
       <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700">
-        <div class="flex justify-between items-start mb-4">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ item.title }}</h1>
-            <span :class="getStatusBadgeClass(item.status)" class="badge">
+          <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight">{{ item.title }}</h1>
+            <span :class="getStatusBadgeClass(item.status)" class="badge shrink-0">
               {{ getStatusLabel(item.status) }}
             </span>
           </div>
 
-          <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-6">
-            <div class="flex items-center" title="Date de publication">
-              <IconCalendar class="w-4 h-4 mr-1" />
-              Publié le {{ formatDate(item.createdAt) }}
+          <div class="flex flex-wrap items-center gap-y-2 gap-x-4 text-sm text-gray-500 dark:text-gray-400 mb-6 border-b border-gray-50 dark:border-gray-700 pb-4">
+            <div class="flex items-center whitespace-nowrap" title="Date de publication">
+              <IconCalendar class="w-4 h-4 mr-1 text-primary-500" />
+              <span>Publié le {{ formatDate(item.createdAt) }}</span>
             </div>
-            <div class="flex items-center" title="Distance">
-              <IconMapPin class="w-4 h-4 mr-1" />
-              {{ item.distance }} km
+            <div class="flex items-center whitespace-nowrap" title="Distance">
+              <IconMapPin class="w-4 h-4 mr-1 text-primary-500" />
+              <span>{{ item.distance }} km</span>
             </div>
-            <div class="flex items-center" title="Vues totales">
-              <IconEye class="w-4 h-4 mr-1 text-primary-500/70" />
+            <div class="flex items-center whitespace-nowrap" title="Vues totales">
+              <IconEye class="w-4 h-4 mr-1 text-primary-500" />
               <span class="font-bold">{{ item.views || 0 }}</span>
             </div>
-            <div class="flex items-center" title="Vues uniques">
-              <IconUsers class="w-4 h-4 mr-1 text-primary-500/70" />
+            <div class="flex items-center whitespace-nowrap" title="Vues uniques">
+              <IconUsers class="w-4 h-4 mr-1 text-primary-500" />
               <span class="font-bold">{{ item.uniqueViews || 0 }}</span>
             </div>
           </div>
@@ -66,26 +66,26 @@
           </div>
 
           <!-- Caractéristiques -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <IconCube class="w-6 h-6 mx-auto text-gray-400 mb-2" />
-              <p class="text-xs text-gray-500 uppercase">Type</p>
-              <p class="font-semibold">{{ item.cargoType }}</p>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl text-center border border-gray-100 dark:border-gray-700 font-mono">
+              <IconCube class="w-6 h-6 mx-auto text-primary-500 mb-2" />
+              <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Type</p>
+              <p class="font-bold text-gray-900 dark:text-white capitalize truncate px-1">{{ item.cargoType }}</p>
             </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <IconScale class="w-6 h-6 mx-auto text-gray-400 mb-2" />
-              <p class="text-xs text-gray-500 uppercase">Poids</p>
-              <p class="font-semibold">{{ item.weight }} kg</p>
+            <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl text-center border border-gray-100 dark:border-gray-700 font-mono">
+              <IconScale class="w-6 h-6 mx-auto text-primary-500 mb-2" />
+              <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Poids</p>
+              <p class="font-bold text-gray-900 dark:text-white">{{ item.weight }} kg</p>
             </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <IconArrowsMaximize class="w-6 h-6 mx-auto text-gray-400 mb-2" />
-              <p class="text-xs text-gray-500 uppercase">Volume</p>
-              <p class="font-semibold">{{ item.volume }} m³</p>
+            <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl text-center border border-gray-100 dark:border-gray-700 font-mono">
+              <IconArrowsMaximize class="w-6 h-6 mx-auto text-primary-500 mb-2" />
+              <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Volume</p>
+              <p class="font-bold text-gray-900 dark:text-white">{{ item.volume }} m³</p>
             </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <IconCurrencyEuro class="w-6 h-6 mx-auto text-gray-400 mb-2" />
-              <p class="text-xs text-gray-500 uppercase">Budget</p>
-              <p class="font-semibold text-primary-600">{{ item.budget }} FCFA</p>
+            <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl text-center border border-gray-100 dark:border-gray-700 font-mono">
+              <IconCurrencyEuro class="w-6 h-6 mx-auto text-primary-500 mb-2" />
+              <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Budget</p>
+              <p class="font-bold text-primary-600">{{ item.budget }} FCFA</p>
             </div>
           </div>
 
@@ -100,35 +100,35 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700">
           <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">À propos de l'expéditeur</h3>
-          <div class="flex items-center space-x-3 mb-4">
+          <div class="flex items-center gap-4 mb-6">
             <div
-              class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold text-xl uppercase">
+              class="w-14 h-14 bg-gradient-to-br from-primary-100 to-primary-50 dark:from-primary-900/30 dark:to-primary-900/10 rounded-2xl flex items-center justify-center text-primary-600 font-black text-2xl uppercase border border-primary-200 dark:border-primary-800">
               {{ item.user?.firstName?.[0] || 'E' }}
             </div>
             <div>
-              <p class="font-medium text-gray-900 dark:text-white">
-                {{ isOwner ? 'Vous' : (item.user?.company || item.user?.firstName) }}
+              <p class="font-black text-gray-900 dark:text-white text-lg">
+                {{ isOwner ? 'Vous' : (item.user?.company || item.user?.firstName + ' ' + (item.user?.lastName || '')) }}
               </p>
-              <div class="flex items-center text-sm text-gray-500">
-                <div class="flex mr-2">
+              <div class="flex items-center text-sm">
+                <div class="flex mr-2 text-yellow-400">
                   <template v-for="i in 5" :key="i">
-                    <IconStarFilled v-if="i <= Math.round(item.user?.rating || 0)" class="w-4 h-4 text-yellow-500" />
+                    <IconStarFilled v-if="i <= Math.round(item.user?.rating || 0)" class="w-4 h-4" />
                     <IconStar v-else class="w-4 h-4 text-gray-200" />
                   </template>
                 </div>
-                <span class="font-bold">{{ item.user?.rating || '0.0' }}</span>
-                <span class="ml-1">({{ item.user?.reviewCount || 0 }} avis)</span>
+                <span class="font-black text-gray-700 dark:text-gray-300">{{ item.user?.rating || '0.0' }}</span>
+                <span class="ml-1 text-gray-500">({{ item.user?.reviewCount || 0 }} avis)</span>
               </div>
             </div>
           </div>
-          <div class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
-            <div class="flex items-center">
-              <IconShieldCheck class="w-4 h-4 text-green-500 mr-2" />
-              Identité vérifiée
+          <div class="space-y-4">
+            <div class="flex items-center p-3 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900/20">
+              <IconShieldCheck class="w-5 h-5 text-green-600 mr-2 shrink-0" />
+              <span class="text-sm font-bold text-green-700 dark:text-green-400">Compte Expéditeur vérifié</span>
             </div>
-
+ 
             <!-- Rating Action -->
-            <button v-if="canRate" @click="$emit('showRatingModal')" class="btn btn-secondary w-full rounded-xl py-3 mt-4">
+            <button v-if="canRate" @click="$emit('showRatingModal')" class="btn btn-secondary w-full rounded-xl py-3 mt-4 transition-all hover:scale-[1.02]">
               {{ ratingLabel }}
             </button>
           </div>
