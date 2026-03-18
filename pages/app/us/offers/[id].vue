@@ -156,8 +156,9 @@
                 <span class="font-medium text-gray-900 dark:text-white">{{ announcement.volume }} m³</span>
               </div>
               <div class="flex justify-between text-sm">
-                <span class="text-gray-500">Distance</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ announcement.distance }} km</span>
+                <span class="text-gray-500">Vues (totales / uniques)</span>
+                <span class="font-medium text-gray-900 dark:text-white">{{ announcement.views || 0 }} / {{
+                  announcement.uniqueViews || 0 }}</span>
               </div>
             </div>
           </div>
@@ -176,10 +177,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useAnnouncementStore } from '~/stores/announcement';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAuthStore } from '~/stores/auth';
-import {
-  IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled,
-  IconCheck, IconMessage, IconBadge
-} from '@tabler/icons-vue';
+import { IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled, IconCheck, IconMessage, IconBadge } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();

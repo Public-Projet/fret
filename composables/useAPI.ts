@@ -6,7 +6,7 @@ import type { ApiError, ApiResponse } from '~/types/api';
 
 export function useAPI() {
   const config = useRuntimeConfig();
-  const baseURL = config.public.baseAPI as string;
+  const baseURL = config.apiBaseUrl as string;
 
   /**
    * Effectue une requête HTTP générique

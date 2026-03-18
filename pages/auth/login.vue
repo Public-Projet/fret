@@ -223,7 +223,6 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const router = useRouter();
-const api = useAPI();
 
 // Login form
 const email = ref('');
@@ -318,13 +317,7 @@ const handleForgotPassword = async () => {
   forgotError.value = '';
 
   try {
-    const endpoint = selectedRole.value === 'shipper'
-      ? '/shipper/auth/forgot-password'
-      : '/carrier/auth/forgot-password';
-
-    const response = await api.post<{ message: string } | string>(endpoint, {
-      email: forgotEmail.value
-    });
+    const response = await authStore.forgotPassword(forgotEmail.value, selectedRole.value);
 
     if (response.success && response.data) {
       forgotEmailSent.value = true;
@@ -332,7 +325,8 @@ const handleForgotPassword = async () => {
       if (typeof response.data === 'string') {
         forgotSuccessMessage.value = response.data;
       } else {
-        forgotSuccessMessage.value = response.data.message || 'Un email de réinitialisation a été envoyé.';
+        const data = response.data as { message?: string };
+        forgotSuccessMessage.value = data.message || 'Un email de réinitialisation a été envoyé.';
       }
     } else {
       forgotError.value = response.error?.message || 'Une erreur est survenue.';

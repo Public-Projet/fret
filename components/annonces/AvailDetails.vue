@@ -38,7 +38,17 @@
             <div class="text-right">
               <p class="text-3xl font-black text-primary-600">
                 {{ item.price ? item.price + ' FCFA' : 'Prix sur devis' }}</p>
-              <p class="text-sm text-gray-400 italic">Tarif indicatif</p>
+              <p class="text-sm text-gray-400 italic mb-2">Tarif indicatif</p>
+              <div class="flex items-center justify-end gap-3 text-sm text-gray-500">
+                <div class="flex items-center" title="Vues totales">
+                  <IconEye class="w-4 h-4 mr-1 text-primary-500/70" />
+                  <span class="font-bold">{{ item.views || 0 }}</span>
+                </div>
+                <div class="flex items-center" title="Vues uniques">
+                  <IconUsers class="w-4 h-4 mr-1 text-primary-500/70" />
+                  <span class="font-bold">{{ item.uniqueViews || 0 }}</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -141,7 +151,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IconArrowLeft, IconStarFilled, IconStar, IconTruck, IconCheck, IconUser } from '@tabler/icons-vue';
+import { IconArrowLeft, IconStarFilled, IconStar, IconTruck, IconCheck, IconUser, IconEye, IconUsers } from '@tabler/icons-vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAvailabilityStore } from '~/stores/availability';
 

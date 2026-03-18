@@ -71,6 +71,7 @@ export async function proxyToBackend<T = unknown>(
     throw createError({
       statusCode,
       statusMessage: data?.message || `Erreur backend ${statusCode}`,
+      message: data?.message || (typeof data === 'string' ? data : `Erreur backend ${statusCode}`),
       data,
     });
   }

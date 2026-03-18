@@ -16,13 +16,21 @@
           </div>
 
           <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-6">
-            <div class="flex items-center">
+            <div class="flex items-center" title="Date de publication">
               <IconCalendar class="w-4 h-4 mr-1" />
               Publié le {{ formatDate(item.createdAt) }}
             </div>
-            <div class="flex items-center">
+            <div class="flex items-center" title="Distance">
               <IconMapPin class="w-4 h-4 mr-1" />
               {{ item.distance }} km
+            </div>
+            <div class="flex items-center" title="Vues totales">
+              <IconEye class="w-4 h-4 mr-1 text-primary-500/70" />
+              <span class="font-bold">{{ item.views || 0 }}</span>
+            </div>
+            <div class="flex items-center" title="Vues uniques">
+              <IconUsers class="w-4 h-4 mr-1 text-primary-500/70" />
+              <span class="font-bold">{{ item.uniqueViews || 0 }}</span>
             </div>
           </div>
 
@@ -147,7 +155,7 @@
 </template>
 
 <script setup lang="ts">
-import { IconArrowLeft, IconCalendar, IconMapPin, IconCube, IconScale, IconArrowsMaximize, IconCurrencyEuro, IconStarFilled, IconStar, IconShieldCheck } from '@tabler/icons-vue';
+import { IconArrowLeft, IconCalendar, IconMapPin, IconCube, IconScale, IconArrowsMaximize, IconCurrencyEuro, IconStarFilled, IconStar, IconShieldCheck, IconEye, IconUsers } from '@tabler/icons-vue';
 import { useAuthStore } from '~/stores/auth';
 
 const props = defineProps<{

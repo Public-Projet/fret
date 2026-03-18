@@ -21,6 +21,8 @@ export interface Announcement {
   deliveryDate: string;
   budget: number;
   status: AnnouncementStatus;
+  views?: number;
+  uniqueViews?: number;
   createdAt: string;
   updatedAt: string;
   offers?: Offer[];

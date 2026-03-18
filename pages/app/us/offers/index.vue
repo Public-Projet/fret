@@ -61,7 +61,7 @@
                 <span :class="getStatusClass(announcement.status)">
                   {{ getStatusLabel(announcement.status) }}
                 </span>
-                <span class="text-xs font-medium text-gray-400 tabular-nums">ID: #{{ announcement.id.slice(0, 8) }}</span>
+                <span class="text-xs font-medium text-gray-400 tabular-nums">ID: #{{ String(announcement.id || '').slice(0, 8) }}</span>
               </div>
               
               <h3 class="text-xl font-black text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 transition-colors">
@@ -80,6 +80,19 @@
                 <div class="flex items-center px-1">
                   <IconCalendar class="w-4 h-4 mr-2 text-primary-500" />
                   <span>Enlèvement le <span class="font-bold text-gray-700 dark:text-gray-300">{{ formatDate(announcement.pickupDate) }}</span></span>
+                </div>
+                
+                <!-- View Stats -->
+                <div class="flex items-center gap-3 px-3 py-1.5 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+                  <div class="flex items-center text-xs text-gray-600 dark:text-gray-400" title="Vues totales">
+                    <IconEye class="w-4 h-4 mr-1.5 text-primary-500/70" />
+                    <span class="font-bold">{{ announcement.views || 0 }}</span>
+                  </div>
+                  <div class="w-px h-3 bg-gray-300 dark:bg-gray-600"></div>
+                  <div class="flex items-center text-xs text-gray-600 dark:text-gray-400" title="Vues uniques (visiteurs différents)">
+                    <IconUsers class="w-4 h-4 mr-1.5 text-primary-500/70" />
+                    <span class="font-bold">{{ announcement.uniqueViews || 0 }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -125,7 +138,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
 import type { Announcement } from '~/types';
-import { IconCalendar, IconFileText, IconMapPin, IconPencil, IconPlus, IconTrash, IconEye } from '@tabler/icons-vue';
+import { IconCalendar, IconFileText, IconMapPin, IconPencil, IconPlus, IconTrash, IconEye, IconUsers } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const announcementStore = useAnnouncementStore();

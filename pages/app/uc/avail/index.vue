@@ -57,7 +57,7 @@
               <h3 class="font-black text-xl text-gray-900 dark:text-white tracking-tight">
                 {{ item.vehicle?.brand }} {{ item.vehicle?.model }}
                 <span class="text-gray-400 font-bold ml-1 text-sm">({{ item.vehicle?.licensePlate || item.vehicle?.type
-                  }})</span>
+                }})</span>
               </h3>
               <span
                 :class="['px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm border', getStatusClass(item.status)]">
@@ -104,6 +104,16 @@
                   </p>
                 </div>
               </div>
+              <div
+                class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-900/30 rounded-2xl border border-gray-100 dark:border-gray-800 group-hover:bg-white dark:group-hover:bg-gray-800 transition-colors">
+                <IconEye class="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                <div>
+                  <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest">Vues (tot./uniq.)</p>
+                  <p class="text-sm font-black text-gray-900 dark:text-white">
+                    {{ item.views || 0 }} / {{ item.uniqueViews || 0 }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -124,11 +134,7 @@
 import { computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAvailabilityStore } from '~/stores/availability';
-import {
-  IconCalendar, IconMapPin, IconPlus, IconTruck, IconWeight,
-  IconCurrencyEuro, IconChevronRight, IconArrowRight,
-  IconCalendarCheck, IconUsers
-} from '@tabler/icons-vue';
+import { IconCalendar, IconMapPin, IconPlus, IconTruck, IconCurrencyEuro, IconChevronRight, IconArrowRight, IconCalendarCheck, IconUsers, IconEye } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const availabilityStore = useAvailabilityStore();

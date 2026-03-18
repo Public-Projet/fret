@@ -76,7 +76,7 @@
                 class="md:text-right bg-primary-50/50 dark:bg-primary-900/20 p-6 rounded-3xl border border-primary-100 dark:border-primary-900/30">
                 <p class="text-3xl font-black text-primary-600 tracking-tight">{{ availability.price?.toLocaleString()
                   || '-' }} <span class="text-xs text-gray-500 font-black uppercase ml-1">FCFA</span></p>
-                <div v-if="availability.maxRequests" class="mt-2 flex items-center md:justify-end gap-2">
+                <div v-if="availability.maxRequests" class="mt-2 flex items-center justify-end gap-2">
                   <div class="w-24 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div class="h-full bg-primary-500 rounded-full"
                       :style="{ width: `${(availability.currentRequests / availability.maxRequests) * 100}%` }"></div>
@@ -85,6 +85,16 @@
                     :class="availability.currentRequests >= availability.maxRequests ? 'text-red-600' : 'text-gray-500'">
                     {{ availability.currentRequests }} / {{ availability.maxRequests }} Demandes
                   </span>
+                </div>
+                <div class="mt-4 flex items-center justify-end gap-3 text-sm text-gray-500">
+                  <div class="flex items-center" title="Vues totales">
+                    <IconEye class="w-4 h-4 mr-1 text-primary-500/70" />
+                    <span class="font-bold">{{ availability.views || 0 }}</span>
+                  </div>
+                  <div class="flex items-center" title="Vues uniques">
+                    <IconUser class="w-4 h-4 mr-1 text-primary-500/70" />
+                    <span class="font-bold">{{ availability.uniqueViews || 0 }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -263,10 +273,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAvailabilityStore, type Availability } from '~/stores/availability';
-import {
-  IconArrowLeft, IconPencil, IconTrash, IconLoader2,
-  IconCalendar, IconUsers, IconAlertCircle
-} from '@tabler/icons-vue';
+import { IconArrowLeft, IconPencil, IconTrash, IconLoader2, IconCalendar, IconUsers, IconAlertCircle, IconEye, IconUser } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();

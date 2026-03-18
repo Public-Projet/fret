@@ -44,6 +44,8 @@ export interface StoreAvailability {
   status: 'active' | 'expired' | 'full' | 'prolonged';
   maxRequests?: number;
   currentRequests: number;
+  views?: number;
+  uniqueViews?: number;
   createdAt: string;
   carrier?: {
     id: string;

@@ -118,6 +118,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useAuthStore } from '~/stores/auth';
 import {
   IconLoader2,
   IconLock,
@@ -134,7 +135,7 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
-const api = useAPI();
+const authStore = useAuthStore();
 
 const token = ref<string | null>(null);
 const loading = ref(true);
@@ -172,10 +173,7 @@ const handleResetPassword = async () => {
   submitting.value = true;
 
   try {
-    const response = await api.post<{ message: string }>('/carrier/auth/reset-password', {
-      token: token.value,
-      password: newPassword.value
-    });
+    const response = await authStore.resetPassword(token.value!, newPassword.value, 'carrier');
 
     if (response.success && response.data) {
       resetSuccess.value = true;

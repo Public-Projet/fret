@@ -253,5 +253,101 @@ export const useAuthStore = defineStore('auth', {
       }
       return { success: false, error: 'Utilisateur non connecté' };
     },
+
+    /**
+     * Vérification de l'adresse email
+     */
+    async verifyEmail(token: string, role: UserRole) {
+      this.isLoading = true;
+      try {
+        const response = await $fetch<{ message: string }>('/api/auth/verify-email', {
+          method: 'POST',
+          body: { token, role },
+        });
+        this.isLoading = false;
+        return { success: true, data: response };
+      } catch (error: any) {
+        this.isLoading = false;
+        return { 
+          success: false, 
+          error: {
+            message: error.data?.message || 'Erreur lors de la vérification',
+            data: error.data?.data || error.data
+          }
+        };
+      }
+    },
+
+    /**
+     * Renvoyer l'email de vérification
+     */
+    async resendVerificationEmail(email: string, role: UserRole) {
+      this.isLoading = true;
+      try {
+        const response = await $fetch<{ message: string }>('/api/auth/resend-verification', {
+          method: 'POST',
+          body: { email, role },
+        });
+        this.isLoading = false;
+        return { success: true, data: response };
+      } catch (error: any) {
+        this.isLoading = false;
+        return { 
+          success: false, 
+          error: {
+            message: error.data?.message || 'Erreur lors du renvoi de l\'email',
+            data: error.data?.data || error.data
+          }
+        };
+      }
+    },
+
+    /**
+     * Demande de réinitialisation de mot de passe
+     */
+    async forgotPassword(email: string, role: UserRole) {
+      this.isLoading = true;
+      try {
+        const response = await $fetch<{ message: string } | string>('/api/auth/forgot-password', {
+          method: 'POST',
+          body: { email, role },
+        });
+        this.isLoading = false;
+        return { success: true, data: response };
+      } catch (error: any) {
+        this.isLoading = false;
+        return { 
+          success: false, 
+          error: {
+            message: error.data?.message || 'Erreur lors de l\'envoi de l\'email',
+            data: error.data?.data || error.data
+          }
+        };
+      }
+    },
+
+    /**
+     * Réinitialisation effective du mot de passe
+     */
+    async resetPassword(token: string, password: string, role: UserRole) {
+      this.isLoading = true;
+      try {
+        const response = await $fetch<{ message: string }>('/api/auth/reset-password', {
+          method: 'POST',
+          body: { token, password, role },
+        });
+        this.isLoading = false;
+        return { success: true, data: response };
+      } catch (error: any) {
+        this.isLoading = false;
+        return { 
+          success: false, 
+          error: {
+            message: error.data?.message || 'Erreur lors de la réinitialisation',
+            data: error.data?.data || error.data
+          }
+        };
+      }
+    },
   },
 });

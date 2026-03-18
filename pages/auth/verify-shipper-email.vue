@@ -47,12 +47,14 @@
         <p class="text-gray-600 dark:text-gray-400 mb-6">
           {{ errorMessage }}
         </p>
+
+
         <div class="flex flex-col sm:flex-row gap-3 justify-center">
-          <NuxtLink to="/auth/register?role=shipper"
-            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all">
-            <IconUserPlus class="w-5 h-5" />
-            S'inscrire à nouveau
-          </NuxtLink>
+          <button @click="showResendModal = true"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-primary-500/30">
+            <IconMail class="w-5 h-5" />
+            Renvoyer le lien
+          </button>
           <NuxtLink to="/auth/login"
             class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
             <IconLogin class="w-5 h-5" />
@@ -73,39 +75,38 @@
         <p class="text-gray-600 dark:text-gray-400 mb-6">
           Le lien de vérification semble incomplet ou invalide.
         </p>
-        <NuxtLink to="/auth/register?role=shipper"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all">
-          <IconUserPlus class="w-5 h-5" />
-          S'inscrire
-        </NuxtLink>
+        <button @click="showResendModal = true"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-primary-500/30">
+          <IconMail class="w-5 h-5" />
+          Renvoyer le lien
+        </button>
       </div>
     </div>
+
+    <!-- Modals -->
+    <ModalResendVerification v-model="showResendModal" role="shipper" />
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import {
-  IconLoader2,
-  IconCircleCheck,
-  IconCircleX,
-  IconLogin,
-  IconUserPlus,
-  IconAlertTriangle
-} from '@tabler/icons-vue';
+import { useAuthStore } from '~/stores/auth';
+import { IconLoader2, IconCircleCheck, IconCircleX, IconLogin, IconUserPlus, IconAlertTriangle, IconMail } from '@tabler/icons-vue';
 
 definePageMeta({
   layout: false
 });
 
 const route = useRoute();
-const api = useAPI();
+const authStore = useAuthStore();
 
 const loading = ref(false);
 const success = ref(false);
 const error = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
+
+const showResendModal = ref(false);
 
 onMounted(async () => {
   const token = route.query.token as string;
@@ -117,29 +118,15 @@ onMounted(async () => {
   loading.value = true;
 
   try {
-    const response = await api.post<{ message: string }>('/shipper/auth/verify-email', { token });
+    const result = await authStore.verifyEmail(token, 'shipper');
 
-    if (response.success && response.data) {
+    if (result.success && result.data) {
       success.value = true;
-      successMessage.value = response.data.message || 'Votre email a été vérifié avec succès !';
+      successMessage.value = result.data.message || 'Votre email a été vérifié avec succès !';
     } else {
       error.value = true;
 
-      // Extraire le message d'erreur
-      if (response.error?.data) {
-        const errorData = response.error.data as Record<string, unknown>;
-        if (errorData.expiredToken && typeof errorData.expiredToken === 'object') {
-          errorMessage.value = (errorData.expiredToken as { message?: string }).message || 'Le lien de vérification a expiré.';
-        } else if (errorData.invalidToken && typeof errorData.invalidToken === 'object') {
-          errorMessage.value = (errorData.invalidToken as { message?: string }).message || 'Le lien de vérification est invalide.';
-        } else if (errorData.message) {
-          errorMessage.value = errorData.message as string;
-        } else {
-          errorMessage.value = 'Le lien de vérification est invalide ou a expiré.';
-        }
-      } else {
-        errorMessage.value = response.error?.message || 'Une erreur est survenue lors de la vérification.';
-      }
+      errorMessage.value = result.error?.message || 'Le lien de vérification est invalide ou a expiré.';
     }
   } catch (e) {
     console.error('Erreur verification:', e);
