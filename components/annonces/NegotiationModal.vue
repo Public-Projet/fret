@@ -89,6 +89,10 @@
           <button @click="$emit('close')" class="flex-1 btn btn-outline py-4 rounded-2xl">
             Annuler
           </button>
+          <div v-if="error" class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 text-red-600 rounded-2xl text-sm font-bold">
+            {{ error }}
+          </div>
+
           <button @click="handleSubmit" :disabled="loading" class="flex-1 btn btn-primary py-4 rounded-2xl">
             <IconLoader2 v-if="loading" class="w-5 h-5 animate-spin mr-2" />
             {{ loading ? 'Envoi...' : 'Envoyer la proposition' }}
@@ -100,30 +104,84 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { IconX, IconCurrencyDollar, IconMapPinFilled, IconMessageDots, IconLoader2 } from '@tabler/icons-vue';
+import { useAvailabilityStore } from '~/stores/availability';
+import { useAnnouncementStore } from '~/stores/announcement';
+import { useAuthStore } from '~/stores/auth';
 
 const props = defineProps<{
-  originalPrice?: number;
+  targetId: string;
+  dataType: 'avail' | 'announcement';
+  originalPrice?: number | string;
   originalOrigin: any;
   originalDestination?: any;
-  initialData?: any;
-  loading?: boolean;
+  initialData?: any; // For counter-proposals
 }>();
 
 const emit = defineEmits<{
-  (e: 'close'): void;
-  (e: 'submit', data: any): void;
+  close: [];
+  success: [];
 }>();
+
+const availStore = useAvailabilityStore();
+const fretStore = useAnnouncementStore();
+const authStore = useAuthStore();
+
+const loading = ref(false);
+const error = ref('');
 
 const form = reactive({
   price: props.initialData?.proposedPrice || props.initialData?.price || props.originalPrice || undefined,
+  message: props.initialData?.notes || props.initialData?.message || '',
   origin: props.initialData?.proposedOrigin ? { ...props.initialData.proposedOrigin } : { ...props.originalOrigin },
-  destination: props.initialData?.proposedDestination ? { ...props.initialData.proposedDestination } : (props.originalDestination ? { ...props.originalDestination } : { city: '', country: props.originalOrigin.country }),
-  message: props.initialData?.notes || props.initialData?.message || ''
+  destination: props.initialData?.proposedDestination ? { ...props.initialData.proposedDestination } : (props.originalDestination ? { ...props.originalDestination } : { city: '', country: props.originalOrigin?.country || '' }),
 });
 
-const handleSubmit = () => {
-  emit('submit', { ...form });
+const handleSubmit = async () => {
+  loading.value = true;
+  error.value = '';
+
+  try {
+    let res;
+    
+    if (props.initialData) {
+      // Counter-proposal
+      const role = authStore.isShipper ? 'shipper' : 'carrier';
+      if (props.dataType === 'avail') {
+        res = await availStore.counterBooking(props.initialData.id, role, {
+          proposedPrice: form.price,
+          proposedOrigin: form.origin,
+          proposedDestination: form.destination,
+          notes: form.message
+        });
+      } else {
+        res = await fretStore.counterOffer(props.initialData.id, role, {
+          price: form.price,
+          proposedOrigin: form.origin,
+          proposedDestination: form.destination,
+          message: form.message
+        });
+      }
+    } else {
+      // New proposal/enrollment
+      if (props.dataType === 'avail') {
+        res = await availStore.enrollAvailability(props.targetId, form);
+      } else {
+        res = await fretStore.createOffer(props.targetId, form);
+      }
+    }
+
+    if (res.success) {
+      emit('success');
+    } else {
+      error.value = (res as any).error || 'Une erreur est survenue';
+    }
+  } catch (err: any) {
+    console.error('Negotiation error:', err);
+    error.value = 'Erreur technique. Veuillez réessayer.';
+  } finally {
+    loading.value = false;
+  }
 };
 </script>

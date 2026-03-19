@@ -263,9 +263,10 @@
     </div>
 
     <!-- Negotiation Modal -->
-    <AnnoncesNegotiationModal v-if="showNegotiationModal" :original-price="availability?.price"
-      :original-origin="availability?.origin" :original-destination="availability?.destination" :loading="negotiating"
-      :initial-data="selectedProposalForCounter" @close="closeNegotiationModal" @submit="handleNegotiationSubmit" />
+    <AnnoncesNegotiationModal v-if="showNegotiationModal" :targetId="id" :dataType="'avail'"
+      :originalPrice="availability?.price" :originalOrigin="availability?.origin"
+      :originalDestination="availability?.destination" :initial-data="selectedProposalForCounter"
+      @close="closeNegotiationModal" @success="handleNegotiationSuccess" />
   </div>
 </template>
 
@@ -299,31 +300,10 @@ const closeNegotiationModal = () => {
   selectedProposalForCounter.value = null;
 };
 
-const handleNegotiationSubmit = async (data: any) => {
-  if (!selectedProposalForCounter.value) return;
-
-  negotiating.value = true;
-  try {
-    const role = 'carrier';
-    const res = await store.counterBooking(selectedProposalForCounter.value.id, role, {
-      proposedPrice: data.price,
-      proposedOrigin: data.origin,
-      proposedDestination: data.destination,
-      notes: data.message
-    });
-
-    if (res.success) {
-      showNegotiationModal.value = false;
-      selectedProposalForCounter.value = null;
-      await loadAvailability();
-    } else {
-      alert(res.error || "Une erreur est survenue lors de l'envoi de votre proposition.");
-    }
-  } catch (err) {
-    console.error('Negotiation error:', err);
-  } finally {
-    negotiating.value = false;
-  }
+const handleNegotiationSuccess = async () => {
+  showNegotiationModal.value = false;
+  selectedProposalForCounter.value = null;
+  await loadAvailability();
 };
 
 const form = reactive({

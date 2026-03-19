@@ -6,11 +6,12 @@
         <div>
           <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight flex items-center">
             <IconTruck class="w-10 h-10 mr-4 text-secondary-600 drop-shadow-sm" />
-            Ma Flotte de Véhicules
+            Ma flotte de véhicules
           </h1>
-          <p class="text-gray-500 font-medium mt-1 text-sm lg:text-base">Gérez et suivez l'état de vos véhicules en temps réel</p>
+          <p class="text-gray-500 font-medium mt-1 text-sm lg:text-base">
+            Gérez et suivez l'état de vos véhicules en temps réel</p>
         </div>
-        <button @click="openAddModal" 
+        <button @click="openAddModal"
           class="bg-secondary-600 hover:bg-secondary-700 text-white px-8 py-4 rounded-2xl font-black transition-all hover:shadow-xl hover:shadow-secondary-500/30 flex items-center justify-center group active:scale-95 w-full md:w-auto">
           <IconPlus class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
           Ajouter un véhicule
@@ -21,7 +22,8 @@
       <div v-if="vehiclesLoading && vehicles.length === 0" class="flex flex-col items-center justify-center py-24">
         <div class="relative w-16 h-16 mb-6">
           <div class="absolute inset-0 border-4 border-secondary-100 dark:border-secondary-900/30 rounded-full"></div>
-          <div class="absolute inset-0 border-4 border-secondary-600 rounded-full border-t-transparent animate-spin"></div>
+          <div class="absolute inset-0 border-4 border-secondary-600 rounded-full border-t-transparent animate-spin">
+          </div>
         </div>
         <p class="text-gray-500 font-bold">Chargement de votre flotte...</p>
       </div>
@@ -29,14 +31,16 @@
       <!-- Empty State -->
       <div v-else-if="vehicles.length === 0"
         class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] p-16 text-center border-2 border-dashed border-gray-100 dark:border-gray-700 shadow-xl shadow-gray-200/50 dark:shadow-none">
-        <div class="w-24 h-24 bg-gray-50 dark:bg-gray-700/50 rounded-[2rem] flex items-center justify-center text-gray-300 mx-auto mb-6">
+        <div
+          class="w-24 h-24 bg-gray-50 dark:bg-gray-700/50 rounded-[2rem] flex items-center justify-center text-gray-300 mx-auto mb-6">
           <IconTruckOff class="w-12 h-12" />
         </div>
         <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">Aucun véhicule enregistré</h3>
         <p class="text-gray-500 mb-10 max-w-sm mx-auto font-medium">
-          Vous n'avez pas encore ajouté de véhicule. Ajoutez-en un pour commencer à recevoir des offres de fret et publier vos disponibilités.
+          Vous n'avez pas encore ajouté de véhicule. Ajoutez-en un pour commencer à recevoir des offres de fret et
+          publier vos disponibilités.
         </p>
-        <button @click="openAddModal" 
+        <button @click="openAddModal"
           class="inline-flex px-10 py-4 bg-secondary-600 hover:bg-secondary-700 text-white rounded-2xl font-black transition-all hover:shadow-xl hover:shadow-secondary-500/30 active:scale-95">
           Ajouter mon premier véhicule
         </button>
@@ -48,7 +52,8 @@
           class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] border border-white dark:border-gray-700 shadow-xl shadow-gray-200/50 dark:shadow-none p-8 flex flex-col group hover:border-secondary-200 dark:hover:border-secondary-800 transition-all hover:translate-y-[-4px] hover:shadow-2xl">
 
           <div class="flex justify-between items-start mb-6">
-            <div class="p-4 bg-secondary-50 dark:bg-secondary-900/30 rounded-2xl text-secondary-600 shadow-inner group-hover:scale-110 transition-transform">
+            <div
+              class="p-4 bg-secondary-50 dark:bg-secondary-900/30 rounded-2xl text-secondary-600 shadow-inner group-hover:scale-110 transition-transform">
               <IconTruck class="w-8 h-8" />
             </div>
             <div class="flex space-x-2">
@@ -66,11 +71,14 @@
           </div>
 
           <div class="flex-1">
-            <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2 group-hover:text-secondary-600 transition-colors">
+            <h3
+              class="text-xl font-black text-gray-900 dark:text-white mb-2 group-hover:text-secondary-600 transition-colors">
               {{ vehicle.brand }} {{ vehicle.model }}
             </h3>
-            <div class="inline-flex items-center px-3 py-1 bg-gray-100 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-700 mb-6">
-              <span class="text-xs font-black text-gray-500 dark:text-gray-400 font-mono tracking-wider">{{ vehicle.licensePlate }}</span>
+            <div
+              class="inline-flex items-center px-3 py-1 bg-gray-100 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-700 mb-6">
+              <span class="text-xs font-black text-gray-500 dark:text-gray-400 font-mono tracking-wider">{{
+                vehicle.licensePlate }}</span>
             </div>
 
             <div class="space-y-4 border-t border-gray-50 dark:border-gray-700/50 pt-6">
@@ -80,11 +88,13 @@
               </div>
               <div class="flex justify-between items-center text-sm">
                 <span class="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Capacité</span>
-                <span class="font-black text-gray-900 dark:text-white">{{ vehicle.capacity || '-' }} <span class="text-[10px] text-gray-400 uppercase">Tonnes</span></span>
+                <span class="font-black text-gray-900 dark:text-white">{{ vehicle.capacity || '-' }} <span
+                    class="text-[10px] text-gray-400 uppercase">Tonnes</span></span>
               </div>
               <div class="flex justify-between items-center text-sm">
                 <span class="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Statut</span>
-                <span :class="['px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm', getStatusClass(vehicle.status)]">
+                <span
+                  :class="['px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm', getStatusClass(vehicle.status)]">
                   {{ formatStatus(vehicle.status) }}
                 </span>
               </div>

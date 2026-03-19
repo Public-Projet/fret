@@ -5,7 +5,7 @@
         <div>
           <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight flex items-center">
             <IconCalendarCheck class="w-10 h-10 mr-4 text-primary-600 drop-shadow-sm" />
-            Mes Disponibilités
+            Mes disponibilités
           </h1>
           <p class="text-gray-500 font-medium mt-1">Publiez et gérez vos trajets pour recevoir des offres de fret</p>
         </div>

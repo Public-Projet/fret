@@ -7,9 +7,9 @@
       </div>
 
       <!-- Availability View -->
-      <AnnoncesAvailDetails v-else-if="item" :item="item" :is-owner="false"
-        :already-enrolled="alreadyEnrolled" :can-rate="canRate" @enroll="enroll"
-        @show-rating-modal="showRatingModal = true" @refresh="fetchData" @counter="startCounterNegotiation" />
+      <AnnoncesAvailDetails v-else-if="item" :item="item" :is-owner="false" :already-enrolled="alreadyEnrolled"
+        :can-rate="canRate" @enroll="enroll" @show-rating-modal="showRatingModal = true" @refresh="fetchData"
+        @counter="startCounterNegotiation" />
 
       <div v-else class="text-center py-20">
         <IconAlertCircle class="w-12 h-12 text-red-500 mx-auto mb-4" />
@@ -17,11 +17,12 @@
         <NuxtLink to="/app/us/avail" class="btn btn-primary mt-4">Retour aux opportunités</NuxtLink>
       </div>
     </div>
-    
+
     <!-- Negotiation Modal -->
-    <AnnoncesNegotiationModal v-if="showNegotiationModal" :original-price="item?.price || item?.budget"
-      :original-origin="item?.origin" :original-destination="item?.destination" :loading="negotiating"
-      :initial-data="selectedProposalForCounter" @close="closeNegotiationModal" @submit="handleNegotiationSubmit" />
+    <AnnoncesNegotiationModal v-if="showNegotiationModal" :targetId="id" :dataType="'avail'"
+      :originalPrice="item?.price || item?.budget" :originalOrigin="item?.origin"
+      :originalDestination="item?.destination" :initial-data="selectedProposalForCounter" @close="closeNegotiationModal"
+      @success="handleNegotiationSuccess" />
 
     <!-- Rating Modal -->
     <div v-if="showRatingModal"
@@ -34,8 +35,7 @@
             Fermer
             <IconX class="ml-2 w-5 h-5" />
           </button>
-          <ProfileRatingForm :targetId="item.carrier?.id"
-            :targetRole="'carrier'" :initialData="null"
+          <ProfileRatingForm :targetId="item.carrier?.id" :targetRole="'carrier'" :initialData="null"
             @success="handleRatingSuccess" />
         </div>
       </div>
@@ -57,43 +57,16 @@ const authStore = useAuthStore();
 const id = route.params.id as string;
 const item = ref<any>(null);
 const loading = ref(true);
-const negotiating = ref(false);
 const showRatingModal = ref(false);
 const showNegotiationModal = ref(false);
 const selectedProposalForCounter = ref<any>(null);
 
-const handleNegotiationSubmit = async (data: any) => {
-  negotiating.value = true;
-  try {
-    let res;
-    if (selectedProposalForCounter.value) {
-      // It's a counter-proposal
-      const role = authStore.isShipper ? 'shipper' : 'carrier';
-      res = await availStore.counterBooking(selectedProposalForCounter.value.id, role, {
-        proposedPrice: data.price,
-        proposedOrigin: data.origin,
-        proposedDestination: data.destination,
-        notes: data.message
-      });
-    } else {
-      // It's a new proposal
-      res = await availStore.enrollAvailability(id, data);
-    }
-
-    if (res.success) {
-      showNegotiationModal.value = false;
-      selectedProposalForCounter.value = null;
-      await fetchData();
-      if (authStore.isAuthenticated && authStore.isShipper) {
-        await availStore.fetchShipperEnrollments();
-      }
-    } else {
-      alert(res.error || "Une erreur est survenue lors de l'envoi de votre proposition.");
-    }
-  } catch (err) {
-    console.error('Negotiation error:', err);
-  } finally {
-    negotiating.value = false;
+const handleNegotiationSuccess = async () => {
+  showNegotiationModal.value = false;
+  selectedProposalForCounter.value = null;
+  await fetchData();
+  if (authStore.isAuthenticated && authStore.isShipper) {
+    await availStore.fetchShipperEnrollments();
   }
 };
 
