@@ -168,7 +168,7 @@ export const useAvailabilityStore = defineStore('availability', {
 
     async deleteAvailability(id: string) {
       try {
-        await $fetch(`/api/availabilities/${id}`, { method: 'DELETE' });
+        await ($fetch as any)(`/api/availabilities/${id}`, { method: 'DELETE' });
         this.availabilities = this.availabilities.filter(a => a.id !== id);
         return { success: true };
       } catch (err: any) {

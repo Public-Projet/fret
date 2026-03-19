@@ -200,7 +200,7 @@ export const useAnnouncementStore = defineStore('announcement', {
     async deleteAnnouncement(id: string) {
       this.loading = true;
       try {
-        await $fetch(`/api/announcements/${id}`, { method: 'DELETE' });
+        await ($fetch as any)(`/api/announcements/${id}`, { method: 'DELETE' });
         this.announcements = this.announcements.filter(a => a.id !== id);
         if (this.currentAnnouncement?.id === id) {
           this.currentAnnouncement = null;

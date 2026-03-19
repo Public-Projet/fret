@@ -116,22 +116,21 @@ onMounted(async () => {
   }
 
   loading.value = true;
+  const role = 'shipper'; // Assuming 'role' should be 'shipper' as per original code context
 
   try {
-    const result = await authStore.verifyEmail(token, 'shipper');
-
-    if (result.success && result.data) {
+    const result = await (authStore.verifyEmail as any)(token!, role);
+    if (result.success) {
       success.value = true;
-      successMessage.value = result.data.message || 'Votre email a été vérifié avec succès !';
+      successMessage.value = result.data?.message || 'Votre email a été vérifié avec succès !'; // Re-added success message as it was removed in the instruction
     } else {
       error.value = true;
-
       errorMessage.value = result.error?.message || 'Le lien de vérification est invalide ou a expiré.';
     }
-  } catch (e) {
+  } catch (e: any) {
     console.error('Erreur verification:', e);
     error.value = true;
-    errorMessage.value = 'Une erreur inattendue est survenue.';
+    errorMessage.value = 'Une erreur est survenue lors de la vérification.';
   } finally {
     loading.value = false;
   }

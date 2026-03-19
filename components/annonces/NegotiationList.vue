@@ -20,7 +20,7 @@
     <div v-else class="divide-y divide-gray-100 dark:divide-gray-700">
       <div v-for="proposal in items" :key="proposal.id"
         class="p-4 md:p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-        
+
         <!-- Header: User and Status -->
         <div class="flex items-start justify-between mb-4">
           <div class="flex items-center gap-3">
@@ -44,32 +44,38 @@
         <!-- Body: Proposal Details -->
         <div class="bg-gray-50 dark:bg-gray-900/30 rounded-2xl p-4 space-y-3">
           <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
-            <div class="flex w-fit items-center text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/40 px-3 py-1.5 rounded-xl font-black text-lg">
+            <div
+              class="flex w-fit items-center text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/40 px-3 py-1.5 rounded-xl font-black text-lg">
               <IconCash class="w-5 h-5 mr-1" />
               {{ proposal.proposedPrice || proposal.price }} FCFA
             </div>
-            
-            <div v-if="proposal.proposedOrigin || proposal.proposedDestination" class="flex w-fit items-center text-secondary-700 dark:text-secondary-300 bg-secondary-50 dark:bg-secondary-900/40 px-3 py-1.5 rounded-xl font-medium text-sm">
+
+            <div v-if="proposal.proposedOrigin || proposal.proposedDestination"
+              class="flex w-fit items-center text-secondary-700 dark:text-secondary-300 bg-secondary-50 dark:bg-secondary-900/40 px-3 py-1.5 rounded-xl font-medium text-sm">
               <IconMapPin class="w-4 h-4 mr-1 shrink-0" />
-              <span class="truncate">{{ proposal.proposedOrigin?.city || 'Origine' }} &rarr; {{ proposal.proposedDestination?.city || 'Destination' }}</span>
+              <span class="truncate">{{ proposal.proposedOrigin?.city || 'Origine' }} &rarr; {{
+                proposal.proposedDestination?.city || 'Destination' }}</span>
             </div>
           </div>
 
-          <div v-if="proposal.notes || proposal.message" class="text-sm text-gray-600 dark:text-gray-400 italic bg-white dark:bg-gray-800 p-3 rounded-xl border-l-4 border-primary-400 shadow-sm">
+          <div v-if="proposal.notes || proposal.message"
+            class="text-sm text-gray-600 dark:text-gray-400 italic bg-white dark:bg-gray-800 p-3 rounded-xl border-l-4 border-primary-400 shadow-sm">
             "{{ proposal.notes || proposal.message }}"
           </div>
 
           <div v-if="proposal.contractPath">
-            <a :href="`${backendUrl}/api/v1/public/contracts/download/${proposal.contractPath.split('/').pop().replace('.pdf', '')}`"
-                target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-colors">
-                <IconFileDownload class="w-4 h-4 mr-2" />
-                Télécharger le contrat
+            <a :href="`${backendUrl}/api/v1/public/contracts/download/${proposal.contractPath.split('/').pop()}`"
+              target="_blank"
+              class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-colors">
+              <IconFileDownload class="w-4 h-4 mr-2" />
+              Télécharger le contrat
             </a>
           </div>
         </div>
 
         <!-- Footer: Actions -->
-        <div v-if="proposal.status === 'pending'" class="flex flex-col sm:flex-row items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700/50">
+        <div v-if="proposal.status === 'pending'"
+          class="flex flex-col sm:flex-row items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700/50">
           <template v-if="canRespond(proposal)">
             <button @click="handleReject(proposal.id)" :disabled="loading"
               class="w-full sm:w-auto flex-1 btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 py-2.5">
@@ -85,7 +91,8 @@
             </button>
           </template>
           <template v-else>
-            <div class="flex-1 w-full text-sm text-gray-500 dark:text-gray-400 italic flex items-center justify-center sm:justify-start mb-2 sm:mb-0">
+            <div
+              class="flex-1 w-full text-sm text-gray-500 dark:text-gray-400 italic flex items-center justify-center sm:justify-start mb-2 sm:mb-0">
               <IconClock class="w-4 h-4 mr-1.5" /> En attente de leur réponse...
             </div>
             <button @click="$emit('counter', proposal)" :disabled="loading"
