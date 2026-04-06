@@ -286,7 +286,7 @@
                 class="flex-1 md:flex-none px-6 py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-center">
                 Détails
               </NuxtLink>
-              <NuxtLink :to="`/app/messages`"
+              <NuxtLink :to="getConversationId(enrollment.id) ? `/app/messages/${getConversationId(enrollment.id)}` : `/app/messages`"
                 class="flex-1 md:flex-none px-6 py-3 rounded-xl bg-primary-600 text-white font-bold text-sm hover:bg-primary-700 transition-all hover:shadow-lg hover:shadow-primary-500/25 flex items-center justify-center group active:scale-95">
                 <IconMessage class="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" /> Chat
               </NuxtLink>
@@ -301,13 +301,18 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
+import { useMessagingStore } from '~/stores/messaging';
+import { useAuthStore } from '~/stores/auth';
 import { IconSearch, IconLoader2, IconCheck, IconHistory, IconTicketOff, IconArrowRight, IconMessage, IconTruck, IconCalendar, IconPackage, IconUsers, IconTruckOff, IconMapPin, IconChevronDown, IconArrowDown } from '@tabler/icons-vue';
 
 // Tabs
 const activeTab = ref('market');
 
 // Store
+const authStore = useAuthStore();
 const availabilityStore = useAvailabilityStore();
+const messagingStore = useMessagingStore();
+const currentUser = computed(() => authStore.currentUser);
 const loadingPublic = ref(false);
 const loadingEnrollments = ref(false);
 
@@ -322,9 +327,19 @@ const fetchCurrentTabInfo = async () => {
     loadingPublic.value = false;
   } else if (activeTab.value === 'enrollments') {
     loadingEnrollments.value = true;
-    await availabilityStore.fetchShipperEnrollments();
+    await Promise.all([
+      availabilityStore.fetchShipperEnrollments(),
+      currentUser.value ? messagingStore.fetchConversations() : Promise.resolve()
+    ]);
     loadingEnrollments.value = false;
   }
+};
+
+const getConversationId = (enrollmentId: string | number) => {
+  const conv = messagingStore.conversations.find((c: any) => 
+    String(c.referenceId) === String(enrollmentId) && c.referenceType === 'booking'
+  );
+  return conv?.id;
 };
 
 watch(activeTab, fetchCurrentTabInfo);

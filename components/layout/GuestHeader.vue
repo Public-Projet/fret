@@ -215,7 +215,7 @@ const isShipper = computed(() => authStore.isShipper);
 const isDark = computed(() => themeStore.isDark);
 const currentUser = computed(() => authStore.currentUser);
 const unreadCount = computed(() =>
-  currentUser.value ? messagingStore.unreadCount(currentUser.value.id) : 0
+  currentUser.value ? messagingStore.unreadCount() : 0
 );
 
 const userInitials = computed(() => {
@@ -306,7 +306,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .glass-dark {
   @apply bg-gray-900/80 backdrop-blur-xl border-white/5;
 }

@@ -2,10 +2,6 @@
   <div class="container-custom py-8">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Messagerie</h1>
-      <button @click="startMockConversation" class="btn btn-primary flex items-center">
-        <IconPlus class="w-5 h-5 mr-2" />
-        Nouvelle conversation
-      </button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-12rem)]">
@@ -15,7 +11,18 @@
           <input type="text" placeholder="Rechercher..." class="input" />
         </div>
         <div class="flex-1 overflow-y-auto">
-          <div v-if="conversations.length === 0" class="p-4 text-center text-gray-500">
+          <div v-if="loading" class="p-4 space-y-4">
+            <div v-for="i in 5" :key="i" class="animate-pulse flex space-x-4">
+              <div class="flex-1 space-y-3 py-1">
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                <div class="space-y-2">
+                  <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else-if="conversations.length === 0" class="p-4 text-center text-gray-500">
             Aucune conversation
           </div>
           <div v-else>
@@ -25,7 +32,8 @@
               :class="{ 'bg-primary-50 dark:bg-primary-900/10': isActive(conversation.id) }">
               <div class="flex justify-between items-start mb-1">
                 <span class="font-semibold text-gray-900 dark:text-white truncate">
-                  {{ getOtherParticipant(conversation)?.company || getOtherParticipant(conversation)?.firstName }}
+                  {{ getOtherParticipant(conversation)?.company || getOtherParticipant(conversation)?.firstName ||
+                    getOtherParticipant(conversation)?.firstname || 'Utilisateur' }}
                 </span>
                 <span class="text-xs text-gray-500 whitespace-nowrap ml-2">
                   {{ formatDate(conversation.updatedAt) }}
@@ -56,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAuthStore } from '~/stores/auth';
 import type { Conversation } from '~/types';
@@ -67,6 +75,8 @@ const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 
+const loading = ref(true);
+
 const currentUser = computed(() => authStore.currentUser);
 const conversations = computed(() =>
   currentUser.value ? messagingStore.userConversations(currentUser.value.id) : []
@@ -75,7 +85,7 @@ const conversations = computed(() =>
 const isActive = (id: string) => route.params.id === id;
 
 const getOtherParticipant = (conversation: Conversation) => {
-  return conversation.participants.find(p => p.id !== currentUser.value?.id);
+  return conversation.participants.find(p => p.role !== currentUser.value?.role);
 };
 
 const formatDate = (dateString?: string) => {
@@ -89,20 +99,15 @@ const formatDate = (dateString?: string) => {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 };
 
-const startMockConversation = async () => {
-  if (!currentUser.value) return;
-
-  // Create a mock conversation with a support user or random user
-  // In a real app, this would open a user selection modal
-  const otherUserId = currentUser.value.role === 'shipper' ? '4' : '3';
-
-  // Using a mock announcement ID 'ann-1' for demo purposes
-  const result = await messagingStore.getOrCreateConversation('ann-1', [currentUser.value.id, otherUserId]);
-
-  if (result.success && result.conversation) {
-    router.push(`/app/messages/${result.conversation.id}`);
+onMounted(async () => {
+  if (currentUser.value) {
+    loading.value = true;
+    await messagingStore.fetchConversations();
+    loading.value = false;
+  } else {
+    loading.value = false;
   }
-};
+});
 useHead({
   title: 'Messagerie',
   meta: [

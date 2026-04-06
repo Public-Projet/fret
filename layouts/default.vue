@@ -59,7 +59,7 @@ const isSidebarCollapsed = ref(false);
 const currentUser = computed(() => authStore.currentUser);
 const isShipper = computed(() => authStore.isShipper);
 const unreadCount = computed(() =>
-  currentUser.value ? messagingStore.unreadCount(currentUser.value.id) : 0
+  currentUser.value ? messagingStore.unreadCount() : 0
 );
 
 const userInitials = computed(() => {

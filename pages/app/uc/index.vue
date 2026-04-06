@@ -12,11 +12,13 @@
         </p>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
-        <NuxtLink to="/annonces?tab=fret" class="btn-outline flex items-center justify-center py-3 px-6 rounded-2xl font-bold text-sm">
+        <NuxtLink to="/annonces?tab=fret"
+          class="btn-outline flex items-center justify-center py-3 px-6 rounded-2xl font-bold text-sm">
           <IconSearch class="w-5 h-5 mr-2" />
           Trouver du fret
         </NuxtLink>
-        <button @click="publishAvailability" class="btn-primary flex items-center justify-center py-3 px-6 rounded-2xl font-bold text-sm shadow-lg shadow-primary-500/20 active:scale-95 transition-all">
+        <button @click="publishAvailability"
+          class="btn-primary flex items-center justify-center py-3 px-6 rounded-2xl font-bold text-sm shadow-lg shadow-primary-500/20 active:scale-95 transition-all">
           <IconPlus class="w-5 h-5 mr-2" />
           Publier ma disponibilité
         </button>
@@ -34,7 +36,8 @@
 
     <!-- Stats -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12">
-      <div class="group bg-gradient-to-br from-blue-500 to-indigo-700 p-6 rounded-[2rem] shadow-xl shadow-blue-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
+      <div
+        class="group bg-gradient-to-br from-blue-500 to-indigo-700 p-6 rounded-[2rem] shadow-xl shadow-blue-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
         <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
           <IconSend class="w-24 h-24" />
         </div>
@@ -45,7 +48,8 @@
         </div>
       </div>
 
-      <div class="group bg-gradient-to-br from-emerald-500 to-teal-700 p-6 rounded-[2rem] shadow-xl shadow-emerald-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
+      <div
+        class="group bg-gradient-to-br from-emerald-500 to-teal-700 p-6 rounded-[2rem] shadow-xl shadow-emerald-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
         <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
           <IconCircleCheck class="w-24 h-24" />
         </div>
@@ -56,23 +60,27 @@
         </div>
       </div>
 
-      <div class="group bg-gradient-to-br from-purple-500 to-indigo-800 p-6 rounded-[2rem] shadow-xl shadow-purple-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
+      <div
+        class="group bg-gradient-to-br from-purple-500 to-indigo-800 p-6 rounded-[2rem] shadow-xl shadow-purple-500/20 relative overflow-hidden transition-all hover:scale-[1.02]">
         <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
           <IconCurrencyEuro class="w-24 h-24" />
         </div>
         <IconCurrencyEuro class="w-8 h-8 text-white/90 mb-4" />
         <div>
           <p class="text-xs lg:text-sm font-bold text-purple-50/90 uppercase tracking-wider mb-1">CA Potentiel</p>
-          <p class="text-2xl lg:text-3xl font-black text-white leading-tight">{{ potentialRevenue.toLocaleString() }} <span class="text-sm">FCFA</span></p>
+          <p class="text-2xl lg:text-3xl font-black text-white leading-tight">{{ potentialRevenue.toLocaleString() }}
+            <span class="text-sm">FCFA</span></p>
         </div>
       </div>
 
-      <div class="group bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-700/50 relative overflow-hidden transition-all hover:scale-[1.02]">
+      <div
+        class="group bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-700/50 relative overflow-hidden transition-all hover:scale-[1.02]">
         <div class="flex flex-col h-full justify-between">
           <p class="text-xs lg:text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Ma note</p>
           <div class="mt-2">
             <div class="flex items-end gap-2 mb-2">
-              <span class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-none">{{ currentUser?.rating || '0.0' }}</span>
+              <span class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-none">{{
+                currentUser?.rating || '0.0' }}</span>
               <span class="text-xs font-bold text-gray-400 dark:text-gray-500 mb-1">/ 5</span>
             </div>
             <div class="flex gap-1 mb-2">
@@ -80,7 +88,8 @@
                 :class="i <= Math.round(currentUser?.rating || 0) ? 'text-yellow-400' : 'text-gray-200 dark:text-gray-700'"
                 class="w-4 h-4" />
             </div>
-            <p class="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-widest">{{ currentUser?.reviewsCount || 0 }} avis</p>
+            <p class="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-widest">{{
+              currentUser?.reviewsCount || 0 }} avis</p>
           </div>
         </div>
       </div>
@@ -91,29 +100,35 @@
       <div class="lg:col-span-2 space-y-6">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-black text-gray-900 dark:text-white">Mes offres récentes</h2>
-          <NuxtLink to="/annonces?tab=fret" class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors">Explorer →</NuxtLink>
+          <NuxtLink to="/annonces?tab=fret"
+            class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors">Explorer →</NuxtLink>
         </div>
 
-        <div v-if="myOffers.length === 0" class="bg-white dark:bg-gray-800 rounded-[2rem] p-12 text-center border border-gray-100 dark:border-gray-700/50 shadow-xl">
-          <div class="w-20 h-20 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div v-if="myOffers.length === 0"
+          class="bg-white dark:bg-gray-800 rounded-[2rem] p-12 text-center border border-gray-100 dark:border-gray-700/50 shadow-xl">
+          <div
+            class="w-20 h-20 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
             <IconSend class="w-10 h-10 text-gray-300 dark:text-gray-600" />
           </div>
           <p class="text-gray-500 dark:text-gray-400 font-medium mb-6">Vous n'avez fait aucune offre pour le moment.</p>
-          <NuxtLink to="/annonces?tab=fret" class="btn-primary px-8 py-3 rounded-2xl font-black inline-block active:scale-95 transition-all">
+          <NuxtLink to="/annonces?tab=fret"
+            class="btn-primary px-8 py-3 rounded-2xl font-black inline-block active:scale-95 transition-all">
             VOIR LES ANNONCES
           </NuxtLink>
         </div>
 
         <div v-else class="space-y-4">
-          <div v-for="offer in myOffers" :key="offer.id" 
+          <div v-for="offer in myOffers" :key="offer.id"
             class="group bg-white dark:bg-gray-800 p-5 rounded-2xl hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div class="flex items-start gap-4">
-              <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-primary-50 dark:bg-primary-900/20 rounded-xl flex items-center justify-center flex-shrink-0">
                 <IconSend class="w-6 h-6 text-primary-500" />
               </div>
               <div>
                 <div class="flex flex-wrap items-center gap-2 mb-1">
-                  <span :class="getOfferStatusClass(offer.status)" class="text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider">
+                  <span :class="getOfferStatusClass(offer.status)"
+                    class="text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider">
                     {{ getOfferStatusLabel(offer.status) }}
                   </span>
                   <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">
@@ -128,7 +143,7 @@
                 </p>
               </div>
             </div>
-            <NuxtLink :to="`/annonces/${offer.announcementId}?type=offer`" 
+            <NuxtLink :to="`/annonces/${offer.announcementId}?type=offer`"
               class="w-full sm:w-auto px-6 py-2.5 bg-gray-50 dark:bg-gray-900 rounded-xl text-xs font-black text-gray-600 dark:text-gray-300 border border-gray-100 dark:border-gray-700 group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-all text-center">
               DÉTAILS
             </NuxtLink>
@@ -141,15 +156,17 @@
         <h2 class="text-xl font-black text-gray-900 dark:text-white">Pour vous</h2>
 
         <div class="space-y-4">
-          <div v-for="announcement in recommendedAnnouncements" :key="announcement.id" 
+          <div v-for="announcement in recommendedAnnouncements" :key="announcement.id"
             class="group bg-white dark:bg-gray-800 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-primary-500/5 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-150"></div>
-            
+            <div
+              class="absolute top-0 right-0 w-24 h-24 bg-primary-500/5 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-150">
+            </div>
+
             <div class="relative z-10">
               <h3 class="font-black text-gray-900 dark:text-white line-clamp-1 mb-4 text-lg">
                 {{ announcement.title }}
               </h3>
-              
+
               <div class="flex items-center gap-3 mb-6 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-2xl">
                 <div class="w-8 h-8 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center shadow-sm">
                   <IconMapPin class="w-4 h-4 text-primary-500" />
@@ -160,7 +177,8 @@
               </div>
 
               <div class="flex items-center justify-between">
-                <span class="text-xl font-black text-primary-600">{{ announcement.budget.toLocaleString() }} <span class="text-xs">FCFA</span></span>
+                <span class="text-xl font-black text-primary-600">{{ announcement.budget.toLocaleString() }} <span
+                    class="text-xs">FCFA</span></span>
                 <NuxtLink :to="`/annonces/${announcement.id}?type=offer`"
                   class="w-10 h-10 bg-primary-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 hover:bg-primary-500 active:scale-90 transition-all">
                   →
@@ -168,9 +186,9 @@
               </div>
             </div>
           </div>
-          
+
           <!-- View More Card -->
-          <NuxtLink to="/annonces?tab=fret" 
+          <NuxtLink to="/annonces?tab=fret"
             class="block p-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-[2rem] text-center hover:border-primary-500 transition-all group">
             <p class="text-gray-500 font-bold group-hover:text-primary-600">Voir toutes les annonces de fret</p>
           </NuxtLink>
@@ -210,17 +228,17 @@ const recommendedAnnouncements = computed(() => {
 
 // Stats
 const activeOffersCount = computed(() =>
-  myOffers.value.filter(o => ['pending', 'counter'].includes(o.status)).length
+  myOffers.value.filter((o: any) => ['pending', 'counter'].includes(o.status)).length
 );
 
 const acceptedOffersCount = computed(() =>
-  myOffers.value.filter(o => o.status === 'accepted').length
+  myOffers.value.filter((o: any) => o.status === 'accepted').length
 );
 
 const potentialRevenue = computed(() =>
   myOffers.value
-    .filter(o => ['pending', 'counter', 'accepted'].includes(o.status))
-    .reduce((sum, o) => sum + o.price, 0)
+    .filter((o: any) => ['pending', 'counter', 'accepted'].includes(o.status))
+    .reduce((sum: number, o: any) => sum + o.price, 0)
 );
 
 const getOfferStatusLabel = (status: string) => {

@@ -82,7 +82,7 @@
           <NuxtLink to="/app/us/offers" class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors">Voir tout →</NuxtLink>
         </div>
         
-        <div v-if="recentAnnouncements.length === 0" class="flex flex-col items-center justify-center py-12 text-center">
+        <div v-if="recentActivity.length === 0" class="flex flex-col items-center justify-center py-12 text-center">
           <div class="w-20 h-20 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mb-4">
             <IconFileText class="w-10 h-10 text-gray-300 dark:text-gray-600" />
           </div>
@@ -90,18 +90,23 @@
         </div>
         
         <div v-else class="space-y-4">
-          <div v-for="announcement in recentAnnouncements" :key="announcement.id"
+          <div v-for="item in recentActivity" :key="item.type + '-' + item.id"
             class="group flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-900/30 rounded-2xl hover:bg-white dark:hover:bg-gray-700 hover:shadow-lg transition-all border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center shadow-sm">
-                <IconPackage class="w-6 h-6 text-primary-500" />
+                <IconTicket v-if="item.type === 'avail'" class="w-6 h-6 text-emerald-500" />
+                <IconPackage v-else class="w-6 h-6 text-primary-500" />
               </div>
               <div>
-                <p class="font-bold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">{{ announcement.title }}</p>
-                <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{{ formatDate(announcement.createdAt) }}</p>
+                <p class="font-bold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">{{ item.title }}</p>
+                <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  {{ formatDate(item.createdAt) }}
+                  <span class="pl-2 border-l border-gray-200 dark:border-gray-700 ml-2 text-emerald-500" v-if="item.type === 'avail'">Souscription</span>
+                  <span class="pl-2 border-l border-gray-200 dark:border-gray-700 ml-2" v-else>Offre</span>
+                </p>
               </div>
             </div>
-            <NuxtLink :to="`/annonces/${announcement.id}?type=offer`" 
+            <NuxtLink :to="item.link" 
               class="px-4 py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-black text-primary-600 border border-primary-100 dark:border-primary-900/30 group-hover:bg-primary-600 group-hover:text-white transition-all shadow-sm">
               VOIR
             </NuxtLink>
@@ -135,12 +140,14 @@
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useAnnouncementStore } from '~/stores/announcement';
-import { IconCircleCheck, IconCurrencyEuro, IconFileText, IconMessage, IconPlus, IconList, IconRocket, IconTicket } from '@tabler/icons-vue';
+import { useAvailabilityStore } from '~/stores/availability';
+import { IconCircleCheck, IconCurrencyEuro, IconFileText, IconMessage, IconPlus, IconList, IconRocket, IconTicket, IconPackage } from '@tabler/icons-vue';
 
 const authStore = useAuthStore();
 const announcementStore = useAnnouncementStore();
+const availabilityStore = useAvailabilityStore();
 
-const loading = computed(() => announcementStore.loading);
+const loading = computed(() => announcementStore.loading || availabilityStore.loading);
 const currentUser = computed(() => authStore.currentUser);
 
 const myAnnouncements = computed(() => {
@@ -148,25 +155,67 @@ const myAnnouncements = computed(() => {
   return announcementStore.userAnnouncements(currentUser.value.id);
 });
 
+const enrollments = computed(() => availabilityStore.enrollments);
+
 // Stats
-const activeAnnouncementsCount = computed(() =>
-  myAnnouncements.value.filter(a => ['pending', 'negotiating'].includes(a.status)).length
-);
+const activeAnnouncementsCount = computed(() => {
+  const activeOffers = myAnnouncements.value.filter(a => ['pending', 'negotiating'].includes(a.status)).length;
+  const activeEnrollments = enrollments.value.filter(e => ['pending', 'negotiating', 'countered'].includes(e.status)).length;
+  return activeOffers + activeEnrollments;
+});
 
-const negotiatingCount = computed(() =>
-  myAnnouncements.value.filter(a => a.status === 'negotiating').length
-);
+const negotiatingCount = computed(() => {
+  const negOffers = myAnnouncements.value.filter(a => a.status === 'negotiating').length;
+  const negEnrollments = enrollments.value.filter(e => ['negotiating', 'countered'].includes(e.status)).length;
+  return negOffers + negEnrollments;
+});
 
-const completedCount = computed(() =>
-  myAnnouncements.value.filter(a => a.status === 'completed').length
-);
+const completedCount = computed(() => {
+  const compOffers = myAnnouncements.value.filter(a => a.status === 'completed').length;
+  const compEnrollments = enrollments.value.filter(e => ['completed', 'accepted'].includes(e.status)).length;
+  return compOffers + compEnrollments;
+});
 
-const totalBudget = computed(() =>
-  myAnnouncements.value.reduce((sum, a) => sum + a.budget, 0)
-);
+const totalBudget = computed(() => {
+  const sumOffers = myAnnouncements.value.reduce((sum, a) => {
+    let finalPrice = a.budget || 0;
+    if (a.offers && a.offers.length > 0) {
+      const acceptedOffer = a.offers.find((o: any) => ['accepted', 'confirmed'].includes(o.status));
+      if (acceptedOffer) {
+        finalPrice = (acceptedOffer as any).proposedPrice || acceptedOffer.price || finalPrice;
+      }
+    }
+    return sum + finalPrice;
+  }, 0);
+  
+  const sumEnrollments = enrollments.value.reduce((sum, e: any) => {
+    let finalPrice = e.availability?.price || 0;
+    if (e.proposedPrice || e.price) {
+      finalPrice = e.proposedPrice || e.price;
+    }
+    return sum + finalPrice;
+  }, 0);
+  
+  return sumOffers + sumEnrollments;
+});
 
-const recentAnnouncements = computed(() => {
-  return [...myAnnouncements.value]
+const recentActivity = computed(() => {
+  const offersList = myAnnouncements.value.map(a => ({
+    id: a.id,
+    title: a.title,
+    createdAt: a.createdAt,
+    type: 'offer',
+    link: `/annonces/${a.id}?type=offer`
+  }));
+  const enrollmentsList = enrollments.value.map(e => ({
+    id: e.id,
+    title: `${e.availability?.origin?.city || 'Origine'} → ${e.availability?.destination?.city || 'Libre'}`,
+    createdAt: e.createdAt,
+    type: 'avail',
+    link: `/app/us/avail/${e.availability?.id}`
+  }));
+  
+  return [...offersList, ...enrollmentsList]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
 });
@@ -180,6 +229,7 @@ const formatDate = (dateString: string) => {
 
 onMounted(() => {
   announcementStore.fetchMyAnnouncements();
+  availabilityStore.fetchShipperEnrollments();
 });
 useHead({
   title: 'Tableau de bord Expéditeur',

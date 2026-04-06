@@ -274,7 +274,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAvailabilityStore, type Availability } from '~/stores/availability';
-import { IconArrowLeft, IconPencil, IconTrash, IconLoader2, IconCalendar, IconUsers, IconAlertCircle, IconEye, IconUser } from '@tabler/icons-vue';
+import { IconArrowLeft, IconTruck, IconPencil, IconTrash, IconLoader2, IconCalendar, IconUsers, IconAlertCircle, IconEye, IconUser } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();

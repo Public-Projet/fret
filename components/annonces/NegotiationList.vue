@@ -64,7 +64,7 @@
           </div>
 
           <div v-if="proposal.contractPath">
-            <a :href="`${backendUrl}/api/v1/public/contracts/download/${proposal.contractPath.split('/').pop()}`"
+            <a :href="`${backendUrl}/api/v1/public/contracts/download/${proposal.contractPath.split('/').pop().replace('.pdf', '')}`"
               target="_blank"
               class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-colors">
               <IconFileDownload class="w-4 h-4 mr-2" />
@@ -125,21 +125,20 @@ const fretStore = useAnnouncementStore();
 const authStore = useAuthStore();
 const loading = ref(false);
 
-const backendUrl = 'http://localhost:1337'; // TODO: Get from config if possible
+const runtimeConfig = useRuntimeConfig();
+const backendUrl = '';
 
 const canRespond = (proposal: any) => {
   if (!authStore.isAuthenticated) return false;
 
-  // If I am the owner of the main item (Carrier for avail, Shipper for announcement)
-  // I can respond if the LAST proposal was NOT by me.
-
-  // For Availability: Carrier is owner. If lastProposedBy is 'shipper', carrier can respond.
-  if (props.type === 'avail') {
+  // I can respond if the last proposal was NOT by my role.
+  if (authStore.isCarrier) {
     return proposal.lastProposedBy === 'shipper';
+  } else if (authStore.isShipper) {
+    return proposal.lastProposedBy === 'carrier';
   }
 
-  // For Offer: Shipper is owner. If lastProposedBy is 'carrier', shipper can respond.
-  return proposal.lastProposedBy === 'carrier';
+  return false;
 };
 
 const getUserName = (proposal: any) => {

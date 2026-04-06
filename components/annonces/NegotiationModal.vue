@@ -60,7 +60,8 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1">
                   <label class="text-xs text-gray-400 uppercase font-bold pl-1 font-mono">Départ négocié</label>
-                  <input v-model="form.origin.city" type="text" class="input text-sm" placeholder="Ville de départ..." />
+                  <input v-model="form.origin.city" type="text" class="input text-sm"
+                    placeholder="Ville de départ..." />
                 </div>
                 <div class="space-y-1">
                   <label class="text-xs text-gray-400 uppercase font-bold pl-1 font-mono">Arrivée négociée</label>
@@ -89,11 +90,12 @@
           <button @click="$emit('close')" class="flex-1 btn btn-outline py-4 rounded-2xl">
             Annuler
           </button>
-          <div v-if="error" class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 text-red-600 rounded-2xl text-sm font-bold">
+          <div v-if="error"
+            class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 text-red-600 rounded-2xl text-sm font-bold">
             {{ error }}
           </div>
 
-          <button @click="handleSubmit" :disabled="loading" class="flex-1 btn btn-primary py-4 rounded-2xl">
+          <button @click="handleSubmit" :disabled="loading" class="flex item-center btn btn-primary py-4 rounded-2xl">
             <IconLoader2 v-if="loading" class="w-5 h-5 animate-spin mr-2" />
             {{ loading ? 'Envoi...' : 'Envoyer la proposition' }}
           </button>
@@ -144,7 +146,7 @@ const handleSubmit = async () => {
 
   try {
     let res;
-    
+
     if (props.initialData) {
       // Counter-proposal
       const role = authStore.isShipper ? 'shipper' : 'carrier';
