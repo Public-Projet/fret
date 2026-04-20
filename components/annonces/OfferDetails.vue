@@ -44,8 +44,9 @@
                 <div>
                   <p class="text-xs font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-1">
                     Enlèvement</p>
-                  <p class="font-medium text-gray-900 dark:text-white text-lg">{{ item.origin?.city }} ({{
-                    item.origin?.postalCode }})</p>
+                  <p class="font-medium text-gray-900 dark:text-white text-lg">
+                    {{ item.origin?.city }} <span v-if="item.origin?.postalCode">({{ item.origin?.postalCode }})</span>
+                  </p>
                   <p class="text-gray-600 dark:text-gray-400">{{ item.origin?.address }}</p>
                 </div>
               </div>
@@ -57,8 +58,9 @@
                   <p
                     class="text-xs font-semibold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider mb-1">
                     Livraison</p>
-                  <p class="font-medium text-gray-900 dark:text-white text-lg">{{ item.destination?.city }} ({{
-                    item.destination?.postalCode }})</p>
+                  <p class="font-medium text-gray-900 dark:text-white text-lg">
+                    {{ item.destination?.city }} <span v-if="item.destination?.postalCode">({{ item.destination?.postalCode }})</span>
+                  </p>
                   <p class="text-gray-600 dark:text-gray-400">{{ item.destination?.address }}</p>
                 </div>
               </div>
@@ -103,21 +105,21 @@
           <div class="flex items-center gap-4 mb-6">
             <div
               class="w-14 h-14 bg-gradient-to-br from-primary-100 to-primary-50 dark:from-primary-900/30 dark:to-primary-900/10 rounded-2xl flex items-center justify-center text-primary-600 font-black text-2xl uppercase border border-primary-200 dark:border-primary-800">
-              {{ item.user?.firstName?.[0] || 'E' }}
+              {{ (item.shipper || item.user)?.firstName?.[0] || 'E' }}
             </div>
             <div>
               <p class="font-black text-gray-900 dark:text-white text-lg">
-                {{ isOwner ? 'Vous' : (item.user?.company || item.user?.firstName + ' ' + (item.user?.lastName || '')) }}
+                {{ isOwner ? 'Vous' : ((item.shipper || item.user)?.company || (item.shipper || item.user)?.firstName + ' ' + ((item.shipper || item.user)?.lastName || '')) }}
               </p>
               <div class="flex items-center text-sm">
                 <div class="flex mr-2 text-yellow-400">
                   <template v-for="i in 5" :key="i">
-                    <IconStarFilled v-if="i <= Math.round(item.user?.rating || 0)" class="w-4 h-4" />
+                    <IconStarFilled v-if="i <= Math.round((item.shipper || item.user)?.rating || 0)" class="w-4 h-4" />
                     <IconStar v-else class="w-4 h-4 text-gray-200" />
                   </template>
                 </div>
-                <span class="font-black text-gray-700 dark:text-gray-300">{{ item.user?.rating || '0.0' }}</span>
-                <span class="ml-1 text-gray-500">({{ item.user?.reviewCount || 0 }} avis)</span>
+                <span class="font-black text-gray-700 dark:text-gray-300">{{ (item.shipper || item.user)?.rating || '0.0' }}</span>
+                <span class="ml-1 text-gray-500">({{ (item.shipper || item.user)?.reviewCount || 0 }} avis)</span>
               </div>
             </div>
           </div>
@@ -134,13 +136,25 @@
           </div>
         </div>
 
-        <div v-if="authStore.isCarrier && item.status === 'pending'"
+        <div v-if="authStore.isCarrier && item.status === 'pending' && !hasAlreadyOffered"
           class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700">
           <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Faire une offre</h3>
           <p class="text-gray-500 mb-6 font-medium">Proposez vos services pour ce transport et entamez la négociation avec l'expéditeur.</p>
           <button @click="$emit('enroll')" class="btn btn-primary w-full py-4 rounded-2xl shadow-md shadow-primary-500/20">
             Proposer mes services
           </button>
+        </div>
+        
+        <div v-else-if="authStore.isCarrier && (item.status === 'pending' || item.status === 'negotiating') && hasAlreadyOffered"
+          class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-center text-center">
+          <div class="w-16 h-16 bg-amber-50 dark:bg-amber-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <IconMessage class="w-8 h-8 text-amber-500" />
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Négociation en cours</h3>
+          <p class="text-gray-500 mb-6 text-sm">Vous avez déjà fait une offre. Suivez vos messages pour la suite.</p>
+          <NuxtLink to="/app/messages" class="btn btn-outline border-amber-200 text-amber-700 hover:bg-amber-50 w-full py-4 rounded-2xl">
+            Voir mes messages
+          </NuxtLink>
         </div>
       </div>
 
@@ -155,7 +169,8 @@
 </template>
 
 <script setup lang="ts">
-import { IconArrowLeft, IconCalendar, IconMapPin, IconCube, IconScale, IconArrowsMaximize, IconCurrencyEuro, IconStarFilled, IconStar, IconShieldCheck, IconEye, IconUsers } from '@tabler/icons-vue';
+import { computed } from 'vue';
+import { IconArrowLeft, IconCalendar, IconMapPin, IconCube, IconScale, IconArrowsMaximize, IconCurrencyEuro, IconStarFilled, IconStar, IconShieldCheck, IconEye, IconUsers, IconMessage } from '@tabler/icons-vue';
 import { useAuthStore } from '~/stores/auth';
 
 const props = defineProps<{
@@ -172,6 +187,11 @@ defineEmits<{
 }>();
 
 const authStore = useAuthStore();
+
+const hasAlreadyOffered = computed(() => {
+  if (!props.item?.offers || !authStore.currentUser) return false;
+  return props.item.offers.some((o: any) => o.carrier === authStore.currentUser?.id || o.carrier?.id === authStore.currentUser?.id);
+});
 
 const formatDate = (dateStr: string) => {
   if (!dateStr) return '';

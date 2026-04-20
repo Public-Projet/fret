@@ -21,10 +21,11 @@ export const useMessagingStore = defineStore('messaging', {
       return state.conversations.reduce((total: number, conv: any) => total + (conv.unreadCount || 0), 0);
     },
     offersByCarrier: (state) => (carrierId: string) => {
-      return state.offers.filter((o: any) => String(o.carrierId) === String(carrierId));
+      return state.offers.filter((o: any) => String(o.carrier?.id || o.carrier) === String(carrierId));
     },
     offersByAnnouncement: (state) => (announcementId: string) => {
-      return state.offers.filter((o: any) => String(o.announcementId) === String(announcementId));
+      const idStr = String(announcementId);
+      return state.offers.filter((o: any) => String(o.announcement?.id || o.announcement) === idStr);
     },
   },
 
@@ -83,7 +84,7 @@ export const useMessagingStore = defineStore('messaging', {
             content
           }
         });
-        
+
         if (res && res.id) {
           this.messages.push(res);
           // Update conversation lastMessage
@@ -109,32 +110,40 @@ export const useMessagingStore = defineStore('messaging', {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` }
         });
-        
+
         const convIndex = this.conversations.findIndex(c => String(c.id) === String(conversationId));
         if (convIndex !== -1) {
           this.conversations[convIndex].unreadCount = 0;
         }
-        
+
         // local mark messages read
         this.messages
           .filter(m => String(m.conversation) === String(conversationId) && String(m.senderId) !== String(userId))
           .forEach(m => m.read = true);
-          
+
       } catch (e) {
         console.error('Failed to mark read', e);
       }
     },
 
-    async fetchOffersForAnnouncement(announcementId: string) {
-      // Mock implementation to avoid TS errors
+
+    async fetchCarrierOffers() {
       this.loading = true;
       try {
-        await new Promise(resolve => setTimeout(resolve, 300));
+        const token = useCookie('auth_token').value;
+        const res = await $fetch<any[]>(`/api/carrier/offers`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (Array.isArray(res)) {
+          this.offers = res;
+        }
+      } catch (e) {
+        console.error('Failed to fetch carrier offers', e);
       } finally {
         this.loading = false;
       }
     },
-    
+
     async getOrCreateConversation(announcementId: string, participantIds: string[]) {
       // Mock implementation
       this.loading = true;
@@ -145,15 +154,5 @@ export const useMessagingStore = defineStore('messaging', {
         this.loading = false;
       }
     },
-
-    async acceptOffer(offerId: string) {
-      // Mock implementation
-      this.loading = true;
-      try {
-        await new Promise(resolve => setTimeout(resolve, 300));
-      } finally {
-        this.loading = false;
-      }
-    }
   }
 });

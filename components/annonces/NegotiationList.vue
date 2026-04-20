@@ -110,7 +110,7 @@
 import { ref, computed } from 'vue';
 import { IconGavel, IconInbox, IconStarFilled, IconFileDownload, IconMapPin, IconCash, IconClock } from '@tabler/icons-vue';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useAnnouncementStore } from '~/stores/announcement';
+import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useAuthStore } from '~/stores/auth';
 
 const props = defineProps<{
@@ -121,11 +121,10 @@ const props = defineProps<{
 const emit = defineEmits(['refresh', 'counter']);
 
 const availStore = useAvailabilityStore();
-const fretStore = useAnnouncementStore();
+const fretStore = useShpAnnouncementStore();
 const authStore = useAuthStore();
 const loading = ref(false);
 
-const runtimeConfig = useRuntimeConfig();
 const backendUrl = '';
 
 const canRespond = (proposal: any) => {
@@ -186,7 +185,7 @@ const handleAccept = async (id: string) => {
     if (props.type === 'avail') {
       res = await availStore.acceptBooking(id);
     } else {
-      res = await fretStore.acceptOffer(id);
+      res = await fretStore.acceptShpOffer(id);
     }
 
     if (res.success) {

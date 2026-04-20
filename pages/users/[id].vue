@@ -54,7 +54,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '~/stores/user';
 import { useAuthStore } from '~/stores/auth';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useAnnouncementStore } from '~/stores/announcement';
+import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useRoute } from 'vue-router';
 import { IconArrowLeft, IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
@@ -62,7 +62,7 @@ const route = useRoute();
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const availStore = useAvailabilityStore();
-const fretStore = useAnnouncementStore();
+const fretStore = usePbcAnnouncementStore();
 
 const id = route.params.id as string;
 const userRole = route.query.role as string;
@@ -114,7 +114,7 @@ const fetchData = async () => {
     if (res.success && res.data?.shipper) {
       user.value = { ...res.data.shipper, role: 'shipper' };
     }
-    await fretStore.fetchAnnouncements(); // To filter by shipper
+    await fretStore.fetchPublicAnnouncements(); // To filter by shipper
   }
   loading.value = false;
 };

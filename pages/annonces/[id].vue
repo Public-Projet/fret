@@ -52,13 +52,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useAnnouncementStore } from '~/stores/announcement';
+import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useAuthStore } from '~/stores/auth';
 import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
 const availStore = useAvailabilityStore();
-const fretStore = useAnnouncementStore();
+const fretStore = usePbcAnnouncementStore();
 const authStore = useAuthStore();
 
 const id = route.params.id as string;
@@ -149,7 +149,7 @@ const fetchData = async () => {
     const res = await availStore.fetchPublicAvailability(id);
     if (res.success) item.value = res.availability;
   } else if (dataType.value === 'offer' || dataType.value === 'fret') {
-    const res = await fretStore.fetchAnnouncementById(id);
+    const res = await fretStore.getPublicAnnouncements(id);
     // Announcement store might update its state directly
     item.value = fretStore.currentAnnouncement;
   } else {
@@ -159,7 +159,7 @@ const fetchData = async () => {
       item.value = resAvail.availability;
       dataType.value = 'avail';
     } else {
-      const resOffer = await fretStore.fetchAnnouncementById(id);
+      const resOffer = await fretStore.getPublicAnnouncements(id);
       if (resOffer) {
         item.value = fretStore.currentAnnouncement;
         dataType.value = 'offer';

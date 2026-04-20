@@ -1,4 +1,4 @@
 export default defineEventHandler(async (event) => {
-  const announcementId = getRouterParam(event, 'announcementId');
+  const { announcementId } = getQuery(event);
   return proxyToBackend(event, `/shipper/announcement/${announcementId}/offers`);
 });

@@ -3,7 +3,19 @@
     class="bg-white/80 dark:bg-gray-800/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center sticky top-0 z-30 transition-all duration-300">
     <div class="flex items-center gap-4">
       <NuxtLink to="/" class="flex items-center gap-2 group">
-        <img src="/img/Logo.png" alt="BourseFret" class="h-10 w-auto bg-white rounded-lg p-1" />
+        <div
+          class="relative overflow-hidden rounded-xl bg-white p-1.5 shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-105">
+          <img src="/img/Logo.png" alt="BourseFret" class="h-9 w-auto" />
+          <div class="absolute inset-0 bg-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-lg font-black tracking-tight leading-none text-gray-900 dark:text-white">
+            Bourse de Fret
+          </span>
+          <span class="text-[10px] font-bold text-primary-500 uppercase tracking-[0.2em] leading-none mt-1">
+            Bénin Connecté
+          </span>
+        </div>
       </NuxtLink>
     </div>
 

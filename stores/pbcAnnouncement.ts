@@ -8,7 +8,7 @@ interface AnnouncementState {
   loading: boolean;
 }
 
-export const useAnnouncementStore = defineStore('announcement', {
+export const usePbcAnnouncementStore = defineStore('pbcAnnouncement', {
   state: (): AnnouncementState => ({
     announcements: [],
     currentAnnouncement: null,
@@ -17,14 +17,10 @@ export const useAnnouncementStore = defineStore('announcement', {
   }),
 
   getters: {
-    /**
-     * Récupérer toutes les annonces
-     */
+    // Récupérer toutes les annonces
     allAnnouncements: (state) => state.announcements,
 
-    /**
-     * Récupérer les annonces filtrées
-     */
+    // Récupérer les annonces filtrées
     filteredAnnouncements: (state) => {
       let filtered = [...state.announcements];
 
@@ -67,79 +63,68 @@ export const useAnnouncementStore = defineStore('announcement', {
       return filtered;
     },
 
-    /**
-     * Récupérer les annonces d'un utilisateur
-     */
+    // Récupérer les annonces d'un utilisateur
     userAnnouncements: (state) => (userId: string) => {
       return state.announcements.filter(a => a.userId === userId);
     },
 
-    /**
-     * Récupérer les annonces par statut
-     */
+    // Récupérer les annonces par statut
     announcementsByStatus: (state) => (status: AnnouncementStatus) => {
       return state.announcements.filter(a => a.status === status);
     },
   },
 
   actions: {
-    /**
-     * Mettre à jour les filtres
-     */
-    setFilters(filters: AnnouncementFilters) {
-      this.filters = filters;
-    },
-
-    /**
-     * Réinitialiser les filtres
-     */
-    resetFilters() {
-      this.filters = {};
-    },
-
-    /**
-     * Transporteur: Faire une offre sur une annonce
-     */
-    async createOffer(announcementId: string, negotiationData: any) {
+    // Charger toutes les annonces
+    async fetchPublicAnnouncements(queryParams: any = {}) {
       this.loading = true;
+
       try {
-        await $fetch(`/api/announcements/${announcementId}/offer`, {
-          method: 'POST',
-          body: {
-            price: negotiationData.price,
-            message: negotiationData.message,
-            proposedOrigin: negotiationData.origin,
-            proposedDestination: negotiationData.destination,
-          },
+        const queryString = new URLSearchParams(queryParams).toString();
+        const url = `/api/public/announce/list${queryString ? `?${queryString}` : ''}`;
+
+        const response = await $fetch<{ announcements: Announcement[], total: number }>(url);
+
+        const { announcements } = response;
+        this.announcements = announcements.map((a) => {
+          const shipperId = typeof a.shipper === 'object' && a.shipper !== null ? a.shipper.id : a.shipper;
+          if (shipperId && !a.userId) a.userId = shipperId;
+          return a;
         });
-        return { success: true };
-      } catch (error: any) {
-        console.error('Erreur lors de la création de l\'offre:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: true, total: response.total };
+      } catch (error) {
+        console.error('Erreur lors du chargement des annonces:', error);
+        return { success: false, error };
       } finally {
         this.loading = false;
       }
     },
 
-    async rejectOffer(offerId: string) {
+    // Charger une annonce par ID
+    async getPublicAnnouncements(id: string) {
+      this.loading = true;
       try {
-        await $fetch(`/api/offers/${offerId}/reject`, { method: 'POST' });
-        return { success: true };
-      } catch (error: any) {
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        const response = await $fetch<Announcement>(`/api/public/announce/get`);
+        const announcement = response;
+        if (announcement.shipper && !announcement.userId) announcement.userId = announcement.shipper.id;
+        this.currentAnnouncement = announcement;
+        return { success: true, announcement };
+      } catch (error) {
+        console.error('Erreur lors du chargement de l\'annonce:', error);
+        return { success: false, error: 'Annonce non trouvée' };
+      } finally {
+        this.loading = false;
       }
     },
 
-    async counterOffer(offerId: string, role: 'shipper' | 'carrier', data: any) {
-      try {
-        await $fetch(`/api/offers/${offerId}/counter`, {
-          method: 'POST',
-          body: { ...data, role },
-        });
-        return { success: true };
-      } catch (error: any) {
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
-      }
+    // Mettre à jour les filtres
+    setFilters(filters: AnnouncementFilters) {
+      this.filters = filters;
+    },
+
+    // Réinitialiser les filtres
+    resetFilters() {
+      this.filters = {};
     },
   },
 });

@@ -63,12 +63,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useAnnouncementStore } from '~/stores/announcement';
+import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useRoute } from 'vue-router';
 import { IconLoader2, IconTruckOff, IconPackageOff, IconX } from '@tabler/icons-vue';
 
 const availStore = useAvailabilityStore();
-const fretStore = useAnnouncementStore();
+const fretStore = usePbcAnnouncementStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -166,7 +166,7 @@ const fetchData = async () => {
     if (fretFilters.value.cargoType) params.cargoType = fretFilters.value.cargoType;
     if (fretFilters.value.minBudget) params.minBudget = fretFilters.value.minBudget;
 
-    await fretStore.fetchAnnouncements(params);
+    await fretStore.fetchPublicAnnouncements(params);
   }
 };
 

@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   delete body?.role;
 
   const endpoint = role === 'shipper'
-    ? `/shipper/booking/${id}/counter`
+    ? `/shipper/availabilities/${id}/counter`
     : `/carrier/booking/${id}/counter`;
 
   return proxyToBackend(event, endpoint, {

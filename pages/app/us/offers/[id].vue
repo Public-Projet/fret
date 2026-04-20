@@ -68,11 +68,11 @@
                     <div class="flex items-center space-x-3 mb-2">
                       <div
                         class="w-10 h-10 bg-primary-100 dark:bg-primary-900/50 rounded-full flex items-center justify-center font-bold text-primary-700 dark:text-primary-300">
-                        {{ offer.carrier?.firstName[0] }}
+                        {{ (offer.carrier?.firstName || offer.carrier?.company || 'U')[0] }}
                       </div>
                       <div>
                         <p class="font-bold text-gray-900 dark:text-white flex items-center">
-                          {{ offer.carrier?.company || offer.carrier?.firstName }}
+                          {{ offer.carrier?.company || offer.carrier?.firstName || 'Transporteur' }}
                           <IconBadge v-if="offer.carrier?.verified" class="w-4 h-4 text-green-500 ml-1" />
                         </p>
                         <div class="flex items-center text-xs text-gray-500">
@@ -174,14 +174,16 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useAnnouncementStore } from '~/stores/announcement';
+import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
+import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useMessagingStore } from '~/stores/messaging';
 import { useAuthStore } from '~/stores/auth';
 import { IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled, IconCheck, IconMessage, IconBadge } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
-const announcementStore = useAnnouncementStore();
+const announcementStore = useShpAnnouncementStore();
+const pbcAnnouncementStore = usePbcAnnouncementStore();
 const messagingStore = useMessagingStore();
 const authStore = useAuthStore();
 
@@ -235,7 +237,7 @@ const handleCancel = async () => {
 };
 
 const handleUpdate = async (updatedData: any) => {
-  await announcementStore.updateAnnouncement(announcementId, updatedData);
+  await announcementStore.updateShpAnnouncement(announcementId, updatedData);
   showEditModal.value = false;
 };
 
@@ -249,8 +251,12 @@ const contactCarrier = async (carrierId: string) => {
 
 const acceptOffer = async (offerId: string) => {
   if (confirm("Accepter cette offre ? Cela marquera l'annonce comme 'Acceptée'.")) {
-    await messagingStore.acceptOffer(offerId);
-    await announcementStore.updateStatus(announcementId, 'accepted');
+    const res = await announcementStore.acceptShpOffer(offerId);
+    if (res.success) {
+      await announcementStore.updateStatus(announcementId, 'accepted');
+    } else {
+      alert(res.error || "Erreur lors de l'acceptation de l'offre");
+    }
   }
 };
 
@@ -259,8 +265,8 @@ const viewCarrierProfile = (carrierId: string) => {
 };
 
 onMounted(async () => {
-  await announcementStore.fetchAnnouncementById(announcementId);
-  await messagingStore.fetchOffersForAnnouncement(announcementId);
+  await pbcAnnouncementStore.getPublicAnnouncements(announcementId);
+  await announcementStore.fetchShpOffersForAnnouncement(announcementId);
 });
 useHead({
   title: 'Détails de l\'offre',

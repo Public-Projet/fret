@@ -17,7 +17,8 @@
               <IconTruck class="w-5 h-5 mr-2 text-secondary-600" />
               Ma Flotte
             </h3>
-            <button v-if="vehicles.length > 0" @click="openVehicleModal" class="btn btn-secondary btn-xs">
+            <button v-if="vehicles.length > 0" @click="openVehicleModal"
+              class="btn btn-secondary btn-xs flex items-center">
               <IconPlus class="w-3 h-3 mr-1" />
               Ajouter
             </button>
