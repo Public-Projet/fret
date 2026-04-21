@@ -213,7 +213,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconLock, IconCube, IconTruck, IconLoader2, IconEye, IconEyeOff, IconX, IconMail, IconMailCheck } from '@tabler/icons-vue';
 import type { UserRole } from '~/types';
 
@@ -221,10 +221,10 @@ definePageMeta({
   layout: false
 });
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const router = useRouter();
 
-// Login form
+// form
 const email = ref('');
 const password = ref('');
 const error = ref('');
@@ -277,7 +277,7 @@ const handleLogin = async () => {
   error.value = '';
 
   try {
-    const result = await authStore.login(email.value, password.value, selectedRole.value, rememberMe.value);
+    const result = await authStore.loginUser(email.value, password.value, selectedRole.value, rememberMe.value);
 
     if (result.success && result.user) {
       // Redirection selon le rôle
@@ -317,7 +317,7 @@ const handleForgotPassword = async () => {
   forgotError.value = '';
 
   try {
-    const response = await authStore.forgotPassword(forgotEmail.value, selectedRole.value);
+    const response = await authStore.forgotUserPassword(forgotEmail.value, selectedRole.value);
 
     if (response.success && response.data) {
       forgotEmailSent.value = true;

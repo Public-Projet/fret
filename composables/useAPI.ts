@@ -55,7 +55,7 @@ export function useAPI() {
       }
 
       if (!response.ok) {
-        // Redirection vers login si non authentifié
+        // Redirection vers la page de connexion si non authentifié
         if (response.status === 401) {
           const isBadCombo = responseData && typeof responseData === 'object' && ('badCombo' in responseData);
           const skipRedirect = (options as any).skipAuthRedirect === true;

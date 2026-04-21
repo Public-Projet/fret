@@ -14,13 +14,13 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useNotificationStore } from '~/stores/notification';
 import { IconBrandWhatsapp } from '@tabler/icons-vue';
 
 const heroImagePath = "https://assets.volvo.com/is/image/VolvoInformationTechnologyAB/Volvo-High-Capacity-Transport-1?wid=1024";
 const baseUrl = "https://boursefret.netlify.app";
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const notificationStore = useNotificationStore();
 
 onMounted(() => {

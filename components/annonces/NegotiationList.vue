@@ -207,7 +207,7 @@ const handleReject = async (id: string) => {
     if (props.type === 'avail') {
       res = await availStore.rejectBooking(id);
     } else {
-      res = await fretStore.rejectOffer(id);
+      res = await fretStore.rejectShpOffer(id);
     }
 
     if (res.success) {

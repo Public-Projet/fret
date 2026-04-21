@@ -205,6 +205,29 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
       }
     },
 
+    // Refuser une offre
+    async rejectShpOffer(offerId: string) {
+      try {
+        await $fetch(`/api/shipper/announce/offer-reject`, { method: 'POST' });
+        return { success: true };
+      } catch (error: any) {
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
+      }
+    },
+
+    // Contre proposition d'une offre
+    async counterShpOffer(offerId: string, role: 'shipper' | 'carrier', data: any) {
+      try {
+        await $fetch(`/api/shipper/announce/offer-counter`, {
+          method: 'POST',
+          body: { ...data, role },
+        });
+        return { success: true };
+      } catch (error: any) {
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
+      }
+    },
+
 
 
 
@@ -252,25 +275,8 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
       }
     },
 
-    async rejectOffer(offerId: string) {
-      try {
-        await $fetch(`/api/offers/${offerId}/reject`, { method: 'POST' });
-        return { success: true };
-      } catch (error: any) {
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
-      }
-    },
 
-    async counterOffer(offerId: string, role: 'shipper' | 'carrier', data: any) {
-      try {
-        await $fetch(`/api/offers/${offerId}/counter`, {
-          method: 'POST',
-          body: { ...data, role },
-        });
-        return { success: true };
-      } catch (error: any) {
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
-      }
-    },
+
+
   },
 });

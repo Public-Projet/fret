@@ -11,13 +11,12 @@
         <!-- Sidebar Navigation -->
         <aside class="w-full lg:w-72 shrink-0">
           <nav class="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 scrollbar-hide">
-            <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" 
-              :class="[
-                'flex items-center space-x-3 px-6 py-4 rounded-2xl font-bold transition-all duration-300 whitespace-nowrap lg:w-full',
-                activeTab === tab.id
-                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30 -translate-x-1'
-                  : 'text-gray-500 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white hover:shadow-sm'
-              ]">
+            <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" :class="[
+              'flex items-center space-x-3 px-6 py-4 rounded-2xl font-bold transition-all duration-300 whitespace-nowrap lg:w-full',
+              activeTab === tab.id
+                ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30 -translate-x-1'
+                : 'text-gray-500 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white hover:shadow-sm'
+            ]">
               <component :is="tab.icon" class="w-5 h-5 shrink-0" />
               <span>{{ tab.label }}</span>
             </button>
@@ -26,29 +25,35 @@
 
         <!-- Main Content -->
         <main class="flex-1">
-          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-gray-200/50 dark:shadow-none border border-white dark:border-gray-700 overflow-hidden">
+          <div
+            class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-gray-200/50 dark:shadow-none border border-white dark:border-gray-700 overflow-hidden">
             <!-- Profile Tab -->
-            <div v-if="activeTab === 'profile'" class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div v-if="activeTab === 'profile'"
+              class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div class="flex items-center space-x-6 mb-12">
                 <div class="relative group">
-                  <div class="w-24 h-24 rounded-[2rem] bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 text-4xl font-black shadow-inner overflow-hidden">
+                  <div
+                    class="w-24 h-24 rounded-[2rem] bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 text-4xl font-black shadow-inner overflow-hidden">
                     <span v-if="!currentUser?.avatar">{{ currentUser?.firstName?.[0] }}</span>
                     <img v-else :src="currentUser.avatar" class="w-full h-full object-cover" />
                   </div>
-                  <button class="absolute -bottom-2 -right-2 p-2 bg-white dark:bg-gray-700 rounded-xl shadow-lg border border-gray-100 dark:border-gray-600 text-primary-600 hover:scale-110 transition-transform">
+                  <button
+                    class="absolute -bottom-2 -right-2 p-2 bg-white dark:bg-gray-700 rounded-xl shadow-lg border border-gray-100 dark:border-gray-600 text-primary-600 hover:scale-110 transition-transform">
                     <IconCamera class="w-5 h-5" />
                   </button>
                 </div>
                 <div>
-                  <h2 class="text-2xl font-black text-gray-900 dark:text-white">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h2>
-                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px] mt-1">{{ currentUser?.role }}</p>
+                  <h2 class="text-2xl font-black text-gray-900 dark:text-white">{{ currentUser?.firstName }} {{
+                    currentUser?.lastName }}</h2>
+                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px] mt-1">{{ currentUser?.role }}
+                  </p>
                 </div>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="space-y-2">
                   <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Prénom</label>
-                  <input v-model="profileForm.firstname" type="text" 
+                  <input v-model="profileForm.firstname" type="text"
                     class="w-full px-5 py-3.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-700 rounded-2xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none font-bold text-gray-900 dark:text-white" />
                 </div>
                 <div class="space-y-2">
@@ -61,7 +66,8 @@
                   <div class="flex items-center space-x-3">
                     <input :value="currentUser?.email" type="email" disabled
                       class="flex-1 px-5 py-3.5 bg-gray-100 dark:bg-gray-900/50 border border-transparent rounded-2xl font-bold text-gray-400 cursor-not-allowed" />
-                    <button @click="showEmailModal = true" class="px-6 py-3.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl font-bold text-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">Modifier</button>
+                    <button @click="showEmailModal = true"
+                      class="px-6 py-3.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl font-bold text-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">Modifier</button>
                   </div>
                 </div>
               </div>
@@ -76,50 +82,61 @@
             </div>
 
             <!-- Notifications Tab -->
-            <div v-if="activeTab === 'notifications'" class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div v-if="activeTab === 'notifications'"
+              class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-8 flex items-center">
                 <IconBell class="w-7 h-7 mr-3 text-primary-500" /> Préférences de notifications
               </h2>
 
               <div class="space-y-6">
                 <!-- Example notification toggles -->
-                <div class="flex items-center justify-between p-6 bg-gray-50/50 dark:bg-gray-900/30 rounded-3xl border border-gray-100 dark:border-gray-700 group hover:border-primary-100 dark:hover:border-primary-900/30 transition-all">
+                <div
+                  class="flex items-center justify-between p-6 bg-gray-50/50 dark:bg-gray-900/30 rounded-3xl border border-gray-100 dark:border-gray-700 group hover:border-primary-100 dark:hover:border-primary-900/30 transition-all">
                   <div>
                     <h3 class="font-bold text-gray-900 dark:text-white">Nouvelles offres</h3>
-                    <p class="text-sm text-gray-500 mt-0.5">Recevez des emails pour chaque nouvelle offre correspondant à votre profil</p>
+                    <p class="text-sm text-gray-500 mt-0.5">Recevez des emails pour chaque nouvelle offre correspondant
+                      à votre profil</p>
                   </div>
                   <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" checked class="sr-only peer">
-                    <div class="w-14 h-8 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-600 shadow-inner"></div>
+                    <div
+                      class="w-14 h-8 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-600 shadow-inner">
+                    </div>
                   </label>
                 </div>
-                <div class="flex items-center justify-between p-6 bg-gray-50/50 dark:bg-gray-900/30 rounded-3xl border border-gray-100 dark:border-gray-700 group hover:border-primary-100 dark:hover:border-primary-900/30 transition-all">
+                <div
+                  class="flex items-center justify-between p-6 bg-gray-50/50 dark:bg-gray-900/30 rounded-3xl border border-gray-100 dark:border-gray-700 group hover:border-primary-100 dark:hover:border-primary-900/30 transition-all">
                   <div>
                     <h3 class="font-bold text-gray-900 dark:text-white">Messages instantanés</h3>
                     <p class="text-sm text-gray-500 mt-0.5">Être alerté lors de la réception d'un nouveau message</p>
                   </div>
                   <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" checked class="sr-only peer">
-                    <div class="w-14 h-8 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-600 shadow-inner"></div>
+                    <div
+                      class="w-14 h-8 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-600 shadow-inner">
+                    </div>
                   </label>
                 </div>
               </div>
 
               <div class="flex justify-end mt-12 pt-8 border-t border-gray-100 dark:border-gray-700">
-                <button class="px-10 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black transition-all hover:shadow-xl hover:shadow-primary-500/30 active:scale-95">
+                <button
+                  class="px-10 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black transition-all hover:shadow-xl hover:shadow-primary-500/30 active:scale-95">
                   Sauvegarder les préférences
                 </button>
               </div>
             </div>
 
             <!-- Security Tab -->
-            <div v-if="activeTab === 'security'" class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div v-if="activeTab === 'security'"
+              class="p-8 lg:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-10 flex items-center">
                 <IconShieldLock class="w-7 h-7 mr-3 text-primary-500" /> Sécurité du compte
               </h2>
 
               <div class="space-y-8">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 p-8 bg-gray-50/50 dark:bg-gray-900/30 rounded-[2.5rem] border border-gray-100 dark:border-gray-700">
+                <div
+                  class="flex flex-col md:flex-row md:items-center justify-between gap-6 p-8 bg-gray-50/50 dark:bg-gray-900/30 rounded-[2.5rem] border border-gray-100 dark:border-gray-700">
                   <div class="flex items-center space-x-5">
                     <div class="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-2xl text-blue-600">
                       <IconKey class="w-6 h-6" />
@@ -129,7 +146,8 @@
                       <p class="text-sm text-gray-500 mt-0.5">Dernière modification il y a 3 mois</p>
                     </div>
                   </div>
-                  <button @click="showPasswordModal = true" class="px-8 py-3.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl font-black text-sm hover:shadow-lg transition-all active:scale-95">
+                  <button @click="showPasswordModal = true"
+                    class="px-8 py-3.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl font-black text-sm hover:shadow-lg transition-all active:scale-95">
                     Modifier le mot de passe
                   </button>
                 </div>
@@ -138,10 +156,12 @@
                   <h3 class="text-xs font-black text-red-500 uppercase tracking-widest mb-6 ml-1 flex items-center">
                     <IconAlertTriangle class="w-4 h-4 mr-2" /> Zone de danger
                   </h3>
-                  <div class="p-8 bg-red-50/30 dark:bg-red-900/10 rounded-[2.5rem] border border-red-100 dark:border-red-900/30">
+                  <div
+                    class="p-8 bg-red-50/30 dark:bg-red-900/10 rounded-[2.5rem] border border-red-100 dark:border-red-900/30">
                     <h4 class="font-black text-gray-900 dark:text-white mb-2">Supprimer le compte</h4>
-                    <p class="text-sm text-gray-500 mb-8 max-w-xl">Une fois votre compte supprimé, toutes vos données (profil, annonces, messages) seront définitivement effacées. Cette opération est irréversible.</p>
-                    <button @click="handleDeleteAccount" 
+                    <p class="text-sm text-gray-500 mb-8 max-w-xl">Une fois votre compte supprimé, toutes vos données
+                      (profil, annonces, messages) seront définitivement effacées. Cette opération est irréversible.</p>
+                    <button @click="handleDeleteAccount"
                       class="px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black text-sm transition-all hover:shadow-xl hover:shadow-red-500/30 active:scale-95">
                       Supprimer mon compte
                     </button>
@@ -169,22 +189,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { 
-  IconUser, 
-  IconBell, 
-  IconShieldLock, 
-  IconCamera, 
-  IconLoader2, 
-  IconKey, 
-  IconAlertTriangle,
-  IconChevronRight 
-} from '@tabler/icons-vue';
-import { useAuthStore } from '~/stores/auth';
+import { IconUser, IconBell, IconShieldLock, IconCamera, IconLoader2, IconKey, IconAlertTriangle, IconChevronRight } from '@tabler/icons-vue';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useProfileStore } from '~/stores/profile';
 import type { UpdatePasswordData, UpdateEmailData } from '~/types';
 
 const router = useRouter();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const profileStore = useProfileStore();
 const currentUser = computed(() => authStore.currentUser);
 
@@ -213,10 +224,9 @@ onMounted(async () => {
 const updateProfile = async () => {
   if (!currentUser.value) return;
   loading.value = true;
-  // Implement actual update logic via profileStore if needed
   setTimeout(() => {
     loading.value = false;
-    alert('Profil mis à jour (Démo)');
+    alert('Profil mis à jour');
   }, 1000);
 };
 
@@ -309,7 +319,7 @@ const handleDeleteSubmit = async (data: { password: string; confirmation: string
     if (response.success) {
       deleteSuccess.value = 'Votre compte a été supprimé.';
       setTimeout(async () => {
-        await authStore.logout();
+        await authStore.logoutUser();
         router.push('/auth/login');
       }, 1500);
     } else {

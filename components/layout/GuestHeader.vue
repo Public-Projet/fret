@@ -185,21 +185,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useThemeStore } from '~/stores/theme';
 import { useMessagingStore } from '~/stores/messaging';
-import {
-  IconChevronDown,
-  IconMenu2,
-  IconX,
-  IconArrowRight,
-  IconLayoutDashboard,
-  IconUser,
-  IconSettings,
-  IconLogout
-} from '@tabler/icons-vue';
+import { IconChevronDown, IconMenu2, IconX, IconArrowRight, IconLayoutDashboard, IconUser, IconSettings, IconLogout } from '@tabler/icons-vue';
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const themeStore = useThemeStore();
 const messagingStore = useMessagingStore();
 const router = useRouter();
@@ -224,7 +215,6 @@ const userInitials = computed(() => {
 });
 
 const headerLinks = computed(() => {
-  // Base links now include Tarifs as suggested by the user
   const links = [
     { label: 'Marché', to: '/annonces' },
     { label: 'Annuaire', to: '/users' },
@@ -284,7 +274,7 @@ const closeMobileMenu = () => {
 };
 
 const handleLogout = () => {
-  authStore.logout();
+  authStore.logoutUser();
   closeUserMenu();
   router.push('/');
 };

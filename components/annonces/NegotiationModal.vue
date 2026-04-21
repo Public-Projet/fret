@@ -109,7 +109,7 @@
 import { ref, reactive } from 'vue';
 import { IconX, IconCurrencyDollar, IconMapPinFilled, IconMessageDots, IconLoader2 } from '@tabler/icons-vue';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useAnnouncementStore } from '~/stores/announcement';
+import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useAuthStore } from '~/stores/auth';
 
 const props = defineProps<{
@@ -127,7 +127,7 @@ const emit = defineEmits<{
 }>();
 
 const availStore = useAvailabilityStore();
-const fretStore = useAnnouncementStore();
+const fretStore = useShpAnnouncementStore();
 const authStore = useAuthStore();
 
 const loading = ref(false);
@@ -158,7 +158,7 @@ const handleSubmit = async () => {
           notes: form.message
         });
       } else {
-        res = await fretStore.counterOffer(props.initialData.id, role, {
+        res = await fretStore.counterShpOffer(props.initialData.id, role, {
           price: form.price,
           proposedOrigin: form.origin,
           proposedDestination: form.destination,

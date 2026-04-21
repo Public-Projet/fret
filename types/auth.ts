@@ -1,8 +1,6 @@
 import type { UserRole } from './index';
 
-/**
- * Interface utilisateur normalisée pour le frontend
- */
+// Interface utilisateur normalisée pour le frontend
 export interface AuthUser {
   id: string;
   email: string;
@@ -10,7 +8,6 @@ export interface AuthUser {
   lastName: string;
   role: UserRole;
   status: 'pending' | 'active' | 'suspended';
-
   company?: string;
   phone?: string;
   avatar?: string;
@@ -18,7 +15,6 @@ export interface AuthUser {
   reviewsCount?: number;
   verified?: boolean;
   createdAt?: string;
-
   kycDocuments?: {
     id: string;
     type: string;
@@ -30,9 +26,7 @@ export interface AuthUser {
   kycStatus?: 'none' | 'pending' | 'verified' | 'rejected';
 }
 
-/**
- * Interface utilisateur retournée par l'API
- */
+// Interface utilisateur retournée par l'API
 export interface ApiUser {
   id: string;
   email: string;
@@ -49,24 +43,18 @@ export interface ApiUser {
   kycStatus?: string;
 }
 
-/**
- * Réponse de l'API login
- */
+// Réponse de l'API login
 export interface LoginResponse {
   token: string;
   user: ApiUser;
 }
 
-/**
- * Réponse de l'API register
- */
+// Réponse de l'API d'inscription
 export interface RegisterResponse {
   message: string;
 }
 
-/**
- * État du store d'authentification
- */
+// État du store d'authentification
 export interface AuthState {
   user: AuthUser | null;
   isAuthenticated: boolean;
@@ -75,9 +63,7 @@ export interface AuthState {
   lastConnectedAt: string | null;
 }
 
-/**
- * Données d'inscription
- */
+// Données d'inscription
 export interface RegisterData {
   email: string;
   password: string;
@@ -85,9 +71,7 @@ export interface RegisterData {
   lastname: string;
 }
 
-/**
- * Convertit un utilisateur API vers le format frontend
- */
+// Convertit un utilisateur API vers le format frontend
 export function mapApiUserToAuthUser(apiUser: ApiUser): AuthUser {
   return {
     id: apiUser.id,

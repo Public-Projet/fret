@@ -120,26 +120,5 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.loading = false;
       }
     },
-
-    async rejectOffer(offerId: string) {
-      try {
-        await $fetch(`/api/offers/${offerId}/reject`, { method: 'POST' });
-        return { success: true };
-      } catch (error: any) {
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
-      }
-    },
-
-    async counterOffer(offerId: string, role: 'shipper' | 'carrier', data: any) {
-      try {
-        await $fetch(`/api/offers/${offerId}/counter`, {
-          method: 'POST',
-          body: { ...data, role },
-        });
-        return { success: true };
-      } catch (error: any) {
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
-      }
-    },
   },
 });

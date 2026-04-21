@@ -90,15 +90,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
-import { IconLoader2, IconCircleCheck, IconCircleX, IconLogin, IconUserPlus, IconAlertTriangle, IconMail } from '@tabler/icons-vue';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
+import { IconLoader2, IconCircleCheck, IconCircleX, IconLogin, IconAlertTriangle, IconMail } from '@tabler/icons-vue';
 
 definePageMeta({
   layout: false
 });
 
 const route = useRoute();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const loading = ref(false);
 const success = ref(false);
@@ -116,10 +116,10 @@ onMounted(async () => {
   }
 
   loading.value = true;
-  const role = 'shipper'; // Assuming 'role' should be 'shipper' as per original code context
+  const role = 'shipper';
 
   try {
-    const result = await (authStore.verifyEmail as any)(token!, role);
+    const result = await (authStore.verifyUserEmail as any)(token!, role);
     if (result.success) {
       success.value = true;
       successMessage.value = result.data?.message || 'Votre email a été vérifié avec succès !'; // Re-added success message as it was removed in the instruction

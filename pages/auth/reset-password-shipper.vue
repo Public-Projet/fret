@@ -118,24 +118,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
-import {
-  IconLoader2,
-  IconLock,
-  IconEye,
-  IconEyeOff,
-  IconCircleCheck,
-  IconCircleX,
-  IconLogin
-} from '@tabler/icons-vue';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
+import { IconLoader2, IconLock, IconEye, IconEyeOff, IconCircleCheck, IconCircleX, IconLogin } from '@tabler/icons-vue';
 
 definePageMeta({
   layout: false
 });
 
 const route = useRoute();
-const router = useRouter();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const token = ref<string | null>(null);
 const loading = ref(true);
@@ -173,7 +164,7 @@ const handleResetPassword = async () => {
   submitting.value = true;
 
   try {
-    const response = await authStore.resetPassword(token.value!, newPassword.value, 'shipper');
+    const response = await authStore.resetUserPassword(token.value!, newPassword.value, 'shipper');
 
     if (response.success && response.data) {
       resetSuccess.value = true;

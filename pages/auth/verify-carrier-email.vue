@@ -90,15 +90,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
-import { IconLoader2, IconCircleCheck, IconCircleX, IconLogin, IconUserPlus, IconAlertTriangle, IconMail } from '@tabler/icons-vue';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
+import { IconLoader2, IconCircleCheck, IconCircleX, IconLogin, IconAlertTriangle, IconMail } from '@tabler/icons-vue';
 
 definePageMeta({
   layout: false
 });
 
 const route = useRoute();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const loading = ref(false);
 const success = ref(false);
@@ -118,7 +118,7 @@ onMounted(async () => {
   loading.value = true;
 
   try {
-    const result = await authStore.verifyEmail(token, 'carrier');
+    const result = await authStore.verifyUserEmail(token, 'carrier');
 
     if (result.success && result.data) {
       success.value = true;

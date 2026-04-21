@@ -121,7 +121,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { UserRole } from '~/types';
 import { IconCube, IconTruck, IconLoader2, IconCheck, IconEye, IconEyeOff } from '@tabler/icons-vue';
 
@@ -131,7 +131,7 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const role = ref<UserRole>('shipper');
 const loading = ref(false);
@@ -159,7 +159,7 @@ const handleRegister = async () => {
   successMessage.value = '';
 
   try {
-    const result = await authStore.register({
+    const result = await authStore.registerUser({
       email: form.email,
       password: form.password,
       firstname: form.firstname,

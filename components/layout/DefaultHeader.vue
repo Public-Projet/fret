@@ -91,8 +91,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
-import { IconMenu2, IconX, IconChevronDown, IconUser, IconLogout, IconHome, IconSettings } from '@tabler/icons-vue';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
+import { IconMenu2, IconX, IconChevronDown, IconUser, IconLogout, IconSettings } from '@tabler/icons-vue';
 
 defineProps<{
   menuOpen: boolean;
@@ -100,7 +100,7 @@ defineProps<{
 
 defineEmits(['toggle-menu']);
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const router = useRouter();
 
 const isDropdownOpen = ref(false);
@@ -126,7 +126,7 @@ const userRole = computed(() => {
 
 const handleLogout = () => {
   isDropdownOpen.value = false;
-  authStore.logout();
+  authStore.logoutUser();
   router.push('/auth/login');
 };
 
