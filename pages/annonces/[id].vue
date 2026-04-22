@@ -53,13 +53,13 @@
 import { ref, computed, onMounted } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
 const availStore = useAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const id = route.params.id as string;
 const dataType = ref<'avail' | 'fret' | 'offer' | null>((route.query.type as any) || null);

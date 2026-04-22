@@ -1,8 +1,8 @@
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { ROLES } from '~/utils/roles';
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const authStore = useAuthStore();
+  const authStore = useCmnAuthStore();
   const path = to.path;
 
   // Si l'utilisateur n'est pas connecté, le middleware auth.global.ts gère déjà la redirection

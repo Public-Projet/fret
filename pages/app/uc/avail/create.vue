@@ -158,7 +158,7 @@
 import { ref, reactive, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useProfileStore } from '~/stores/profile';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { 
   IconArrowLeft, IconMapPin, IconTruck, IconLoader2, 
   IconChevronDown, IconCurrencyEuro, IconAlertCircle 
@@ -166,7 +166,7 @@ import {
 
 const router = useRouter();
 const availabilityStore = useAvailabilityStore();
-const profileStore = useProfileStore();
+const profileStore = useCmnProfileStore();
 
 const vehicles = computed(() => profileStore.vehicles);
 const loadingVehicles = computed(() => profileStore.vehiclesLoading);

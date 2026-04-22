@@ -154,7 +154,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { IconArrowLeft, IconStarFilled, IconStar, IconTruck, IconCheck, IconUser, IconEye, IconUsers } from '@tabler/icons-vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useAvailabilityStore } from '~/stores/availability';
 
 const props = defineProps<{
@@ -171,7 +171,7 @@ defineEmits<{
   (e: 'counter', proposal: any): void;
 }>();
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const availStore = useAvailabilityStore();
 
 const getMyEnrollmentStatusText = () => {

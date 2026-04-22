@@ -118,11 +118,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useMessagingStore } from '~/stores/messaging';
 import { IconCalendar, IconMapPin, IconSearch, IconEye, IconMessage, IconSend, IconArrowRight } from '@tabler/icons-vue';
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const messagingStore = useMessagingStore();
 const currentFilter = ref('all');
 

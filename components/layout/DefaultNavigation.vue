@@ -33,7 +33,7 @@
 import { computed } from 'vue';
 import { IconDashboard, IconTruck, IconMessage, IconSettings, IconListCheck } from '@tabler/icons-vue';
 import { ROLES } from '~/utils/roles';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 const props = defineProps<{
   isShipper: boolean;
@@ -41,7 +41,7 @@ const props = defineProps<{
   collapsed?: boolean;
 }>();
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const navigationItems = computed(() => {
   const items = [

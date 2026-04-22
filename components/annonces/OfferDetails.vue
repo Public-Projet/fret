@@ -171,7 +171,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { IconArrowLeft, IconCalendar, IconMapPin, IconCube, IconScale, IconArrowsMaximize, IconCurrencyEuro, IconStarFilled, IconStar, IconShieldCheck, IconEye, IconUsers, IconMessage } from '@tabler/icons-vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 const props = defineProps<{
   item: any;
@@ -186,7 +186,7 @@ defineEmits<{
   (e: 'refresh'): void;
 }>();
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const hasAlreadyOffered = computed(() => {
   if (!props.item?.offers || !authStore.currentUser) return false;

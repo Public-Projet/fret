@@ -115,7 +115,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useProfileStore } from '~/stores/profile';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { useAPI } from '~/composables/useAPI';
 import {
   IconArrowLeft, IconFileDescription, IconDownload, IconLoader2,
@@ -124,7 +124,7 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const profileStore = useProfileStore();
+const profileStore = useCmnProfileStore();
 const api = useAPI();
 
 const document = ref<any>(null);

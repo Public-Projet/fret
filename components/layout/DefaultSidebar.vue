@@ -82,7 +82,7 @@
 import { computed } from 'vue';
 import { IconTruck, IconDashboard, IconMessage, IconSettings, IconChevronLeft, IconChevronRight, IconListCheck } from '@tabler/icons-vue';
 import { ROLES } from '~/utils/roles';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 const props = defineProps<{
   userInitials: string;
@@ -96,7 +96,7 @@ const props = defineProps<{
 
 defineEmits(['toggle-collapse']);
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 interface MenuItem {
   label: string;

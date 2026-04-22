@@ -132,11 +132,11 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useAvailabilityStore } from '~/stores/availability';
 import { IconCalendar, IconMapPin, IconPlus, IconTruck, IconCurrencyEuro, IconChevronRight, IconArrowRight, IconCalendarCheck, IconUsers, IconEye } from '@tabler/icons-vue';
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const availabilityStore = useAvailabilityStore();
 
 const availabilities = computed(() => availabilityStore.availabilities);

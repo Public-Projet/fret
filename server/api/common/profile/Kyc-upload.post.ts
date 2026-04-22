@@ -10,7 +10,6 @@ export default defineEventHandler(async (event) => {
   }
 
   // For KYC, the body is FormData — we need to forward it as-is
-  // Since proxyToBackend uses JSON, we do a raw proxy here
   const config = useRuntimeConfig();
   const baseUrl = config.apiBaseUrl as string;
   const token = getHeader(event, 'authorization')?.slice(7) || getCookie(event, 'auth_token');

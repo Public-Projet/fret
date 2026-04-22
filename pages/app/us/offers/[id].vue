@@ -177,7 +177,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useMessagingStore } from '~/stores/messaging';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled, IconCheck, IconMessage, IconBadge } from '@tabler/icons-vue';
 
 const route = useRoute();
@@ -185,7 +185,7 @@ const router = useRouter();
 const announcementStore = useShpAnnouncementStore();
 const pbcAnnouncementStore = usePbcAnnouncementStore();
 const messagingStore = useMessagingStore();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const announcementId = route.params.id as string;
 const showEditModal = ref(false);

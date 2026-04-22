@@ -111,7 +111,7 @@ import { ref, computed } from 'vue';
 import { IconGavel, IconInbox, IconStarFilled, IconFileDownload, IconMapPin, IconCash, IconClock } from '@tabler/icons-vue';
 import { useAvailabilityStore } from '~/stores/availability';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 const props = defineProps<{
   items: any[];
@@ -122,7 +122,7 @@ const emit = defineEmits(['refresh', 'counter']);
 
 const availStore = useAvailabilityStore();
 const fretStore = useShpAnnouncementStore();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const loading = ref(false);
 
 const backendUrl = '';

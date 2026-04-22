@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
-  const query = getQuery(event);
-  const role = query.role as string;
+  const body = await readBody(event);
+  const role = body?.role as string;
 
   if (!role || !['shipper', 'carrier'].includes(role)) {
     throw createError({
@@ -9,5 +9,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return proxyToBackend(event, `/${role}/me`);
+  const { role: _role, ...deleteData } = body;
+
+  return proxyToBackend(event, `/${role}/profile`, {
+    method: 'DELETE',
+    body: deleteData,
+  });
 });

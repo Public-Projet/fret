@@ -189,14 +189,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { IconUser, IconBell, IconShieldLock, IconCamera, IconLoader2, IconKey, IconAlertTriangle, IconChevronRight } from '@tabler/icons-vue';
+import { IconUser, IconBell, IconShieldLock, IconCamera, IconLoader2, IconKey, IconAlertTriangle } from '@tabler/icons-vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useProfileStore } from '~/stores/profile';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 import type { UpdatePasswordData, UpdateEmailData } from '~/types';
 
 const router = useRouter();
 const authStore = useCmnAuthStore();
-const profileStore = useProfileStore();
+const profileStore = useCmnProfileStore();
 const currentUser = computed(() => authStore.currentUser);
 
 const activeTab = ref('profile');
@@ -209,25 +209,37 @@ const tabs = [
 ];
 
 const profileForm = reactive({
-  firstname: currentUser.value?.firstName || '',
-  lastname: currentUser.value?.lastName || ''
+  firstname: '',
+  lastname: ''
 });
 
 onMounted(async () => {
   if (currentUser.value) {
-    await profileStore.fetchProfile(currentUser.value.role);
-    profileForm.firstname = currentUser.value.firstName || '';
-    profileForm.lastname = currentUser.value.lastName || '';
+    const res = await profileStore.fetchProfile(currentUser.value.role);
+    if (res.success && res.profile) {
+      profileForm.firstname = res.profile.firstname || '';
+      profileForm.lastname = res.profile.lastname || '';
+    } else {
+      profileForm.firstname = currentUser.value.firstName || '';
+      profileForm.lastname = currentUser.value.lastName || '';
+    }
   }
 });
 
 const updateProfile = async () => {
   if (!currentUser.value) return;
   loading.value = true;
-  setTimeout(() => {
-    loading.value = false;
-    alert('Profil mis à jour');
-  }, 1000);
+  const result = await profileStore.updateProfile(currentUser.value.role, {
+    firstname: profileForm.firstname,
+    lastname: profileForm.lastname
+  });
+
+  loading.value = false;
+  if (result.success) {
+    // Le header sera mis à jour via la synchro dans le store
+  } else {
+    alert(result.error || 'Erreur lors de la mise à jour');
+  }
 };
 
 // Password Modal
@@ -312,18 +324,15 @@ const handleDeleteSubmit = async (data: { password: string; confirmation: string
   deleteError.value = '';
   deleteSuccess.value = '';
   try {
-    const api = useAPI();
-    const userRole = currentUser.value.role;
-    const endpoint = userRole === 'shipper' ? '/shipper/profile' : '/carrier/profile';
-    const response = await api.del(endpoint, data);
-    if (response.success) {
-      deleteSuccess.value = 'Votre compte a été supprimé.';
+    const result = await profileStore.deleteAccount(currentUser.value.role, data);
+    if (result.success) {
+      deleteSuccess.value = result.message || 'Votre compte a été supprimé.';
       setTimeout(async () => {
         await authStore.logoutUser();
         router.push('/auth/login');
       }, 1500);
     } else {
-      deleteError.value = response.error?.message || 'Erreur lors de la suppression.';
+      deleteError.value = result.error || 'Erreur lors de la suppression.';
     }
   } catch (error: any) {
     deleteError.value = error.message || 'Une erreur est survenue.';

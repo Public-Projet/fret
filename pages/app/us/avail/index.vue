@@ -302,14 +302,14 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
 import { useMessagingStore } from '~/stores/messaging';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconSearch, IconLoader2, IconCheck, IconHistory, IconTicketOff, IconArrowRight, IconMessage, IconTruck, IconCalendar, IconPackage, IconUsers, IconTruckOff, IconMapPin, IconChevronDown, IconArrowDown } from '@tabler/icons-vue';
 
 // Tabs
 const activeTab = ref('market');
 
 // Store
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const availabilityStore = useAvailabilityStore();
 const messagingStore = useMessagingStore();
 const currentUser = computed(() => authStore.currentUser);

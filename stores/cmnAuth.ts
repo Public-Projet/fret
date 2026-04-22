@@ -283,7 +283,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
       this.isLoading = true;
 
       try {
-        const response = await $fetch<{ user: ApiUser }>('/api/auth/me', {
+        const response = await $fetch<{ user: ApiUser }>('/api/common/profile/me', {
           query: { role: roleCookie.value },
           headers: {
             'Authorization': `Bearer ${tokenCookie.value}`,

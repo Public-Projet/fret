@@ -9,7 +9,7 @@ interface ProfileState {
   vehiclesLoading: boolean;
 }
 
-export const useProfileStore = defineStore('profile', {
+export const useCmnProfileStore = defineStore('cmnProfile', {
   state: (): ProfileState => ({
     profile: null,
     vehicles: [],
@@ -31,15 +31,13 @@ export const useProfileStore = defineStore('profile', {
   },
 
   actions: {
-    /**
-     * Récupérer le profil utilisateur
-     */
+    // Récupérer le profil utilisateur
     async fetchProfile(role: UserRole, _requestOptions: any = {}) {
       this.isLoading = true;
       this.error = null;
 
       try {
-        const response = await $fetch<{ message: string; user: UserProfile }>('/api/profile', {
+        const response = await $fetch<{ message: string; user: UserProfile }>('/api/common/profile/me', {
           query: { role },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
@@ -47,7 +45,16 @@ export const useProfileStore = defineStore('profile', {
         });
 
         if (response?.user) {
+          const authStore = useCmnAuthStore();
           this.profile = response.user;
+
+          // Synchronisation avec l'authStore pour le header
+          authStore.updateProfile({
+            firstName: response.user.firstname,
+            lastName: response.user.lastname,
+            avatar: response.user.photoUrl
+          });
+
           if (role === 'carrier') {
             await this.fetchVehicles();
           }
@@ -65,12 +72,13 @@ export const useProfileStore = defineStore('profile', {
       }
     },
 
+    // Mettre à jour le profil
     async updateProfile(role: UserRole, data: UpdateProfileData, _requestOptions: any = {}) {
       this.isLoading = true;
       this.error = null;
 
       try {
-        const response = await $fetch<{ message: string; user: UserProfile }>('/api/profile/update', {
+        const response = await $fetch<{ message: string; user: UserProfile }>('/api/common/profile/update-profile', {
           method: 'PATCH',
           body: { ...data, role },
           headers: {
@@ -79,7 +87,16 @@ export const useProfileStore = defineStore('profile', {
         });
 
         if (response?.user) {
+          const authStore = useCmnAuthStore();
           this.profile = response.user;
+
+          // Mise à jour de l'authStore pour synchroniser le header
+          authStore.updateProfile({
+            firstName: response.user.firstname,
+            lastName: response.user.lastname,
+            avatar: response.user.photoUrl
+          });
+
           return { success: true, message: response.message, profile: this.profile };
         } else {
           const errorMessage = 'Erreur de mise à jour';
@@ -95,38 +112,13 @@ export const useProfileStore = defineStore('profile', {
       }
     },
 
-    async updatePassword(role: UserRole, data: UpdatePasswordData, _requestOptions: any = {}) {
-      this.isLoading = true;
-      this.error = null;
-
-      try {
-        const response = await $fetch<{ message: string }>('/api/profile/password', {
-          method: 'PATCH',
-          body: { ...data, role },
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        if (response?.message) {
-          return { success: true, message: response.message };
-        }
-        return { success: false, error: 'Erreur de mise à jour' };
-      } catch (e: any) {
-        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du mot de passe';
-        this.error = errorMessage;
-        return { success: false, error: errorMessage };
-      } finally {
-        this.isLoading = false;
-      }
-    },
-
+    // Mettre à jour l'email
     async updateEmail(role: UserRole, data: UpdateEmailData, _requestOptions: any = {}) {
       this.isLoading = true;
       this.error = null;
 
       try {
-        const response = await $fetch<{ message: string }>('/api/profile/email', {
+        const response = await $fetch<{ message: string }>('/api/common/profile/email', {
           method: 'PATCH',
           body: {
             email: data.newEmail,
@@ -150,6 +142,163 @@ export const useProfileStore = defineStore('profile', {
         this.isLoading = false;
       }
     },
+
+    // Mettre à jour le mot de passe
+    async updatePassword(role: UserRole, data: UpdatePasswordData, _requestOptions: any = {}) {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const response = await $fetch<{ message: string }>('/api/common/profile/password', {
+          method: 'PATCH',
+          body: { ...data, role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.message) {
+          return { success: true, message: response.message };
+        }
+        return { success: false, error: 'Erreur de mise à jour' };
+      } catch (e: any) {
+        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du mot de passe';
+        this.error = errorMessage;
+        return { success: false, error: errorMessage };
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    // Soumettre ses documents de KYC
+    async uploadKycDocument(type: string, file: File, role: UserRole = 'carrier') {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const formData = new FormData();
+        formData.append('type', type);
+        formData.append('document', file);
+        formData.append('role', role);
+
+        const response = await $fetch<{ message: string; document: any }>('/api/common/profile/kyc-upload', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.message) {
+          await this.fetchProfile(role);
+          return { success: true, message: response.message };
+        }
+        return { success: false, error: 'Erreur envoi document' };
+      } catch (e: any) {
+        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de l\'envoi du document' };
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    // Récupérer les métadonnées d'un document KYC
+    async fetchKycDocument(role: UserRole, docId: string) {
+      this.isLoading = true;
+
+      try {
+        const response = await $fetch<{ document: any }>(`/api/common/profile/kyc-document`, {
+          query: { role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.document) {
+          return { success: true, document: response.document };
+        }
+        return { success: false, error: 'Document non trouvé' };
+      } catch (e: any) {
+        return { success: false, error: e?.data?.message || 'Erreur lors de la récupération du document' };
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async updateVehicle(id: string, data: Partial<AddVehicleData>) {
+      this.vehiclesLoading = true;
+
+      try {
+        const response = await $fetch<{ message: string; vehicle: Vehicle }>(`/api/vehicles/${id}`, {
+          method: 'PATCH',
+          body: data,
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.vehicle) {
+          const index = this.vehicles.findIndex(v => v.id === id);
+          if (index !== -1) {
+            this.vehicles[index] = response.vehicle;
+          }
+          return { success: true, message: response.message };
+        }
+        return { success: false, error: 'Erreur de mise à jour' };
+      } catch (e: any) {
+        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du véhicule' };
+      } finally {
+        this.vehiclesLoading = false;
+      }
+    },
+
+    // Supprimer le compte
+    async deleteAccount(role: UserRole, data: { password: string; confirmation: string }) {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const response = await $fetch<{ message: string }>('/api/common/profile/delete-account', {
+          method: 'DELETE',
+          body: { ...data, role },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.message) {
+          return { success: true, message: response.message };
+        }
+        return { success: false, error: 'Erreur lors de la suppression' };
+      } catch (e: any) {
+        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la suppression du compte';
+        this.error = errorMessage;
+        return { success: false, error: errorMessage };
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Récupérer les véhicules
@@ -253,90 +402,9 @@ export const useProfileStore = defineStore('profile', {
       }
     },
 
-    /**
-     * Envoyer un document KYC
-     */
-    async uploadKycDocument(type: string, file: File, role: UserRole = 'carrier') {
-      this.isLoading = true;
-      this.error = null;
 
-      try {
-        const formData = new FormData();
-        formData.append('type', type);
-        formData.append('document', file);
-        formData.append('role', role);
 
-        const response = await $fetch<{ message: string; document: any }>('/api/kyc/upload', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
 
-        if (response?.message) {
-          await this.fetchProfile(role);
-          return { success: true, message: response.message };
-        }
-        return { success: false, error: 'Erreur envoi document' };
-      } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de l\'envoi du document' };
-      } finally {
-        this.isLoading = false;
-      }
-    },
-
-    /**
-     * Récupérer les métadonnées d'un document KYC
-     */
-    async fetchKycDocument(role: UserRole, docId: string) {
-      this.isLoading = true;
-
-      try {
-        const response = await $fetch<{ document: any }>(`/api/kyc/${docId}`, {
-          query: { role },
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        if (response?.document) {
-          return { success: true, document: response.document };
-        }
-        return { success: false, error: 'Document non trouvé' };
-      } catch (e: any) {
-        return { success: false, error: e?.data?.message || 'Erreur lors de la récupération du document' };
-      } finally {
-        this.isLoading = false;
-      }
-    },
-
-    async updateVehicle(id: string, data: Partial<AddVehicleData>) {
-      this.vehiclesLoading = true;
-
-      try {
-        const response = await $fetch<{ message: string; vehicle: Vehicle }>(`/api/vehicles/${id}`, {
-          method: 'PATCH',
-          body: data,
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        if (response?.vehicle) {
-          const index = this.vehicles.findIndex(v => v.id === id);
-          if (index !== -1) {
-            this.vehicles[index] = response.vehicle;
-          }
-          return { success: true, message: response.message };
-        }
-        return { success: false, error: 'Erreur de mise à jour' };
-      } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du véhicule' };
-      } finally {
-        this.vehiclesLoading = false;
-      }
-    },
 
     /**
      * Mettre à jour le statut d'un véhicule

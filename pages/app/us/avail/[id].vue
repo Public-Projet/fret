@@ -47,12 +47,12 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
 const availStore = useAvailabilityStore();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const id = route.params.id as string;
 const item = ref<any>(null);

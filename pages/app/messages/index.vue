@@ -66,12 +66,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useMessagingStore } from '~/stores/messaging';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { Conversation } from '~/types';
 import { IconMessage, IconPlus } from '@tabler/icons-vue';
 
 const messagingStore = useMessagingStore();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const route = useRoute();
 const router = useRouter();
 

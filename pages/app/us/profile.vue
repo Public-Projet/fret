@@ -106,10 +106,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useProfileStore } from '~/stores/profile';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { IconPremiumRights, IconHistory, IconCertificate, IconPlus, IconFileCheck, IconLoader2, IconX, IconDownload, IconEye } from '@tabler/icons-vue';
 
-const profileStore = useProfileStore();
+const profileStore = useCmnProfileStore();
 const profile = computed(() => profileStore.profile);
 
 // Modals visibility

@@ -48,10 +48,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useMessagingStore } from '~/stores/messaging';
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const messagingStore = useMessagingStore();
 const mobileMenuOpen = ref(false);
 const isSidebarCollapsed = ref(false);

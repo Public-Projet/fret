@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useAuthStore } from './auth';
+import { useCmnAuthStore } from './cmnAuth';
 
 export const useMessagingStore = defineStore('messaging', {
   state: () => ({
@@ -31,7 +31,7 @@ export const useMessagingStore = defineStore('messaging', {
 
   actions: {
     getApiBase() {
-      const auth = useAuthStore();
+      const auth = useCmnAuthStore();
       const role = auth.userRole || 'public';
       return `/api/${role}/messaging`;
     },
@@ -73,7 +73,7 @@ export const useMessagingStore = defineStore('messaging', {
     async sendMessage(conversationId: string, senderId: string, content: string) {
       this.loading = true;
       try {
-        const auth = useAuthStore();
+        const auth = useCmnAuthStore();
         const token = useCookie('auth_token').value;
         const res = await $fetch<any>(`${this.getApiBase()}/conversations/${conversationId}/messages`, {
           method: 'POST',

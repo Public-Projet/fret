@@ -15,7 +15,7 @@ export const useNotificationStore = defineStore('notification', {
   actions: {
     async fetchNotifications(page = 1) {
       this.isLoading = true;
-      const authStore = useAuthStore();
+      const authStore = useCmnAuthStore();
       const role = authStore.user?.role;
 
       if (!role) {
@@ -49,7 +49,7 @@ export const useNotificationStore = defineStore('notification', {
     },
 
     async markAsRead(id: string) {
-      const authStore = useAuthStore();
+      const authStore = useCmnAuthStore();
       const role = authStore.user?.role;
 
       if (!role) return;
@@ -77,7 +77,7 @@ export const useNotificationStore = defineStore('notification', {
     },
 
     async markAllAsRead() {
-      const authStore = useAuthStore();
+      const authStore = useCmnAuthStore();
       const role = authStore.user?.role;
 
       if (!role) return;
@@ -99,7 +99,7 @@ export const useNotificationStore = defineStore('notification', {
     },
 
     async deleteNotification(id: string) {
-      const authStore = useAuthStore();
+      const authStore = useCmnAuthStore();
       const role = authStore.user?.role;
 
       if (!role) return;

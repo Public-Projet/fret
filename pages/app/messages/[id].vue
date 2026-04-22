@@ -141,13 +141,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useMessagingStore } from '~/stores/messaging';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { Conversation } from '~/types';
 import { IconArrowLeft, IconSend, IconReceipt2, IconCheck } from '@tabler/icons-vue';
 
 const route = useRoute();
 const messagingStore = useMessagingStore();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const conversationId = route.params.id as string;
 const messagesContainer = ref<HTMLElement | null>(null);

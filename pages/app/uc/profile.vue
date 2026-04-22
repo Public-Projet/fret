@@ -169,13 +169,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useProfileStore } from '~/stores/profile';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 import type { AddVehicleData, Vehicle } from '~/types';
 import {
   IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconX, IconLoader2, IconEye
 } from '@tabler/icons-vue';
 
-const profileStore = useProfileStore();
+const profileStore = useCmnProfileStore();
 const profile = computed(() => profileStore.profile);
 const vehicles = computed(() => profileStore.vehicles);
 

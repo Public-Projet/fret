@@ -191,18 +191,18 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useMessagingStore } from '~/stores/messaging';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useProfileStore } from '~/stores/profile';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconTruck } from '@tabler/icons-vue';
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const messagingStore = useMessagingStore();
 const announcementStore = usePbcAnnouncementStore();
 const availabilityStore = useAvailabilityStore();
-const profileStore = useProfileStore();
+const profileStore = useCmnProfileStore();
 
 const publishAvailability = () => {
   useRouter().push('/app/uc/avail/create');

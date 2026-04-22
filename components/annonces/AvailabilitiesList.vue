@@ -98,7 +98,7 @@
 
 <script setup lang="ts">
 import { IconMapPin, IconMapPinFilled, IconCalendar, IconTruck, IconStarFilled, IconStar, IconEye, IconUsers } from '@tabler/icons-vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 const props = defineProps<{
   items: any[];
@@ -108,7 +108,7 @@ defineEmits<{
   (e: 'openRateModal', carrier: any): void;
 }>();
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const formatDate = (dateStr: string) => {
   return new Date(dateStr).toLocaleDateString('fr-FR', {

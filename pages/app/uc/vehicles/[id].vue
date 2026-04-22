@@ -214,7 +214,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useProfileStore } from '~/stores/profile';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 import type { Vehicle, AddVehicleData } from '~/types';
 import { 
   IconArrowLeft, IconTruck, IconPencil, IconTrash, 
@@ -225,7 +225,7 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const profileStore = useProfileStore();
+const profileStore = useCmnProfileStore();
 
 const vehicleId = route.params.id as string;
 const vehicle = ref<Vehicle | null>(null);

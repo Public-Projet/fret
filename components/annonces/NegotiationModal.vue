@@ -110,7 +110,7 @@ import { ref, reactive } from 'vue';
 import { IconX, IconCurrencyDollar, IconMapPinFilled, IconMessageDots, IconLoader2 } from '@tabler/icons-vue';
 import { useAvailabilityStore } from '~/stores/availability';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 const props = defineProps<{
   targetId: string;
@@ -128,7 +128,7 @@ const emit = defineEmits<{
 
 const availStore = useAvailabilityStore();
 const fretStore = useShpAnnouncementStore();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const loading = ref(false);
 const error = ref('');

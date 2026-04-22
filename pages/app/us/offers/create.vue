@@ -208,13 +208,13 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconChevronLeft, IconInfoCircle, IconMapPin, IconCalendar, IconScale, IconRocket, IconLoader2, IconChevronDown } from '@tabler/icons-vue';
 import type { CargoType } from '~/types';
 
 const router = useRouter();
 const shpAnnouncementStore = useShpAnnouncementStore();
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 
 const loading = ref(false);
 

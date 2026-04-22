@@ -146,12 +146,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useAuthStore } from '~/stores/auth';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import type { Announcement } from '~/types';
 import { IconCalendar, IconFileText, IconMapPin, IconPencil, IconPlus, IconTrash, IconEye, IconUsers } from '@tabler/icons-vue';
 
-const authStore = useAuthStore();
+const authStore = useCmnAuthStore();
 const announcementStore = useShpAnnouncementStore();
 const currentFilter = ref('all');
 const showEditModal = ref(false);
