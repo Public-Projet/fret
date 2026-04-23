@@ -194,14 +194,14 @@ import { computed, onMounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useMessagingStore } from '~/stores/messaging';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
-import { useAvailabilityStore } from '~/stores/availability';
+import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconTruck } from '@tabler/icons-vue';
 
 const authStore = useCmnAuthStore();
 const messagingStore = useMessagingStore();
 const announcementStore = usePbcAnnouncementStore();
-const availabilityStore = useAvailabilityStore();
+const availabilityStore = useCarAvailabilityStore();
 const profileStore = useCmnProfileStore();
 
 const publishAvailability = () => {
@@ -314,7 +314,7 @@ const formatDate = (dateString: string) => {
 
 onMounted(() => {
   announcementStore.fetchPublicAnnouncements();
-  availabilityStore.fetchAvailabilities();
+  availabilityStore.fetchCarAvailabilities();
   profileStore.fetchVehicles();
   messagingStore.fetchCarrierOffers();
 });

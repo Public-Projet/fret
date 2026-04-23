@@ -108,7 +108,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { IconX, IconCurrencyDollar, IconMapPinFilled, IconMessageDots, IconLoader2 } from '@tabler/icons-vue';
-import { useAvailabilityStore } from '~/stores/availability';
+import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 
@@ -126,7 +126,7 @@ const emit = defineEmits<{
   success: [];
 }>();
 
-const availStore = useAvailabilityStore();
+const availStore = useCarAvailabilityStore();
 const fretStore = useShpAnnouncementStore();
 const authStore = useCmnAuthStore();
 
@@ -148,10 +148,9 @@ const handleSubmit = async () => {
     let res;
 
     if (props.initialData) {
-      // Counter-proposal
       const role = authStore.isShipper ? 'shipper' : 'carrier';
       if (props.dataType === 'avail') {
-        res = await availStore.counterBooking(props.initialData.id, role, {
+        res = await availStore.counterCarBooking(props.initialData.id, role, {
           proposedPrice: form.price,
           proposedOrigin: form.origin,
           proposedDestination: form.destination,

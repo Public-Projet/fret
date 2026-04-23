@@ -109,7 +109,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { IconGavel, IconInbox, IconStarFilled, IconFileDownload, IconMapPin, IconCash, IconClock } from '@tabler/icons-vue';
-import { useAvailabilityStore } from '~/stores/availability';
+import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 
@@ -120,7 +120,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['refresh', 'counter']);
 
-const availStore = useAvailabilityStore();
+const availStore = useCarAvailabilityStore();
 const fretStore = useShpAnnouncementStore();
 const authStore = useCmnAuthStore();
 const loading = ref(false);
@@ -183,7 +183,7 @@ const handleAccept = async (id: string) => {
   try {
     let res;
     if (props.type === 'avail') {
-      res = await availStore.acceptBooking(id);
+      res = await availStore.acceptCarBooking(id);
     } else {
       res = await fretStore.acceptShpOffer(id);
     }
@@ -205,7 +205,7 @@ const handleReject = async (id: string) => {
   try {
     let res;
     if (props.type === 'avail') {
-      res = await availStore.rejectBooking(id);
+      res = await availStore.rejectCarBooking(id);
     } else {
       res = await fretStore.rejectShpOffer(id);
     }

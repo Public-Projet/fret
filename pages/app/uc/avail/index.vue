@@ -133,17 +133,17 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useAvailabilityStore } from '~/stores/availability';
+import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { IconCalendar, IconMapPin, IconPlus, IconTruck, IconCurrencyEuro, IconChevronRight, IconArrowRight, IconCalendarCheck, IconUsers, IconEye } from '@tabler/icons-vue';
 
 const authStore = useCmnAuthStore();
-const availabilityStore = useAvailabilityStore();
+const availabilityStore = useCarAvailabilityStore();
 
 const availabilities = computed(() => availabilityStore.availabilities);
 const loading = computed(() => availabilityStore.loading);
 
 onMounted(() => {
-  availabilityStore.fetchAvailabilities();
+  availabilityStore.fetchCarAvailabilities();
 });
 
 const getStatusLabel = (status: string) => {

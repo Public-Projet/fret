@@ -273,12 +273,12 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useAvailabilityStore, type Availability } from '~/stores/availability';
+import { useCarAvailabilityStore, type Availability } from '~/stores/carAvailability';
 import { IconArrowLeft, IconTruck, IconPencil, IconTrash, IconLoader2, IconCalendar, IconUsers, IconAlertCircle, IconEye, IconUser } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
-const store = useAvailabilityStore();
+const store = useCarAvailabilityStore();
 const id = route.params.id as string;
 
 const availability = ref<Availability | null>(null);
@@ -321,7 +321,7 @@ onMounted(async () => {
 
 const loadAvailability = async () => {
   loading.value = true;
-  const result = await store.fetchAvailability(id);
+  const result = await store.fetchCarAvailability(id);
   if (result.success && result.availability) {
     availability.value = result.availability;
   } else {
@@ -400,7 +400,7 @@ const handleUpdate = async () => {
     destination: form.destination.city ? form.destination : undefined
   };
 
-  const result = await store.updateAvailability(id, payload);
+  const result = await store.updateCarAvailability(id, payload);
 
   if (result.success && result.availability) {
     availability.value = result.availability;
@@ -414,7 +414,7 @@ const handleUpdate = async () => {
 
 const handleDelete = async () => {
   if (!confirm('Supprimer cette disponibilité ?')) return;
-  const result = await store.deleteAvailability(id);
+  const result = await store.deleteCarAvailability(id);
   if (result.success) {
     router.push('/app/uc/avail');
   } else {
