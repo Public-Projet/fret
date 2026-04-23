@@ -187,12 +187,12 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useThemeStore } from '~/stores/theme';
-import { useMessagingStore } from '~/stores/messaging';
+import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { IconChevronDown, IconMenu2, IconX, IconArrowRight, IconLayoutDashboard, IconUser, IconSettings, IconLogout } from '@tabler/icons-vue';
 
 const authStore = useCmnAuthStore();
 const themeStore = useThemeStore();
-const messagingStore = useMessagingStore();
+const messagingStore = useCmnMessagingStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -206,7 +206,7 @@ const isShipper = computed(() => authStore.isShipper);
 const isDark = computed(() => themeStore.isDark);
 const currentUser = computed(() => authStore.currentUser);
 const unreadCount = computed(() =>
-  currentUser.value ? messagingStore.unreadCount() : 0
+  currentUser.value ? messagingStore.unreadCount : 0
 );
 
 const userInitials = computed(() => {

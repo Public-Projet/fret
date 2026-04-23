@@ -49,17 +49,17 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useMessagingStore } from '~/stores/messaging';
+import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 
 const authStore = useCmnAuthStore();
-const messagingStore = useMessagingStore();
+const messagingStore = useCmnMessagingStore();
 const mobileMenuOpen = ref(false);
 const isSidebarCollapsed = ref(false);
 
 const currentUser = computed(() => authStore.currentUser);
 const isShipper = computed(() => authStore.isShipper);
 const unreadCount = computed(() =>
-  currentUser.value ? messagingStore.unreadCount() : 0
+  currentUser.value ? messagingStore.unreadCount : 0
 );
 
 const userInitials = computed(() => {
