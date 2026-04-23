@@ -65,12 +65,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useMessagingStore } from '~/stores/messaging';
+import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { Conversation } from '~/types';
 import { IconMessage, IconPlus } from '@tabler/icons-vue';
 
-const messagingStore = useMessagingStore();
+const messagingStore = useCmnMessagingStore();
 const authStore = useCmnAuthStore();
 const route = useRoute();
 const router = useRouter();
@@ -79,7 +79,7 @@ const loading = ref(true);
 
 const currentUser = computed(() => authStore.currentUser);
 const conversations = computed(() =>
-  currentUser.value ? messagingStore.userConversations(currentUser.value.id) : []
+  currentUser.value ? messagingStore.conversations : []
 );
 
 const isActive = (id: string) => route.params.id === id;
@@ -102,7 +102,7 @@ const formatDate = (dateString?: string) => {
 onMounted(async () => {
   if (currentUser.value) {
     loading.value = true;
-    await messagingStore.fetchConversations();
+    await messagingStore.fetchUserConversations();
     loading.value = false;
   } else {
     loading.value = false;

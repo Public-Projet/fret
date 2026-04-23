@@ -176,7 +176,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
-import { useMessagingStore } from '~/stores/messaging';
+import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled, IconCheck, IconMessage, IconBadge } from '@tabler/icons-vue';
 
@@ -184,7 +184,7 @@ const route = useRoute();
 const router = useRouter();
 const announcementStore = useShpAnnouncementStore();
 const pbcAnnouncementStore = usePbcAnnouncementStore();
-const messagingStore = useMessagingStore();
+const messagingStore = useCmnMessagingStore();
 const authStore = useCmnAuthStore();
 
 const announcementId = route.params.id as string;
@@ -243,7 +243,7 @@ const handleUpdate = async (updatedData: any) => {
 
 const contactCarrier = async (carrierId: string) => {
   if (!currentUser.value) return;
-  const result = await messagingStore.getOrCreateConversation(announcementId, [currentUser.value.id, carrierId]);
+  const result = await messagingStore.getOrCreateUserConversation(announcementId, [currentUser.value.id, carrierId]);
   if (result.success && result.conversation) {
     router.push(`/app/messages/${result.conversation.id}`);
   }

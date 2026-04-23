@@ -192,14 +192,14 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useMessagingStore } from '~/stores/messaging';
+import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconTruck } from '@tabler/icons-vue';
 
 const authStore = useCmnAuthStore();
-const messagingStore = useMessagingStore();
+const messagingStore = useCmnMessagingStore();
 const announcementStore = usePbcAnnouncementStore();
 const availabilityStore = useCarAvailabilityStore();
 const profileStore = useCmnProfileStore();

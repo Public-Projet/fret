@@ -140,13 +140,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue';
-import { useMessagingStore } from '~/stores/messaging';
+import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { Conversation } from '~/types';
 import { IconArrowLeft, IconSend, IconReceipt2, IconCheck } from '@tabler/icons-vue';
 
 const route = useRoute();
-const messagingStore = useMessagingStore();
+const messagingStore = useCmnMessagingStore();
 const authStore = useCmnAuthStore();
 
 const conversationId = route.params.id as string;
@@ -157,7 +157,7 @@ const loading = ref(true);
 
 const currentUser = computed(() => authStore.currentUser);
 const conversations = computed(() =>
-  currentUser.value ? messagingStore.userConversations(currentUser.value.id) : []
+  currentUser.value ? messagingStore.conversations : []
 );
 const currentConversation = computed(() =>
   conversations.value.find(c => String(c.id) === String(conversationId))
@@ -207,7 +207,7 @@ const sendMessage = async () => {
 
   sending.value = true;
   try {
-    await messagingStore.sendMessage(conversationId, currentUser.value.id, newMessage.value);
+    await messagingStore.sendUserMessage(conversationId, newMessage.value);
     newMessage.value = '';
     scrollToBottom();
   } finally {
@@ -219,10 +219,10 @@ onMounted(async () => {
   if (currentUser.value) {
     loading.value = true;
     await Promise.all([
-      messagingStore.fetchConversations(),
-      messagingStore.fetchMessages(conversationId)
+      messagingStore.fetchUserConversations(),
+      messagingStore.fetchUserMessages(conversationId)
     ]);
-    messagingStore.markAsRead(conversationId, currentUser.value.id);
+    messagingStore.readUserMessage(conversationId);
     loading.value = false;
   } else {
     loading.value = false;

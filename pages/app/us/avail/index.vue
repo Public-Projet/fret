@@ -262,7 +262,7 @@
                     <span class="truncate">{{ enrollment.availability?.origin?.city }}</span>
                     <IconArrowRight class="w-5 h-5 text-primary-500 flex-shrink-0" />
                     <span class="truncate text-primary-600">{{ enrollment.availability?.destination?.city || 'Libre'
-                      }}</span>
+                    }}</span>
                   </p>
                   <div class="flex items-center mt-2 text-gray-500 font-bold text-sm">
                     <IconCalendar class="w-4 h-4 mr-2 text-primary-400" />
@@ -286,7 +286,8 @@
                 class="flex-1 md:flex-none px-6 py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-center">
                 Détails
               </NuxtLink>
-              <NuxtLink :to="getConversationId(enrollment.id) ? `/app/messages/${getConversationId(enrollment.id)}` : `/app/messages`"
+              <NuxtLink
+                :to="getConversationId(enrollment.id) ? `/app/messages/${getConversationId(enrollment.id)}` : `/app/messages`"
                 class="flex-1 md:flex-none px-6 py-3 rounded-xl bg-primary-600 text-white font-bold text-sm hover:bg-primary-700 transition-all hover:shadow-lg hover:shadow-primary-500/25 flex items-center justify-center group active:scale-95">
                 <IconMessage class="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" /> Chat
               </NuxtLink>
@@ -301,7 +302,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
-import { useMessagingStore } from '~/stores/messaging';
+import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconSearch, IconLoader2, IconCheck, IconHistory, IconTicketOff, IconArrowRight, IconMessage, IconTruck, IconCalendar, IconPackage, IconUsers, IconTruckOff, IconMapPin, IconChevronDown, IconArrowDown } from '@tabler/icons-vue';
 
@@ -311,7 +312,7 @@ const activeTab = ref('market');
 // Store
 const authStore = useCmnAuthStore();
 const availabilityStore = useAvailabilityStore();
-const messagingStore = useMessagingStore();
+const messagingStore = useCmnMessagingStore();
 const currentUser = computed(() => authStore.currentUser);
 const loadingPublic = ref(false);
 const loadingEnrollments = ref(false);
@@ -329,14 +330,14 @@ const fetchCurrentTabInfo = async () => {
     loadingEnrollments.value = true;
     await Promise.all([
       availabilityStore.fetchShipperEnrollments(),
-      currentUser.value ? messagingStore.fetchConversations() : Promise.resolve()
+      currentUser.value ? messagingStore.fetchUserConversations() : Promise.resolve()
     ]);
     loadingEnrollments.value = false;
   }
 };
 
 const getConversationId = (enrollmentId: string | number) => {
-  const conv = messagingStore.conversations.find((c: any) => 
+  const conv = messagingStore.conversations.find((c: any) =>
     String(c.referenceId) === String(enrollmentId) && c.referenceType === 'booking'
   );
   return conv?.id;
