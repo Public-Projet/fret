@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useNotificationStore } from '~/stores/notification';
+import { useCmnNotificationStore } from '~/stores/cmnNotification';
 import { IconArrowLeft, IconInfoCircle, IconAlertTriangle, IconAlertCircle, IconLoader2, IconTrash, IconSearchOff } from '@tabler/icons-vue';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -84,7 +84,7 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
-const notificationStore = useNotificationStore();
+const notificationStore = useCmnNotificationStore();
 const id = route.params.id as string;
 
 const notification = computed(() => notificationStore.notifications.find(n => String(n.id) === String(id)));
@@ -106,15 +106,14 @@ const formatDate = (timestamp?: number) => {
 
 const handleDelete = async () => {
   if (confirm('Voulez-vous vraiment supprimer cette notification ?')) {
-    await notificationStore.deleteNotification(id);
+    await notificationStore.deleteUserNotification(id);
     router.push('/app/notifications');
   }
 };
 
 onMounted(async () => {
   isLoading.value = true;
-  // If not found in current list, try to fetch (the get-one marks as read on server)
-  await notificationStore.markAsRead(id);
+  await notificationStore.getOneUserNotification(id);
   isLoading.value = false;
 });
 useHead({

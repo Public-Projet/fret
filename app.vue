@@ -15,18 +15,18 @@
 
 <script setup lang="ts">
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useNotificationStore } from '~/stores/notification';
+import { useCmnNotificationStore } from '~/stores/cmnNotification';
 import { IconBrandWhatsapp } from '@tabler/icons-vue';
 
 const heroImagePath = "https://assets.volvo.com/is/image/VolvoInformationTechnologyAB/Volvo-High-Capacity-Transport-1?wid=1024";
 const baseUrl = "https://boursefret.netlify.app";
 const authStore = useCmnAuthStore();
-const notificationStore = useNotificationStore();
+const notificationStore = useCmnNotificationStore();
 
 onMounted(() => {
   authStore.restoreSession();
   if (authStore.isAuthenticated) {
-    notificationStore.fetchNotifications();
+    notificationStore.fetchUserNotifications();
     notificationStore.startPolling();
   }
 });

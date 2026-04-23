@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Notification } from '~/types';
 
-export const useNotificationStore = defineStore('notification', {
+export const useCmnNotificationStore = defineStore('cmnNotification', {
   state: () => ({
     notifications: [] as Notification[],
     unreadCount: 0,
@@ -13,7 +13,8 @@ export const useNotificationStore = defineStore('notification', {
   }),
 
   actions: {
-    async fetchNotifications(page = 1) {
+    // Liste de toutes les notifications
+    async fetchUserNotifications(page = 1) {
       this.isLoading = true;
       const authStore = useCmnAuthStore();
       const role = authStore.user?.role;
@@ -24,7 +25,7 @@ export const useNotificationStore = defineStore('notification', {
       }
 
       try {
-        const response = await $fetch<any>('/api/notifications', {
+        const response = await $fetch<any>('/api/common/notifications/list', {
           query: { role, page, limit: this.limit },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
@@ -48,14 +49,15 @@ export const useNotificationStore = defineStore('notification', {
       }
     },
 
-    async markAsRead(id: string) {
+    // Lire une notification utilisateur
+    async getOneUserNotification(id: string) {
       const authStore = useCmnAuthStore();
       const role = authStore.user?.role;
 
       if (!role) return;
 
       try {
-        const response = await $fetch<any>(`/api/notifications/${id}`, {
+        const response = await $fetch<any>(`/api/common/notifications/mine`, {
           query: { role },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
@@ -76,14 +78,15 @@ export const useNotificationStore = defineStore('notification', {
       }
     },
 
-    async markAllAsRead() {
+    // Marquer comme lu
+    async markNotificationAsRead() {
       const authStore = useCmnAuthStore();
       const role = authStore.user?.role;
 
       if (!role) return;
 
       try {
-        await $fetch('/api/notifications/mark-all-read', {
+        await $fetch('/api/common/notifications/mark-all-read', {
           method: 'PATCH',
           body: { role },
           headers: {
@@ -98,14 +101,15 @@ export const useNotificationStore = defineStore('notification', {
       }
     },
 
-    async deleteNotification(id: string) {
+    // Supprimer les notifications
+    async deleteUserNotification(id: string) {
       const authStore = useCmnAuthStore();
       const role = authStore.user?.role;
 
       if (!role) return;
 
       try {
-        await $fetch(`/api/notifications/${id}`, {
+        await $fetch(`/api/common/notifications/remove`, {
           method: 'DELETE',
           query: { role },
           headers: {
@@ -127,7 +131,7 @@ export const useNotificationStore = defineStore('notification', {
     startPolling() {
       if (this.refreshInterval) return;
       this.refreshInterval = setInterval(() => {
-        this.fetchNotifications(1);
+        this.fetchUserNotifications(1);
       }, 60000);
     },
 

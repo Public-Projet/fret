@@ -86,12 +86,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useNotificationStore } from '~/stores/notification';
+import { useCmnNotificationStore } from '~/stores/cmnNotification';
 import { IconBell, IconBellOff, IconInfoCircle, IconAlertTriangle, IconAlertCircle } from '@tabler/icons-vue';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-const notificationStore = useNotificationStore();
+const notificationStore = useCmnNotificationStore();
 const router = useRouter();
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
@@ -102,17 +102,17 @@ const unreadCount = computed(() => notificationStore.unreadCount);
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
   if (isOpen.value) {
-    notificationStore.fetchNotifications();
+    notificationStore.fetchUserNotifications();
   }
 };
 
 const markAllRead = () => {
-  notificationStore.markAllAsRead();
+  notificationStore.markNotificationAsRead();
 };
 
 const handleNotificationClick = (notif: any) => {
   if (notif.status === 'unread') {
-    notificationStore.markAsRead(notif.id);
+    notificationStore.getOneUserNotification(notif.id);
   }
   isOpen.value = false;
   router.push(`/app/notifications/${notif.id}`);
@@ -139,8 +139,7 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
-  // Initial count fetch or interval
-  notificationStore.fetchNotifications();
+  notificationStore.fetchUserNotifications();
 });
 
 onUnmounted(() => {

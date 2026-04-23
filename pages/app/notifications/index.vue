@@ -88,7 +88,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import { useNotificationStore } from '~/stores/notification';
+import { useCmnNotificationStore } from '~/stores/cmnNotification';
 import {
   IconBellOff, IconInfoCircle, IconAlertTriangle,
   IconAlertCircle, IconLoader2, IconTrash
@@ -100,7 +100,7 @@ definePageMeta({
   layout: 'default'
 });
 
-const notificationStore = useNotificationStore();
+const notificationStore = useCmnNotificationStore();
 
 const notifications = computed(() => notificationStore.notifications);
 const unreadCount = computed(() => notificationStore.unreadCount);
@@ -108,10 +108,10 @@ const total = computed(() => notificationStore.total);
 const page = computed(() => notificationStore.page);
 const isLoading = computed(() => notificationStore.isLoading);
 
-const markAllRead = () => notificationStore.markAllAsRead();
-const markAsRead = (id: string) => notificationStore.markAsRead(id);
-const deleteNotif = (id: string) => notificationStore.deleteNotification(id);
-const loadMore = () => notificationStore.fetchNotifications(page.value + 1);
+const markAllRead = () => notificationStore.markNotificationAsRead();
+const markAsRead = (id: string) => notificationStore.getOneUserNotification(id);
+const deleteNotif = (id: string) => notificationStore.deleteUserNotification(id);
+const loadMore = () => notificationStore.fetchUserNotifications(page.value + 1);
 
 const getPriorityClass = (priority: string) => {
   switch (priority) {
@@ -127,7 +127,7 @@ const formatDate = (timestamp: number) => {
 };
 
 onMounted(() => {
-  notificationStore.fetchNotifications(1);
+  notificationStore.fetchUserNotifications(1);
 });
 useHead({
   title: 'Notifications',
