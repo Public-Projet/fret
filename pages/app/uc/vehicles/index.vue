@@ -118,12 +118,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
+import { useCarVehiclesStore } from '~/stores/carVehicles';
 import type { Vehicle, AddVehicleData } from '~/types';
-import { IconTruck, IconPlus, IconLoader2, IconPencil, IconTrash, IconTruckOff } from '@tabler/icons-vue';
+import { IconTruck, IconPlus, IconPencil, IconTrash, IconTruckOff } from '@tabler/icons-vue';
 
 const profileStore = useCmnProfileStore();
-const vehicles = computed(() => profileStore.vehicles);
-const vehiclesLoading = computed(() => profileStore.vehiclesLoading);
+const carVehicleStore = useCarVehiclesStore();
+const vehicles = computed(() => carVehicleStore.vehicles);
+const vehiclesLoading = computed(() => carVehicleStore.vehiclesLoading);
 
 const showModal = ref(false);
 const selectedVehicle = ref<Vehicle | null>(null);
@@ -132,7 +134,7 @@ const modalError = ref('');
 const modalSuccess = ref('');
 
 onMounted(async () => {
-  await profileStore.fetchVehicles();
+  await carVehicleStore.fetchCarVehicles();
 });
 
 const formatStatus = (status: string) => {
@@ -183,9 +185,9 @@ const handleSubmit = async (data: AddVehicleData) => {
 
   let result;
   if (selectedVehicle.value) {
-    result = await profileStore.updateVehicle(selectedVehicle.value.id, data);
+    result = await carVehicleStore.updateCarVehicleDetail(selectedVehicle.value.id, data);
   } else {
-    result = await profileStore.addVehicle(data);
+    result = await carVehicleStore.addCarVehicle(data);
   }
 
   modalLoading.value = false;
@@ -202,7 +204,7 @@ const handleSubmit = async (data: AddVehicleData) => {
 
 const handleDelete = async (id: string) => {
   if (!confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?')) return;
-  await profileStore.deleteVehicle(id);
+  await carVehicleStore.deleteCarVehicle(id);
 };
 
 definePageMeta({ layout: 'default' });

@@ -170,14 +170,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
+import { useCarVehiclesStore } from '~/stores/carVehicles';
 import type { AddVehicleData, Vehicle } from '~/types';
-import {
-  IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconX, IconLoader2, IconEye
-} from '@tabler/icons-vue';
+import { IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconX, IconLoader2, IconEye } from '@tabler/icons-vue';
 
 const profileStore = useCmnProfileStore();
+const carVehicleStore = useCarVehiclesStore();
 const profile = computed(() => profileStore.profile);
-const vehicles = computed(() => profileStore.vehicles);
+const vehicles = computed(() => carVehicleStore.vehicles);
 
 // Modals visibility
 const showEditModal = ref(false);
@@ -188,11 +188,6 @@ const showVehicleModal = ref(false);
 const showKycModal = ref(false);
 
 const selectedVehicle = ref<Vehicle | null>(null);
-
-// ... existing state ...
-
-// Vehicle state
-// Vehicle state
 const vehicleLoading = ref(false);
 const vehicleError = ref('');
 const vehicleSuccess = ref('');
@@ -239,8 +234,6 @@ onMounted(async () => {
   await profileStore.fetchProfile('carrier');
 });
 
-// ... existing modal handlers ...
-
 const openVehicleModal = () => {
   selectedVehicle.value = null; // Add mode
   vehicleError.value = '';
@@ -255,8 +248,6 @@ const openEditVehicleModal = (vehicle: Vehicle) => {
   showVehicleModal.value = true;
 };
 
-// ... existing handlers ...
-
 const handleVehicleSubmit = async (data: AddVehicleData) => {
   vehicleLoading.value = true;
   vehicleError.value = '';
@@ -264,9 +255,9 @@ const handleVehicleSubmit = async (data: AddVehicleData) => {
 
   let result;
   if (selectedVehicle.value) {
-    result = await profileStore.updateVehicle(selectedVehicle.value.id, data);
+    result = await carVehicleStore.updateCarVehicleDetail(selectedVehicle.value.id, data);
   } else {
-    result = await profileStore.addVehicle(data);
+    result = await carVehicleStore.addCarVehicle(data);
   }
 
   vehicleLoading.value = false;
@@ -282,7 +273,7 @@ const handleVehicleSubmit = async (data: AddVehicleData) => {
 const handleDeleteVehicle = async (id: string) => {
   if (!confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?')) return;
 
-  const result = await profileStore.deleteVehicle(id);
+  const result = await carVehicleStore.deleteCarVehicle(id);
   if (!result.success) {
     alert(result.error || 'Erreur lors de la suppression');
   }

@@ -1,21 +1,18 @@
 import { defineStore } from 'pinia';
-import type { UserRole, UserProfile, UpdateProfileData, UpdatePasswordData, UpdateEmailData, Vehicle, AddVehicleData, StoreAvailability as Availability, } from '~/types';
+import { useCarVehiclesStore } from './carVehicles';
+import type { UserRole, UserProfile, UpdateProfileData, UpdatePasswordData, UpdateEmailData, } from '~/types';
 
 interface ProfileState {
   profile: UserProfile | null;
-  vehicles: Vehicle[];
   isLoading: boolean;
   error: string | null;
-  vehiclesLoading: boolean;
 }
 
 export const useCmnProfileStore = defineStore('cmnProfile', {
   state: (): ProfileState => ({
     profile: null,
-    vehicles: [],
     isLoading: false,
     error: null,
-    vehiclesLoading: false,
   }),
 
   getters: {
@@ -27,7 +24,6 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
       if (!state.profile) return false;
       return !!(state.profile.phone && state.profile.bio);
     },
-    vehicleCount: (state) => state.vehicles.length,
   },
 
   actions: {
@@ -56,7 +52,8 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
           });
 
           if (role === 'carrier') {
-            await this.fetchVehicles();
+            const vehicleStore = useCarVehiclesStore();
+            await vehicleStore.fetchCarVehicles();
           }
           return { success: true, profile: this.profile };
         } else {
@@ -224,33 +221,6 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
       }
     },
 
-    async updateVehicle(id: string, data: Partial<AddVehicleData>) {
-      this.vehiclesLoading = true;
-
-      try {
-        const response = await $fetch<{ message: string; vehicle: Vehicle }>(`/api/vehicles/${id}`, {
-          method: 'PATCH',
-          body: data,
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        if (response?.vehicle) {
-          const index = this.vehicles.findIndex(v => v.id === id);
-          if (index !== -1) {
-            this.vehicles[index] = response.vehicle;
-          }
-          return { success: true, message: response.message };
-        }
-        return { success: false, error: 'Erreur de mise à jour' };
-      } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du véhicule' };
-      } finally {
-        this.vehiclesLoading = false;
-      }
-    },
-
     // Supprimer le compte
     async deleteAccount(role: UserRole, data: { password: string; confirmation: string }) {
       this.isLoading = true;
@@ -278,166 +248,11 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
       }
     },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Récupérer les véhicules
-     */
-    async fetchVehicles(_requestOptions: any = {}) {
-      this.vehiclesLoading = true;
-
-      try {
-        const response = await $fetch<{ vehicles: Vehicle[] }>('/api/vehicles', {
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        if (response?.vehicles) {
-          this.vehicles = response.vehicles;
-          return { success: true, vehicles: this.vehicles };
-        }
-        return { success: false, error: 'Erreur chargement véhicules' };
-      } catch (e: any) {
-        return { success: false, error: e?.data?.message || 'Erreur lors du chargement des véhicules' };
-      } finally {
-        this.vehiclesLoading = false;
-      }
-    },
-
-    /**
-     * Ajouter un véhicule
-     */
-    async addVehicle(data: AddVehicleData) {
-      this.vehiclesLoading = true;
-
-      try {
-        const response = await $fetch<{ message: string; vehicle: Vehicle }>('/api/vehicles', {
-          method: 'POST',
-          body: data,
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        if (response?.vehicle) {
-          this.vehicles.push(response.vehicle);
-          return { success: true, message: response.message };
-        }
-        return { success: false, error: 'Erreur ajout véhicule' };
-      } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de l\'ajout du véhicule' };
-      } finally {
-        this.vehiclesLoading = false;
-      }
-    },
-
-    /**
-     * Supprimer un véhicule
-     */
-    async deleteVehicle(id: string) {
-      try {
-        const response = await $fetch<{ message: string }>(`/api/vehicles/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        this.vehicles = this.vehicles.filter(v => v.id !== id);
-        return { success: true, message: response?.message || 'Véhicule supprimé' };
-      } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la suppression' };
-      }
-    },
-
-    /**
-     * Récupérer un véhicule spécifique
-     */
-    async fetchVehicle(id: string) {
-      this.vehiclesLoading = true;
-
-      try {
-        const response = await $fetch<{ vehicle: Vehicle; availability: Availability | null; history: Availability[] }>(`/api/vehicles/${id}`, {
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        if (response?.vehicle) {
-          return {
-            success: true,
-            vehicle: {
-              ...response.vehicle,
-              availability: response.availability,
-              history: response.history
-            }
-          };
-        }
-        return { success: false, error: 'Véhicule non trouvé' };
-      } catch (e: any) {
-        return { success: false, error: e?.data?.message || 'Erreur lors du chargement du véhicule' };
-      } finally {
-        this.vehiclesLoading = false;
-      }
-    },
-
-
-
-
-
-    /**
-     * Mettre à jour le statut d'un véhicule
-     */
-    async updateVehicleStatus(id: string, status: 'available' | 'in_transit' | 'maintenance') {
-      try {
-        const response = await $fetch<{ message: string; vehicle: Vehicle }>(`/api/vehicles/${id}/status`, {
-          method: 'PATCH',
-          body: { status },
-          headers: {
-            'Authorization': `Bearer ${useCookie('auth_token').value}`,
-          },
-        });
-
-        if (response?.vehicle) {
-          const index = this.vehicles.findIndex(v => v.id === id);
-          if (index !== -1) {
-            this.vehicles[index] = response.vehicle;
-          }
-          return { success: true, message: response.message, vehicle: response.vehicle };
-        }
-        return { success: false, error: 'Erreur de mise à jour' };
-      } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du statut' };
-      }
-    },
-
     /**
      * Réinitialiser le store
      */
     reset() {
       this.profile = null;
-      this.vehicles = [];
       this.isLoading = false;
       this.error = null;
     },

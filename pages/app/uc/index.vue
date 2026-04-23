@@ -195,10 +195,12 @@ import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
+import { useCarVehiclesStore } from '~/stores/carVehicles';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { IconCircleCheck, IconCurrencyEuro, IconMapPin, IconPlus, IconSearch, IconSend, IconTruck } from '@tabler/icons-vue';
 
 const authStore = useCmnAuthStore();
+const carVehicleStore = useCarVehiclesStore();
 const messagingStore = useCmnMessagingStore();
 const announcementStore = usePbcAnnouncementStore();
 const availabilityStore = useCarAvailabilityStore();
@@ -315,7 +317,7 @@ const formatDate = (dateString: string) => {
 onMounted(() => {
   announcementStore.fetchPublicAnnouncements();
   availabilityStore.fetchCarAvailabilities();
-  profileStore.fetchVehicles();
+  carVehicleStore.fetchCarVehicles();
   messagingStore.fetchCarrierOffers();
 });
 useHead({

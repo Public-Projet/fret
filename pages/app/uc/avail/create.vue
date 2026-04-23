@@ -179,20 +179,20 @@
 import { ref, reactive, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
-import { useCmnProfileStore } from '~/stores/cmnProfile';
+import { useCarVehiclesStore } from '~/stores/carVehicles';
 import { IconArrowLeft, IconMapPin, IconTruck, IconLoader2, IconChevronDown, IconCurrencyEuro, IconAlertCircle } from '@tabler/icons-vue';
 
 const router = useRouter();
 const availabilityStore = useCarAvailabilityStore();
-const profileStore = useCmnProfileStore();
+const carVehicleStore = useCarVehiclesStore();
 
-const vehicles = computed(() => profileStore.vehicles);
-const loadingVehicles = computed(() => profileStore.vehiclesLoading);
+const vehicles = computed(() => carVehicleStore.vehicles);
+const loadingVehicles = computed(() => carVehicleStore.vehiclesLoading);
 const submitting = ref(false);
 const error = ref('');
 
 onMounted(async () => {
-  await profileStore.fetchVehicles();
+  await carVehicleStore.fetchCarVehicles();
 });
 
 const form = reactive({
