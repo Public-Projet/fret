@@ -39,6 +39,21 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
       }
     },
 
+    // Liste des inscriptions
+    async fetchShpEnrollments() {
+      this.loading = true;
+      try {
+        const response = await $fetch<{ enrollments: any[] }>('/api/shipper/availability/list');
+        if (response?.enrollments) {
+          this.enrollments = response.enrollments;
+        }
+      } catch (err) {
+        console.error('Failed to fetch shipper enrollments', err);
+      } finally {
+        this.loading = false;
+      }
+    },
+
     // Détails d'une disponibilité
     async fetchShpMineAvailability() {
       try {
@@ -47,6 +62,19 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
           return { success: true, availability: response.data };
         }
         return { success: false, error: 'Disponibilité non trouvée' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
+      }
+    },
+
+    // Contre-proposer une proposition
+    async counterShpBooking(bookingId: string, data: any) {
+      try {
+        await $fetch(`/api/shipper/availability/counter`, {
+          method: 'POST',
+          body: { ...data, id: bookingId },
+        });
+        return { success: true };
       } catch (err: any) {
         return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
@@ -108,22 +136,6 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
       }
     },
 
-    /**
-     * Expéditeur: Liste de mes inscriptions
-     */
-    async fetchShipperEnrollments() {
-      this.loading = true;
-      try {
-        const response = await $fetch<{ enrollments: any[] }>('/api/availabilities/enrollments');
-        if (response?.enrollments) {
-          this.enrollments = response.enrollments;
-        }
-      } catch (err) {
-        console.error('Failed to fetch shipper enrollments', err);
-      } finally {
-        this.loading = false;
-      }
-    },
 
     extractErrorMessage(error: any): string {
       if (error?.data?.message) return error.data.message;

@@ -119,7 +119,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
       try {
         await $fetch(`/api/carrier/availability/booking-counter`, {
           method: 'POST',
-          body: { ...data, role },
+          body: { ...data, id: bookingId },
         });
         return { success: true };
       } catch (err: any) {
@@ -181,24 +181,6 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
         return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
-
-    /**
-     * Expéditeur: Liste de mes inscriptions
-     */
-    async fetchShipperEnrollments() {
-      this.loading = true;
-      try {
-        const response = await $fetch<{ enrollments: any[] }>('/api/availabilities/enrollments');
-        if (response?.enrollments) {
-          this.enrollments = response.enrollments;
-        }
-      } catch (err) {
-        console.error('Failed to fetch shipper enrollments', err);
-      } finally {
-        this.loading = false;
-      }
-    },
-
 
     extractErrorMessage(error: any): string {
       if (error?.data?.message) return error.data.message;

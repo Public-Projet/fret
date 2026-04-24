@@ -50,25 +50,6 @@ export const useAvailabilityStore = defineStore('availability', {
       }
     },
 
-
-
-    /**
-     * Expéditeur: Liste de mes inscriptions
-     */
-    async fetchShipperEnrollments() {
-      this.loading = true;
-      try {
-        const response = await $fetch<{ enrollments: any[] }>('/api/availabilities/enrollments');
-        if (response?.enrollments) {
-          this.enrollments = response.enrollments;
-        }
-      } catch (err) {
-        console.error('Failed to fetch shipper enrollments', err);
-      } finally {
-        this.loading = false;
-      }
-    },
-
     extractErrorMessage(error: any): string {
       if (error?.data?.message) return error.data.message;
       if (error?.message) return error.message;

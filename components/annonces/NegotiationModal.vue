@@ -154,12 +154,21 @@ const handleSubmit = async () => {
     if (props.initialData) {
       const role = authStore.isShipper ? 'shipper' : 'carrier';
       if (props.dataType === 'avail') {
-        res = await availStore.counterCarBooking(props.initialData.id, role, {
-          proposedPrice: form.price,
-          proposedOrigin: form.origin,
-          proposedDestination: form.destination,
-          notes: form.message
-        });
+        if (authStore.isShipper) {
+          res = await shpAvailStore.counterShpBooking(props.initialData.id, {
+            proposedPrice: form.price,
+            proposedOrigin: form.origin,
+            proposedDestination: form.destination,
+            notes: form.message
+          });
+        } else {
+          res = await availStore.counterCarBooking(props.initialData.id, 'carrier', {
+            proposedPrice: form.price,
+            proposedOrigin: form.origin,
+            proposedDestination: form.destination,
+            notes: form.message
+          });
+        }
       } else {
         res = await cmnAnnouncementStore.counterCmnOffer(props.initialData.id, role, {
           price: form.price,

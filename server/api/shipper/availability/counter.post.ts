@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   delete body?.id;
   delete body?.role;
 
-  return proxyToBackend(event, `/carrier/availability/${id}/counter`, {
+  return proxyToBackend(event, `/shipper/availability/${id}/counter`, {
     method: 'POST',
     body,
   });

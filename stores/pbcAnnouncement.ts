@@ -65,5 +65,6 @@ export const usePbcAnnouncementStore = defineStore('pbcAnnouncement', {
     },
 
     ...sharedAnnouncementActions,
+
   },
 });
