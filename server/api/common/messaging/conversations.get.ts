@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return proxyToBackend(event, `/${role}/messaging/conversations`, {
+  return proxyToBackend(event, `/${role}/messaging`, {
     query: { role }
   });
 });

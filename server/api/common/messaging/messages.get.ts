@@ -17,5 +17,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return proxyToBackend(event, `/${role}/messaging/conversations/${id}/messages`);
+  return proxyToBackend(event, `/${role}/messaging/${id}/messages`);
 });

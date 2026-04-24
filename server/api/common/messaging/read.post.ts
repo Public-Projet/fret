@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return proxyToBackend(event, `/${role}/messaging/conversations/${id}/read`, {
+  return proxyToBackend(event, `/${role}/messaging/${id}/read`, {
     method: 'POST',
     body: { role }
   });

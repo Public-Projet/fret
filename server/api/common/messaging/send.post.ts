@@ -19,11 +19,11 @@ export default defineEventHandler(async (event) => {
 
   const { role: _role, conversationId: _id, ...messageData } = body;
 
-  return proxyToBackend(event, `/${role}/messaging/conversations/${id}/messages`, {
+  return proxyToBackend(event, `/${role}/messaging/${id}/send`, {
     method: 'POST',
     body: {
       ...messageData,
-      role // On s'assure que le rôle est passé au backend si nécessaire
+      role
     }
   });
 });

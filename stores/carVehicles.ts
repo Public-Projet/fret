@@ -176,9 +176,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
       this.error = null;
     },
 
-    /**
-     * Extraire le message d'erreur de la réponse
-     */
+
     extractErrorMessage(error: any): string {
       if (!error) return 'Une erreur est survenue';
 
