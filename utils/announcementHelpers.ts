@@ -1,7 +1,8 @@
-import type { Announcement, AnnouncementFilters, AnnouncementStatus } from '~/types';
+import type { Announcement, AnnouncementFilters, AnnouncementStatus, Offer } from '~/types';
 
 export interface AnnouncementBaseState {
   announcements: Announcement[];
+  offers?: Offer[];
   filters: AnnouncementFilters;
 }
 
@@ -55,7 +56,7 @@ export const applyAnnouncementFilters = (announcements: Announcement[], filters:
  */
 export const sharedAnnouncementGetters = {
   allAnnouncements: (state: AnnouncementBaseState) => state.announcements,
-  
+
   filteredAnnouncements: (state: AnnouncementBaseState) => {
     return applyAnnouncementFilters(state.announcements, state.filters);
   },
@@ -66,6 +67,10 @@ export const sharedAnnouncementGetters = {
 
   announcementsByStatus: (state: AnnouncementBaseState) => (status: AnnouncementStatus) => {
     return state.announcements.filter(a => a.status === status);
+  },
+
+  offersByAnnouncement: (state: AnnouncementBaseState) => (announcementId: string) => {
+    return (state.offers || []).filter(o => String((o as any).announcementId || (o as any).announcement?.id || o.announcement) === String(announcementId));
   },
 };
 

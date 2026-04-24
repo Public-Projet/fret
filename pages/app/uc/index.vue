@@ -194,6 +194,7 @@ import { computed, onMounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
+import { useCarAnnouncementStore } from '~/stores/carAnnouncement';
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { useCarVehiclesStore } from '~/stores/carVehicles';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
@@ -203,6 +204,7 @@ const authStore = useCmnAuthStore();
 const carVehicleStore = useCarVehiclesStore();
 const messagingStore = useCmnMessagingStore();
 const announcementStore = usePbcAnnouncementStore();
+const carStore = useCarAnnouncementStore();
 const availabilityStore = useCarAvailabilityStore();
 const profileStore = useCmnProfileStore();
 
@@ -212,10 +214,7 @@ const publishAvailability = () => {
 
 const currentUser = computed(() => authStore.currentUser);
 
-const myOffers = computed(() => {
-  if (!currentUser.value) return [];
-  return messagingStore.offersByCarrier(currentUser.value.id);
-});
+const myOffers = computed(() => carStore.offers);
 
 const myAvailabilities = computed(() => availabilityStore.availabilities);
 
@@ -318,7 +317,8 @@ onMounted(() => {
   announcementStore.fetchPublicAnnouncements();
   availabilityStore.fetchCarAvailabilities();
   carVehicleStore.fetchCarVehicles();
-  messagingStore.fetchCarrierOffers();
+  carStore.fetchCarOffers();
+  messagingStore.fetchUserConversations();
 });
 useHead({
   title: 'Tableau de bord Transporteur',

@@ -1,9 +1,11 @@
 import type { OfferStatus } from './common';
 import type { User } from './users';
+import type { Announcement } from './announcement';
 
 export interface Offer {
   id: string;
   announcementId: string;
+  announcement?: Announcement;
   carrierId: string;
   carrier?: User;
   price: number;

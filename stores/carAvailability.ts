@@ -21,7 +21,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     // Ajouter une disponibilité
     async addCarAvailability(data: CreateAvailabilityData) {
       try {
-        const response = await $fetch<{ availability: Availability }>('/api/carrier/availabilities/add', {
+        const response = await $fetch<{ availability: Availability }>('/api/carrier/availability/add', {
           method: 'POST',
           body: data,
         });
@@ -39,7 +39,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     async fetchCarAvailabilities() {
       this.loading = true;
       try {
-        const response = await $fetch<{ availabilities: Availability[] }>('/api/carrier/availabilities/list');
+        const response = await $fetch<{ availabilities: Availability[] }>('/api/carrier/availability/list');
         if (response?.availabilities) {
           this.availabilities = response.availabilities;
         }
@@ -53,7 +53,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     // Obtenir une disponibilité
     async fetchCarAvailability(id: string) {
       try {
-        const response = await $fetch<{ availability: Availability }>(`/api/carrier/availabilities/mine`);
+        const response = await $fetch<{ availability: Availability }>(`/api/carrier/availability/mine`);
         if (response?.availability) {
           return { success: true, availability: response.availability };
         }
@@ -66,7 +66,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     // Modifier une disponibilité
     async updateCarAvailability(id: string, data: Partial<CreateAvailabilityData> & { status?: string }) {
       try {
-        const response = await $fetch<{ availability: Availability }>(`/api/carrier/availabilities/update`, {
+        const response = await $fetch<{ availability: Availability }>(`/api/carrier/availability/update`, {
           method: 'PATCH',
           body: data,
         });
@@ -86,7 +86,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     // Supprimer une disponibilité
     async deleteCarAvailability(id: string) {
       try {
-        await ($fetch as any)(`/api/carrier/availabilities/remove`, { method: 'DELETE' });
+        await ($fetch as any)(`/api/carrier/availability/remove`, { method: 'DELETE' });
         this.availabilities = this.availabilities.filter(a => a.id !== id);
         return { success: true };
       } catch (err: any) {
@@ -97,7 +97,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     // Accapter une proposition de disponibilité    
     async acceptCarBooking(bookingId: string) {
       try {
-        await $fetch(`/api/carrier/availabilities/booking-accept`, { method: 'POST' });
+        await $fetch(`/api/carrier/availability/booking-accept`, { method: 'POST' });
         return { success: true };
       } catch (err: any) {
         return { success: false, error: err?.data?.message || 'Erreur technique' };
@@ -107,7 +107,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     // Rejeter une proposition de disponibilité    
     async rejectCarBooking(bookingId: string) {
       try {
-        await $fetch(`/api/carrier/availabilities/booking-reject`, { method: 'POST' });
+        await $fetch(`/api/carrier/availability/booking-reject`, { method: 'POST' });
         return { success: true };
       } catch (err: any) {
         return { success: false, error: err?.data?.message || 'Erreur technique' };
@@ -117,7 +117,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     //  Contre proposé une proposition
     async counterCarBooking(bookingId: string, role: 'shipper' | 'carrier', data: any) {
       try {
-        await $fetch(`/api/carrier/availabilities/booking-counter`, {
+        await $fetch(`/api/carrier/availability/booking-counter`, {
           method: 'POST',
           body: { ...data, role },
         });
@@ -126,6 +126,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
         return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
+
 
 
 

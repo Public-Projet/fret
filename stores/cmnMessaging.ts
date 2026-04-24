@@ -6,7 +6,6 @@ export const useCmnMessagingStore = defineStore('cmnMessaging', {
     conversations: [] as any[],
     messages: [] as any[],
     currentConversation: null as any | null,
-    offers: [] as any[],
     loading: false,
   }),
 
@@ -16,12 +15,6 @@ export const useCmnMessagingStore = defineStore('cmnMessaging', {
     },
     conversationMessages: (state) => (conversationId: string) => {
       return state.messages.filter((m: any) => String(m.conversation || m.conversationId) === String(conversationId));
-    },
-    offersByCarrier: (state) => (carrierId: string) => {
-      return state.offers.filter((o: any) => String(o.carrier?.id || o.carrier || o.carrierId) === String(carrierId));
-    },
-    offersByAnnouncement: (state) => (announcementId: string) => {
-      return state.offers.filter((o: any) => String(o.announcement?.id || o.announcement || o.announcementId) === String(announcementId));
     },
   },
 
@@ -152,10 +145,8 @@ export const useCmnMessagingStore = defineStore('cmnMessaging', {
     async getOrCreateUserConversation(announcementId: string, participantIds: string[]) {
       this.loading = true;
       try {
-        // Simulation d'un délai réseau
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        // Pour l'instant on retourne un mock ID
         const mockConversation = {
           id: "mock-id-" + Date.now(),
           announcementId,
@@ -169,26 +160,6 @@ export const useCmnMessagingStore = defineStore('cmnMessaging', {
         }
 
         return { success: true, conversation: mockConversation };
-      } finally {
-        this.loading = false;
-      }
-    },
-
-
-
-
-    async fetchCarrierOffers() {
-      this.loading = true;
-      try {
-        const token = useCookie('auth_token').value;
-        const res = await $fetch<any[]>(`/api/carrier/offers`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (Array.isArray(res)) {
-          this.offers = res;
-        }
-      } catch (e) {
-        console.error('Failed to fetch carrier offers', e);
       } finally {
         this.loading = false;
       }

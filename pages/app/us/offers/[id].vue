@@ -192,7 +192,7 @@ const showEditModal = ref(false);
 
 const loading = computed(() => announcementStore.loading);
 const announcement = computed(() => announcementStore.currentAnnouncement);
-const offers = computed(() => messagingStore.offersByAnnouncement(announcementId));
+const offers = computed(() => announcementStore.offersByAnnouncement(announcementId));
 const currentUser = computed(() => authStore.currentUser);
 
 const getStatusLabel = (status: string) => {

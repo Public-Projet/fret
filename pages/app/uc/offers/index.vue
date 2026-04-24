@@ -83,7 +83,7 @@
                   class="flex items-center bg-gray-100 dark:bg-gray-700/50 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-700">
                   <IconMapPin class="w-4 h-4 mr-2 text-primary-500" />
                   <span class="font-bold text-gray-700 dark:text-gray-300 truncate">{{ offer.announcement?.origin?.city
-                  }}</span>
+                    }}</span>
                   <IconArrowRight class="w-3 h-3 mx-2" />
                   <span class="font-bold text-gray-700 dark:text-gray-300 truncate">{{
                     offer.announcement?.destination?.city }}</span>
@@ -127,20 +127,17 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useCmnMessagingStore } from '~/stores/cmnMessaging';
+import { useCarAnnouncementStore } from '~/stores/carAnnouncement';
 import { IconCalendar, IconMapPin, IconSearch, IconEye, IconMessage, IconSend, IconArrowRight } from '@tabler/icons-vue';
 
 const authStore = useCmnAuthStore();
-const messagingStore = useCmnMessagingStore();
+const carStore = useCarAnnouncementStore();
 const currentFilter = ref('all');
 
-const loading = computed(() => messagingStore.loading);
+const loading = computed(() => carStore.loading);
 const currentUser = computed(() => authStore.currentUser);
 
-const myOffers = computed(() => {
-  if (!currentUser.value) return [];
-  return messagingStore.offers;
-});
+const myOffers = computed(() => carStore.offers);
 
 const filteredOffers = computed(() => {
   if (currentFilter.value === 'all') return myOffers.value;
@@ -180,7 +177,7 @@ const formatDate = (dateString: string) => {
 };
 
 onMounted(() => {
-  messagingStore.fetchCarrierOffers();
+  carStore.fetchCarOffers();
 });
 
 useHead({
