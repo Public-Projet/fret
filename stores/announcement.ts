@@ -96,29 +96,5 @@ export const useAnnouncementStore = defineStore('announcement', {
     resetFilters() {
       this.filters = {};
     },
-
-    /**
-     * Transporteur: Faire une offre sur une annonce
-     */
-    async createOffer(announcementId: string, negotiationData: any) {
-      this.loading = true;
-      try {
-        await $fetch(`/api/announcements/${announcementId}/offer`, {
-          method: 'POST',
-          body: {
-            price: negotiationData.price,
-            message: negotiationData.message,
-            proposedOrigin: negotiationData.origin,
-            proposedDestination: negotiationData.destination,
-          },
-        });
-        return { success: true };
-      } catch (error: any) {
-        console.error('Erreur lors de la création de l\'offre:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
-      } finally {
-        this.loading = false;
-      }
-    },
   },
 });

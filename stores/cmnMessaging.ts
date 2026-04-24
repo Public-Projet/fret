@@ -154,7 +154,7 @@ export const useCmnMessagingStore = defineStore('cmnMessaging', {
       try {
         // Simulation d'un délai réseau
         await new Promise(resolve => setTimeout(resolve, 300));
-        
+
         // Pour l'instant on retourne un mock ID
         const mockConversation = {
           id: "mock-id-" + Date.now(),
@@ -167,7 +167,7 @@ export const useCmnMessagingStore = defineStore('cmnMessaging', {
         if (!this.conversations.find(c => String(c.id) === String(mockConversation.id))) {
           this.conversations.unshift(mockConversation);
         }
-        
+
         return { success: true, conversation: mockConversation };
       } finally {
         this.loading = false;

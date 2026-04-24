@@ -110,6 +110,8 @@ import { ref, reactive } from 'vue';
 import { IconX, IconCurrencyDollar, IconMapPinFilled, IconMessageDots, IconLoader2 } from '@tabler/icons-vue';
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
+import { useCarAnnouncementStore } from '~/stores/carAnnouncement';
+import { useCmnAnnouncementStore } from '~/stores/cmnAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 const props = defineProps<{
@@ -128,6 +130,8 @@ const emit = defineEmits<{
 
 const availStore = useCarAvailabilityStore();
 const fretStore = useShpAnnouncementStore();
+const carStore = useCarAnnouncementStore();
+const cmnAnnouncementStore = useCmnAnnouncementStore();
 const authStore = useCmnAuthStore();
 
 const loading = ref(false);
@@ -157,7 +161,7 @@ const handleSubmit = async () => {
           notes: form.message
         });
       } else {
-        res = await fretStore.counterShpOffer(props.initialData.id, role, {
+        res = await cmnAnnouncementStore.counterCmnOffer(props.initialData.id, role, {
           price: form.price,
           proposedOrigin: form.origin,
           proposedDestination: form.destination,
@@ -165,11 +169,10 @@ const handleSubmit = async () => {
         });
       }
     } else {
-      // New proposal/enrollment
       if (props.dataType === 'avail') {
         res = await availStore.enrollAvailability(props.targetId, form);
       } else {
-        res = await fretStore.createOffer(props.targetId, form);
+        res = await carStore.createCarOffer(props.targetId, form);
       }
     }
 

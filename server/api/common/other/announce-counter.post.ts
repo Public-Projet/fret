@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   const endpoint = role === 'shipper'
     ? `/shipper/announcement/${id}/counter`
-    : `/carrier/offer/${id}/counter`;
+    : `/carrier/announcement/${id}/counter`;
 
   return proxyToBackend(event, endpoint, {
     method: 'POST',
