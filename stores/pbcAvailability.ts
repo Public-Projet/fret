@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import type { StoreAvailability as Availability, StoreLocation as Location, CreateAvailabilityData, } from '~/types';
 export type { Availability, Location, CreateAvailabilityData };
 
-export const useAvailabilityStore = defineStore('availability', {
+export const usePbcAvailabilityStore = defineStore('pbcAvailability', {
   state: () => ({
     availabilities: [] as Availability[],
     enrollments: [] as any[],
@@ -18,13 +18,11 @@ export const useAvailabilityStore = defineStore('availability', {
   },
 
   actions: {
-    /**
-     * Publique: Liste des disponibilités
-     */
-    async fetchPublicAvailabilities() {
+    // Liste publique des disponibilités
+    async fetchPbcAvailabilities() {
       this.loading = true;
       try {
-        const response = await $fetch<{ availabilities: Availability[] }>('/api/availabilities');
+        const response = await $fetch<{ availabilities: Availability[] }>('/api/public/availability/list');
         if (response?.availabilities) {
           this.availabilities = response.availabilities;
         }
@@ -35,12 +33,10 @@ export const useAvailabilityStore = defineStore('availability', {
       }
     },
 
-    /**
-     * Publique: Une disponibilité
-     */
-    async fetchPublicAvailability(id: string) {
+    // Détails d'une disponibilité
+    async fetchPbcMineAvailability(id: string) {
       try {
-        const response = await $fetch<{ availability: Availability }>(`/api/availabilities/${id}`);
+        const response = await $fetch<{ availability: Availability }>(`/api/public/availability/mine`);
         if (response?.availability) {
           return { success: true, availability: response.availability };
         }

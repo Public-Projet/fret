@@ -23,7 +23,7 @@ export const usePbcAnnouncementStore = defineStore('pbcAnnouncement', {
 
   actions: {
     // Charger toutes les annonces
-    async fetchPublicAnnouncements(queryParams: any = {}) {
+    async fetchPbcAnnouncements(queryParams: any = {}) {
       this.loading = true;
 
       try {
@@ -48,7 +48,7 @@ export const usePbcAnnouncementStore = defineStore('pbcAnnouncement', {
     },
 
     // Charger une annonce par ID
-    async getPublicAnnouncements(id: string) {
+    async getPbcAnnouncements(id: string) {
       this.loading = true;
       try {
         const response = await $fetch<Announcement>(`/api/public/announce/get`);
@@ -65,6 +65,5 @@ export const usePbcAnnouncementStore = defineStore('pbcAnnouncement', {
     },
 
     ...sharedAnnouncementActions,
-
   },
 });

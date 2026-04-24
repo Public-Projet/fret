@@ -265,7 +265,7 @@ const viewCarrierProfile = (carrierId: string) => {
 };
 
 onMounted(async () => {
-  await pbcAnnouncementStore.getPublicAnnouncements(announcementId);
+  await pbcAnnouncementStore.getPbcAnnouncements(announcementId);
   await announcementStore.fetchShpOffersForAnnouncement(announcementId);
 });
 useHead({

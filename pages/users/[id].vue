@@ -54,6 +54,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '~/stores/user';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useAvailabilityStore } from '~/stores/availability';
+import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useRoute } from 'vue-router';
 import { IconArrowLeft, IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
@@ -62,6 +63,7 @@ const route = useRoute();
 const userStore = useUserStore();
 const authStore = useCmnAuthStore();
 const availStore = useAvailabilityStore();
+const pbcAvailStore = usePbcAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
 
 const id = route.params.id as string;
@@ -86,7 +88,6 @@ const isMe = computed(() => {
 
 const canRate = computed(() => {
   if (!authStore.isAuthenticated || isMe.value) return false;
-  // Carrier can rate Shipper, Shipper can rate Carrier
   if (authStore.isCarrier && user.value?.role === 'shipper') return true;
   if (authStore.isShipper && user.value?.role === 'carrier') return true;
   return false;
@@ -108,13 +109,13 @@ const fetchData = async () => {
     if (res.success && res.data?.carrier) {
       user.value = { ...res.data.carrier, role: 'carrier' };
     }
-    await availStore.fetchPublicAvailabilities(); // To filter by carrier
+    await pbcAvailStore.fetchPbcAvailabilities(); // To filter by carrier
   } else {
     const res = await userStore.fetchPublicProfile(id, 'shipper');
     if (res.success && res.data?.shipper) {
       user.value = { ...res.data.shipper, role: 'shipper' };
     }
-    await fretStore.fetchPublicAnnouncements(); // To filter by shipper
+    await fretStore.fetchPbcAnnouncements(); // To filter by shipper
   }
   loading.value = false;
 };

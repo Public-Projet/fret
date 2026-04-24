@@ -52,6 +52,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
+import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
@@ -59,6 +60,7 @@ import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
 const availStore = useAvailabilityStore();
+const pbcAvailStore = usePbcAvailabilityStore();
 const shpAvailStore = useShpAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
 const authStore = useCmnAuthStore();
@@ -148,20 +150,18 @@ const fetchData = async () => {
 
   // Try to load based on type or try both
   if (dataType.value === 'avail') {
-    const res = await availStore.fetchPublicAvailability(id);
+    const res = await pbcAvailStore.fetchPbcMineAvailability(id);
     if (res.success) item.value = res.availability;
   } else if (dataType.value === 'offer' || dataType.value === 'fret') {
-    const res = await fretStore.getPublicAnnouncements(id);
-    // Announcement store might update its state directly
+    const res = await fretStore.getPbcAnnouncements(id);
     item.value = fretStore.currentAnnouncement;
   } else {
-    // Try both
-    const resAvail = await availStore.fetchPublicAvailability(id);
+    const resAvail = await pbcAvailStore.fetchPbcMineAvailability(id);
     if (resAvail.success) {
       item.value = resAvail.availability;
       dataType.value = 'avail';
     } else {
-      const resOffer = await fretStore.getPublicAnnouncements(id);
+      const resOffer = await fretStore.getPbcAnnouncements(id);
       if (resOffer) {
         item.value = fretStore.currentAnnouncement;
         dataType.value = 'offer';

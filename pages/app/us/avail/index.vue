@@ -262,7 +262,7 @@
                     <span class="truncate">{{ enrollment.availability?.origin?.city }}</span>
                     <IconArrowRight class="w-5 h-5 text-primary-500 flex-shrink-0" />
                     <span class="truncate text-primary-600">{{ enrollment.availability?.destination?.city || 'Libre'
-                    }}</span>
+                      }}</span>
                   </p>
                   <div class="flex items-center mt-2 text-gray-500 font-bold text-sm">
                     <IconCalendar class="w-4 h-4 mr-2 text-primary-400" />
@@ -302,6 +302,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
+import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
@@ -310,12 +311,12 @@ import { IconSearch, IconLoader2, IconCheck, IconHistory, IconTicketOff, IconArr
 const activeTab = ref('market');
 const authStore = useCmnAuthStore();
 const availabilityStore = useAvailabilityStore();
+const pbcAvailStore = usePbcAvailabilityStore();
 const shpAvailStore = useShpAvailabilityStore();
 const messagingStore = useCmnMessagingStore();
 const currentUser = computed(() => authStore.currentUser);
 const loadingPublic = ref(false);
 const loadingEnrollments = ref(false);
-
 const availabilities = computed(() => availabilityStore.availabilities);
 const enrollments = computed(() => availabilityStore.enrollments);
 
@@ -323,7 +324,7 @@ const enrollments = computed(() => availabilityStore.enrollments);
 const fetchCurrentTabInfo = async () => {
   if (activeTab.value === 'market') {
     loadingPublic.value = true;
-    await availabilityStore.fetchPublicAvailabilities();
+    await pbcAvailStore.fetchPbcAvailabilities();
     loadingPublic.value = false;
   } else if (activeTab.value === 'enrollments') {
     loadingEnrollments.value = true;

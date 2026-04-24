@@ -80,63 +80,6 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
       }
     },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Publique: Liste des disponibilités
-     */
-    async fetchPublicAvailabilities() {
-      this.loading = true;
-      try {
-        const response = await $fetch<{ availabilities: Availability[] }>('/api/availabilities');
-        if (response?.availabilities) {
-          this.availabilities = response.availabilities;
-        }
-      } catch (err) {
-        console.error('Failed to fetch public availabilities', err);
-      } finally {
-        this.loading = false;
-      }
-    },
-
-    /**
-     * Publique: Une disponibilité
-     */
-    async fetchPublicAvailability(id: string) {
-      try {
-        const response = await $fetch<{ availability: Availability }>(`/api/availabilities/${id}`);
-        if (response?.availability) {
-          return { success: true, availability: response.availability };
-        }
-        return { success: false, error: 'Disponibilité non trouvée' };
-      } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
-      }
-    },
-
-
     extractErrorMessage(error: any): string {
       if (error?.data?.message) return error.data.message;
       if (error?.message) return error.message;

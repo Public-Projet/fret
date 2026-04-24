@@ -63,11 +63,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
+import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useRoute } from 'vue-router';
 import { IconLoader2, IconTruckOff, IconPackageOff, IconX } from '@tabler/icons-vue';
 
 const availStore = useAvailabilityStore();
+const pbcAvailStore = usePbcAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
 const router = useRouter();
 const route = useRoute();
@@ -158,7 +160,7 @@ const switchTab = (tab: 'avail' | 'fret') => {
 // Data Fetching
 const fetchData = async () => {
   if (activeTab.value === 'avail') {
-    await availStore.fetchPublicAvailabilities();
+    await pbcAvailStore.fetchPbcAvailabilities();
   } else {
     const params: any = {};
     if (fretFilters.value.originCity) params.originCity = fretFilters.value.originCity;
@@ -166,7 +168,7 @@ const fetchData = async () => {
     if (fretFilters.value.cargoType) params.cargoType = fretFilters.value.cargoType;
     if (fretFilters.value.minBudget) params.minBudget = fretFilters.value.minBudget;
 
-    await fretStore.fetchPublicAnnouncements(params);
+    await fretStore.fetchPbcAnnouncements(params);
   }
 };
 
