@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { extractErrorMessage } from '~/utils/error';
 import type { StoreAvailability as Availability, StoreLocation as Location, CreateAvailabilityData, } from '~/types';
 export type { Availability, Location, CreateAvailabilityData };
 
@@ -76,14 +77,8 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
         });
         return { success: true };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
       }
     },
-
-    extractErrorMessage(error: any): string {
-      if (error?.data?.message) return error.data.message;
-      if (error?.message) return error.message;
-      return 'Une erreur est survenue';
-    }
   }
 });

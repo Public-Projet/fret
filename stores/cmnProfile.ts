@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { extractErrorMessage } from '~/utils/error';
 import { useCarVehiclesStore } from './carVehicles';
 import type { UserRole, UserProfile, UpdateProfileData, UpdatePasswordData, UpdateEmailData, } from '~/types';
 
@@ -61,7 +62,7 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
           return { success: false, error: 'Profil non trouvé' };
         }
       } catch (e: any) {
-        const errorMessage = e?.data?.message || 'Erreur lors de la récupération du profil';
+        const errorMessage = extractErrorMessage(e) || 'Erreur lors de la récupération du profil';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -101,7 +102,7 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
           return { success: false, error: errorMessage };
         }
       } catch (e: any) {
-        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du profil';
+        const errorMessage = extractErrorMessage(e) || 'Erreur lors de la mise à jour du profil';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -129,10 +130,11 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
 
         if (response?.message) {
           return { success: true, message: response.message };
+        } else {
+          return { success: false, error: 'Erreur de mise à jour' };
         }
-        return { success: false, error: 'Erreur de mise à jour' };
       } catch (e: any) {
-        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la mise à jour de l\'email';
+        const errorMessage = extractErrorMessage(e) || 'Erreur lors de la mise à jour de l\'email';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -156,10 +158,11 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
 
         if (response?.message) {
           return { success: true, message: response.message };
+        } else {
+          return { success: false, error: 'Erreur de mise à jour' };
         }
-        return { success: false, error: 'Erreur de mise à jour' };
       } catch (e: any) {
-        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du mot de passe';
+        const errorMessage = extractErrorMessage(e) || 'Erreur lors de la mise à jour du mot de passe';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -189,10 +192,11 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
         if (response?.message) {
           await this.fetchProfile(role);
           return { success: true, message: response.message };
+        } else {
+          return { success: false, error: 'Erreur envoi document' };
         }
-        return { success: false, error: 'Erreur envoi document' };
       } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de l\'envoi du document' };
+        return { success: false, error: extractErrorMessage(e) || 'Erreur lors de l\'envoi du document' };
       } finally {
         this.isLoading = false;
       }
@@ -212,10 +216,11 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
 
         if (response?.document) {
           return { success: true, document: response.document };
+        } else {
+          return { success: false, error: 'Document non trouvé' };
         }
-        return { success: false, error: 'Document non trouvé' };
       } catch (e: any) {
-        return { success: false, error: e?.data?.message || 'Erreur lors de la récupération du document' };
+        return { success: false, error: extractErrorMessage(e) || 'Erreur lors de la récupération du document' };
       } finally {
         this.isLoading = false;
       }
@@ -237,10 +242,11 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
 
         if (response?.message) {
           return { success: true, message: response.message };
+        } else {
+          return { success: false, error: 'Erreur lors de la suppression' };
         }
-        return { success: false, error: 'Erreur lors de la suppression' };
       } catch (e: any) {
-        const errorMessage = this.extractErrorMessage(e) || 'Erreur lors de la suppression du compte';
+        const errorMessage = extractErrorMessage(e) || 'Erreur lors de la suppression du compte';
         this.error = errorMessage;
         return { success: false, error: errorMessage };
       } finally {
@@ -255,35 +261,6 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
       this.profile = null;
       this.isLoading = false;
       this.error = null;
-    },
-
-    /**
-     * Extraire le message d'erreur de la réponse
-     */
-    extractErrorMessage(error: any): string {
-      if (!error) return 'Une erreur est survenue';
-
-      // Erreur $fetch (error.data contient les données d'erreur)
-      const errorData = error?.data?.data || error?.data;
-
-      if (errorData && typeof errorData === 'object') {
-        const errorKeys = ['badCombo', 'invalidPhoneFormat', 'passwordFormatInvalid', 'notFound', 'invalidEmail', 'emailAlreadyInUse', 'licensePlateAlreadyInUse'];
-        for (const key of errorKeys) {
-          if (errorData[key] && typeof errorData[key] === 'object') {
-            return (errorData[key] as { message?: string }).message || 'Une erreur est survenue';
-          }
-        }
-
-        if (errorData.message && typeof errorData.message === 'string') {
-          return errorData.message;
-        }
-      }
-
-      if (error.message && !error.message.startsWith('Erreur HTTP')) {
-        return error.message;
-      }
-
-      return 'Une erreur est survenue';
     },
   },
 });

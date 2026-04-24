@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import type { UserProfile, Vehicle, AddVehicleData, StoreAvailability as Availability, } from '~/types';
+import { extractErrorMessage } from '~/utils/error';
+import type { Vehicle, AddVehicleData, StoreAvailability as Availability, } from '~/types';
 
 interface ProfileState {
   vehicles: Vehicle[];
@@ -40,7 +41,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
         }
         return { success: false, error: 'Erreur ajout véhicule' };
       } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de l\'ajout du véhicule' };
+        return { success: false, error: extractErrorMessage(e) || 'Erreur lors de l\'ajout du véhicule' };
       } finally {
         this.vehiclesLoading = false;
       }
@@ -120,7 +121,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
         }
         return { success: false, error: 'Erreur de mise à jour' };
       } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du véhicule' };
+        return { success: false, error: extractErrorMessage(e) || 'Erreur lors de la mise à jour du véhicule' };
       } finally {
         this.vehiclesLoading = false;
       }
@@ -146,7 +147,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
         }
         return { success: false, error: 'Erreur de mise à jour' };
       } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la mise à jour du statut' };
+        return { success: false, error: extractErrorMessage(e) || 'Erreur lors de la mise à jour du statut' };
       }
     },
 
@@ -163,7 +164,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
         this.vehicles = this.vehicles.filter(v => v.id !== id);
         return { success: true, message: response?.message || 'Véhicule supprimé' };
       } catch (e: any) {
-        return { success: false, error: this.extractErrorMessage(e) || 'Erreur lors de la suppression' };
+        return { success: false, error: extractErrorMessage(e) || 'Erreur lors de la suppression' };
       }
     },
 
@@ -174,33 +175,6 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
       this.vehicles = [];
       this.isLoading = false;
       this.error = null;
-    },
-
-
-    extractErrorMessage(error: any): string {
-      if (!error) return 'Une erreur est survenue';
-
-      // Erreur $fetch (error.data contient les données d'erreur)
-      const errorData = error?.data?.data || error?.data;
-
-      if (errorData && typeof errorData === 'object') {
-        const errorKeys = ['badCombo', 'invalidPhoneFormat', 'passwordFormatInvalid', 'notFound', 'invalidEmail', 'emailAlreadyInUse', 'licensePlateAlreadyInUse'];
-        for (const key of errorKeys) {
-          if (errorData[key] && typeof errorData[key] === 'object') {
-            return (errorData[key] as { message?: string }).message || 'Une erreur est survenue';
-          }
-        }
-
-        if (errorData.message && typeof errorData.message === 'string') {
-          return errorData.message;
-        }
-      }
-
-      if (error.message && !error.message.startsWith('Erreur HTTP')) {
-        return error.message;
-      }
-
-      return 'Une erreur est survenue';
     },
   },
 });
