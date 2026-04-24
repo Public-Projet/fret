@@ -4,7 +4,7 @@ interface ThemeState {
   isDark: boolean;
 }
 
-export const useThemeStore = defineStore('theme', {
+export const useFrtThemeStore = defineStore('frtTheme', {
   state: (): ThemeState => ({
     isDark: false,
   }),
@@ -14,27 +14,21 @@ export const useThemeStore = defineStore('theme', {
   },
 
   actions: {
-    /**
-     * Basculer entre mode clair et sombre
-     */
+    // Basculer entre mode clair et sombre
     toggleTheme() {
       this.isDark = !this.isDark;
       this.applyTheme();
       this.saveTheme();
     },
 
-    /**
-     * Définir le thème
-     */
+    // Définir le thème
     setTheme(isDark: boolean) {
       this.isDark = isDark;
       this.applyTheme();
       this.saveTheme();
     },
 
-    /**
-     * Appliquer le thème au DOM
-     */
+    // Appliquer le thème au DOM
     applyTheme() {
       if (process.client) {
         if (this.isDark) {
@@ -45,25 +39,20 @@ export const useThemeStore = defineStore('theme', {
       }
     },
 
-    /**
-     * Sauvegarder le thème dans le localStorage
-     */
+    // Sauvegarder le thème dans le localStorage
     saveTheme() {
       if (process.client) {
         localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
       }
     },
 
-    /**
-     * Restaurer le thème depuis le localStorage
-     */
+    // Restaurer le thème depuis le localStorage
     restoreTheme() {
       if (process.client) {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
           this.isDark = savedTheme === 'dark';
         } else {
-          // Utiliser la préférence système par défaut
           this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         }
         this.applyTheme();

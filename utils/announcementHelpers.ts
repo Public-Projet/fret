@@ -70,7 +70,7 @@ export const sharedAnnouncementGetters = {
   },
 
   offersByAnnouncement: (state: AnnouncementBaseState) => (announcementId: string) => {
-    return (state.offers || []).filter(o => String((o as any).announcementId || (o as any).announcement?.id || o.announcement) === String(announcementId));
+    return (state.offers || []).filter(o => String(o.announcementId || o.announcement?.id || o.announcement) === String(announcementId));
   },
 };
 

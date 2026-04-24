@@ -20,13 +20,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useThemeStore } from '~/stores/theme';
+import { useFrtThemeStore } from '~/stores/frtTheme';
 import { IconMoon, IconSun } from '@tabler/icons-vue';
 
 defineProps<{
   customClass?: string;
 }>();
 
-const themeStore = useThemeStore();
+const themeStore = useFrtThemeStore();
 const isDark = computed(() => themeStore.isDark);
 </script>

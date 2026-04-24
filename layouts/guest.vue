@@ -23,9 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import { useThemeStore } from '~/stores/theme';
+import { useFrtThemeStore } from '~/stores/frtTheme';
 
-const themeStore = useThemeStore();
+const themeStore = useFrtThemeStore();
 
 onMounted(() => {
   themeStore.restoreTheme();

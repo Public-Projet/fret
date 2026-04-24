@@ -186,12 +186,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useThemeStore } from '~/stores/theme';
+import { useFrtThemeStore } from '~/stores/frtTheme';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { IconChevronDown, IconMenu2, IconX, IconArrowRight, IconLayoutDashboard, IconUser, IconSettings, IconLogout } from '@tabler/icons-vue';
 
 const authStore = useCmnAuthStore();
-const themeStore = useThemeStore();
+const themeStore = useFrtThemeStore();
 const messagingStore = useCmnMessagingStore();
 const router = useRouter();
 const route = useRoute();
