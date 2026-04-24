@@ -33,7 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import { usePbcSiteContentStore, getInitials, getAvatarClass } from '~/stores/pbcSiteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
+import { getInitials, getAvatarClass } from '~/utils/siteContent';
 
 const contentStore = usePbcSiteContentStore();
 

@@ -45,7 +45,8 @@
 </template>
 
 <script setup lang="ts">
-import { usePbcSiteContentStore, getInitials, getAvatarClass, getRoleClass } from '~/stores/pbcSiteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
+import { getInitials, getAvatarClass, getRoleClass } from '~/utils/siteContent';
 
 const contentStore = usePbcSiteContentStore();
 

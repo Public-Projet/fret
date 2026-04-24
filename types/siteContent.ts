@@ -93,3 +93,30 @@ export interface SocialLink {
   order: number;
   isActive: boolean;
 }
+
+export interface SiteContentLoading {
+  partners: boolean;
+  testimonials: boolean;
+  team: boolean;
+  legal: boolean;
+  faqs: boolean;
+  faqCategories: boolean;
+  safetyItems: boolean;
+  help: boolean;
+  article: boolean;
+  socialLinks: boolean;
+}
+
+export interface SiteContentState {
+  partners: Partner[];
+  testimonials: Testimonial[];
+  team: TeamMember[];
+  legal: Record<string, LegalPage>;
+  faqs: FaqItem[];
+  faqCategories: FaqCategory[];
+  safetyItems: SafetyItem[];
+  helpCategories: HelpCategory[];
+  socialLinks: SocialLink[];
+  currentArticle: HelpArticle | null;
+  loading: SiteContentLoading;
+}

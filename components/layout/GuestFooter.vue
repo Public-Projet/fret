@@ -47,12 +47,12 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import * as Icons from '@tabler/icons-vue';
-import { useSiteContentStore } from '~/stores/siteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
 
-const store = useSiteContentStore();
+const store = usePbcSiteContentStore();
 const currentYear = computed(() => new Date().getFullYear());
 
-// Fetch social links (works for both SSR and Client)
+// Fetch social links
 await store.fetchSocialLinks();
 
 const getIconComponent = (iconName: string) => {
