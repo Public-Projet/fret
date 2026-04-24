@@ -76,7 +76,7 @@ const availabilities = computed(() => {
 });
 
 const fretOffers = computed(() => {
-  return fretStore.filteredAnnouncements.filter(a => String(a.userId) === String(id));
+  return fretStore.allAnnouncements.filter(a => String(a.userId) === String(id));
 });
 
 const isMe = computed(() => {

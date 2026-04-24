@@ -120,7 +120,7 @@ const fretFilters = ref({
 });
 
 const fretAnnouncements = computed(() => {
-  return fretStore.allAnnouncements.map(a => {
+  return fretStore.filteredAnnouncements.map(a => {
     return {
       ...a,
       user: a.shipper || a.user,

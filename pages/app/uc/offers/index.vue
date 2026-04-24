@@ -83,7 +83,7 @@
                   class="flex items-center bg-gray-100 dark:bg-gray-700/50 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-700">
                   <IconMapPin class="w-4 h-4 mr-2 text-primary-500" />
                   <span class="font-bold text-gray-700 dark:text-gray-300 truncate">{{ offer.announcement?.origin?.city
-                    }}</span>
+                  }}</span>
                   <IconArrowRight class="w-3 h-3 mx-2" />
                   <span class="font-bold text-gray-700 dark:text-gray-300 truncate">{{
                     offer.announcement?.destination?.city }}</span>
