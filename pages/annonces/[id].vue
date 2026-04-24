@@ -51,7 +51,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useAvailabilityStore } from '~/stores/availability';
 import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
@@ -59,7 +58,6 @@ import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
-const availStore = useAvailabilityStore();
 const pbcAvailStore = usePbcAvailabilityStore();
 const shpAvailStore = useShpAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
@@ -105,7 +103,7 @@ const isOwner = computed(() => {
 
 const alreadyEnrolled = computed(() => {
   if (dataType.value === 'avail') {
-    return availStore.isEnrolled(id);
+    return shpAvailStore.isEnrolled(id);
   }
   return false;
 });

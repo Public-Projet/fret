@@ -155,7 +155,7 @@
                   </div>
                 </div>
 
-                <template v-if="availabilityStore.isEnrolled(item.id)">
+                <template v-if="shpAvailStore.isEnrolled(item.id)">
                   <div
                     class="flex items-center text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-4 py-2 rounded-xl border border-emerald-100 dark:border-emerald-900/30">
                     <IconCheck class="w-5 h-5 mr-2" />
@@ -262,7 +262,7 @@
                     <span class="truncate">{{ enrollment.availability?.origin?.city }}</span>
                     <IconArrowRight class="w-5 h-5 text-primary-500 flex-shrink-0" />
                     <span class="truncate text-primary-600">{{ enrollment.availability?.destination?.city || 'Libre'
-                      }}</span>
+                    }}</span>
                   </p>
                   <div class="flex items-center mt-2 text-gray-500 font-bold text-sm">
                     <IconCalendar class="w-4 h-4 mr-2 text-primary-400" />
@@ -301,7 +301,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import { useAvailabilityStore } from '~/stores/availability';
 import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
@@ -310,15 +309,14 @@ import { IconSearch, IconLoader2, IconCheck, IconHistory, IconTicketOff, IconArr
 
 const activeTab = ref('market');
 const authStore = useCmnAuthStore();
-const availabilityStore = useAvailabilityStore();
 const pbcAvailStore = usePbcAvailabilityStore();
 const shpAvailStore = useShpAvailabilityStore();
 const messagingStore = useCmnMessagingStore();
 const currentUser = computed(() => authStore.currentUser);
 const loadingPublic = ref(false);
 const loadingEnrollments = ref(false);
-const availabilities = computed(() => availabilityStore.availabilities);
-const enrollments = computed(() => availabilityStore.enrollments);
+const availabilities = computed(() => pbcAvailStore.availabilities);
+const enrollments = computed(() => shpAvailStore.enrollments);
 
 // Data loading logic based on active tab
 const fetchCurrentTabInfo = async () => {

@@ -155,7 +155,7 @@
 import { computed } from 'vue';
 import { IconArrowLeft, IconStarFilled, IconStar, IconTruck, IconCheck, IconUser, IconEye, IconUsers } from '@tabler/icons-vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useAvailabilityStore } from '~/stores/availability';
+import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 
 const props = defineProps<{
   item: any;
@@ -172,10 +172,11 @@ defineEmits<{
 }>();
 
 const authStore = useCmnAuthStore();
-const availStore = useAvailabilityStore();
+const pbcAvailStore = usePbcAvailabilityStore();
+const shpAvailStore = useShpAvailabilityStore();
 
 const getMyEnrollmentStatusText = () => {
-  const enrollment = availStore.enrollments.find((e: any) => String(e.availability?.id) === String(props.item.id) || String(e.availability) === String(props.item.id));
+  const enrollment = shpAvailStore.enrollments.find((e: any) => String(e.availability?.id) === String(props.item.id) || String(e.availability) === String(props.item.id));
   if (enrollment && ['accepted', 'confirmed'].includes(enrollment.status)) {
     return 'Contrat validé !';
   }
@@ -183,7 +184,7 @@ const getMyEnrollmentStatusText = () => {
 };
 
 const myEnrollment = computed(() => {
-  return availStore.enrollments.find((e: any) => String(e.availability?.id) === String(props.item.id) || String(e.availability) === String(props.item.id));
+  return shpAvailStore.enrollments.find((e: any) => String(e.availability?.id) === String(props.item.id) || String(e.availability) === String(props.item.id));
 });
 
 const getStatusLabel = (status: string) => {

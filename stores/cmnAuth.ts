@@ -253,7 +253,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
       this.isAuthenticated = false;
 
       // Arrêter le rafraîchissement des notifications
-      const notificationStore = useNotificationStore();
+      const notificationStore = useCmnNotificationStore();
       notificationStore.stopPolling();
 
       // Rediriger vers la page de connexion

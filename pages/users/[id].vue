@@ -53,7 +53,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '~/stores/user';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useAvailabilityStore } from '~/stores/availability';
 import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useRoute } from 'vue-router';
@@ -62,7 +61,6 @@ import { IconArrowLeft, IconLoader2, IconAlertCircle, IconX } from '@tabler/icon
 const route = useRoute();
 const userStore = useUserStore();
 const authStore = useCmnAuthStore();
-const availStore = useAvailabilityStore();
 const pbcAvailStore = usePbcAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
 
@@ -74,7 +72,7 @@ const loading = ref(true);
 const showRatingModal = ref(false);
 
 const availabilities = computed(() => {
-  return availStore.availabilities.filter(a => String(a.carrier?.id) === String(id));
+  return pbcAvailStore.availabilities.filter((a: any) => String(a.carrier?.id) === String(id));
 });
 
 const fretOffers = computed(() => {

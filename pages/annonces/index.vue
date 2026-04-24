@@ -62,13 +62,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import { useAvailabilityStore } from '~/stores/availability';
 import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useRoute } from 'vue-router';
 import { IconLoader2, IconTruckOff, IconPackageOff, IconX } from '@tabler/icons-vue';
 
-const availStore = useAvailabilityStore();
 const pbcAvailStore = usePbcAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
 const router = useRouter();
@@ -101,7 +99,7 @@ const availFilters = ref({
 });
 
 const filteredAvailabilities = computed(() => {
-  return availStore.availabilities.filter(item => {
+  return pbcAvailStore.availabilities.filter(item => {
     // Filter by User if provided in query
     const matchUserId = !route.query.userId || String(item.carrier?.id) === String(route.query.userId);
     if (!matchUserId) return false;
@@ -131,7 +129,7 @@ const fretAnnouncements = computed(() => {
   });
 });
 
-const loading = computed(() => activeTab.value === 'avail' ? availStore.loading : fretStore.loading);
+const loading = computed(() => activeTab.value === 'avail' ? pbcAvailStore.loading : fretStore.loading);
 const isEmpty = computed(() => {
   if (activeTab.value === 'avail') return filteredAvailabilities.value.length === 0;
   return fretAnnouncements.value.length === 0;
