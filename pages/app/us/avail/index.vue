@@ -302,16 +302,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
+import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconSearch, IconLoader2, IconCheck, IconHistory, IconTicketOff, IconArrowRight, IconMessage, IconTruck, IconCalendar, IconPackage, IconUsers, IconTruckOff, IconMapPin, IconChevronDown, IconArrowDown } from '@tabler/icons-vue';
 
-// Tabs
 const activeTab = ref('market');
-
-// Store
 const authStore = useCmnAuthStore();
 const availabilityStore = useAvailabilityStore();
+const shpAvailStore = useShpAvailabilityStore();
 const messagingStore = useCmnMessagingStore();
 const currentUser = computed(() => authStore.currentUser);
 const loadingPublic = ref(false);
@@ -329,7 +328,7 @@ const fetchCurrentTabInfo = async () => {
   } else if (activeTab.value === 'enrollments') {
     loadingEnrollments.value = true;
     await Promise.all([
-      availabilityStore.fetchShipperEnrollments(),
+      shpAvailStore.fetchShpEnrollments(),
       currentUser.value ? messagingStore.fetchUserConversations() : Promise.resolve()
     ]);
     loadingEnrollments.value = false;

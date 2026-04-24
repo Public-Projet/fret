@@ -52,12 +52,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useAvailabilityStore } from '~/stores/availability';
+import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
 const availStore = useAvailabilityStore();
+const shpAvailStore = useShpAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
 const authStore = useCmnAuthStore();
 
@@ -74,7 +76,7 @@ const handleNegotiationSuccess = async () => {
   selectedProposalForCounter.value = null;
   await fetchData();
   if (authStore.isAuthenticated && authStore.isShipper) {
-    await availStore.fetchShipperEnrollments();
+    await shpAvailStore.fetchShpEnrollments();
   }
 };
 
@@ -173,7 +175,7 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
   if (authStore.isAuthenticated && authStore.isShipper) {
-    availStore.fetchShipperEnrollments();
+    shpAvailStore.fetchShpEnrollments();
   }
 });
 

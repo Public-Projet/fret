@@ -66,7 +66,7 @@ const handleNegotiationSuccess = async () => {
   selectedProposalForCounter.value = null;
   await fetchData();
   if (authStore.isAuthenticated && authStore.isShipper) {
-    await availStore.fetchShipperEnrollments();
+    await availStore.fetchShpEnrollments();
   }
 };
 
@@ -114,7 +114,7 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
   if (authStore.isAuthenticated && authStore.isShipper) {
-    availStore.fetchShipperEnrollments();
+    availStore.fetchShpEnrollments();
   }
 });
 

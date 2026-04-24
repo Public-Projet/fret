@@ -155,11 +155,13 @@ import { ref, computed, onMounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useAvailabilityStore } from '~/stores/availability';
+import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { IconCircleCheck, IconCurrencyEuro, IconFileText, IconMessage, IconPlus, IconList, IconRocket, IconTicket, IconPackage } from '@tabler/icons-vue';
 
 const authStore = useCmnAuthStore();
 const announcementStore = useShpAnnouncementStore();
 const availabilityStore = useAvailabilityStore();
+const shpAvailStore = useShpAvailabilityStore();
 
 const loading = computed(() => announcementStore.loading || availabilityStore.loading);
 const currentUser = computed(() => authStore.currentUser);
@@ -243,7 +245,7 @@ const formatDate = (dateString: string) => {
 
 onMounted(() => {
   announcementStore.fetchShpAnnouncements();
-  availabilityStore.fetchShipperEnrollments();
+  shpAvailStore.fetchShpEnrollments();
 });
 useHead({
   title: 'Tableau de bord Expéditeur',
