@@ -94,7 +94,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
       }
     },
 
-    // Accapter une proposition de disponibilité    
+    // Accepter une proposition de disponibilité    
     async acceptCarBooking(bookingId: string) {
       try {
         await $fetch(`/api/carrier/availability/booking-accept`, { method: 'POST' });
@@ -126,6 +126,7 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
         return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
+
 
 
 
