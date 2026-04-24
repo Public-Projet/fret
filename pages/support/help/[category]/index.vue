@@ -59,10 +59,10 @@
 import { computed, onMounted } from 'vue';
 import { IconChevronRight, IconArrowLeft, IconFileOff, IconUser } from '@tabler/icons-vue';
 import * as TablerIcons from '@tabler/icons-vue';
-import { useSiteContentStore } from '~/stores/siteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
 
 const route = useRoute();
-const store = useSiteContentStore();
+const store = usePbcSiteContentStore();
 const categorySlug = route.params.category as string;
 
 onMounted(() => {

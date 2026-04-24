@@ -44,9 +44,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { IconChevronDown } from '@tabler/icons-vue';
-import { useSiteContentStore } from '~/stores/siteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
 
-const store = useSiteContentStore();
+const store = usePbcSiteContentStore();
 const openFaqId = ref<string | null>(null);
 
 onMounted(() => {
@@ -54,14 +54,11 @@ onMounted(() => {
 });
 
 const filteredFaqs = computed(() => {
-  // On filtre par la catégorie 'Paiement' comme demandé par l'utilisateur
-  // On inclut aussi prix et abonnement car c'est pertinent pour la page pricing
   return store.faqs.filter(faq => {
     let cat = '';
     if (typeof faq.category === 'string') {
       cat = faq.category.toLowerCase();
     } else if (faq.category && typeof faq.category === 'object') {
-      // Si c'est un objet, on utilise le titre ou le slug
       cat = (faq.category.title || faq.category.slug || '').toLowerCase();
     }
 

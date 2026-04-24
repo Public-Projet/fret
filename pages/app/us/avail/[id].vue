@@ -46,12 +46,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAvailabilityStore } from '~/stores/availability';
+import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
-const availStore = useAvailabilityStore();
+const availStore = useShpAvailabilityStore();
 const authStore = useCmnAuthStore();
 
 const id = route.params.id as string;
@@ -104,7 +104,7 @@ const enroll = () => {
 
 const fetchData = async () => {
   loading.value = true;
-  const res = await availStore.fetchShipperAvailabilityById(id);
+  const res = await availStore.fetchShpMineAvailability();
   if (res.success) {
     item.value = res.availability;
   }

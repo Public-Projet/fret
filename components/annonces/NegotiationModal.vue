@@ -109,7 +109,7 @@
 import { ref, reactive } from 'vue';
 import { IconX, IconCurrencyDollar, IconMapPinFilled, IconMessageDots, IconLoader2 } from '@tabler/icons-vue';
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
-import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
+import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { useCarAnnouncementStore } from '~/stores/carAnnouncement';
 import { useCmnAnnouncementStore } from '~/stores/cmnAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
@@ -129,7 +129,7 @@ const emit = defineEmits<{
 }>();
 
 const availStore = useCarAvailabilityStore();
-const fretStore = useShpAnnouncementStore();
+const shpAvailStore = useShpAvailabilityStore();
 const carStore = useCarAnnouncementStore();
 const cmnAnnouncementStore = useCmnAnnouncementStore();
 const authStore = useCmnAuthStore();
@@ -170,7 +170,7 @@ const handleSubmit = async () => {
       }
     } else {
       if (props.dataType === 'avail') {
-        res = await availStore.enrollAvailability(props.targetId, form);
+        res = await shpAvailStore.enrollShpAvailability(props.targetId, form);
       } else {
         res = await carStore.createCarOffer(props.targetId, form);
       }

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import type { StoreAvailability as Availability, StoreLocation as Location, CreateAvailabilityData, } from '~/types';
 export type { Availability, Location, CreateAvailabilityData };
 
-export const useAvailabilityStore = defineStore('availability', {
+export const useShpAvailabilityStore = defineStore('shpAvailability', {
   state: () => ({
     availabilities: [] as Availability[],
     enrollments: [] as any[],
@@ -18,6 +18,64 @@ export const useAvailabilityStore = defineStore('availability', {
   },
 
   actions: {
+    // S'inscrire à une disponibilité
+    async enrollShpAvailability(id: string, negotiationData: any = {}) {
+      this.loading = true;
+      try {
+        await ($fetch as any)(`/api/shipper/availability/enroll`, {
+          method: 'POST',
+          body: {
+            notes: negotiationData.message,
+            proposedPrice: negotiationData.price,
+            proposedOrigin: negotiationData.origin,
+            proposedDestination: negotiationData.destination,
+          },
+        });
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique lors de l\'inscription' };
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // Détails d'une disponibilité
+    async fetchShpMineAvailability() {
+      try {
+        const response = await $fetch<{ data: Availability }>(`/api/shipper/availability/mine`);
+        if (response?.data) {
+          return { success: true, availability: response.data };
+        }
+        return { success: false, error: 'Disponibilité non trouvée' };
+      } catch (err: any) {
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
+      }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Publique: Liste des disponibilités
      */
@@ -49,8 +107,6 @@ export const useAvailabilityStore = defineStore('availability', {
         return { success: false, error: err?.data?.message || 'Erreur technique' };
       }
     },
-
-
 
     /**
      * Expéditeur: Liste de mes inscriptions

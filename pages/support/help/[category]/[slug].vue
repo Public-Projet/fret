@@ -88,22 +88,20 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { IconChevronRight, IconArrowLeft, IconFileOff, IconEye, IconThumbUp, IconThumbDown, IconLoader2 } from '@tabler/icons-vue';
-import { useSiteContentStore } from '~/stores/siteContent';
+import { IconChevronRight, IconArrowLeft, IconFileOff, IconEye, IconThumbUp, IconThumbDown } from '@tabler/icons-vue';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
 
 const route = useRoute();
-const store = useSiteContentStore();
+const store = usePbcSiteContentStore();
 const articleSlug = route.params.slug as string;
 
 onMounted(async () => {
   await store.fetchArticleBySlug(articleSlug);
-  // Also ensuring help categories are loaded for related articles
   if (store.helpCategories.length === 0) {
     await store.fetchHelp();
   }
 });
 
-// Watch slug change for intra-navigation
 watch(() => route.params.slug, async (newSlug) => {
   if (newSlug) await store.fetchArticleBySlug(newSlug as string);
 });

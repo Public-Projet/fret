@@ -20,9 +20,9 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import { useSiteContentStore } from '~/stores/siteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
 
-const store = useSiteContentStore();
+const store = usePbcSiteContentStore();
 
 onMounted(() => {
   store.fetchSafetyItems();

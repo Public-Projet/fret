@@ -22,9 +22,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useSiteContentStore } from '~/stores/siteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
 
-const store = useSiteContentStore();
+const store = usePbcSiteContentStore();
 const activeCategory = ref<any>('Toutes');
 
 onMounted(() => {
@@ -36,7 +36,6 @@ const categories = computed(() => {
   if (store.faqCategories.length > 0) {
     return ['Toutes', ...store.faqCategories];
   }
-  // Fallback if no categories loaded but FAQs have inline categories (should not happen with new logic but safe to keep)
   const cats = new Set(store.faqs.map(f => typeof f.category === 'string' ? f.category : (f.category as any).title));
   return ['Toutes', ...Array.from(cats)];
 });
@@ -47,14 +46,12 @@ const filteredFaqs = computed(() => {
   }
 
   if (typeof activeCategory.value === 'string') {
-    // Old string based filtering or fallback
     return store.faqs.filter(faq => {
       const catName = typeof faq.category === 'string' ? faq.category : (faq.category as any).title;
       return catName === activeCategory.value;
     });
   }
 
-  // Object based filtering (compare IDs)
   return store.faqs.filter(faq => {
     if (typeof faq.category === 'object' && faq.category !== null) {
       return (faq.category as any).id === activeCategory.value.id;

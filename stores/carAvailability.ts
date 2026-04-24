@@ -183,29 +183,6 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
     },
 
     /**
-     * Expéditeur: S'inscrire à une disponibilité
-     */
-    async enrollAvailability(id: string, negotiationData: any = {}) {
-      this.loading = true;
-      try {
-        await ($fetch as any)(`/api/availabilities/${id}/enroll`, {
-          method: 'POST',
-          body: {
-            notes: negotiationData.message,
-            proposedPrice: negotiationData.price,
-            proposedOrigin: negotiationData.origin,
-            proposedDestination: negotiationData.destination,
-          },
-        });
-        return { success: true };
-      } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique lors de l\'inscription' };
-      } finally {
-        this.loading = false;
-      }
-    },
-
-    /**
      * Expéditeur: Liste de mes inscriptions
      */
     async fetchShipperEnrollments() {
@@ -221,33 +198,6 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
         this.loading = false;
       }
     },
-
-
-
-
-
-    /**
-     * Expéditeur: Une disponibilité
-     */
-    async fetchShipperAvailabilityById(id: string) {
-      try {
-        const response = await $fetch<{ data: Availability }>(`/api/shipper/availabilities/${id}`);
-        if (response?.data) {
-          return { success: true, availability: response.data };
-        }
-        return { success: false, error: 'Disponibilité non trouvée' };
-      } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
-      }
-    },
-
-
-
-
-
-
-
-
 
 
     extractErrorMessage(error: any): string {

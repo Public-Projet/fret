@@ -33,9 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import { useSiteContentStore, getInitials, getAvatarClass } from '~/stores/siteContent';
+import { usePbcSiteContentStore, getInitials, getAvatarClass } from '~/stores/pbcSiteContent';
 
-const contentStore = useSiteContentStore();
+const contentStore = usePbcSiteContentStore();
 
 onMounted(() => {
   contentStore.fetchTestimonials();

@@ -45,9 +45,9 @@
 </template>
 
 <script setup lang="ts">
-import { useSiteContentStore, getInitials, getAvatarClass, getRoleClass } from '~/stores/siteContent';
+import { usePbcSiteContentStore, getInitials, getAvatarClass, getRoleClass } from '~/stores/pbcSiteContent';
 
-const contentStore = useSiteContentStore();
+const contentStore = usePbcSiteContentStore();
 
 onMounted(() => {
   contentStore.fetchTeam();

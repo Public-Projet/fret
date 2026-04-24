@@ -29,9 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { useSiteContentStore } from '~/stores/siteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
 
-const contentStore = useSiteContentStore();
+const contentStore = usePbcSiteContentStore();
 
 onMounted(() => {
   contentStore.fetchPartners();

@@ -19,9 +19,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useSiteContentStore } from '~/stores/siteContent';
+import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
 
-const store = useSiteContentStore();
+const store = usePbcSiteContentStore();
 const searchQuery = ref('');
 
 onMounted(() => {
@@ -36,7 +36,6 @@ const categoriesWithCount = computed(() => {
 });
 
 const popularArticles = computed(() => {
-  // Simple popularity based on views
   const allArticles = store.helpCategories.flatMap(c => c.articles || []);
   return [...allArticles]
     .sort((a, b) => b.views - a.views)

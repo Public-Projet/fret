@@ -25,10 +25,7 @@ interface SiteContentState {
     socialLinks: boolean;
   };
 }
-
-// --- Helpers ---
-
-/** Génère les initiales à partir d'un nom complet */
+// Génère les initiales à partir d'un nom complet
 export function getInitials(name: string): string {
   return name
     .split(' ')
@@ -37,7 +34,7 @@ export function getInitials(name: string): string {
     .join('');
 }
 
-/** Palette de couleurs pour les avatars de fallback */
+// Palette de couleurs pour les avatars de fallback
 const AVATAR_COLORS = [
   'bg-gradient-to-br from-blue-500 to-blue-700',
   'bg-gradient-to-br from-green-500 to-green-700',
@@ -48,12 +45,12 @@ const AVATAR_COLORS = [
   'bg-gradient-to-br from-teal-500 to-teal-700',
 ];
 
-/** Retourne une classe de couleur d'avatar déterministe basée sur l'index */
+// Retourne une classe de couleur d'avatar déterministe basée sur l'index
 export function getAvatarClass(index: number): string {
   return AVATAR_COLORS[index % AVATAR_COLORS.length];
 }
 
-/** Palette de couleurs pour le rôle */
+// Palette de couleurs pour le rôle
 const ROLE_COLORS = [
   'text-blue-600 dark:text-blue-400',
   'text-green-600 dark:text-green-400',
@@ -67,9 +64,7 @@ export function getRoleClass(index: number): string {
   return ROLE_COLORS[index % ROLE_COLORS.length];
 }
 
-// --- Store ---
-
-export const useSiteContentStore = defineStore('siteContent', {
+export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
   state: (): SiteContentState => ({
     partners: [],
     testimonials: [],
@@ -96,7 +91,7 @@ export const useSiteContentStore = defineStore('siteContent', {
   }),
 
   actions: {
-    /** Récupérer la liste des liens sociaux */
+    // Récupérer la liste des liens sociaux
     async fetchSocialLinks() {
       if (this.socialLinks.length > 0) return;
       this.loading.socialLinks = true;
@@ -112,7 +107,7 @@ export const useSiteContentStore = defineStore('siteContent', {
       }
     },
 
-    /** Récupérer la liste des partenaires */
+    // Récupérer la liste des partenaires
     async fetchPartners() {
       if (this.partners.length > 0) return;
       this.loading.partners = true;
@@ -128,7 +123,7 @@ export const useSiteContentStore = defineStore('siteContent', {
       }
     },
 
-    /** Récupérer la liste des témoignages */
+    // Récupérer la liste des témoignages
     async fetchTestimonials() {
       if (this.testimonials.length > 0) return;
       this.loading.testimonials = true;
@@ -144,7 +139,7 @@ export const useSiteContentStore = defineStore('siteContent', {
       }
     },
 
-    /** Récupérer la liste des membres de l'équipe */
+    // Récupérer la liste des membres de l'équipe
     async fetchTeam() {
       if (this.team.length > 0) return;
       this.loading.team = true;
@@ -160,7 +155,7 @@ export const useSiteContentStore = defineStore('siteContent', {
       }
     },
 
-    /** Récupérer un contenu légal par son slug */
+    // Récupérer un contenu légal par son slug
     async fetchLegalBySlug(slug: string) {
       if (this.legal[slug]) return this.legal[slug];
       this.loading.legal = true;
@@ -178,7 +173,7 @@ export const useSiteContentStore = defineStore('siteContent', {
       return null;
     },
 
-    /** Récupérer la liste des FAQ */
+    // Récupérer la liste des FAQ
     async fetchFaqs() {
       if (this.faqs.length > 0) return;
       this.loading.faqs = true;
@@ -194,12 +189,11 @@ export const useSiteContentStore = defineStore('siteContent', {
       }
     },
 
-    /** Récupérer la liste des catégories de FAQ */
+    // Récupérer la liste des catégories de FAQ
     async fetchFaqCategories() {
-      // Placeholder — pas encore implémenté côté backend
     },
 
-    /** Récupérer la liste des contenus de sécurité */
+    // Récupérer la liste des contenus de sécurité
     async fetchSafetyItems() {
       if (this.safetyItems.length > 0) return;
       this.loading.safetyItems = true;
@@ -215,7 +209,7 @@ export const useSiteContentStore = defineStore('siteContent', {
       }
     },
 
-    /** Récupérer les catégories et articles du centre d'aide */
+    // Récupérer les catégories et articles du centre d'aide
     async fetchHelp() {
       if (this.helpCategories.length > 0) return;
       this.loading.help = true;
@@ -231,7 +225,7 @@ export const useSiteContentStore = defineStore('siteContent', {
       }
     },
 
-    /** Récupérer un article par son slug */
+    // Récupérer un article par son slug
     async fetchArticleBySlug(slug: string) {
       this.loading.article = true;
       try {
