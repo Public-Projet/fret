@@ -1,4 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const slug = getRouterParam(event, 'slug');
+  const query = getQuery(event);
+  const slug = query.slug as string;
   return proxyToBackend(event, `/public/cms/help/article/${slug}`);
 });

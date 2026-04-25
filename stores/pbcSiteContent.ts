@@ -161,7 +161,7 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
       if (this.legal[slug]) return this.legal[slug];
       this.loading.legal = true;
       try {
-        const res = await $fetch<{ data: LegalPage }>(`/api/public/cms/legal`);
+        const res = await $fetch<{ data: LegalPage }>(`/api/public/cms/legal`, { query: { slug } });
         if (res?.data) {
           this.legal[slug] = res.data;
           return this.legal[slug];
@@ -178,7 +178,7 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
     async fetchArticleBySlug(slug: string) {
       this.loading.article = true;
       try {
-        const res = await $fetch<{ data: HelpArticle }>(`/api/public/cms/article`);
+        const res = await $fetch<{ data: HelpArticle }>(`/api/public/cms/article`, { query: { slug } });
         if (res?.data) {
           this.currentArticle = res.data;
 
