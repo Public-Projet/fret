@@ -76,6 +76,22 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
       }
     },
 
+    // Récupérer la liste des catégories de FAQ
+    async fetchFaqCategories() {
+      if (this.faqCategories.length > 0) return;
+      this.loading.faqCategories = true;
+      try {
+        const res = await $fetch<{ data: FaqCategory[] }>('/api/public/cms/ressource', { query: { resource: 'faq-category' } });
+        if (res?.data) {
+          this.faqCategories = res.data;
+        }
+      } catch (e) {
+        console.error('[siteContent] Erreur chargement catégories FAQ:', e);
+      } finally {
+        this.loading.faqCategories = false;
+      }
+    },
+
     // Récupérer la liste des FAQ
     async fetchFaqs() {
       if (this.faqs.length > 0) return;
@@ -185,23 +201,6 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
         this.loading.article = false;
       }
       return null;
-    },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Récupérer la liste des catégories de FAQ
-    async fetchFaqCategories() {
     },
   },
 });

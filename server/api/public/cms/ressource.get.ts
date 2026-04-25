@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Resource parameter is required' });
   }
 
-  const allowed = ['partners', 'testimonials', 'team', 'faq', 'safety', 'help', 'social-links'];
+  const allowed = ['partners', 'testimonials', 'team', 'faq-category', 'faq', 'safety', 'help', 'social-links'];
   if (!allowed.includes(resource)) {
     throw createError({ statusCode: 400, statusMessage: `Resource '${resource}' non autorisée` });
   }
