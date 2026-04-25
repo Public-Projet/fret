@@ -23,7 +23,7 @@ const loading = ref(true);
 const content = ref<any>(null);
 
 onMounted(async () => {
-  content.value = await contentStore.fetchLegalBySlug('legal');
+  content.value = await contentStore.fetchLegalBySlug('mention');
   loading.value = false;
 });
 
