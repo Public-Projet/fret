@@ -28,28 +28,12 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
   }),
 
   actions: {
-    // Récupérer la liste des liens sociaux
-    async fetchSocialLinks() {
-      if (this.socialLinks.length > 0) return;
-      this.loading.socialLinks = true;
-      try {
-        const res = await $fetch<{ data: SocialLink[] }>('/api/cms', { query: { resource: 'social-links' } });
-        if (res?.data) {
-          this.socialLinks = res.data;
-        }
-      } catch (e) {
-        console.error('[siteContent] Erreur chargement liens sociaux:', e);
-      } finally {
-        this.loading.socialLinks = false;
-      }
-    },
-
     // Récupérer la liste des partenaires
     async fetchPartners() {
       if (this.partners.length > 0) return;
       this.loading.partners = true;
       try {
-        const res = await $fetch<{ data: Partner[] }>('/api/cms', { query: { resource: 'partners' } });
+        const res = await $fetch<{ data: Partner[] }>('/api/public/cms/ressource', { query: { resource: 'partners' } });
         if (res?.data) {
           this.partners = res.data;
         }
@@ -65,7 +49,7 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
       if (this.testimonials.length > 0) return;
       this.loading.testimonials = true;
       try {
-        const res = await $fetch<{ data: Testimonial[] }>('/api/cms', { query: { resource: 'testimonials' } });
+        const res = await $fetch<{ data: Testimonial[] }>('/api/public/cms/ressource', { query: { resource: 'testimonials' } });
         if (res?.data) {
           this.testimonials = res.data;
         }
@@ -81,7 +65,7 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
       if (this.team.length > 0) return;
       this.loading.team = true;
       try {
-        const res = await $fetch<{ data: TeamMember[] }>('/api/cms', { query: { resource: 'team' } });
+        const res = await $fetch<{ data: TeamMember[] }>('/api/public/cms/ressource', { query: { resource: 'team' } });
         if (res?.data) {
           this.team = res.data;
         }
@@ -92,30 +76,12 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
       }
     },
 
-    // Récupérer un contenu légal par son slug
-    async fetchLegalBySlug(slug: string) {
-      if (this.legal[slug]) return this.legal[slug];
-      this.loading.legal = true;
-      try {
-        const res = await $fetch<{ data: LegalPage }>(`/api/cms/legal/${slug}`);
-        if (res?.data) {
-          this.legal[slug] = res.data;
-          return this.legal[slug];
-        }
-      } catch (e) {
-        console.error(`[siteContent] Erreur chargement page légale ${slug}:`, e);
-      } finally {
-        this.loading.legal = false;
-      }
-      return null;
-    },
-
     // Récupérer la liste des FAQ
     async fetchFaqs() {
       if (this.faqs.length > 0) return;
       this.loading.faqs = true;
       try {
-        const res = await $fetch<{ data: FaqItem[] }>('/api/cms', { query: { resource: 'faq' } });
+        const res = await $fetch<{ data: FaqItem[] }>('/api/public/cms/ressource', { query: { resource: 'faq' } });
         if (res?.data) {
           this.faqs = res.data;
         }
@@ -126,16 +92,12 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
       }
     },
 
-    // Récupérer la liste des catégories de FAQ
-    async fetchFaqCategories() {
-    },
-
     // Récupérer la liste des contenus de sécurité
     async fetchSafetyItems() {
       if (this.safetyItems.length > 0) return;
       this.loading.safetyItems = true;
       try {
-        const res = await $fetch<{ data: SafetyItem[] }>('/api/cms', { query: { resource: 'safety' } });
+        const res = await $fetch<{ data: SafetyItem[] }>('/api/public/cms/ressource', { query: { resource: 'safety' } });
         if (res?.data) {
           this.safetyItems = res.data;
         }
@@ -151,7 +113,7 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
       if (this.helpCategories.length > 0) return;
       this.loading.help = true;
       try {
-        const res = await $fetch<{ data: HelpCategory[] }>('/api/cms', { query: { resource: 'help' } });
+        const res = await $fetch<{ data: HelpCategory[] }>('/api/public/cms/ressource', { query: { resource: 'help' } });
         if (res?.data) {
           this.helpCategories = res.data;
         }
@@ -162,15 +124,48 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
       }
     },
 
+    // Récupérer la liste des liens sociaux
+    async fetchSocialLinks() {
+      if (this.socialLinks.length > 0) return;
+      this.loading.socialLinks = true;
+      try {
+        const res = await $fetch<{ data: SocialLink[] }>('/api/public/cms/ressource', { query: { resource: 'social-links' } });
+        if (res?.data) {
+          this.socialLinks = res.data;
+        }
+      } catch (e) {
+        console.error('[siteContent] Erreur chargement liens sociaux:', e);
+      } finally {
+        this.loading.socialLinks = false;
+      }
+    },
+
+    // Récupérer un contenu légal par son slug
+    async fetchLegalBySlug(slug: string) {
+      if (this.legal[slug]) return this.legal[slug];
+      this.loading.legal = true;
+      try {
+        const res = await $fetch<{ data: LegalPage }>(`/api/public/cms/legal`);
+        if (res?.data) {
+          this.legal[slug] = res.data;
+          return this.legal[slug];
+        }
+      } catch (e) {
+        console.error(`[siteContent] Erreur chargement page légale ${slug}:`, e);
+      } finally {
+        this.loading.legal = false;
+      }
+      return null;
+    },
+
     // Récupérer un article par son slug
     async fetchArticleBySlug(slug: string) {
       this.loading.article = true;
       try {
-        const res = await $fetch<{ data: HelpArticle }>(`/api/cms/help/article/${slug}`);
+        const res = await $fetch<{ data: HelpArticle }>(`/api/public/cms/article`);
         if (res?.data) {
           this.currentArticle = res.data;
 
-          // Mettre à jour l'article dans la liste des catégories pour synchroniser les vues
           const articleId = this.currentArticle.id;
           this.helpCategories.forEach(cat => {
             if (cat.articles) {
@@ -190,6 +185,23 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
         this.loading.article = false;
       }
       return null;
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Récupérer la liste des catégories de FAQ
+    async fetchFaqCategories() {
     },
   },
 });
