@@ -37,10 +37,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useUserStore } from '~/stores/user';
+import { useCmnUserStore } from '~/stores/cmnUser';
 import { IconLoader2, IconTruckOff, IconCubeOff } from '@tabler/icons-vue';
 
-const userStore = useUserStore();
+const userStore = useCmnUserStore();
 const route = useRoute();
 const activeTab = ref<'carrier' | 'shipper'>('carrier');
 const searchQuery = ref('');

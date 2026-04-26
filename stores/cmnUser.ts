@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import type { PublicUser } from '~/types';
+import { extractErrorMessage } from '~/utils/error';
 
-export const useUserStore = defineStore('user', {
+export const useCmnUserStore = defineStore('cmnUser', {
   state: () => ({
     carriers: [] as PublicUser[],
     shippers: [] as PublicUser[],
@@ -22,7 +23,7 @@ export const useUserStore = defineStore('user', {
         if (params.limit) query.limit = params.limit.toString();
         if (params.search) query.search = params.search;
 
-        const result = await $fetch<{ carriers: PublicUser[]; total: number }>('/api/users', { query });
+        const result = await $fetch<{ carriers: PublicUser[]; total: number }>('/api/common/users/list', { query });
 
         if (result?.carriers) {
           this.carriers = result.carriers;
@@ -32,7 +33,7 @@ export const useUserStore = defineStore('user', {
         return { success: true, data: result };
       } catch (err: any) {
         this.loading = false;
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
       }
     },
 
@@ -44,7 +45,7 @@ export const useUserStore = defineStore('user', {
         if (params.limit) query.limit = params.limit.toString();
         if (params.search) query.search = params.search;
 
-        const result = await $fetch<{ shippers: PublicUser[]; total: number }>('/api/users', { query });
+        const result = await $fetch<{ shippers: PublicUser[]; total: number }>('/api/common/users/list', { query });
 
         if (result?.shippers) {
           this.shippers = result.shippers;
@@ -54,7 +55,7 @@ export const useUserStore = defineStore('user', {
         return { success: true, data: result };
       } catch (err: any) {
         this.loading = false;
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
       }
     },
 
@@ -62,8 +63,8 @@ export const useUserStore = defineStore('user', {
       this.loading = true;
       try {
         const pluralRole = role === 'carrier' ? 'carriers' : 'shippers';
-        const result = await $fetch<{ carrier?: PublicUser; shipper?: PublicUser }>(`/api/users/${id}`, {
-          query: { role: pluralRole },
+        const result = await $fetch<{ carrier?: PublicUser; shipper?: PublicUser }>('/api/common/users/detail', {
+          query: { id, role: pluralRole },
         });
 
         if (result) {
@@ -73,15 +74,15 @@ export const useUserStore = defineStore('user', {
         return { success: true, data: result };
       } catch (err: any) {
         this.loading = false;
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
       }
     },
 
     async rateCarrier(carrierId: string, score: number, comment?: string) {
       try {
-        const result = await $fetch<{ rating: number; reviewsCount: number }>(`/api/users/${carrierId}/rate`, {
+        const result = await $fetch<{ rating: number; reviewsCount: number }>('/api/common/users/rate', {
           method: 'POST',
-          body: { role: 'shipper', score, comment },
+          body: { id: carrierId, role: 'shipper', score, comment },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },
@@ -93,15 +94,15 @@ export const useUserStore = defineStore('user', {
         }
         return { success: false, error: 'Erreur technique' };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
       }
     },
 
     async rateShipper(shipperId: string, score: number, comment?: string) {
       try {
-        const result = await $fetch<{ rating: number; reviewsCount: number }>(`/api/users/${shipperId}/rate`, {
+        const result = await $fetch<{ rating: number; reviewsCount: number }>('/api/common/users/rate', {
           method: 'POST',
-          body: { role: 'carrier', score, comment },
+          body: { id: shipperId, role: 'carrier', score, comment },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },
@@ -113,7 +114,7 @@ export const useUserStore = defineStore('user', {
         }
         return { success: false, error: 'Erreur technique' };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
       }
     }
   }

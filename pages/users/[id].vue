@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useUserStore } from '~/stores/user';
+import { useCmnUserStore } from '~/stores/cmnUser';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
@@ -59,7 +59,7 @@ import { useRoute } from 'vue-router';
 import { IconArrowLeft, IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
 
 const route = useRoute();
-const userStore = useUserStore();
+const userStore = useCmnUserStore();
 const authStore = useCmnAuthStore();
 const pbcAvailStore = usePbcAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();

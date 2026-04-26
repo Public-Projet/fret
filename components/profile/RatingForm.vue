@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useUserStore } from '~/stores/user';
+import { useCmnUserStore } from '~/stores/cmnUser';
 import { IconStarFilled, IconStar, IconCheck, IconLoader2, IconSend } from '@tabler/icons-vue';
 
 const props = defineProps<{
@@ -75,7 +75,7 @@ const emit = defineEmits<{
   'success': [result: { rating: number, reviewsCount: number, myReview: { score: number, comment: string } }];
 }>();
 
-const userStore = useUserStore();
+const userStore = useCmnUserStore();
 const score = ref(props.initialData?.score || 0);
 const comment = ref(props.initialData?.comment || '');
 const loading = ref(false);
@@ -114,7 +114,7 @@ const handleSubmit = async () => {
         myReview: { score: score.value, comment: comment.value }
       });
     } else {
-      error.value = result.error?.message || "Une erreur est survenue lors de l'envoi de la note.";
+      error.value = result.error || "Une erreur est survenue lors de l'envoi de la note.";
     }
   } catch (err) {
     error.value = "Erreur technique lors de l'envoi de la note.";

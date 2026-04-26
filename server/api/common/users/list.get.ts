@@ -1,5 +1,6 @@
+import { proxyToBackend } from '~/server/utils/api';
+
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id');
   const query = getQuery(event);
   const role = query.role as string;
 
@@ -7,5 +8,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'role doit être "carriers" ou "shippers"' });
   }
 
-  return proxyToBackend(event, `/public/${role}/${id}`);
+  const { role: _role, ...params } = query;
+
+  return proxyToBackend(event, `/public/${role}`, { query: params as Record<string, string> });
 });
