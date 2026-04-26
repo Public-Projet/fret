@@ -112,13 +112,12 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { IconSend, IconCheck, IconCopy } from '@tabler/icons-vue';
-import { useAPI } from '~/composables/useAPI';
+import { usePbcOtherStore } from '~/stores/pbcOther';
 
 const isLoading = ref(false);
 const showSuccess = ref(false);
 const ticketNumber = ref('');
 const copied = ref(false);
-const api = useAPI();
 
 const form = reactive({
   firstName: '',
@@ -137,9 +136,10 @@ const handleSubmit = async () => {
   }
 
   isLoading.value = true;
+  const pbcOtherStore = usePbcOtherStore();
 
   try {
-    const response = await api.post<{ ticketNumber: string }>('/public/contact/submit', form);
+    const response = await pbcOtherStore.submitContactForm(form);
 
     if (response.success && response.data) {
       ticketNumber.value = response.data.ticketNumber;

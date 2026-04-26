@@ -64,7 +64,7 @@
           </div>
 
           <div v-if="proposal.contractPath">
-            <a :href="`${backendUrl}/api/v1/public/contracts/download/${proposal.contractPath.split('/').pop().replace('.pdf', '')}`"
+            <a :href="pbcOtherStore.getContractDownloadUrl(proposal.contractPath)"
               target="_blank"
               class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-colors">
               <IconFileDownload class="w-4 h-4 mr-2" />
@@ -112,6 +112,7 @@ import { IconGavel, IconInbox, IconStarFilled, IconFileDownload, IconMapPin, Ico
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
+import { usePbcOtherStore } from '~/stores/pbcOther';
 
 const props = defineProps<{
   items: any[];
@@ -123,6 +124,7 @@ const emit = defineEmits(['refresh', 'counter']);
 const availStore = useCarAvailabilityStore();
 const fretStore = useShpAnnouncementStore();
 const authStore = useCmnAuthStore();
+const pbcOtherStore = usePbcOtherStore();
 const loading = ref(false);
 
 const backendUrl = '';
