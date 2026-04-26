@@ -21,7 +21,8 @@
       <!-- Search -->
       <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto lg:flex-1 lg:max-w-xl">
         <div class="relative w-full">
-          <IconSearch class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+          <IconSearch
+            class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
           <input :value="searchQuery" @input="$emit('update:searchQuery', ($event.target as HTMLInputElement).value)"
             @keyup.enter="$emit('search')" type="text"
             :placeholder="activeTab === 'carrier' ? 'Rechercher un transporteur...' : 'Rechercher un expéditeur...'"
