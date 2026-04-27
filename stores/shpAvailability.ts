@@ -23,9 +23,10 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
     async enrollShpAvailability(id: string, negotiationData: any = {}) {
       this.loading = true;
       try {
-        await ($fetch as any)(`/api/shipper/availability/enroll`, {
+        await $fetch(`/api/shipper/availability/enroll`, {
           method: 'POST',
           body: {
+            id,
             notes: negotiationData.message,
             proposedPrice: negotiationData.price,
             proposedOrigin: negotiationData.origin,
@@ -34,7 +35,7 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
         });
         return { success: true };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique lors de l\'inscription' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique lors de l\'inscription' };
       } finally {
         this.loading = false;
       }
@@ -56,20 +57,26 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
     },
 
     // Détails d'une disponibilité
-    async fetchShpMineAvailability() {
+    async fetchShpMineAvailability(id: string) {
+      this.loading = true;
       try {
-        const response = await $fetch<{ data: Availability }>(`/api/shipper/availability/mine`);
+        const response = await $fetch<{ data: Availability }>(`/api/shipper/availability/mine`, {
+          query: { id }
+        });
         if (response?.data) {
           return { success: true, availability: response.data };
         }
         return { success: false, error: 'Disponibilité non trouvée' };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
       }
     },
 
     // Contre-proposer une proposition
     async counterShpBooking(bookingId: string, data: any) {
+      this.loading = true;
       try {
         await $fetch(`/api/shipper/availability/counter`, {
           method: 'POST',
@@ -78,6 +85,8 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
         return { success: true };
       } catch (err: any) {
         return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
       }
     },
   }

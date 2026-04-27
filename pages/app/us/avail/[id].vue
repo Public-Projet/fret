@@ -104,7 +104,7 @@ const enroll = () => {
 
 const fetchData = async () => {
   loading.value = true;
-  const res = await availStore.fetchShpMineAvailability();
+  const res = await availStore.fetchShpMineAvailability(id);
   if (res.success) {
     item.value = res.availability;
   }

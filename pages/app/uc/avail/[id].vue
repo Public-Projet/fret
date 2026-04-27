@@ -325,11 +325,7 @@ const loadAvailability = async () => {
   if (result.success && result.availability) {
     availability.value = result.availability;
   } else {
-    if (typeof result.error === 'object' && result.error !== null) {
-      error.value = result.error.message || 'Impossible de charger la disponibilité';
-    } else {
-      error.value = result.error || 'Impossible de charger la disponibilité';
-    }
+    error.value = result.error || 'Impossible de charger la disponibilité';
   }
   loading.value = false;
 };

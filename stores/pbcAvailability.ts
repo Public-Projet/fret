@@ -37,7 +37,9 @@ export const usePbcAvailabilityStore = defineStore('pbcAvailability', {
     // Détails d'une disponibilité
     async fetchPbcMineAvailability(id: string) {
       try {
-        const response = await $fetch<{ availability: Availability }>(`/api/public/availability/mine`);
+        const response = await $fetch<{ availability: Availability }>(`/api/public/availability/mine`, {
+          query: { id }
+        });
         if (response?.availability) {
           return { success: true, availability: response.availability };
         }

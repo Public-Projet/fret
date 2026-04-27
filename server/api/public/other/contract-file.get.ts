@@ -12,5 +12,5 @@ export default defineEventHandler(async (event) => {
   }
 
   // On utilise notre nouvel utilitaire pour les flux binaires
-  return proxyBinaryToBackend(event, `/api/v1/public/contracts/download/${encodeURIComponent(filename)}`);
+  return proxyBinaryToBackend(event, `/public/contracts/download/${encodeURIComponent(filename)}`);
 });

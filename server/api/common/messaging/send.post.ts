@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     method: 'POST',
     body: {
       ...messageData,
-      role
+      senderRole: role
     }
   });
 });

@@ -1,7 +1,6 @@
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id');
   const body = await readBody(event);
-
+  const id = body?.id;
   return proxyToBackend(event, `/shipper/availability/${id}/enroll`, {
     method: 'POST',
     body,

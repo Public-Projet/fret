@@ -53,23 +53,29 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
 
     // Obtenir une disponibilité
     async fetchCarAvailability(id: string) {
+      this.loading = true;
       try {
-        const response = await $fetch<{ availability: Availability }>(`/api/carrier/availability/mine`);
+        const response = await $fetch<{ availability: Availability }>(`/api/carrier/availability/mine`, {
+          query: { id }
+        });
         if (response?.availability) {
           return { success: true, availability: response.availability };
         }
         return { success: false, error: 'Disponibilité non trouvée' };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
       }
     },
 
     // Modifier une disponibilité
     async updateCarAvailability(id: string, data: Partial<CreateAvailabilityData> & { status?: string }) {
+      this.loading = true;
       try {
         const response = await $fetch<{ availability: Availability }>(`/api/carrier/availability/update`, {
           method: 'PATCH',
-          body: data,
+          body: { ...data, id },
         });
         if (response?.availability) {
           const index = this.availabilities.findIndex(a => a.id === id);
@@ -80,43 +86,64 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
         }
         return { success: false, error: 'Erreur technique' };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
       }
     },
 
     // Supprimer une disponibilité
     async deleteCarAvailability(id: string) {
+      this.loading = true;
       try {
-        await ($fetch as any)(`/api/carrier/availability/remove`, { method: 'DELETE' });
+        await $fetch(`/api/carrier/availability/remove`, {
+          method: 'DELETE',
+          query: { id }
+        });
         this.availabilities = this.availabilities.filter(a => a.id !== id);
         return { success: true };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
       }
     },
 
     // Accepter une proposition de disponibilité    
     async acceptCarBooking(bookingId: string) {
+      this.loading = true;
       try {
-        await $fetch(`/api/carrier/availability/booking-accept`, { method: 'POST' });
+        await $fetch(`/api/carrier/availability/booking-accept`, {
+          method: 'POST',
+          body: { id: bookingId }
+        });
         return { success: true };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
       }
     },
 
     // Rejeter une proposition de disponibilité    
     async rejectCarBooking(bookingId: string) {
+      this.loading = true;
       try {
-        await $fetch(`/api/carrier/availability/booking-reject`, { method: 'POST' });
+        await $fetch(`/api/carrier/availability/booking-reject`, {
+          method: 'POST',
+          body: { id: bookingId }
+        });
         return { success: true };
       } catch (err: any) {
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
       }
     },
 
     //  Contre proposé une proposition
     async counterCarBooking(bookingId: string, role: 'shipper' | 'carrier', data: any) {
+      this.loading = true;
       try {
         await $fetch(`/api/carrier/availability/booking-counter`, {
           method: 'POST',
@@ -125,6 +152,8 @@ export const useCarAvailabilityStore = defineStore('carAvailability', {
         return { success: true };
       } catch (err: any) {
         return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
       }
     },
   }

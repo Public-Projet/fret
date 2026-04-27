@@ -76,6 +76,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
 
       try {
         const response = await $fetch<{ vehicle: Vehicle; availability: Availability | null; history: Availability[] }>(`/api/carrier/vehicles/mine`, {
+          query: { id },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },
@@ -106,7 +107,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
       try {
         const response = await $fetch<{ message: string; vehicle: Vehicle }>(`/api/carrier/vehicles/update-vehicle`, {
           method: 'PATCH',
-          body: data,
+          body: { ...data, id },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },
@@ -132,7 +133,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
       try {
         const response = await $fetch<{ message: string; vehicle: Vehicle }>(`/api/carrier/vehicles/update-status`, {
           method: 'PATCH',
-          body: { status },
+          body: { id, status },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },
@@ -156,6 +157,7 @@ export const useCarVehiclesStore = defineStore('carVehicles', {
       try {
         const response = await $fetch<{ message: string }>(`/api/carrier/vehicles/remove`, {
           method: 'DELETE',
+          query: { id },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },

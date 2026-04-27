@@ -1,4 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id');
+  const query = getQuery(event);
+  const id = query.id as string;
   return proxyToBackend(event, `/public/availability/${id}`);
 });
