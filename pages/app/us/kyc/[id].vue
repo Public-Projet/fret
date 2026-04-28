@@ -41,26 +41,30 @@
                 <p class="text-red-600 font-medium">{{ error }}</p>
               </div>
               <div v-else-if="document" class="w-full text-center">
-                <div v-if="isImage" class="relative group inline-block">
-                  <div v-if="previewLoading" class="p-12">
-                    <IconLoader2 class="w-8 h-8 animate-spin text-primary-600 mx-auto" />
-                  </div>
-                  <img v-else-if="previewUrl" :src="previewUrl" :alt="document.name"
-                    class="max-w-full h-auto rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mx-auto" />
+                <div v-if="isImage" class="relative group inline-block w-full">
+                  <img v-if="previewUrl" :src="previewUrl" :alt="document.name"
+                    class="max-w-full max-h-[80vh] h-auto rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mx-auto object-contain" />
                   <div v-else class="p-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200">
                     <IconAlertCircle class="w-8 h-8 text-red-500 mx-auto mb-2" />
                     <p class="text-sm text-gray-500">Impossible de charger l'aperçu</p>
                   </div>
                 </div>
+                <div v-else-if="isPdf" class="w-full h-[80vh] min-h-[600px] border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden relative">
+                   <iframe v-if="previewUrl" :src="previewUrl" class="w-full h-full border-0 absolute top-0 left-0" title="PDF Preview"></iframe>
+                   <div v-else class="p-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 flex flex-col items-center justify-center">
+                    <IconAlertCircle class="w-8 h-8 text-red-500 mx-auto mb-2" />
+                    <p class="text-sm text-gray-500">Impossible de charger le PDF</p>
+                  </div>
+                </div>
                 <div v-else
-                  class="p-12 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700">
-                  <IconFileTypePdf class="w-20 h-20 text-red-500 mx-auto mb-4" />
-                  <h3 class="font-bold text-lg mb-2">Document PDF</h3>
-                  <p class="text-gray-500 mb-6">L'aperçu direct des fichiers PDF n'est pas disponible.</p>
+                  class="p-12 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 mt-4">
+                  <IconFileDescription class="w-20 h-20 text-gray-400 mx-auto mb-4" />
+                  <h3 class="font-bold text-lg mb-2">Document</h3>
+                  <p class="text-gray-500 mb-6">L'aperçu de ce type de fichier n'est pas disponible.</p>
                   <button @click="handleDownload" class="flex items-center btn btn-primary btn-sm mx-auto"
                     :disabled="isDownloading">
                     <IconDownload class="w-4 h-4 mr-2" />
-                    Télécharger pour consulter
+                    Télécharger le document
                   </button>
                 </div>
               </div>
@@ -132,15 +136,25 @@ const document = ref<any>(null);
 const loading = ref(true);
 const error = ref('');
 const isDownloading = ref(false);
-const previewUrl = ref<string | null>(null);
-const previewLoading = ref(false);
-
 const docId = route.params.id as string;
 
 const isImage = computed(() => {
   if (!document.value?.name) return false;
   const ext = document.value.name.split('.').pop()?.toLowerCase();
   return ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext || '');
+});
+
+const isPdf = computed(() => {
+  if (!document.value?.name) return false;
+  const ext = document.value.name.split('.').pop()?.toLowerCase();
+  return ext === 'pdf';
+});
+
+const previewUrl = computed(() => {
+  if (!document.value) return null;
+  const urlPath = document.value.downloadUrl || document.value.url;
+  if (!urlPath) return null;
+  return profileStore.getKycDownloadUrl(urlPath);
 });
 
 const statusClass = computed(() => {
@@ -158,36 +172,10 @@ onMounted(async () => {
   loading.value = false;
   if (result.success) {
     document.value = result.document;
-
-    // Si c'est une image, charger l'aperçu authentifié
-    if (isImage.value && document.value.url) {
-      loadPreview();
-    }
   } else {
     error.value = result.error || 'Impossible de trouver le document.';
   }
 });
-
-onUnmounted(() => {
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value);
-  }
-});
-
-const loadPreview = async () => {
-  if (!document.value?.url) return;
-  previewLoading.value = true;
-  try {
-    const res = await api.get(document.value.url, { responseType: 'blob' });
-    if (res.success && res.data) {
-      previewUrl.value = URL.createObjectURL(res.data as Blob);
-    }
-  } catch (err) {
-    console.error('Erreur chargement aperçu:', err);
-  } finally {
-    previewLoading.value = false;
-  }
-};
 
 const handleDownload = () => {
   const urlPath = document.value?.downloadUrl || document.value?.url;
