@@ -78,7 +78,7 @@
             <button type="button" @click="handleClose" class="btn btn-ghost mt-3 w-full sm:mt-0 sm:w-auto">
               Annuler
             </button>
-            <button type="button" @click="handleSubmit" class="btn btn-secondary w-full sm:w-auto"
+            <button type="button" @click="handleSubmit" class="flex items-center btn btn-secondary w-full sm:w-auto"
               :disabled="loading || !form.type || !form.file">
               <IconLoader2 v-if="loading" class="w-4 h-4 animate-spin mr-2" />
               Soumettre

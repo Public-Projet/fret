@@ -183,6 +183,7 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
 
         const response = await $fetch<{ message: string; document: any }>('/api/common/profile/kyc-upload', {
           method: 'POST',
+          query: { role },
           body: formData,
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
@@ -208,7 +209,7 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
 
       try {
         const response = await $fetch<{ document: any }>(`/api/common/profile/kyc-document`, {
-          query: { role },
+          query: { role, docId },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },
@@ -252,6 +253,12 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
       } finally {
         this.isLoading = false;
       }
+    },
+
+    // Helper pour générer l'URL de téléchargement via le proxy
+    getKycDownloadUrl(path: string) {
+      if (!path) return '';
+      return `/api/common/profile/kyc-download?path=${encodeURIComponent(path)}`;
     },
 
     /**

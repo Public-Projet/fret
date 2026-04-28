@@ -24,7 +24,7 @@
                 {{ getDocTypeName(document?.type) }}
               </h1>
               <button v-if="document?.downloadUrl || document?.url" @click="handleDownload"
-                class="btn btn-secondary btn-sm" :disabled="isDownloading">
+                class="flex items-center btn btn-secondary btn-sm" :disabled="isDownloading">
                 <IconLoader2 v-if="isDownloading" class="w-4 h-4 mr-2 animate-spin" />
                 <IconDownload v-else class="w-4 h-4 mr-2" />
                 Télécharger
@@ -57,7 +57,8 @@
                   <IconFileTypePdf class="w-20 h-20 text-red-500 mx-auto mb-4" />
                   <h3 class="font-bold text-lg mb-2">Document PDF</h3>
                   <p class="text-gray-500 mb-6">L'aperçu direct des fichiers PDF n'est pas disponible.</p>
-                  <button @click="handleDownload" class="btn btn-outline btn-secondary" :disabled="isDownloading">
+                  <button @click="handleDownload" class="flex items-center btn btn-secondary btn-sm mx-auto"
+                    :disabled="isDownloading">
                     <IconDownload class="w-4 h-4 mr-2" />
                     Télécharger pour consulter
                   </button>
@@ -188,31 +189,25 @@ const loadPreview = async () => {
   }
 };
 
-const handleDownload = async () => {
-  const url = document.value?.downloadUrl || document.value?.url;
-  if (!url) return;
+const handleDownload = () => {
+  const urlPath = document.value?.downloadUrl || document.value?.url;
+  if (!urlPath) return;
 
   isDownloading.value = true;
-  try {
-    const res = await api.get(url, { responseType: 'blob' });
-    if (res.success && res.data) {
-      const blob = res.data as Blob;
-      const downloadUrl = URL.createObjectURL(blob);
-      const link = appendLink(downloadUrl, document.value.name || 'document');
-      link.click();
-      setTimeout(() => {
-        URL.revokeObjectURL(downloadUrl);
-        link.remove();
-      }, 100);
-    } else {
-      alert('Erreur lors du téléchargement du document.');
-    }
-  } catch (err) {
-    console.error('Erreur téléchargement:', err);
-    alert('Erreur réseau lors du téléchargement.');
-  } finally {
+  
+  const downloadProxyUrl = profileStore.getKycDownloadUrl(urlPath);
+  
+  const link = window.document.createElement('a');
+  link.href = downloadProxyUrl;
+  link.download = document.value?.name || 'document';
+  link.target = '_blank';
+  window.document.body.appendChild(link);
+  link.click();
+  
+  setTimeout(() => {
+    link.remove();
     isDownloading.value = false;
-  }
+  }, 1000);
 };
 
 const appendLink = (url: string, filename: string) => {

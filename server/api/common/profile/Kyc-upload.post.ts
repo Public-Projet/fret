@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const role = body?.role as string;
+  const query = getQuery(event);
+  const role = query.role as string;
 
   if (!role || !['shipper', 'carrier'].includes(role)) {
     throw createError({

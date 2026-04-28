@@ -115,7 +115,8 @@
                 {{ getStatusLabel(doc.status) }}
               </span>
             </div>
-            <button @click="openKycModal" class="btn btn-ghost btn-sm w-full border border-dashed">
+            <button @click="openKycModal"
+              class="flex items-center justify-center btn btn-ghost btn-sm w-full border border-dashed">
               <IconPlus class="w-4 h-4 mr-1" /> Ajouter un autre document
             </button>
           </div>

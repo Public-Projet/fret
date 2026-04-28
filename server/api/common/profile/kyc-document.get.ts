@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
-  const docId = getRouterParam(event, 'docId');
   const query = getQuery(event);
+  const docId = query.docId as string;
   const role = query.role as string;
 
   if (!role || !['shipper', 'carrier'].includes(role)) {

@@ -18,7 +18,7 @@
 
           <div v-if="!profile?.kycDocuments || profile.kycDocuments.length === 0" class="text-center py-4">
             <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Aucun document</p>
-            <button @click="openKycModal" class="btn btn-primary btn-sm w-full">
+            <button @click="openKycModal" class="flex items-center justify-center btn btn-primary btn-sm w-full">
               <IconPlus class="w-4 h-4 mr-1" /> Ajouter
             </button>
           </div>

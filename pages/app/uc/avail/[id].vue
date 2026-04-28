@@ -273,7 +273,8 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useCarAvailabilityStore, type Availability } from '~/stores/carAvailability';
+import { useCarAvailabilityStore } from '~/stores/carAvailability';
+import type { StoreAvailability as Availability } from '~/types';
 import { IconArrowLeft, IconTruck, IconPencil, IconTrash, IconLoader2, IconCalendar, IconUsers, IconAlertCircle, IconEye, IconUser } from '@tabler/icons-vue';
 
 const route = useRoute();
