@@ -64,12 +64,12 @@
           </div>
 
           <div v-if="proposal.contractPath">
-            <a :href="pbcOtherStore.getContractDownloadUrl(proposal.contractPath)"
-              target="_blank"
-              class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-colors">
-              <IconFileDownload class="w-4 h-4 mr-2" />
+            <button @click="handleDownload(proposal.contractPath)" :disabled="downloadingMap[proposal.contractPath]"
+              class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50">
+              <IconLoader2 v-if="downloadingMap[proposal.contractPath]" class="w-4 h-4 mr-2 animate-spin" />
+              <IconFileDownload v-else class="w-4 h-4 mr-2" />
               Télécharger le contrat
-            </a>
+            </button>
           </div>
         </div>
 
@@ -108,7 +108,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { IconGavel, IconInbox, IconStarFilled, IconFileDownload, IconMapPin, IconCash, IconClock } from '@tabler/icons-vue';
+import { IconGavel, IconInbox, IconStarFilled, IconFileDownload, IconMapPin, IconCash, IconClock, IconLoader2 } from '@tabler/icons-vue';
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
@@ -126,6 +126,7 @@ const fretStore = useShpAnnouncementStore();
 const authStore = useCmnAuthStore();
 const pbcOtherStore = usePbcOtherStore();
 const loading = ref(false);
+const downloadingMap = ref<Record<string, boolean>>({});
 
 const backendUrl = '';
 
@@ -176,6 +177,27 @@ const getStatusClass = (status: string) => {
     case 'countered': return 'badge-warning';
     default: return 'badge-neutral';
   }
+};
+
+const handleDownload = (contractPath: string) => {
+  if (!contractPath) return;
+
+  downloadingMap.value[contractPath] = true;
+  const url = pbcOtherStore.getContractDownloadUrl(contractPath);
+
+  const link = window.document.createElement('a');
+  link.href = url;
+
+  const baseName = contractPath.split('/').pop() || 'contrat.pdf';
+  link.download = baseName;
+
+  window.document.body.appendChild(link);
+  link.click();
+  window.document.body.removeChild(link);
+
+  setTimeout(() => {
+    downloadingMap.value[contractPath] = false;
+  }, 1000);
 };
 
 const handleAccept = async (id: string) => {

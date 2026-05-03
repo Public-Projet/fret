@@ -7,10 +7,13 @@ export default defineEventHandler(async (event) => {
   if (!filename) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Le nom du fichier est requis',
+      statusMessage: 'Le nom du contrat est requis',
     });
   }
 
-  // On utilise notre nouvel utilitaire pour les flux binaires
-  return proxyBinaryToBackend(event, `/public/contracts/download/${encodeURIComponent(filename)}`);
+  // Extract the actual filename if a path was accidentally provided
+  const filenameStr = filename.split('/').pop() || filename;
+
+  // On utilise notre utilitaire pour les flux binaires
+  return proxyBinaryToBackend(event, `/public/contracts/download/${encodeURIComponent(filenameStr)}`);
 });

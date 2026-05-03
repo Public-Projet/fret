@@ -256,7 +256,7 @@ const handleSubmit = async () => {
     });
 
     if (result.success) {
-      router.push('/app/us');
+      router.push('/app/us/offers');
     }
   } catch (error) {
     console.error(error);
