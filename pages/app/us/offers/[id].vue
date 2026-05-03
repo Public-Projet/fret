@@ -83,69 +83,9 @@
               <IconInbox class="w-5 h-5 mr-2 text-primary-600" />
               Offres reçues ({{ offers.length }})
             </h2>
-
-            <div v-if="offers.length === 0"
-              class="text-center py-12 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-dashed border-gray-300 dark:border-gray-600">
-              <IconMailOpened class="w-12 h-12 mx-auto text-gray-300 mb-2" />
-              <p class="text-gray-500">Aucune offre reçue pour le moment.</p>
-              <p class="text-xs text-gray-400 mt-1">Les transporteurs intéressés apparaîtront ici.</p>
-            </div>
-
-            <div v-else class="space-y-4">
-              <div v-for="offer in offers" :key="offer.id"
-                class="border border-gray-200 dark:border-gray-700 rounded-lg p-5 hover:shadow-md transition-shadow relative overflow-hidden">
-
-                <div v-if="offer.status === 'accepted'"
-                  class="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                  ACCEPTÉE
-                </div>
-
-                <div class="flex flex-col md:flex-row justify-between items-start gap-4">
-                  <div class="flex-1">
-                    <div class="flex items-center space-x-3 mb-2">
-                      <div
-                        class="w-10 h-10 bg-primary-100 dark:bg-primary-900/50 rounded-full flex items-center justify-center font-bold text-primary-700 dark:text-primary-300">
-                        {{ (offer.carrier?.firstname || offer.carrier?.company || 'U')[0] }}
-                      </div>
-                      <div>
-                        <p class="font-bold text-gray-900 dark:text-white flex items-center">
-                          {{ offer.carrier?.company || (offer.carrier?.firstname ? (offer.carrier.firstname + ' ' + (offer.carrier.lastname || '')) : 'Transporteur') }}
-                          <IconBadge v-if="offer.carrier?.verified" class="w-4 h-4 text-green-500 ml-1" />
-                        </p>
-                        <div class="flex items-center text-xs text-gray-500">
-                          <IconStarFilled class="w-3 h-3 text-yellow-400 mr-1" />
-                          {{ offer.carrier?.rating }} ({{ offer.carrier?.reviewCount }})
-                        </div>
-                      </div>
-                    </div>
-                    <p
-                      class="text-gray-600 dark:text-gray-300 text-sm bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg mt-2">
-                      "{{ offer.message }}"
-                    </p>
-                  </div>
-
-                  <div class="text-right min-w-[120px]">
-                    <p class="text-sm text-gray-500">Prix proposé</p>
-                    <p class="text-2xl font-bold text-primary-600">{{ offer.price }} FCFA</p>
-                    <p class="text-xs text-gray-400 mt-1">{{ formatDate(offer.createdAt) }}</p>
-                  </div>
-                </div>
-
-                <div class="mt-4 flex justify-end space-x-3 border-t border-gray-100 dark:border-gray-700 pt-4">
-                  <button @click="viewCarrierProfile(offer.carrierId)" class="btn btn-ghost btn-sm">
-                    Voir profil
-                  </button>
-                  <button @click="contactCarrier(offer.carrierId)" class="btn btn-outline btn-sm flex items-center">
-                    <IconMessage class="w-4 h-4 mr-1" />
-                    Discuter
-                  </button>
-                  <button v-if="offer.status === 'pending'" @click="acceptOffer(offer.id)"
-                    class="btn btn-primary btn-sm flex items-center">
-                    <IconCheck class="w-4 h-4 mr-1" />
-                    Accepter
-                  </button>
-                </div>
-              </div>
+            <div class="animate-in fade-in slide-in-from-bottom-2">
+              <AnnoncesNegotiationList :items="offers" type="offer" @refresh="refreshData"
+                @counter="startCounterNegotiation" />
             </div>
           </div>
         </div>
@@ -206,6 +146,11 @@
     <ModalDashboardEditAnnounce v-if="showEditModal" :announcement="announcement" @close="showEditModal = false"
       @update="handleUpdate" />
 
+    <AnnoncesNegotiationModal v-if="showNegotiationModal" :targetId="announcementId" :dataType="'announcement'"
+      :originalPrice="announcement?.budget" :originalOrigin="announcement?.origin"
+      :originalDestination="announcement?.destination" :initial-data="selectedProposalForCounter"
+      @close="closeNegotiationModal" @success="handleNegotiationSuccess" />
+
   </div>
 </template>
 
@@ -224,6 +169,29 @@ const authStore = useCmnAuthStore();
 
 const announcementId = route.params.id as string;
 const showEditModal = ref(false);
+const showNegotiationModal = ref(false);
+const selectedProposalForCounter = ref<any>(null);
+
+const startCounterNegotiation = (proposal: any) => {
+  selectedProposalForCounter.value = proposal;
+  showNegotiationModal.value = true;
+};
+
+const closeNegotiationModal = () => {
+  showNegotiationModal.value = false;
+  selectedProposalForCounter.value = null;
+};
+
+const handleNegotiationSuccess = async () => {
+  showNegotiationModal.value = false;
+  selectedProposalForCounter.value = null;
+  await refreshData();
+};
+
+const refreshData = async () => {
+  await announcementStore.fetchShpAnnouncement(announcementId);
+  await announcementStore.fetchShpOffersForAnnouncement(announcementId);
+};
 
 const loading = computed(() => announcementStore.loading);
 const announcement = computed(() => announcementStore.currentAnnouncement);
@@ -290,24 +258,12 @@ const contactCarrier = async (carrierId: string) => {
   }
 };
 
-const acceptOffer = async (offerId: string) => {
-  if (confirm("Accepter cette offre ? Cela marquera l'annonce comme 'Acceptée'.")) {
-    const res = await announcementStore.acceptShpOffer(offerId);
-    if (res.success) {
-      await announcementStore.updateStatus(announcementId, 'accepted');
-    } else {
-      alert(res.error || "Erreur lors de l'acceptation de l'offre");
-    }
-  }
-};
-
 const viewCarrierProfile = (carrierId: string) => {
   alert("Voir le profil du transporteur (Fonctionnalité à venir)");
 };
 
 onMounted(async () => {
-  await announcementStore.fetchShpAnnouncement(announcementId);
-  await announcementStore.fetchShpOffersForAnnouncement(announcementId);
+  await refreshData();
 });
 useHead({
   title: 'Détails de l\'offre',
