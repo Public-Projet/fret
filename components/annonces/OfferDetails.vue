@@ -164,16 +164,26 @@
         <!-- Négociation en cours -->
         <div
           v-else-if="authStore.isCarrier && (item.status === 'pending' || item.status === 'negotiating') && hasAlreadyOffered"
-          class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-center text-center">
-          <div
-            class="w-16 h-16 bg-amber-50 dark:bg-amber-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <IconMessage class="w-8 h-8 text-amber-500" />
+          class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700 space-y-6">
+          <div class="flex items-center gap-4 border-b border-gray-50 dark:border-gray-700 pb-4">
+            <div
+              class="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center">
+              <IconMessage class="w-6 h-6 text-amber-500" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white">Négociation en cours</h3>
+              <p class="text-xs text-gray-500">Vous avez déjà transmis une offre pour ce transport.</p>
+            </div>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Négociation en cours</h3>
-          <p class="text-gray-500 mb-6 text-sm">Vous avez déjà fait une offre. Suivez vos messages pour la suite.</p>
+          
+          <div v-if="myOffer" class="animate-in fade-in duration-500">
+             <AnnoncesNegotiationList :items="[myOffer]" type="offer" @refresh="$emit('refresh')" @counter="$emit('counter', $event)" />
+          </div>
+
           <NuxtLink to="/app/messages"
-            class="btn btn-outline border-amber-200 text-amber-700 hover:bg-amber-50 w-full py-4 rounded-2xl">
-            Voir mes messages
+            class="btn btn-outline border-amber-200 text-amber-700 hover:bg-amber-50 w-full py-3 rounded-xl flex items-center justify-center">
+            <IconMessage class="w-4 h-4 mr-2" />
+            Discuter dans la messagerie
           </NuxtLink>
         </div>
       </div>
@@ -181,7 +191,7 @@
       <!-- Negotiations (Owner only) -->
       <div v-if="isOwner" class="mt-8 flex flex-col gap-4">
         <h3 class="text-xl font-bold text-gray-900 dark:text-white px-2">Tableau de Bord des Négociations</h3>
-        <AnnoncesNegotiationList :items="item.offers" type="offer" @refresh="$emit('refresh')" />
+        <AnnoncesNegotiationList :items="item.offers" type="offer" @refresh="$emit('refresh')" @counter="$emit('counter', $event)" />
       </div>
 
     </div>
@@ -200,18 +210,21 @@ const props = defineProps<{
   ratingLabel: string;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'showRatingModal'): void;
   (e: 'enroll'): void;
   (e: 'refresh'): void;
+  (e: 'counter', proposal: any): void;
 }>();
 
 const authStore = useCmnAuthStore();
 
-const hasAlreadyOffered = computed(() => {
-  if (!props.item?.offers || !authStore.currentUser) return false;
-  return props.item.offers.some((o: any) => o.carrier === authStore.currentUser?.id || o.carrier?.id === authStore.currentUser?.id);
+const myOffer = computed(() => {
+  if (!props.item?.offers || !authStore.currentUser) return null;
+  return props.item.offers.find((o: any) => o.carrier === authStore.currentUser?.id || o.carrier?.id === authStore.currentUser?.id);
 });
+
+const hasAlreadyOffered = computed(() => !!myOffer.value);
 
 const formatDate = (dateStr: string) => {
   if (!dateStr) return '';

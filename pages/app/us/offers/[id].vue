@@ -105,11 +105,11 @@
                     <div class="flex items-center space-x-3 mb-2">
                       <div
                         class="w-10 h-10 bg-primary-100 dark:bg-primary-900/50 rounded-full flex items-center justify-center font-bold text-primary-700 dark:text-primary-300">
-                        {{ (offer.carrier?.firstName || offer.carrier?.company || 'U')[0] }}
+                        {{ (offer.carrier?.firstname || offer.carrier?.company || 'U')[0] }}
                       </div>
                       <div>
                         <p class="font-bold text-gray-900 dark:text-white flex items-center">
-                          {{ offer.carrier?.company || offer.carrier?.firstName || 'Transporteur' }}
+                          {{ offer.carrier?.company || (offer.carrier?.firstname ? (offer.carrier.firstname + ' ' + (offer.carrier.lastname || '')) : 'Transporteur') }}
                           <IconBadge v-if="offer.carrier?.verified" class="w-4 h-4 text-green-500 ml-1" />
                         </p>
                         <div class="flex items-center text-xs text-gray-500">

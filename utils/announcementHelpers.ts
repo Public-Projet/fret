@@ -72,6 +72,20 @@ export const sharedAnnouncementGetters = {
   offersByAnnouncement: (state: AnnouncementBaseState) => (announcementId: string) => {
     return (state.offers || []).filter(o => String(o.announcementId || o.announcement?.id || o.announcement) === String(announcementId));
   },
+  
+  isOffered: (state: AnnouncementBaseState) => (announcementId: string, carrierId: string) => {
+    return (state.offers || []).some(o => 
+      String(o.announcementId || o.announcement?.id || o.announcement) === String(announcementId) && 
+      String(o.carrier?.id || o.carrier) === String(carrierId)
+    );
+  },
+
+  myOffer: (state: AnnouncementBaseState) => (announcementId: string, carrierId: string) => {
+    return (state.offers || []).find(o => 
+      String(o.announcementId || o.announcement?.id || o.announcement) === String(announcementId) && 
+      String(o.carrier?.id || o.carrier) === String(carrierId)
+    );
+  }
 };
 
 /**
