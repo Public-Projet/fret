@@ -64,15 +64,15 @@
         </div>
         <div>
           <p class="text-sm font-medium text-gray-900 dark:text-white">
-            {{ announcement.user?.company || 'Entreprise' }}
+            {{ (announcement.shipper || announcement.user)?.company || ((announcement.shipper || announcement.user)?.firstname || '') + ' ' + ((announcement.shipper || announcement.user)?.lastname || '') || 'Expéditeur' }}
           </p>
           <div class="flex items-center text-yellow-500">
             <template v-for="i in 5" :key="i">
-              <IconStarFilled v-if="i <= Math.round(announcement.user?.rating || 0)" class="w-2.5 h-2.5" />
+              <IconStarFilled v-if="i <= Math.round((announcement.shipper || announcement.user)?.rating || 0)" class="w-2.5 h-2.5" />
               <IconStar v-else class="w-2.5 h-2.5 text-gray-200" />
             </template>
             <span class="text-[10px] text-gray-400 font-bold ml-1">
-              ({{ announcement.user?.rating || '0.0' }})
+              ({{ (announcement.shipper || announcement.user)?.rating || '0.0' }})
             </span>
           </div>
         </div>

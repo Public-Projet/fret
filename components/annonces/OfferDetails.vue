@@ -117,7 +117,8 @@
             </div>
             <div>
               <p class="font-black text-gray-900 dark:text-white text-lg">
-                {{ isOwner ? 'Vous' : ((item.shipper || item.user)?.company || ((item.shipper || item.user)?.firstname || '') +
+                {{ isOwner ? 'Vous' : ((item.shipper || item.user)?.company || ((item.shipper || item.user)?.firstname
+                  || '') +
                   ' ' + ((item.shipper || item.user)?.lastname || '')) }}
               </p>
               <div class="flex items-center text-sm">
@@ -160,6 +161,7 @@
           </button>
         </div>
 
+        <!-- Négociation en cours -->
         <div
           v-else-if="authStore.isCarrier && (item.status === 'pending' || item.status === 'negotiating') && hasAlreadyOffered"
           class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-center text-center">
