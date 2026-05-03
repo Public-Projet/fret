@@ -77,16 +77,18 @@
         <div v-if="proposal.status === 'pending'"
           class="flex flex-col sm:flex-row items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700/50">
           <template v-if="canRespond(proposal)">
-            <button @click="handleReject(proposal.id)" :disabled="loading"
+            <button @click="handleReject(proposal.id)" :disabled="!!loadingProposalId"
               class="w-full sm:w-auto flex-1 btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 py-2.5">
+              <IconLoader2 v-if="loadingProposalId === proposal.id" class="w-4 h-4 mr-2 animate-spin" />
               Refuser
             </button>
-            <button @click="$emit('counter', proposal)" :disabled="loading"
+            <button @click="$emit('counter', proposal)" :disabled="!!loadingProposalId"
               class="w-full sm:w-auto flex-1 btn btn-secondary py-2.5">
               Contre-proposer
             </button>
-            <button @click="handleAccept(proposal.id)" :disabled="loading"
+            <button @click="handleAccept(proposal.id)" :disabled="!!loadingProposalId"
               class="w-full sm:w-auto flex-1 btn btn-primary py-2.5 shadow-md shadow-primary-500/20">
+              <IconLoader2 v-if="loadingProposalId === proposal.id" class="w-4 h-4 mr-2 animate-spin" />
               Valider l'offre
             </button>
           </template>
@@ -95,7 +97,7 @@
               class="flex-1 w-full text-sm text-gray-500 dark:text-gray-400 italic flex items-center justify-center sm:justify-start mb-2 sm:mb-0">
               <IconClock class="w-4 h-4 mr-1.5" /> En attente de leur réponse...
             </div>
-            <button @click="$emit('counter', proposal)" :disabled="loading"
+            <button @click="$emit('counter', proposal)" :disabled="!!loadingProposalId"
               class="w-full sm:w-auto btn btn-outline py-2.5">
               Modifier ma proposition
             </button>
@@ -125,7 +127,7 @@ const availStore = useCarAvailabilityStore();
 const fretStore = useShpAnnouncementStore();
 const authStore = useCmnAuthStore();
 const pbcOtherStore = usePbcOtherStore();
-const loading = ref(false);
+const loadingProposalId = ref<string | null>(null);
 const downloadingMap = ref<Record<string, boolean>>({});
 
 const backendUrl = '';
@@ -203,7 +205,7 @@ const handleDownload = (contractPath: string) => {
 const handleAccept = async (id: string) => {
   if (!confirm('Voulez-vous vraiment accepter cette proposition ?')) return;
 
-  loading.value = true;
+  loadingProposalId.value = id;
   try {
     let res;
     if (props.type === 'avail') {
@@ -218,14 +220,14 @@ const handleAccept = async (id: string) => {
       alert(res.error || 'Erreur lors de l\'acceptation');
     }
   } finally {
-    loading.value = false;
+    loadingProposalId.value = null;
   }
 };
 
 const handleReject = async (id: string) => {
   if (!confirm('Voulez-vous vraiment refuser cette proposition ?')) return;
 
-  loading.value = true;
+  loadingProposalId.value = id;
   try {
     let res;
     if (props.type === 'avail') {
@@ -240,7 +242,7 @@ const handleReject = async (id: string) => {
       alert(res.error || 'Erreur lors du refus');
     }
   } finally {
-    loading.value = false;
+    loadingProposalId.value = null;
   }
 };
 </script>

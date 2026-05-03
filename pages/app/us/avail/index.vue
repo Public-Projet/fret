@@ -11,13 +11,14 @@
 
       <!-- Tabs -->
       <div class="flex space-x-4 mb-8">
-        <button @click="activeTab = 'market'" :class="[
-          'px-6 py-3 rounded-2xl font-bold transition-all',
+        <button @click="activeTab = 'market'" :disabled="loadingPublic" :class="[
+          'px-6 py-3 rounded-2xl font-bold transition-all flex items-center',
           activeTab === 'market'
             ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/25'
             : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
         ]">
-          <IconSearch class="w-5 h-5 inline-block mr-2" v-if="activeTab === 'market'" />
+          <IconLoader2 class="w-5 h-5 mr-2 animate-spin" v-if="loadingPublic && activeTab === 'market'" />
+          <IconSearch class="w-5 h-5 mr-2" v-else-if="activeTab === 'market'" />
           Opportunités du marché
         </button>
         <button @click="activeTab = 'enrollments'" :class="[
@@ -72,8 +73,18 @@
         </div>
 
         <!-- Feed List -->
-        <div v-if="loadingPublic" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div v-for="i in 4" :key="i" class="bg-white/50 dark:bg-gray-800/50 h-64 rounded-3xl animate-pulse"></div>
+        <div v-if="loadingPublic" class="flex flex-col items-center justify-center py-24">
+          <div class="relative w-16 h-16 mb-6">
+            <div class="absolute inset-0 border-4 border-primary-100 dark:border-primary-900/30 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-primary-600 rounded-full border-t-transparent animate-spin">
+            </div>
+          </div>
+          <p class="text-gray-500 font-bold">Recherche de trajets disponibles...</p>
+          
+          <!-- Optional Skeletons below -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full mt-12 opacity-50">
+            <div v-for="i in 2" :key="i" class="bg-white/50 dark:bg-gray-800/50 h-64 rounded-[2.5rem] animate-pulse border border-white dark:border-gray-700"></div>
+          </div>
         </div>
 
         <div v-else-if="filteredAvailabilities.length === 0" class="text-center py-24">
