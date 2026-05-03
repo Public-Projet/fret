@@ -3,7 +3,7 @@
     <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
       @click.self="$emit('close')">
       <div
-        class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[calc(100vh-48px)]">
         <!-- Header -->
         <div
           class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
@@ -17,7 +17,7 @@
           </button>
         </div>
 
-        <div class="p-8 space-y-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
+        <div class="p-8 space-y-8 flex-1 overflow-y-auto custom-scrollbar">
           <!-- Price Negotiation -->
           <section class="space-y-4">
             <div class="flex items-center gap-2 mb-2">
@@ -86,19 +86,22 @@
         </div>
 
         <!-- Footer -->
-        <div class="p-6 bg-gray-50 dark:bg-gray-900/40 border-t border-gray-100 dark:border-gray-700 flex gap-4">
-          <button @click="$emit('close')" class="flex-1 btn btn-outline py-4 rounded-2xl">
-            Annuler
-          </button>
+        <div class="p-6 bg-gray-50 dark:bg-gray-900/40 border-t border-gray-100 dark:border-gray-700 space-y-4">
           <div v-if="error"
-            class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 text-red-600 rounded-2xl text-sm font-bold">
+            class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 text-red-600 rounded-2xl text-sm font-bold animate-in fade-in slide-in-from-top-2 max-h-24 overflow-y-auto custom-scrollbar">
             {{ error }}
           </div>
 
-          <button @click="handleSubmit" :disabled="loading" class="flex item-center btn btn-primary py-4 rounded-2xl">
-            <IconLoader2 v-if="loading" class="w-5 h-5 animate-spin mr-2" />
-            {{ loading ? 'Envoi...' : 'Envoyer la proposition' }}
-          </button>
+          <div class="flex gap-4">
+            <button @click="$emit('close')" class="flex-1 btn btn-outline py-4 rounded-2xl">
+              Annuler
+            </button>
+            <button @click="handleSubmit" :disabled="loading"
+              class="flex-1 btn btn-primary py-4 rounded-2xl flex items-center justify-center">
+              <IconLoader2 v-if="loading" class="w-5 h-5 animate-spin mr-2" />
+              {{ loading ? 'Envoi...' : 'Envoyer la proposition' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
