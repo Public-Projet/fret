@@ -51,7 +51,9 @@ export const usePbcAnnouncementStore = defineStore('pbcAnnouncement', {
     async getPbcAnnouncements(id: string) {
       this.loading = true;
       try {
-        const response = await $fetch<Announcement>(`/api/public/announce/get`);
+        const response = await $fetch<Announcement>(`/api/public/announce/get`, {
+          query: { id }
+        });
         const announcement = response;
         if (announcement.shipper && !announcement.userId) announcement.userId = announcement.shipper.id;
         this.currentAnnouncement = announcement;
