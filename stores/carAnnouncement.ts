@@ -30,6 +30,7 @@ export const useCarAnnouncementStore = defineStore('carAnnouncement', {
       try {
         await $fetch(`/api/carrier/announce/create-offer`, {
           method: 'POST',
+          query: { id: announcementId },
           body: {
             price: negotiationData.price,
             message: negotiationData.message,

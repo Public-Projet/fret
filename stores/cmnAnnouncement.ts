@@ -29,6 +29,7 @@ export const useCmnAnnouncementStore = defineStore('cmnAnnouncement', {
       try {
         await $fetch(`/api/common/other/announce-counter`, {
           method: 'POST',
+          query: { id: offerId },
           body: { ...data, role },
         });
         return { success: true };

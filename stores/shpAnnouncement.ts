@@ -58,6 +58,29 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         this.loading = false;
       }
     },
+    
+    // Obtenir une seule annonce
+    async fetchShpAnnouncement(id: string) {
+      this.loading = true;
+      try {
+        const response = await $fetch<Announcement>(`/api/shipper/announce/get`, {
+          query: { id }
+        });
+        if (response) {
+          const shipperId = typeof response.shipper === 'object' && response.shipper !== null ? (response.shipper as any).id : response.shipper;
+          if (shipperId && !response.userId) response.userId = shipperId;
+          
+          this.currentAnnouncement = response;
+          return { success: true, announcement: response };
+        }
+        return { success: false, error: 'Annonce non trouvée' };
+      } catch (error: any) {
+        console.error('Erreur lors du chargement de l\'annonce:', error);
+        return { success: false, error: error?.data?.message || 'Erreur technique' };
+      } finally {
+        this.loading = false;
+      }
+    },
 
     // Mettre à jour une annonce
     async updateShpAnnouncement(id: string, updates: Partial<Announcement>) {

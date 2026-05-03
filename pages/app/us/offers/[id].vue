@@ -1,39 +1,76 @@
 <template>
   <div class="container-custom py-8">
-    <div v-if="loading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+    <div v-if="loading" class="flex flex-col items-center justify-center py-24 animate-in fade-in duration-700">
+      <div class="relative w-20 h-20">
+        <div class="absolute inset-0 border-4 border-primary-100 dark:border-primary-900/30 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-primary-600 rounded-full border-t-transparent animate-spin"></div>
+      </div>
+      <p class="mt-6 text-gray-500 dark:text-gray-400 font-medium animate-pulse">Chargement de votre annonce...</p>
     </div>
 
-    <div v-else-if="!announcement" class="text-center py-12">
-      <p class="text-lg text-gray-500">Annonce non trouvée</p>
-      <NuxtLink to="/app/us/offers" class="btn btn-primary mt-4">Retour aux annonces</NuxtLink>
+    <div v-else-if="!announcement"
+      class="max-w-xl mx-auto py-16 px-6 text-center animate-in fade-in zoom-in duration-500">
+      <div
+        class="bg-white dark:bg-gray-800 rounded-[40px] p-12 shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+        <!-- Decorative background element -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary-50 dark:bg-primary-900/10 rounded-full blur-3xl">
+        </div>
+
+        <div class="relative">
+          <div
+            class="w-24 h-24 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-inner">
+            <IconSearch :size="48" class="text-gray-400 dark:text-gray-500" />
+          </div>
+
+          <h2 class="text-3xl font-black text-gray-900 dark:text-white mb-4">Annonce Introuvable</h2>
+          <p class="text-gray-500 dark:text-gray-400 mb-10 leading-relaxed">
+            Désolé, nous ne parvenons pas à trouver cette annonce. Elle a peut-être été supprimée ou archivée.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <NuxtLink to="/app/us/offers"
+              class="btn btn-primary px-8 py-4 rounded-2xl shadow-xl shadow-primary-500/20 flex items-center justify-center">
+              <IconArrowLeft class="w-5 h-5 mr-2" />
+              Retour à mes annonces
+            </NuxtLink>
+            <button @click="handleRetry"
+              class="btn btn-outline px-8 py-4 rounded-2xl border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center">
+              <IconRotateClockwise class="w-5 h-5 mr-2" />
+              Réessayer
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div v-else>
       <!-- Header -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+      <div
+        class="flex flex-col md:flex-row md:items-center justify-between mb-8 animate-in slide-in-from-top-4 duration-500">
         <div>
-          <NuxtLink to="/app/us/offers" class="text-sm text-gray-500 hover:text-gray-900 flex items-center mb-2">
-            <IconArrowLeft class="w-4 h-4 mr-1" />
-            Retour à mes annonces
+          <NuxtLink to="/app/us/offers"
+            class="group inline-flex items-center text-sm font-bold text-gray-500 hover:text-primary-600 mb-4 transition-colors">
+            <IconArrowLeft class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+            Retour au tableau de bord
           </NuxtLink>
-          <div class="flex items-center space-x-3">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ announcement.title }}</h1>
-            <span :class="getStatusClass(announcement.status)">
+          <div class="flex flex-wrap items-center gap-4">
+            <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">{{
+              announcement.title }}</h1>
+            <span :class="getStatusClass(announcement.status)" class="badge-large">
               {{ getStatusLabel(announcement.status) }}
             </span>
           </div>
         </div>
-        <div class="flex space-x-2 mt-4 md:mt-0">
+        <div class="flex items-center gap-3 mt-6 md:mt-0">
           <button v-if="announcement.status === 'pending'" @click="handleEdit"
-            class="btn btn-outline flex items-center">
-            <IconPencil class="w-4 h-4 mr-2" />
+            class="btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary-500 text-gray-700 dark:text-gray-200 shadow-sm rounded-xl py-3 px-5 flex items-center transition-all">
+            <IconPencil class="w-5 h-5 mr-2 text-primary-500" />
             Modifier
           </button>
           <button v-if="['pending', 'negotiating'].includes(announcement.status)" @click="handleCancel"
-            class="btn btn-outline text-red-600 border-red-200 hover:bg-red-50 flex items-center">
-            <IconX class="w-4 h-4 mr-2" />
-            Annuler
+            class="btn bg-white dark:bg-gray-800 border-red-100 dark:border-red-900/30 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 shadow-sm rounded-xl py-3 px-5 flex items-center transition-all">
+            <IconX class="w-5 h-5 mr-2" />
+            Annuler l'annonce
           </button>
         </div>
       </div>
@@ -175,15 +212,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
-import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled, IconCheck, IconMessage, IconBadge } from '@tabler/icons-vue';
+import { IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled, IconCheck, IconMessage, IconBadge, IconSearch, IconRotateClockwise } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
 const announcementStore = useShpAnnouncementStore();
-const pbcAnnouncementStore = usePbcAnnouncementStore();
 const messagingStore = useCmnMessagingStore();
 const authStore = useCmnAuthStore();
 
@@ -230,6 +265,12 @@ const handleEdit = () => {
   showEditModal.value = true;
 };
 
+const handleRetry = () => {
+  if (process.client) {
+    window.location.reload();
+  }
+};
+
 const handleCancel = async () => {
   if (confirm('Êtes-vous sûr de vouloir annuler cette annonce ?')) {
     await announcementStore.updateStatus(announcementId, 'cancelled');
@@ -265,7 +306,7 @@ const viewCarrierProfile = (carrierId: string) => {
 };
 
 onMounted(async () => {
-  await pbcAnnouncementStore.getPbcAnnouncements(announcementId);
+  await announcementStore.fetchShpAnnouncement(announcementId);
   await announcementStore.fetchShpOffersForAnnouncement(announcementId);
 });
 useHead({
