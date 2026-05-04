@@ -69,7 +69,7 @@
 
               <h3
                 class="text-xl font-black text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 transition-colors">
-                <NuxtLink :to="`/annonces/${offer.announcement?.id}?type=offer`">
+                <NuxtLink :to="`/app/uc/offers/${offer.id}`">
                   {{ offer.announcement?.title || 'Annonce supprimée' }}
                 </NuxtLink>
               </h3>
@@ -106,14 +106,10 @@
               </div>
 
               <div class="flex items-center gap-2">
-                <NuxtLink :to="`/annonces/${offer.announcement?.id}?type=offer`"
-                  class="btn btn-sm btn-outline flex items-center">
+                <NuxtLink :to="`/app/uc/offers/${offer.id}`"
+                  class="btn btn-sm btn-primary flex items-center">
                   <IconEye class="w-4 h-4 mr-1" />
-                  Détails
-                </NuxtLink>
-                <NuxtLink to="/app/messages" class="btn btn-sm btn-primary flex items-center">
-                  <IconMessage class="w-4 h-4 mr-1" />
-                  Négocier
+                  Voir & Négocier
                 </NuxtLink>
               </div>
             </div>
