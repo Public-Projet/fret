@@ -172,7 +172,7 @@
 
     <!-- Counter-proposal modal -->
     <AnnoncesNegotiationModal v-if="showNegotiationModal && offer"
-      :targetId="offer.announcementId || offer.announcement?.id"
+      :targetId="String(offer.announcementId || offer.announcement?.id || '')"
       :dataType="'announcement'"
       :originalPrice="offer.announcement?.budget"
       :originalOrigin="offer.announcement?.origin"
