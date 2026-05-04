@@ -1,15 +1,15 @@
 <template>
   <div class="card-hover p-6">
     <!-- Header -->
-    <div class="flex items-start justify-between mb-4">
-      <div class="flex-1">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+    <div class="flex items-start justify-between mb-4 gap-4">
+      <div class="flex-1 min-w-0">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 truncate" :title="announcement.title">
           {{ announcement.title }}
         </h3>
         <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-          <IconMapPin class="w-4 h-4" />
-          <span>{{ announcement.origin.city }} → {{ announcement.destination.city }}</span>
-          <span v-if="announcement.distance" class="text-gray-400">
+          <IconMapPin class="w-4 h-4 shrink-0" />
+          <span class="truncate">{{ announcement.origin.city }} → {{ announcement.destination.city }}</span>
+          <span v-if="announcement.distance" class="text-gray-400 shrink-0">
             ({{ announcement.distance }} km)
           </span>
         </div>

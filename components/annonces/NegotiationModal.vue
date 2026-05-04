@@ -57,17 +57,9 @@
             </div>
 
             <div class="space-y-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-1">
-                  <label class="text-xs text-gray-400 uppercase font-bold pl-1 font-mono">Départ négocié</label>
-                  <input v-model="form.origin.city" type="text" class="input text-sm"
-                    placeholder="Ville de départ..." />
-                </div>
-                <div class="space-y-1">
-                  <label class="text-xs text-gray-400 uppercase font-bold pl-1 font-mono">Arrivée négociée</label>
-                  <input v-model="form.destination.city" type="text" class="input text-sm"
-                    placeholder="Ville d'arrivée..." />
-                </div>
+              <div class="space-y-6">
+                <UtilsLocationInput v-model="form.origin" label="Départ négocié" />
+                <UtilsLocationInput v-model="form.destination" label="Arrivée négociée" />
               </div>
             </div>
           </section>

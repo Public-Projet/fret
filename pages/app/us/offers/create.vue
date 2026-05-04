@@ -89,23 +89,7 @@
                   <h3 class="text-sm font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Départ
                   </h3>
                 </div>
-                <div>
-                  <label class="block text-xs font-bold text-gray-500 mb-1 ml-1">Adresse précise</label>
-                  <input v-model="form.origin.address" type="text" required
-                    class="w-full px-5 py-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-sm font-medium" />
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1">Ville</label>
-                    <input v-model="form.origin.city" type="text" required
-                      class="w-full px-5 py-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-sm font-medium" />
-                  </div>
-                  <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1">CP (Optionnel)</label>
-                    <input v-model="form.origin.postalCode" type="text"
-                      class="w-full px-5 py-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-sm font-medium" />
-                  </div>
-                </div>
+                <UtilsLocationInput v-model="form.origin" label="Lieu d'origine (Départ)" />
                 <div>
                   <label class="block text-xs font-bold text-gray-500 mb-1 ml-1">Date d'enlèvement</label>
                   <div class="relative">
@@ -124,23 +108,7 @@
                   <h3 class="text-sm font-black text-primary-600 dark:text-primary-400 uppercase tracking-widest">
                     Arrivée</h3>
                 </div>
-                <div>
-                  <label class="block text-xs font-bold text-gray-500 mb-1 ml-1">Adresse précise</label>
-                  <input v-model="form.destination.address" type="text" required
-                    class="w-full px-5 py-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none text-sm font-medium" />
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1">Ville</label>
-                    <input v-model="form.destination.city" type="text" required
-                      class="w-full px-5 py-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none text-sm font-medium" />
-                  </div>
-                  <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1 ml-1">CP (Optionnel)</label>
-                    <input v-model="form.destination.postalCode" type="text"
-                      class="w-full px-5 py-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none text-sm font-medium" />
-                  </div>
-                </div>
+                <UtilsLocationInput v-model="form.destination" label="Lieu de destination (Arrivée)" />
                 <div>
                   <label class="block text-xs font-bold text-gray-500 mb-1 ml-1">Date de livraison souhaitée</label>
                   <div class="relative">

@@ -88,5 +88,37 @@ export const useShpAvailabilityStore = defineStore('shpAvailability', {
         this.loading = false;
       }
     },
+
+    // Accepter une proposition de transporteur
+    async acceptBooking(bookingId: string) {
+      this.loading = true;
+      try {
+        await $fetch(`/api/shipper/availability/booking-accept`, {
+          method: 'POST',
+          query: { id: bookingId }
+        });
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // Refuser une proposition de transporteur
+    async rejectBooking(bookingId: string) {
+      this.loading = true;
+      try {
+        await $fetch(`/api/shipper/availability/booking-reject`, {
+          method: 'POST',
+          query: { id: bookingId }
+        });
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: extractErrorMessage(err) || 'Erreur technique' };
+      } finally {
+        this.loading = false;
+      }
+    },
   }
 });

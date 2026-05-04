@@ -69,7 +69,7 @@
             </div>
 
             <!-- Stats -->
-            <div class="grid grid-cols-1 xs:grid-cols-3 gap-4 lg:gap-6 max-w-2xl">
+            <div class="grid grid-cols-3 gap-4 lg:gap-6 max-w-2xl">
               <UiStatCard :value="shippers" label="Chargeurs actifs" />
               <UiStatCard :value="carriers" label="Transporteurs" />
               <UiStatCard :value="deliveries" label="Transports réussis" suffix="k+" />

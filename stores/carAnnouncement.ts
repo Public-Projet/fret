@@ -64,6 +64,40 @@ export const useCarAnnouncementStore = defineStore('carAnnouncement', {
       }
     },
 
+    // Accepter une proposition (contre-offre de l'expéditeur)
+    async acceptOffer(offerId: string) {
+      this.loading = true;
+      try {
+        await $fetch(`/api/carrier/announce/offer-accept`, {
+          method: 'POST',
+          query: { id: offerId }
+        });
+        return { success: true };
+      } catch (err: any) {
+        console.error('Erreur lors de l\'acceptation de l\'offre:', err);
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // Refuser une proposition
+    async rejectOffer(offerId: string) {
+      this.loading = true;
+      try {
+        await $fetch(`/api/carrier/announce/offer-reject`, {
+          method: 'POST',
+          query: { id: offerId }
+        });
+        return { success: true };
+      } catch (err: any) {
+        console.error('Erreur lors du refus de l\'offre:', err);
+        return { success: false, error: err?.data?.message || 'Erreur technique' };
+      } finally {
+        this.loading = false;
+      }
+    },
+
     ...sharedAnnouncementActions,
   },
 });

@@ -112,7 +112,9 @@
 import { ref, computed } from 'vue';
 import { IconGavel, IconInbox, IconStarFilled, IconFileDownload, IconMapPin, IconCash, IconClock, IconLoader2 } from '@tabler/icons-vue';
 import { useCarAvailabilityStore } from '~/stores/carAvailability';
+import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
+import { useCarAnnouncementStore } from '~/stores/carAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { usePbcOtherStore } from '~/stores/pbcOther';
 
@@ -124,13 +126,13 @@ const props = defineProps<{
 const emit = defineEmits(['refresh', 'counter']);
 
 const availStore = useCarAvailabilityStore();
+const shpAvailStore = useShpAvailabilityStore();
 const fretStore = useShpAnnouncementStore();
+const carFretStore = useCarAnnouncementStore();
 const authStore = useCmnAuthStore();
 const pbcOtherStore = usePbcOtherStore();
 const loadingProposalId = ref<string | null>(null);
 const downloadingMap = ref<Record<string, boolean>>({});
-
-const backendUrl = '';
 
 const canRespond = (proposal: any) => {
   if (!authStore.isAuthenticated) return false;
@@ -209,9 +211,17 @@ const handleAccept = async (id: string) => {
   try {
     let res;
     if (props.type === 'avail') {
-      res = await availStore.acceptCarBooking(id);
+      if (authStore.isShipper) {
+        res = await shpAvailStore.acceptBooking(id);
+      } else {
+        res = await availStore.acceptCarBooking(id);
+      }
     } else {
-      res = await fretStore.acceptShpOffer(id);
+      if (authStore.isCarrier) {
+        res = await carFretStore.acceptOffer(id);
+      } else {
+        res = await fretStore.acceptShpOffer(id);
+      }
     }
 
     if (res.success) {
@@ -231,9 +241,17 @@ const handleReject = async (id: string) => {
   try {
     let res;
     if (props.type === 'avail') {
-      res = await availStore.rejectCarBooking(id);
+      if (authStore.isShipper) {
+        res = await shpAvailStore.rejectBooking(id);
+      } else {
+        res = await availStore.rejectCarBooking(id);
+      }
     } else {
-      res = await fretStore.rejectShpOffer(id);
+      if (authStore.isCarrier) {
+        res = await carFretStore.rejectOffer(id);
+      } else {
+        res = await fretStore.rejectShpOffer(id);
+      }
     }
 
     if (res.success) {

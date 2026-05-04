@@ -179,7 +179,14 @@ onMounted(() => {
 
 definePageMeta({ layout: 'guest' });
 useHead({
-  title: computed(() => item.value ? `Détails de l'annonce` : 'Détails'),
+  title: computed(() => {
+    if (!item.value) return 'Détails';
+    if (item.value.title) return item.value.title;
+    if (dataType.value === 'avail' && item.value.origin) {
+      return `Trajet ${item.value.origin.city} → ${item.value.destination?.city || 'Toutes destinations'}`;
+    }
+    return `Détails de l'annonce`;
+  }),
   meta: [
     {
       name: 'description',

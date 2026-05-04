@@ -120,39 +120,13 @@
                 <div
                   class="p-8 bg-gray-50/50 dark:bg-gray-900/30 rounded-[2rem] border border-gray-100 dark:border-gray-800 relative group transition-all hover:border-emerald-200">
                   <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-emerald-500 rounded-full"></div>
-                  <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6 px-1">Point
-                    d'origine (Départ)</label>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <input v-model="form.origin.city" type="text" required
-                      class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white font-bold focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none"
-                      placeholder="Ville (Ex: Cotonou)" />
-                    <input v-model="form.origin.country" type="text"
-                      class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white font-bold focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none"
-                      placeholder="Pays (Bénin)" />
-                  </div>
-                  <input v-model="form.origin.address" type="text"
-                    class="w-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white font-bold focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none"
-                    placeholder="Adresse ou Point précis (Optionnel)" />
+                  <UtilsLocationInput v-model="form.origin" label="Point d'origine (Départ)" />
                 </div>
 
                 <div
                   class="p-8 bg-gray-50/50 dark:bg-gray-900/30 rounded-[2rem] border border-gray-100 dark:border-gray-800 relative group transition-all hover:border-red-200">
                   <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-red-400 rounded-full"></div>
-                  <div class="flex justify-between items-center mb-6 px-1">
-                    <label
-                      class="block text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Destination
-                      finale (Arrivée)</label>
-                    <span
-                      class="text-[10px] font-black text-gray-400 bg-white dark:bg-gray-800 px-2 py-0.5 rounded-lg border border-gray-100 dark:border-gray-700 uppercase tracking-widest">Optionnel</span>
-                  </div>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <input v-model="form.destination.city" type="text"
-                      class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white font-bold focus:ring-4 focus:ring-red-400/10 focus:border-red-400 outline-none"
-                      placeholder="Ville (Laissez vide si flexible)" />
-                    <input v-model="form.destination.country" type="text"
-                      class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white font-bold focus:ring-4 focus:ring-red-400/10 focus:border-red-400 outline-none"
-                      placeholder="Pays" />
-                  </div>
+                  <UtilsLocationInput v-model="form.destination" label="Destination finale (Optionnel)" />
                 </div>
               </div>
             </div>
