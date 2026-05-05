@@ -10,8 +10,9 @@
 
         <div class="relative shrink-0">
           <div
-            class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold text-sm ring-2 ring-white dark:ring-gray-800 shadow-sm">
-            {{ userInitials }}
+            class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 font-bold text-sm ring-2 ring-white dark:ring-gray-800 shadow-sm">
+            <img v-if="userAvatar" :src="userAvatar" alt="Avatar" class="w-full h-full object-cover" />
+            <span v-else>{{ userInitials }}</span>
           </div>
           <div
             class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full">
@@ -86,6 +87,7 @@ import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 const props = defineProps<{
   userInitials: string;
+  userAvatar?: string;
   userName: string;
   userRole: string;
   userEmail: string;

@@ -15,8 +15,9 @@
         <div class="p-4 mb-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
           <div class="flex items-center space-x-3">
             <div
-              class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold text-lg">
-              {{ userInitials }}
+              class="w-10 h-10 rounded-full overflow-hidden bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold text-lg">
+              <img v-if="currentUser?.avatar" :src="currentUser.avatar" alt="Avatar" class="w-full h-full object-cover" />
+              <span v-else>{{ userInitials }}</span>
             </div>
             <div>
               <p class="font-medium text-gray-900 dark:text-white truncate max-w-[140px]">{{ userName }}</p>
@@ -31,7 +32,7 @@
 
     <div class="flex flex-grow relative">
       <!-- Desktop Sidebar -->
-      <LayoutDefaultSidebar :user-initials="userInitials" :user-name="userName" :user-role="userRole"
+      <LayoutDefaultSidebar :user-initials="userInitials" :user-avatar="currentUser?.avatar" :user-name="userName" :user-role="userRole"
         :user-email="currentUser?.email || ''" :is-shipper="isShipper" :unread-count="unreadCount"
         :collapsed="isSidebarCollapsed" @toggle-collapse="isSidebarCollapsed = !isSidebarCollapsed" />
 

@@ -66,9 +66,12 @@
                     <span v-else class="text-white text-xs font-black">{{ userInitials }}</span>
                   </div>
                   <div class="hidden md:block text-left">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase leading-none">Connecté</p>
-                    <IconChevronDown
-                      class="w-4 h-4 text-gray-700 dark:text-gray-300 group-hover:translate-y-0.5 transition-transform" />
+                    <p class="text-[10px] font-bold text-primary-500 uppercase leading-none mb-0.5 tracking-wider">Compte</p>
+                    <div class="flex items-center gap-1.5">
+                      <p class="text-sm font-black text-gray-900 dark:text-gray-100 leading-none">{{ currentUser?.firstName }}</p>
+                      <IconChevronDown
+                        class="w-3.5 h-3.5 text-gray-400 group-hover:translate-y-0.5 transition-transform" />
+                    </div>
                   </div>
                 </button>
 
