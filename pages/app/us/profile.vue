@@ -165,7 +165,7 @@ const openEmailModal = () => {
 };
 
 // Form handlers
-const handleUpdateProfile = async (data: { firstname: string; lastname: string; phone: string; bio: string }) => {
+const handleUpdateProfile = async (data: { firstname: string; lastname: string; phone: string; bio: string; photoUrl: string }) => {
   editLoading.value = true;
   editError.value = '';
   editSuccess.value = '';

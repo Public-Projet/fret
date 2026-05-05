@@ -31,8 +31,11 @@
         <button @click="isDropdownOpen = !isDropdownOpen"
           class="flex items-center gap-3 p-1.5 pr-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
           <div
-            class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold text-sm ring-2 ring-white dark:ring-gray-800 shadow-sm">
-            {{ userInitials }}
+            class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center ring-2 ring-white dark:ring-gray-800 shadow-sm">
+            <img v-if="currentUser?.avatar" :src="currentUser.avatar" alt="Avatar" class="w-full h-full object-cover" />
+            <div v-else class="w-full h-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold text-sm">
+              {{ userInitials }}
+            </div>
           </div>
           <div class="hidden md:block text-left">
             <p class="text-xs font-semibold text-gray-900 dark:text-white leading-none">{{ userName }}</p>

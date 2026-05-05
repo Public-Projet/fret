@@ -70,7 +70,8 @@ export async function proxyToBackend<T = unknown>(
 // Proxy un flux binaire (PDF, image, etc.) vers le backend externe.
 export async function proxyBinaryToBackend(
   event: H3Event,
-  path: string
+  path: string,
+  options: { query?: Record<string, any> } = {}
 ) {
   const config = useRuntimeConfig();
   const baseUrl = config.apiBaseUrl as string;
@@ -82,6 +83,21 @@ export async function proxyBinaryToBackend(
     });
   }
 
-  const url = `${baseUrl}${path}`;
+  let url = `${baseUrl}${path}`;
+  
+  // Appendre les query params si présents
+  if (options.query) {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(options.query)) {
+      if (value !== undefined && value !== null) {
+        params.append(key, String(value));
+      }
+    }
+    const queryString = params.toString();
+    if (queryString) {
+      url += (url.includes('?') ? '&' : '?') + queryString;
+    }
+  }
+
   return proxyRequest(event, url);
 }

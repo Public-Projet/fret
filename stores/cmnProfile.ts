@@ -202,6 +202,45 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
         this.isLoading = false;
       }
     },
+    
+    // Uploader une photo de profil
+    async uploadProfilePhoto(role: UserRole, file: File) {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const formData = new FormData();
+        formData.append('photo', file);
+
+        const response = await $fetch<{ message: string; photoUrl: string }>('/api/common/profile/upload-photo', {
+          method: 'POST',
+          query: { role },
+          body: formData,
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+
+        if (response?.photoUrl) {
+          if (this.profile) {
+            this.profile.photoUrl = response.photoUrl;
+            
+            // Synchronisation avec l'authStore
+            const authStore = useCmnAuthStore();
+            authStore.updateProfile({
+              avatar: response.photoUrl
+            });
+          }
+          return { success: true, photoUrl: response.photoUrl };
+        } else {
+          return { success: false, error: 'Erreur lors de l\'upload de la photo' };
+        }
+      } catch (e: any) {
+        return { success: false, error: extractErrorMessage(e) || 'Erreur lors de l\'upload de la photo' };
+      } finally {
+        this.isLoading = false;
+      }
+    },
 
     // Récupérer les métadonnées d'un document KYC
     async fetchKycDocument(role: UserRole, docId: string) {

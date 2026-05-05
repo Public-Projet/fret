@@ -12,6 +12,36 @@
           <div class="text-center mb-6">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white">Modifier mon profil</h3>
           </div>
+
+          <!-- Photo Upload Section -->
+          <div class="flex flex-col items-center space-y-4 mb-6">
+            <div class="relative group">
+              <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 dark:border-gray-800 shadow-md">
+                <img v-if="form.photoUrl" :src="form.photoUrl" alt="Photo de profil" class="w-full h-full object-cover" />
+                <div v-else class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                  <IconUser class="w-10 h-10 text-gray-400" />
+                </div>
+              </div>
+              <button 
+                type="button" 
+                @click="triggerFileUpload"
+                class="absolute bottom-0 right-0 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:text-primary-600 transition-colors"
+                :disabled="uploadingPhoto"
+              >
+                <IconLoader2 v-if="uploadingPhoto" class="w-4 h-4 animate-spin" />
+                <IconCamera v-else class="w-4 h-4" />
+              </button>
+              <input 
+                ref="fileInput" 
+                type="file" 
+                accept="image/*" 
+                class="hidden" 
+                @change="handleFileUpload" 
+              />
+            </div>
+            <p class="text-xs text-gray-500">Cliquez sur l'icône pour changer votre photo</p>
+          </div>
+
           <form @submit.prevent="handleSubmit" class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
               <div>
@@ -25,7 +55,7 @@
             </div>
             <div>
               <label class="label">Téléphone</label>
-              <input type="tel" v-model="form.phone" class="input" placeholder="+229 01 XX XX XX XX" />
+              <UtilsPhoneInput v-model="form.phone" />
             </div>
             <div>
               <label class="label">Biographie</label>
@@ -54,8 +84,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, computed } from 'vue';
-import { IconX, IconLoader2, IconCheck } from '@tabler/icons-vue';
+import { ref, reactive, watch, computed } from 'vue';
+import { IconX, IconLoader2, IconCheck, IconCamera, IconUser } from '@tabler/icons-vue';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 import type { UserProfile } from '~/types';
 
 const props = defineProps<{
@@ -69,14 +100,19 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: [];
-  submit: [data: { firstname: string; lastname: string; phone: string; bio: string }];
+  submit: [data: { firstname: string; lastname: string; phone: string; bio: string; photoUrl: string }];
 }>();
+
+const profileStore = useCmnProfileStore();
+const fileInput = ref<HTMLInputElement | null>(null);
+const uploadingPhoto = ref(false);
 
 const form = reactive({
   firstname: '',
   lastname: '',
   phone: '',
-  bio: ''
+  bio: '',
+  photoUrl: ''
 });
 
 const accentClass = computed(() => {
@@ -92,8 +128,32 @@ watch(() => props.show, (isOpen) => {
     form.lastname = props.profile.lastname || '';
     form.phone = props.profile.phone || '';
     form.bio = props.profile.bio || '';
+    form.photoUrl = props.profile.photoUrl || '';
   }
 }, { immediate: true });
+
+const triggerFileUpload = () => {
+  fileInput.value?.click();
+};
+
+const handleFileUpload = async (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (!input.files?.length) return;
+
+  const file = input.files[0];
+  uploadingPhoto.value = true;
+
+  try {
+    const result = await profileStore.uploadProfilePhoto(props.profile?.role || 'carrier', file);
+    if (result.success) {
+      form.photoUrl = result.photoUrl!;
+    }
+  } finally {
+    uploadingPhoto.value = false;
+    // Reset input
+    input.value = '';
+  }
+};
 
 const handleSubmit = () => {
   emit('submit', { ...form });

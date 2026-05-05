@@ -7,7 +7,7 @@
         <p class="font-medium text-gray-900 dark:text-white">@{{ profile?.username }}</p>
       </div>
       <div>
-        <label class="text-xs text-gray-500 block mb-1">Email professionnel</label>
+        <label class="text-xs text-gray-500 block mb-1">Email</label>
         <div class="flex items-center justify-between">
           <p class="font-medium text-gray-900 dark:text-white flex items-center">
             <IconMail class="w-4 h-4 mr-2 text-gray-400" />
