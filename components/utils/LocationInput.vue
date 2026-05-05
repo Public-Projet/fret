@@ -116,10 +116,12 @@ const emit = defineEmits<{
 }>();
 
 // Local State
-const localValue = ref({ ...props.modelValue });
-if (!localValue.value.country) {
-  localValue.value.country = 'Bénin';
-}
+const localValue = ref({
+  country: props.modelValue?.country || 'Bénin',
+  city: props.modelValue?.city || '',
+  address: props.modelValue?.address || '',
+  postalCode: props.modelValue?.postalCode || ''
+});
 
 const countries = ref<{ name: string; isoCode: string }[]>([]);
 const availableCities = ref<{ name: string }[]>([]);
@@ -136,13 +138,40 @@ onMounted(() => {
   initCitiesForCurrentCountry();
 });
 
+// Watch for prop changes (External -> Local)
 watch(() => props.modelValue, (newVal) => {
-  localValue.value = { ...newVal, country: newVal.country || 'Bénin' };
-  initCitiesForCurrentCountry();
+  if (!newVal) return;
+
+  // Comparison to avoid circular updates
+  const hasChanged = 
+    newVal.country !== localValue.value.country ||
+    newVal.city !== localValue.value.city ||
+    newVal.address !== localValue.value.address ||
+    newVal.postalCode !== localValue.value.postalCode;
+
+  if (hasChanged) {
+    localValue.value = {
+      country: newVal.country || 'Bénin',
+      city: newVal.city || '',
+      address: newVal.address || '',
+      postalCode: newVal.postalCode || ''
+    };
+    initCitiesForCurrentCountry();
+  }
 }, { deep: true });
 
+// Watch for local changes (Local -> External)
 watch(localValue, (newVal) => {
-  emit('update:modelValue', newVal);
+  // Comparison to avoid circular updates
+  const hasChanged = 
+    newVal.country !== props.modelValue?.country ||
+    newVal.city !== props.modelValue?.city ||
+    newVal.address !== props.modelValue?.address ||
+    newVal.postalCode !== props.modelValue?.postalCode;
+
+  if (hasChanged) {
+    emit('update:modelValue', { ...newVal });
+  }
 }, { deep: true });
 
 const onCountryChange = () => {
