@@ -34,11 +34,21 @@
         </div>
       </div>
 
-      <!-- Copyright -->
-      <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+      <!-- Copyright & API Status -->
+      <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
         <p class="text-sm text-gray-400">
           © {{ currentYear }} Bourse de Fret Bénin. Tous droits réservés.
         </p>
+        
+        <div class="flex items-center gap-2 px-3 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
+          <div class="relative flex h-2 w-2">
+            <span v-if="apiStatus === 'online'" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2" :class="statusColor"></span>
+          </div>
+          <span class="text-[10px] font-bold uppercase tracking-wider transition-colors" :class="statusTextColor">
+            {{ statusText }}
+          </span>
+        </div>
       </div>
     </div>
   </footer>
@@ -48,9 +58,36 @@
 import { computed, onMounted } from 'vue';
 import * as Icons from '@tabler/icons-vue';
 import { usePbcSiteContentStore } from '~/stores/pbcSiteContent';
+import { usePbcOtherStore } from '~/stores/pbcOther';
 
 const store = usePbcSiteContentStore();
+const otherStore = usePbcOtherStore();
 const currentYear = computed(() => new Date().getFullYear());
+
+// API Status Check
+onMounted(() => {
+  otherStore.fetchApiStatus();
+});
+
+const apiStatus = computed(() => otherStore.apiStatus);
+
+const statusText = computed(() => {
+  if (apiStatus.value === 'loading') return 'Vérification...';
+  if (apiStatus.value === 'online') return 'Service en ligne';
+  return 'Service hors-ligne';
+});
+
+const statusColor = computed(() => {
+  if (apiStatus.value === 'loading') return 'bg-amber-400';
+  if (apiStatus.value === 'online') return 'bg-emerald-500';
+  return 'bg-red-500';
+});
+
+const statusTextColor = computed(() => {
+  if (apiStatus.value === 'loading') return 'text-amber-400';
+  if (apiStatus.value === 'online') return 'text-emerald-400';
+  return 'text-red-400';
+});
 
 // Fetch social links
 await store.fetchSocialLinks();
