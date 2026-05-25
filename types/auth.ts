@@ -24,6 +24,10 @@ export interface AuthUser {
     url: string;
   }[];
   kycStatus?: 'none' | 'pending' | 'verified' | 'rejected';
+  subscriptionPlan?: 'free' | 'pro' | 'enterprise';
+  subscriptionType?: 'monthly' | 'annual' | 'none';
+  subscriptionStatus?: 'active' | 'inactive' | 'pending';
+  subscriptionExpiresAt?: number;
 }
 
 // Interface utilisateur retournée par l'API
@@ -41,6 +45,10 @@ export interface ApiUser {
   reviewsCount?: number;
   kycDocuments?: any[];
   kycStatus?: string;
+  subscriptionPlan?: 'free' | 'pro' | 'enterprise';
+  subscriptionType?: 'monthly' | 'annual' | 'none';
+  subscriptionStatus?: 'active' | 'inactive' | 'pending';
+  subscriptionExpiresAt?: number;
 }
 
 // Réponse de l'API login
@@ -86,5 +94,9 @@ export function mapApiUserToAuthUser(apiUser: ApiUser): AuthUser {
     reviewsCount: apiUser.reviewsCount,
     kycDocuments: apiUser.kycDocuments,
     kycStatus: apiUser.kycStatus as any,
+    subscriptionPlan: apiUser.subscriptionPlan,
+    subscriptionType: apiUser.subscriptionType,
+    subscriptionStatus: apiUser.subscriptionStatus,
+    subscriptionExpiresAt: apiUser.subscriptionExpiresAt,
   };
 }
