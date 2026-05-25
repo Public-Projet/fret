@@ -142,6 +142,33 @@
           </div>
           <IconHeadset class="absolute -bottom-4 -right-4 w-24 h-24 text-white/10" />
         </div>
+
+        <!-- Subscription Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+          <h4 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+            <IconCreditCard class="w-5 h-5 mr-2 text-secondary-600" />
+            Abonnement
+          </h4>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">Plan</span>
+              <span class="badge" :class="profile?.subscriptionPlan === 'pro' ? 'badge-secondary text-white' : 'badge-ghost'">{{ profile?.subscriptionPlan === 'pro' ? 'Pro' : 'Gratuit' }}</span>
+            </div>
+            <div v-if="profile?.subscriptionPlan === 'pro'" class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">Facturation</span>
+              <span class="text-sm font-medium">{{ profile?.subscriptionType === 'annual' ? 'Annuelle' : 'Mensuelle' }}</span>
+            </div>
+            <div v-if="profile?.subscriptionPlan === 'pro'" class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">Statut</span>
+              <span class="badge badge-sm" :class="profile?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-warning'">{{ getSubscriptionStatusLabel(profile?.subscriptionStatus) }}</span>
+            </div>
+            <div v-if="profile?.subscriptionPlan === 'pro' && profile?.subscriptionExpiresAt" class="flex justify-between items-center">
+              <span class="text-sm text-gray-500">Expire le</span>
+              <span class="text-sm font-medium">{{ formatDate(profile?.subscriptionExpiresAt) }}</span>
+            </div>
+          </div>
+          <NuxtLink v-if="profile?.subscriptionPlan !== 'pro'" to="/pricing" class="btn btn-secondary btn-sm w-full mt-4">Passer Pro</NuxtLink>
+        </div>
       </div>
     </div>
 
@@ -173,7 +200,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { useCarVehiclesStore } from '~/stores/carVehicles';
 import type { AddVehicleData, Vehicle } from '~/types';
-import { IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconX, IconLoader2, IconEye } from '@tabler/icons-vue';
+import { IconTruck, IconCertificate, IconFileCheck, IconHeadset, IconPlus, IconTrash, IconPencil, IconX, IconLoader2, IconEye, IconCreditCard } from '@tabler/icons-vue';
 
 const profileStore = useCmnProfileStore();
 const carVehicleStore = useCarVehiclesStore();
@@ -398,7 +425,18 @@ const getKycStatusClass = (status?: string) => {
   return classes[status || 'none'] || 'badge-ghost';
 };
 
+const getSubscriptionStatusLabel = (status?: string) => {
+  const labels: Record<string, string> = {
+    active: 'Actif',
+    inactive: 'Inactif',
+    pending: 'En attente',
+    canceled: 'Annulé'
+  };
+  return labels[status || 'inactive'] || status;
+};
+
 const formatDate = (timestamp: number) => {
+  if (!timestamp) return '-';
   return new Date(timestamp).toLocaleDateString('fr-FR', {
     day: 'numeric',
     month: 'long',

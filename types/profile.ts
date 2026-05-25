@@ -20,6 +20,10 @@ export interface UserProfile {
     url: string;
   }[];
   kycStatus?: 'none' | 'pending' | 'verified' | 'rejected';
+  subscriptionPlan?: string;
+  subscriptionType?: string;
+  subscriptionStatus?: string;
+  subscriptionExpiresAt?: number;
 }
 
 export interface UpdateProfileData {
