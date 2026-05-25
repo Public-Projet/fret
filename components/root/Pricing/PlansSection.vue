@@ -14,10 +14,20 @@
           <div class="flex items-baseline mb-6">
             <span class="text-4xl font-extrabold text-gray-900 dark:text-white">Gratuit</span>
           </div>
-          <NuxtLink to="/auth/register"
+          <button
+            v-if="authStore.isAuthenticated && (authStore.user?.subscriptionPlan === 'free' || !authStore.user?.subscriptionPlan)"
+            disabled
+            class="w-full btn bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500 border-none rounded-xl py-3 font-semibold mb-8 cursor-not-allowed">
+            Votre offre actuelle
+          </button>
+          <NuxtLink v-else-if="!authStore.isAuthenticated" to="/auth/register"
             class="w-full btn bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white border-none rounded-xl py-3 font-semibold mb-8">
             Commencer
           </NuxtLink>
+          <button v-else disabled
+            class="w-full btn bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500 border-none rounded-xl py-3 font-semibold mb-8 cursor-not-allowed">
+            Inclus
+          </button>
           <ul class="space-y-4 mb-8 flex-1">
             <li class="flex items-start">
               <IconCheck class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
@@ -61,10 +71,18 @@
             Facturation mensuelle sans engagement
           </p>
 
-          <NuxtLink to="/auth/register"
-            class="w-full btn btn-primary rounded-xl py-3 font-bold shadow-lg shadow-primary-500/30 mb-8 transform transition-transform hover:scale-[1.02]">
-            Devenir Pro
-          </NuxtLink>
+          <button
+            v-if="authStore.isAuthenticated && authStore.user?.subscriptionPlan === 'pro' && authStore.user?.subscriptionStatus === 'active'"
+            disabled
+            class="w-full btn bg-green-500 text-white border-none rounded-xl py-3 font-bold mb-8 cursor-not-allowed">
+            ✓ Votre offre actuelle
+          </button>
+          <button v-else @click="handleSubscribe" :disabled="isLoading"
+            class="w-full btn btn-primary rounded-xl py-3 font-bold shadow-lg shadow-primary-500/30 mb-8 transform transition-transform hover:scale-[1.02] flex items-center justify-center space-x-2">
+            <IconLoader2 v-if="isLoading" class="w-5 h-5 animate-spin" />
+            <span>{{ authStore.isAuthenticated ? "Souscrire" : 'Devenir Pro' }}</span>
+          </button>
+          <p v-if="errorMsg" class="text-xs text-red-500 text-center mb-4">{{ errorMsg }}</p>
           <ul class="space-y-4 mb-8 flex-1">
             <li class="flex items-start">
               <IconCheck class="w-5 h-5 text-primary-500 mr-3 flex-shrink-0" />
@@ -128,9 +146,46 @@
 </template>
 
 <script setup lang="ts">
-import { IconCheck } from '@tabler/icons-vue';
+import { ref } from 'vue';
+import { IconCheck, IconLoader2 } from '@tabler/icons-vue';
+import { useCmnAuthStore } from '~/stores/cmnAuth';
+import { useRouter } from '#app';
 
-defineProps<{
+const props = defineProps<{
   isAnnual: boolean;
 }>();
+
+const authStore = useCmnAuthStore();
+const router = useRouter();
+const isLoading = ref(false);
+const errorMsg = ref('');
+
+async function handleSubscribe() {
+  if (!authStore.isAuthenticated) {
+    return router.push('/auth/login?redirect=/pricing');
+  }
+
+  isLoading.value = true;
+  errorMsg.value = '';
+
+  try {
+    const response = await $fetch<{ checkoutUrl: string }>('/api/common/subscription/checkout', {
+      method: 'POST',
+      body: {
+        plan: 'pro',
+        billing: props.isAnnual ? 'annual' : 'monthly'
+      }
+    });
+
+    if (response && response.checkoutUrl) {
+      window.location.href = response.checkoutUrl;
+    } else {
+      throw new Error('URL de redirection de paiement non reçue.');
+    }
+  } catch (err: any) {
+    console.error(err);
+    errorMsg.value = err.data?.message || 'Erreur lors du lancement de la transaction.';
+    isLoading.value = false;
+  }
+}
 </script>
