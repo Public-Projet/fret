@@ -57,6 +57,24 @@ export const useCmnSubscriptionStore = defineStore('cmnSubscription', {
       } catch (e: any) {
         return { success: false, error: extractErrorMessage(e) || 'Erreur lors de la vérification du paiement' };
       }
+    },
+    async cancelSubscription() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await $fetch<any>('/api/common/subscription/cancel', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+        return { success: true, message: response.message || 'Abonnement annulé' };
+      } catch (e: any) {
+        this.error = extractErrorMessage(e) || 'Erreur lors de l\'annulation de l\'abonnement';
+        return { success: false, error: this.error };
+      } finally {
+        this.loading = false;
+      }
     }
   }
 });
