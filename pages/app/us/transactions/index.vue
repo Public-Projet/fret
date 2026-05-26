@@ -7,7 +7,7 @@
             <IconReceipt class="w-8 h-8 mr-3 text-primary-600" />
             Mes Transactions
           </h1>
-          <p class="text-gray-500 dark:text-gray-400 mt-1">Historique de vos 5 derniers paiements</p>
+          <p class="text-gray-500 dark:text-gray-400 mt-1">Historique de vos 5 derniers paiements d'abonnement</p>
         </div>
         <NuxtLink to="/app/us/profile" class="btn btn-ghost">
           &larr; Retour au profil
@@ -40,7 +40,9 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-              <tr v-for="tx in transactions" :key="tx.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+              <tr v-for="tx in transactions" :key="tx.id"
+                class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
+                :class="{ 'bg-yellow-50/50 dark:bg-yellow-900/10 border-l-2 border-l-yellow-400': tx.status === 'pending' }">
                 <td class="py-4 px-6">
                   <span class="font-mono text-sm text-gray-900 dark:text-gray-300">{{ tx.reference }}</span>
                   <p class="text-xs text-gray-500 mt-1">{{ tx.description || 'Paiement abonnement' }}</p>
