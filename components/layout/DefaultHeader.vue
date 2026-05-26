@@ -33,7 +33,8 @@
           <div
             class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center ring-2 ring-white dark:ring-gray-800 shadow-sm">
             <img v-if="currentUser?.avatar" :src="currentUser.avatar" alt="Avatar" class="w-full h-full object-cover" />
-            <div v-else class="w-full h-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold text-sm">
+            <div v-else
+              class="w-full h-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold text-sm">
               {{ userInitials }}
             </div>
           </div>
@@ -71,8 +72,6 @@
                 @click="isDropdownOpen = false">
                 <IconReceipt class="w-4 h-4" />
                 <span class="flex-1">Transactions</span>
-                <span v-if="hasPendingTransaction"
-                  class="badge badge-xs badge-warning text-white">En attente</span>
               </NuxtLink>
               <NuxtLink to="/app/settings"
                 class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"

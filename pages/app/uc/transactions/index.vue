@@ -58,7 +58,11 @@
                     {{ getStatusLabel(tx.status) }}
                   </span>
                 </td>
-                <td class="py-4 px-6 text-right">
+                <td class="py-4 px-6 text-right space-x-2">
+                  <button v-if="tx.status === 'pending'" @click="handleCancelTransaction(tx.id)"
+                    class="btn btn-outline btn-sm text-red-500 border-red-500 hover:bg-red-50 dark:hover:bg-red-900/10">
+                    Annuler
+                  </button>
                   <NuxtLink :to="`/app/uc/transactions/${tx.id}`" class="btn btn-ghost btn-sm text-secondary-600">
                     Détails
                   </NuxtLink>
@@ -86,6 +90,17 @@ const error = computed(() => subscriptionStore.error);
 
 const fetchTransactions = async () => {
   await subscriptionStore.fetchTransactions();
+};
+
+const handleCancelTransaction = async (id: number) => {
+  if (confirm('Voulez-vous vraiment annuler cette transaction en attente ?')) {
+    const res = await subscriptionStore.cancelTransaction(id) as any;
+    if (res.success) {
+      useNuxtApp().$toast?.success('Transaction annulée avec succès.');
+    } else {
+      useNuxtApp().$toast?.error(res.error || 'Erreur lors de l\'annulation.');
+    }
+  }
 };
 
 onMounted(() => {

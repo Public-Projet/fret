@@ -75,6 +75,26 @@ export const useCmnSubscriptionStore = defineStore('cmnSubscription', {
       } finally {
         this.loading = false;
       }
+    },
+    async cancelTransaction(transactionId: number) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await $fetch<any>('/api/common/subscription/cancel-transaction', {
+          method: 'POST',
+          body: { transactionId },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+        await this.fetchTransactions();
+        return { success: true, message: response.message || 'Transaction annulée' };
+      } catch (e: any) {
+        this.error = extractErrorMessage(e) || 'Erreur lors de l\'annulation de la transaction';
+        return { success: false, error: this.error };
+      } finally {
+        this.loading = false;
+      }
     }
   }
 });
