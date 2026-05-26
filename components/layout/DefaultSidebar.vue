@@ -60,12 +60,12 @@
             </span>
           </div>
           <p class="text-sm font-bold text-gray-900 dark:text-white">
-            {{ currentUser?.subscriptionPlan === 'pro' ? 'Plan Pro' : 'Plan Gratuit' }}
+            {{ currentUser?.subscriptionStatus === 'active' && currentUser?.subscriptionPlan === 'pro' ? 'Plan Pro' : 'Plan Gratuit' }}
           </p>
-          <p v-if="currentUser?.subscriptionType" class="text-xs text-gray-500 dark:text-gray-400">
-            Facturation {{ currentUser?.subscriptionType === 'annual' ? 'annuelle' : 'mensuelle' }}
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Facturation : {{ currentUser?.subscriptionStatus === 'active' ? (currentUser?.subscriptionType === 'annual' ? 'Annuelle' : 'Mensuelle') : 'Aucune' }}
           </p>
-          <NuxtLink v-if="currentUser?.subscriptionPlan !== 'pro'" to="/pricing"
+          <NuxtLink v-if="currentUser?.subscriptionStatus !== 'active' || currentUser?.subscriptionPlan !== 'pro'" to="/pricing"
             class="mt-2 w-full btn btn-primary btn-xs">
             Passer Pro
           </NuxtLink>

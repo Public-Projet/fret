@@ -77,22 +77,21 @@
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Plan</span>
               <span class="badge"
-                :class="profile?.subscriptionPlan === 'pro' ? 'badge-primary text-white' : 'badge-ghost'">{{
-                  profile?.subscriptionPlan === 'pro' ? 'Pro' : 'Gratuit' }}</span>
+                :class="profile?.subscriptionStatus === 'active' && profile?.subscriptionPlan === 'pro' ? 'badge-primary text-white' : 'badge-ghost'">{{
+                  profile?.subscriptionStatus === 'active' && profile?.subscriptionPlan === 'pro' ? 'Pro' : 'Gratuit' }}</span>
             </div>
-            <div v-if="profile?.subscriptionPlan === 'pro'" class="flex justify-between items-center">
+            <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Facturation</span>
-              <span class="text-sm font-medium">{{ profile?.subscriptionType === 'annual' ? 'Annuelle' : 'Mensuelle'
-                }}</span>
+              <span class="text-sm font-medium">{{ profile?.subscriptionStatus === 'active' && profile?.subscriptionType ? (profile?.subscriptionType === 'annual' ? 'Annuelle' : 'Mensuelle') : 'Aucune' }}</span>
             </div>
-            <div v-if="profile?.subscriptionPlan === 'pro'" class="flex justify-between items-center">
+            <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Statut</span>
               <span class="badge badge-sm"
-                :class="profile?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-warning'">{{
-                  getSubscriptionStatusLabel(profile?.subscriptionStatus) }}</span>
+                :class="profile?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-error text-white'">
+                {{ profile?.subscriptionStatus === 'active' ? 'Actif' : 'Inactif' }}
+              </span>
             </div>
-            <div v-if="profile?.subscriptionPlan === 'pro' && profile?.subscriptionExpiresAt"
-              class="flex justify-between items-center">
+            <div v-if="profile?.subscriptionExpiresAt" class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Expire le</span>
               <span class="text-sm font-medium">{{ formatDate(profile?.subscriptionExpiresAt) }}</span>
             </div>

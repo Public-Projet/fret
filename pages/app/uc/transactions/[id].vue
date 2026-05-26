@@ -88,8 +88,21 @@ onMounted(async () => {
   loading.value = false;
 });
 
-const printReceipt = () => {
-  window.print();
+const printReceipt = async () => {
+  if (!transaction.value) return;
+  try {
+    const res = await $fetch<any>(`/api/common/subscription/transactions/${transaction.value.id}/invoice`, {
+      headers: {
+        'Authorization': `Bearer ${useCookie('auth_token').value}`
+      }
+    });
+    if (res.url) {
+      window.open(res.url, '_blank');
+    }
+  } catch (error) {
+    console.error('Erreur lors du téléchargement du reçu:', error);
+    useNuxtApp().$toast?.error('Impossible de télécharger le reçu.');
+  }
 };
 
 definePageMeta({ layout: 'default' });
