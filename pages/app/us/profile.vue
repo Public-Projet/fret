@@ -135,6 +135,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { IconPremiumRights, IconHistory, IconCertificate, IconPlus, IconFileCheck, IconLoader2, IconX, IconDownload, IconEye, IconCreditCard } from '@tabler/icons-vue';
+import { getSubscriptionStatusLabel, getKycStatusLabel, getKycStatusClass, formatDate } from '~/utils/maps';
 
 const profileStore = useCmnProfileStore();
 const profile = computed(() => profileStore.profile);
@@ -284,47 +285,6 @@ const getStatusLabel = (status: string) => {
     rejected: 'Rejeté'
   };
   return labels[status] || status;
-};
-
-const getKycStatusLabel = (status?: string) => {
-  const labels: Record<string, string> = {
-    none: 'Non soumis',
-    pending: 'En attente',
-    approved: 'Approuvé',
-    verified: 'Vérifié',
-    rejected: 'Rejeté'
-  };
-  return labels[status || 'none'] || 'Non soumis';
-};
-
-const getKycStatusClass = (status?: string) => {
-  const classes: Record<string, string> = {
-    none: 'badge-ghost',
-    pending: 'badge-warning',
-    approved: 'badge-success',
-    verified: 'badge-success',
-    rejected: 'badge-error'
-  };
-  return classes[status || 'none'] || 'badge-ghost';
-};
-
-const getSubscriptionStatusLabel = (status?: string) => {
-  const labels: Record<string, string> = {
-    active: 'Actif',
-    inactive: 'Inactif',
-    pending: 'En attente',
-    canceled: 'Annulé'
-  };
-  return labels[status || 'inactive'] || status;
-};
-
-const formatDate = (timestamp: number) => {
-  if (!timestamp) return '-';
-  return new Date(timestamp).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
 };
 
 definePageMeta({ layout: 'default' });
