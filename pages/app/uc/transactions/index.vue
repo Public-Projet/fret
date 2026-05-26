@@ -94,11 +94,11 @@ const fetchTransactions = async () => {
 
 const handleCancelTransaction = async (id: number) => {
   if (confirm('Voulez-vous vraiment annuler cette transaction en attente ?')) {
-    const res = await subscriptionStore.cancelTransaction(id) as any;
+    const res = await subscriptionStore.cancelTransaction(id) as { success: boolean; error?: string };
     if (res.success) {
-      useNuxtApp().$toast?.success('Transaction annulée avec succès.');
+      alert('Transaction annulée avec succès.');
     } else {
-      useNuxtApp().$toast?.error(res.error || 'Erreur lors de l\'annulation.');
+      alert(res.error || 'Erreur lors de l\'annulation.');
     }
   }
 };

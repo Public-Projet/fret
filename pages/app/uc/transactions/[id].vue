@@ -99,9 +99,9 @@ const printReceipt = async () => {
     if (res.url) {
       window.open(res.url, '_blank');
     }
-  } catch (error) {
-    console.error('Erreur lors du téléchargement du reçu:', error);
-    useNuxtApp().$toast?.error('Impossible de télécharger le reçu.');
+  } catch (fetchErr) {
+    console.error('Erreur lors du téléchargement du reçu:', fetchErr);
+    alert('Impossible de télécharger le reçu.');
   }
 };
 

@@ -72,8 +72,8 @@ export const useCmnSubscriptionStore = defineStore('cmnSubscription', {
         
         // Update user in authStore
         const authStore = useCmnAuthStore();
-        if (response.user && authStore.currentUser) {
-          authStore.currentUser = { ...authStore.currentUser, ...response.user };
+        if (response.user && authStore.user) {
+          authStore.user = { ...authStore.user, ...response.user };
         }
         
         return { success: true, message: response.message || 'Abonnement annulé' };
