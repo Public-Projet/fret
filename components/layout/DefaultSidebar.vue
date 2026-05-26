@@ -49,6 +49,42 @@
         </NuxtLink>
       </div>
 
+      <!-- Pricing & Logout block -->
+      <div v-if="!collapsed" class="px-3 pb-3 space-y-2">
+        <!-- Subscription status card -->
+        <div class="rounded-xl p-3 bg-gradient-to-br from-primary-50 to-primary-100/50 dark:from-primary-900/20 dark:to-primary-800/10 border border-primary-100 dark:border-primary-800/30">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-primary-700 dark:text-primary-300">Mon abonnement</span>
+            <span class="badge badge-xs" :class="currentUser?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-ghost text-gray-500'">
+              {{ currentUser?.subscriptionStatus === 'active' ? 'Actif' : 'Inactif' }}
+            </span>
+          </div>
+          <p class="text-sm font-bold text-gray-900 dark:text-white">
+            {{ currentUser?.subscriptionPlan === 'pro' ? 'Plan Pro' : 'Plan Gratuit' }}
+          </p>
+          <p v-if="currentUser?.subscriptionType" class="text-xs text-gray-500 dark:text-gray-400">
+            Facturation {{ currentUser?.subscriptionType === 'annual' ? 'annuelle' : 'mensuelle' }}
+          </p>
+          <NuxtLink v-if="currentUser?.subscriptionPlan !== 'pro'" to="/pricing"
+            class="mt-2 w-full btn btn-primary btn-xs">
+            Passer Pro
+          </NuxtLink>
+        </div>
+        <!-- Logout button -->
+        <button @click="handleLogout"
+          class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+          <IconLogout class="w-4 h-4 flex-shrink-0" />
+          Déconnexion
+        </button>
+      </div>
+      <!-- Collapsed logout -->
+      <div v-else class="px-2 pb-3">
+        <button @click="handleLogout" title="Déconnexion"
+          class="w-full flex items-center justify-center p-2 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+          <IconLogout class="w-5 h-5" />
+        </button>
+      </div>
+
       <!-- Footer Section -->
       <div class="p-4 border-t border-gray-100 dark:border-gray-700/50" v-if="!collapsed">
         <div class="flex flex-col space-y-3">
@@ -81,7 +117,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IconTruck, IconDashboard, IconMessage, IconSettings, IconChevronLeft, IconChevronRight, IconListCheck } from '@tabler/icons-vue';
+import { IconTruck, IconDashboard, IconMessage, IconSettings, IconChevronLeft, IconChevronRight, IconListCheck, IconLogout } from '@tabler/icons-vue';
 import { ROLES } from '~/utils/roles';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 
@@ -99,6 +135,14 @@ const props = defineProps<{
 defineEmits(['toggle-collapse']);
 
 const authStore = useCmnAuthStore();
+const router = useRouter();
+
+const currentUser = computed(() => authStore.currentUser);
+
+const handleLogout = () => {
+  authStore.logoutUser();
+  router.push('/auth/login');
+};
 
 interface MenuItem {
   label: string;

@@ -66,6 +66,14 @@
                 <IconUser class="w-4 h-4" />
                 Mon Profil
               </NuxtLink>
+              <NuxtLink :to="isShipper ? '/app/us/transactions' : '/app/uc/transactions'"
+                class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                @click="isDropdownOpen = false">
+                <IconReceipt class="w-4 h-4" />
+                <span class="flex-1">Transactions</span>
+                <span v-if="hasPendingTransaction"
+                  class="badge badge-xs badge-warning text-white">En attente</span>
+              </NuxtLink>
               <NuxtLink to="/app/settings"
                 class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 @click="isDropdownOpen = false">
@@ -95,7 +103,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { IconMenu2, IconX, IconChevronDown, IconUser, IconLogout, IconSettings } from '@tabler/icons-vue';
+import { useCmnSubscriptionStore } from '~/stores/cmnSubscription';
+import { IconMenu2, IconX, IconChevronDown, IconUser, IconLogout, IconSettings, IconReceipt } from '@tabler/icons-vue';
 
 defineProps<{
   menuOpen: boolean;
@@ -104,6 +113,7 @@ defineProps<{
 defineEmits(['toggle-menu']);
 
 const authStore = useCmnAuthStore();
+const subscriptionStore = useCmnSubscriptionStore();
 const router = useRouter();
 
 const isDropdownOpen = ref(false);
@@ -111,6 +121,10 @@ const dropdownRef = ref<HTMLElement | null>(null);
 
 const currentUser = computed(() => authStore.currentUser);
 const isShipper = computed(() => authStore.isShipper);
+
+const hasPendingTransaction = computed(() =>
+  subscriptionStore.transactions.some(tx => tx.status === 'pending')
+);
 
 const userInitials = computed(() => {
   if (!currentUser.value) return '';
