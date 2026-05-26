@@ -76,22 +76,40 @@
           <div class="space-y-3">
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Plan</span>
-              <span class="badge" :class="profile?.subscriptionPlan === 'pro' ? 'badge-primary text-white' : 'badge-ghost'">{{ profile?.subscriptionPlan === 'pro' ? 'Pro' : 'Gratuit' }}</span>
+              <span class="badge"
+                :class="profile?.subscriptionPlan === 'pro' ? 'badge-primary text-white' : 'badge-ghost'">{{
+                  profile?.subscriptionPlan === 'pro' ? 'Pro' : 'Gratuit' }}</span>
             </div>
             <div v-if="profile?.subscriptionPlan === 'pro'" class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Facturation</span>
-              <span class="text-sm font-medium">{{ profile?.subscriptionType === 'annual' ? 'Annuelle' : 'Mensuelle' }}</span>
+              <span class="text-sm font-medium">{{ profile?.subscriptionType === 'annual' ? 'Annuelle' : 'Mensuelle'
+                }}</span>
             </div>
             <div v-if="profile?.subscriptionPlan === 'pro'" class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Statut</span>
-              <span class="badge badge-sm" :class="profile?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-warning'">{{ getSubscriptionStatusLabel(profile?.subscriptionStatus) }}</span>
+              <span class="badge badge-sm"
+                :class="profile?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-warning'">{{
+                  getSubscriptionStatusLabel(profile?.subscriptionStatus) }}</span>
             </div>
-            <div v-if="profile?.subscriptionPlan === 'pro' && profile?.subscriptionExpiresAt" class="flex justify-between items-center">
+            <div v-if="profile?.subscriptionPlan === 'pro' && profile?.subscriptionExpiresAt"
+              class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Expire le</span>
               <span class="text-sm font-medium">{{ formatDate(profile?.subscriptionExpiresAt) }}</span>
             </div>
           </div>
-          <NuxtLink v-if="profile?.subscriptionPlan !== 'pro'" to="/pricing" class="btn btn-primary btn-sm w-full mt-4">Passer Pro</NuxtLink>
+          <NuxtLink v-if="profile?.subscriptionPlan !== 'pro'" to="/pricing" class="btn btn-primary btn-sm w-full mt-4">
+            Passer Pro</NuxtLink>
+          <div v-if="canCancelSubscription" class="mt-4">
+            <button @click="handleCancelSubscription"
+              class="flex items-center justify-center btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 btn-sm w-full"
+              :disabled="cancelLoading">
+              <IconLoader2 v-if="cancelLoading" class="w-4 h-4 animate-spin mr-2" />
+              <IconCircleX v-else class="w-4 h-4 mr-2" />
+              Annuler et rembourser
+            </button>
+            <p v-if="cancelError" class="text-xs text-red-500 mt-2">{{ cancelError }}</p>
+            <p v-if="cancelSuccess" class="text-xs text-green-500 mt-2">{{ cancelSuccess }}</p>
+          </div>
         </div>
       </div>
 
@@ -134,10 +152,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
-import { IconPremiumRights, IconHistory, IconCertificate, IconPlus, IconFileCheck, IconLoader2, IconX, IconDownload, IconEye, IconCreditCard } from '@tabler/icons-vue';
+import { IconPremiumRights, IconHistory, IconCertificate, IconPlus, IconFileCheck, IconLoader2, IconX, IconCircleX, IconEye, IconCreditCard } from '@tabler/icons-vue';
 import { getSubscriptionStatusLabel, getKycStatusLabel, getKycStatusClass, formatDate } from '~/utils/maps';
+import { useCmnSubscriptionStore } from '~/stores/cmnSubscription';
 
 const profileStore = useCmnProfileStore();
+const subscriptionStore = useCmnSubscriptionStore();
 const profile = computed(() => profileStore.profile);
 
 // Modals visibility
@@ -145,6 +165,18 @@ const showEditModal = ref(false);
 const showPasswordModal = ref(false);
 const showEmailModal = ref(false);
 const showSecurityModal = ref(false);
+
+const cancelLoading = ref(false);
+const cancelError = ref('');
+const cancelSuccess = ref('');
+
+const canCancelSubscription = computed(() => {
+  if (profile.value?.subscriptionStatus !== 'active' || !profile.value?.subscriptionExpiresAt) return false;
+  const duration = profile.value.subscriptionType === 'annual' ? 365 : 30;
+  const createdDate = profile.value.subscriptionExpiresAt - (duration * 24 * 60 * 60 * 1000);
+  const now = Date.now();
+  return (now - createdDate) <= (3 * 24 * 60 * 60 * 1000);
+});
 
 // Edit profile state
 const editLoading = ref(false);
@@ -244,6 +276,24 @@ const handleUpdateEmail = async (data: { newEmail: string; password: string }) =
     setTimeout(() => { showEmailModal.value = false; }, 1500);
   } else {
     emailError.value = result.error || 'Une erreur est survenue';
+  }
+};
+
+const handleCancelSubscription = async () => {
+  if (!confirm('Êtes-vous sûr de vouloir annuler votre abonnement ? Cette action est irréversible et un administrateur traitera votre remboursement sous peu.')) return;
+
+  cancelLoading.value = true;
+  cancelError.value = '';
+  cancelSuccess.value = '';
+
+  const result = await subscriptionStore.cancelSubscription();
+  cancelLoading.value = false;
+
+  if (result.success) {
+    cancelSuccess.value = result.message;
+    await profileStore.fetchProfile('shipper', { skipAuthRedirect: true });
+  } else {
+    cancelError.value = result.error || 'Erreur lors de l\'annulation';
   }
 };
 
