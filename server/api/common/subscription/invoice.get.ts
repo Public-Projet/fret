@@ -1,4 +1,5 @@
-import { proxyToBackend } from '~/server/utils/api';
+import { proxyBinaryToBackend } from '~/server/utils/api';
+import { getCookie } from 'h3';
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
@@ -11,5 +12,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return proxyToBackend(event, `/subscription/transactions/${id}/invoice`);
+  const token = getCookie(event, 'auth_token');
+  if (token) {
+    event.node.req.headers['authorization'] = `Bearer ${token}`;
+  }
+
+  return proxyBinaryToBackend(event, `/subscription/transactions/${id}/invoice`);
 });

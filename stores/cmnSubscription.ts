@@ -103,6 +103,22 @@ export const useCmnSubscriptionStore = defineStore('cmnSubscription', {
       } finally {
         this.loading = false;
       }
+    },
+    async downloadReceipt(transactionId: number) {
+      this.loading = true;
+      try {
+        const response = await $fetch<any>(`/api/common/subscription/invoice`, {
+          query: { id: transactionId },
+          headers: {
+            'Authorization': `Bearer ${useCookie('auth_token').value}`,
+          },
+        });
+        return { success: true, url: response.url };
+      } catch (e: any) {
+        return { success: false, error: extractErrorMessage(e) || 'Erreur lors du téléchargement du reçu' };
+      } finally {
+        this.loading = false;
+      }
     }
   }
 });

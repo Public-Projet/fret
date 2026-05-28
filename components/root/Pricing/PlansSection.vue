@@ -71,9 +71,7 @@
             Facturation mensuelle sans engagement
           </p>
 
-          <button
-            v-if="proButtonState.disabled"
-            disabled
+          <button v-if="proButtonState.disabled" disabled
             class="w-full btn bg-green-500 text-white border-none rounded-xl py-3 font-bold mb-8 cursor-not-allowed">
             ✓ {{ proButtonState.text }}
           </button>
@@ -164,7 +162,7 @@ const proButtonState = computed(() => {
   if (!authStore.isAuthenticated) {
     return { disabled: false, text: "Commencer" };
   }
-  
+
   const user = authStore.user;
   if (user?.subscriptionPlan === 'pro' && user?.subscriptionStatus === 'active') {
     if (props.isAnnual) {
@@ -181,7 +179,7 @@ const proButtonState = computed(() => {
       }
     }
   }
-  
+
   return { disabled: false, text: "Devenir Pro" };
 });
 

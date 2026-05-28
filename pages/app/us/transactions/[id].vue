@@ -56,7 +56,15 @@
           </div>
 
           <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
-            <button @click="downloadReceipt" class="btn btn-outline w-full flex justify-center items-center">
+            <div v-if="loadingInvoice" class="text-center py-6">
+              <IconLoader2 class="w-8 h-8 animate-spin text-secondary-500 mx-auto mb-4" />
+              <p class="text-gray-500">Génération du reçu...</p>
+            </div>
+            <div v-else-if="invoicePreviewUrl" class="w-full h-[600px] border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden relative mb-6">
+               <iframe :src="invoicePreviewUrl" class="w-full h-full border-0 absolute top-0 left-0" title="Aperçu du reçu"></iframe>
+            </div>
+            
+            <button v-if="invoicePreviewUrl" @click="downloadReceipt" class="btn btn-outline w-full flex justify-center items-center">
               <IconPrinter class="w-5 h-5 mr-2" />Télécharger le reçu
             </button>
           </div>
@@ -78,6 +86,8 @@ const subscriptionStore = useCmnSubscriptionStore();
 
 const txId = Number(route.params.id);
 const loading = ref(true);
+const loadingInvoice = ref(true);
+const invoicePreviewUrl = ref('');
 
 const transaction = computed(() => {
   return subscriptionStore.transactions.find((t: any) => t.id === txId);
@@ -88,30 +98,23 @@ onMounted(async () => {
     await subscriptionStore.fetchTransactions();
   }
   loading.value = false;
+  
+  if (transaction.value) {
+    invoicePreviewUrl.value = `/api/common/subscription/invoice?id=${transaction.value.id}`;
+    loadingInvoice.value = false;
+  }
 });
 
-const downloadReceipt = async () => {
-  if (!transaction.value) return;
-  try {
-    const res = await $fetch<any>(`/api/common/subscription/transactions/${transaction.value.id}/invoice`, {
-      headers: {
-        'Authorization': `Bearer ${useCookie('auth_token').value}`
-      }
-    });
-    if (res.url) {
-      const link = window.document.createElement('a');
-      link.href = res.url;
-      const baseName = res.url.split('/').pop() || `recu_${transaction.value.reference}.pdf`;
-      link.download = baseName;
-      link.target = '_blank';
-      window.document.body.appendChild(link);
-      link.click();
-      window.document.body.removeChild(link);
-    }
-  } catch (fetchErr) {
-    console.error('Erreur lors du téléchargement du reçu:', fetchErr);
-    alert('Impossible de télécharger le reçu.');
-  }
+const downloadReceipt = () => {
+  if (!invoicePreviewUrl.value) return;
+  const link = window.document.createElement('a');
+  link.href = invoicePreviewUrl.value;
+  const baseName = `recu_${transaction.value?.reference || txId}.pdf`;
+  link.download = baseName;
+  link.target = '_blank';
+  window.document.body.appendChild(link);
+  link.click();
+  window.document.body.removeChild(link);
 };
 
 definePageMeta({ layout: 'default' });
