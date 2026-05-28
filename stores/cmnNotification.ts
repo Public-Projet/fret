@@ -58,7 +58,7 @@ export const useCmnNotificationStore = defineStore('cmnNotification', {
 
       try {
         const response = await $fetch<any>(`/api/common/notifications/mine`, {
-          query: { role },
+          query: { role, id },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },
@@ -111,7 +111,7 @@ export const useCmnNotificationStore = defineStore('cmnNotification', {
       try {
         await $fetch(`/api/common/notifications/remove`, {
           method: 'DELETE',
-          query: { role },
+          query: { role, id },
           headers: {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },

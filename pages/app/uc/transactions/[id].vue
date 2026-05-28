@@ -8,7 +8,8 @@
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Détails de la transaction</h1>
       </div>
 
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 max-w-2xl mx-auto">
+      <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 max-w-2xl mx-auto">
         <div v-if="loading" class="text-center py-12">
           <IconLoader2 class="w-8 h-8 animate-spin text-secondary-500 mx-auto mb-4" />
           <p class="text-gray-500">Chargement...</p>
@@ -45,18 +46,19 @@
             </div>
             <div class="flex justify-between" v-if="transaction.payment_method">
               <span class="text-gray-500 dark:text-gray-400">Moyen de paiement</span>
-              <span class="font-medium text-gray-900 dark:text-white capitalize">{{ transaction.payment_method.brand || 'Mobile Money' }}</span>
+              <span class="font-medium text-gray-900 dark:text-white capitalize">{{ transaction.payment_method.brand ||
+                'Mobile Money' }}</span>
             </div>
             <div class="flex justify-between" v-if="transaction.customer">
               <span class="text-gray-500 dark:text-gray-400">Client</span>
               <span class="font-medium text-gray-900 dark:text-white">{{ transaction.customer.email }}</span>
             </div>
           </div>
-          
+
           <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
-             <button @click="printReceipt" class="btn btn-outline w-full flex justify-center items-center">
-                <IconPrinter class="w-5 h-5 mr-2" /> Imprimer le reçu
-             </button>
+            <button @click="downloadReceipt" class="btn btn-outline w-full flex justify-center items-center">
+              <IconPrinter class="w-5 h-5 mr-2" />Télécharger le reçu
+            </button>
           </div>
         </div>
       </div>
@@ -88,7 +90,7 @@ onMounted(async () => {
   loading.value = false;
 });
 
-const printReceipt = async () => {
+const downloadReceipt = async () => {
   if (!transaction.value) return;
   try {
     const res = await $fetch<any>(`/api/common/subscription/transactions/${transaction.value.id}/invoice`, {
@@ -97,7 +99,14 @@ const printReceipt = async () => {
       }
     });
     if (res.url) {
-      window.open(res.url, '_blank');
+      const link = window.document.createElement('a');
+      link.href = res.url;
+      const baseName = res.url.split('/').pop() || `recu_${transaction.value.reference}.pdf`;
+      link.download = baseName;
+      link.target = '_blank';
+      window.document.body.appendChild(link);
+      link.click();
+      window.document.body.removeChild(link);
     }
   } catch (fetchErr) {
     console.error('Erreur lors du téléchargement du reçu:', fetchErr);
