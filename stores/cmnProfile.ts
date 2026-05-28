@@ -202,7 +202,7 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
         this.isLoading = false;
       }
     },
-    
+
     // Uploader une photo de profil
     async uploadProfilePhoto(role: UserRole, file: File) {
       this.isLoading = true;
@@ -224,7 +224,7 @@ export const useCmnProfileStore = defineStore('cmnProfile', {
         if (response?.photoUrl) {
           if (this.profile) {
             this.profile.photoUrl = response.photoUrl;
-            
+
             // Synchronisation avec l'authStore
             const authStore = useCmnAuthStore();
             authStore.updateProfile({
