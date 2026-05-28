@@ -67,8 +67,11 @@
           </div>
         </div>
 
-        <div v-if="error" class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+        <div v-if="error" class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex flex-col items-center">
           <p class="text-red-600 dark:text-red-400 text-sm text-center">{{ error }}</p>
+          <button v-if="error.includes('en attente de validation')" type="button" @click="showResendModal = true" class="mt-2 text-sm font-medium hover:underline" :class="selectedRole === 'shipper' ? 'text-primary-600 hover:text-primary-500' : 'text-secondary-600 hover:text-secondary-500'">
+            Renvoyer l'email de vérification
+          </button>
         </div>
 
         <div class="flex items-center justify-between">
@@ -208,6 +211,13 @@
         </div>
       </Transition>
     </Teleport>
+
+    <!-- Modal Resend Verification -->
+    <ModalResendVerification
+      v-model="showResendModal"
+      :role="selectedRole"
+      :initial-email="email"
+    />
   </NuxtLayout>
 </template>
 
@@ -242,6 +252,8 @@ const forgotError = ref('');
 const forgotLoading = ref(false);
 const forgotEmailSent = ref(false);
 const forgotSuccessMessage = ref('');
+
+const showResendModal = ref(false);
 
 onMounted(() => {
   // Charger les informations de dernière connexion

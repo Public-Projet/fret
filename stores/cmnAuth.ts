@@ -170,6 +170,10 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
         if (errorData) {
           if (errorData.badCombo && typeof errorData.badCombo === 'object') {
             errorMessage = (errorData.badCombo as { message?: string }).message || errorMessage;
+          } else if (errorData.accountPending && typeof errorData.accountPending === 'object') {
+            errorMessage = (errorData.accountPending as { message?: string }).message || 'Votre compte est en attente de validation.';
+          } else if (errorData.accountSuspended && typeof errorData.accountSuspended === 'object') {
+            errorMessage = (errorData.accountSuspended as { message?: string }).message || 'Votre compte est suspendu.';
           } else if (errorData.message) {
             errorMessage = errorData.message as string;
           }
