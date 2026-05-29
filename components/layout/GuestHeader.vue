@@ -17,9 +17,6 @@
             <span :class="['text-lg font-black tracking-tight leading-none', isDark ? 'text-white' : 'text-gray-900']">
               Bourse de Fret
             </span>
-            <span class="text-[10px] font-bold text-primary-500 uppercase tracking-[0.2em] leading-none mt-1">
-              Bénin Connecté
-            </span>
           </div>
         </NuxtLink>
 

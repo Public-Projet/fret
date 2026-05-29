@@ -27,12 +27,6 @@
               Véhicule et Options
             </h2>
 
-            <div v-if="error"
-              class="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 text-red-600 rounded-2xl text-sm font-bold flex items-center">
-              <IconAlertCircle class="w-5 h-5 mr-3" />
-              {{ error }}
-            </div>
-
             <div class="space-y-6">
               <div>
                 <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Choix du
@@ -130,6 +124,12 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <div v-if="error"
+            class="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 text-red-600 rounded-2xl text-sm font-bold flex items-center">
+            <IconAlertCircle class="w-5 h-5 mr-3" />
+            {{ error }}
           </div>
 
           <div class="flex flex-col sm:flex-row justify-end gap-4 pt-4">
