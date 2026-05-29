@@ -12,9 +12,6 @@
           <span class="text-lg font-black tracking-tight leading-none text-gray-900 dark:text-white">
             Bourse de Fret
           </span>
-          <span class="text-[10px] font-bold text-primary-500 uppercase tracking-[0.2em] leading-none mt-1">
-            Bénin Connecté
-          </span>
         </div>
       </NuxtLink>
     </div>
