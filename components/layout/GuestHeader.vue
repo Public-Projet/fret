@@ -62,13 +62,16 @@
                   class="flex items-center gap-2 pl-1 pr-3 py-1 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-2xl transition-all duration-300 border border-transparent hover:border-gray-300 dark:hover:border-white/10 group">
                   <div
                     class="w-8 h-8 overflow-hidden rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:scale-105 transition-transform bg-primary-600">
-                    <img v-if="currentUser?.avatar" :src="currentUser.avatar" alt="Avatar" class="w-full h-full object-cover" />
+                    <img v-if="currentUser?.avatar" :src="currentUser.avatar" alt="Avatar"
+                      class="w-full h-full object-cover" />
                     <span v-else class="text-white text-xs font-black">{{ userInitials }}</span>
                   </div>
                   <div class="hidden md:block text-left">
-                    <p class="text-[10px] font-bold text-primary-500 uppercase leading-none mb-0.5 tracking-wider">Compte</p>
+                    <p class="text-[10px] font-bold text-primary-500 uppercase leading-none mb-0.5 tracking-wider">
+                      Compte</p>
                     <div class="flex items-center gap-1.5">
-                      <p class="text-sm font-black text-gray-900 dark:text-gray-100 leading-none">{{ currentUser?.firstName }}</p>
+                      <p class="text-sm font-black text-gray-900 dark:text-gray-100 leading-none">{{
+                        currentUser?.firstName }}</p>
                       <IconChevronDown
                         class="w-3.5 h-3.5 text-gray-400 group-hover:translate-y-0.5 transition-transform" />
                     </div>
@@ -173,9 +176,9 @@
           </template>
           <div v-else class="flex items-center justify-between p-4 bg-gray-100 dark:bg-white/5 rounded-2xl mt-4">
             <div class="flex items-center gap-3">
-              <div
-                class="w-10 h-10 overflow-hidden rounded-xl flex items-center justify-center bg-primary-600">
-                <img v-if="currentUser?.avatar" :src="currentUser.avatar" alt="Avatar" class="w-full h-full object-cover" />
+              <div class="w-10 h-10 overflow-hidden rounded-xl flex items-center justify-center bg-primary-600">
+                <img v-if="currentUser?.avatar" :src="currentUser.avatar" alt="Avatar"
+                  class="w-full h-full object-cover" />
                 <span v-else class="text-white text-xs font-black">{{ userInitials }}</span>
               </div>
               <p class="text-sm font-black text-gray-900 dark:text-white">{{ currentUser?.firstName }}</p>
