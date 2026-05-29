@@ -68,7 +68,7 @@
                   </div>
                   <div class="hidden md:block text-left">
                     <p class="text-[10px] font-bold text-primary-500 uppercase leading-none mb-0.5 tracking-wider">
-                      Compte</p>
+                      {{ userRole }}</p>
                     <div class="flex items-center gap-1.5">
                       <p class="text-sm font-black text-gray-900 dark:text-gray-100 leading-none">{{
                         currentUser?.firstName }}</p>
@@ -88,7 +88,7 @@
                   <div v-if="isUserMenuOpen"
                     class="absolute right-0 mt-3 w-56 glass-dark rounded-2xl shadow-2xl border border-white/10 overflow-hidden py-2 p-1.5 ring-1 ring-black/5">
                     <div class="px-4 py-3 mb-2 bg-white/5 rounded-xl border border-white/5">
-                      <p class="text-xs font-bold text-gray-400 mb-1">Session active</p>
+                      <p class="text-xs font-bold text-gray-400 mb-1">Session active ({{ userRole }})</p>
                       <p class="text-sm font-black text-white truncate">{{ currentUser?.firstName }} {{
                         currentUser?.lastName }}</p>
                     </div>
@@ -213,6 +213,10 @@ const isAuthenticated = computed(() => authStore.isAuthenticated);
 const isShipper = computed(() => authStore.isShipper);
 const isDark = computed(() => themeStore.isDark);
 const currentUser = computed(() => authStore.currentUser);
+const userRole = computed(() => {
+  if (!currentUser.value) return '';
+  return isShipper.value ? 'Expéditeur' : 'Transporteur';
+});
 const unreadCount = computed(() =>
   currentUser.value ? messagingStore.unreadCount : 0
 );

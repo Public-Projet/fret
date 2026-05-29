@@ -2,14 +2,14 @@
   <div
     class="bg-white/80 dark:bg-gray-800/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center sticky top-0 z-30 transition-all duration-300">
     <div class="flex items-center gap-4">
-      <NuxtLink to="/" class="flex items-center gap-2 group">
+      <NuxtLink to="/" class="flex items-center gap-2 group" @click="handleLogoClick">
         <div
           class="relative overflow-hidden rounded-xl bg-white p-1.5 shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-105">
           <img src="/img/Logo.png" alt="BourseFret" class="h-9 w-auto" />
           <div class="absolute inset-0 bg-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
         </div>
         <div class="flex flex-col">
-          <span class="text-lg font-black tracking-tight leading-none text-gray-900 dark:text-white">
+          <span class="hidden lg:block text-lg font-black tracking-tight leading-none text-gray-900 dark:text-white">
             Bourse de Fret
           </span>
         </div>
@@ -86,12 +86,6 @@
           </div>
         </Transition>
       </div>
-
-      <button @click="$emit('toggle-menu')"
-        class="p-2 text-gray-600 dark:text-gray-300 lg:hidden user-select-none hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-        <IconMenu2 v-if="!menuOpen" class="w-6 h-6" />
-        <IconX v-else class="w-6 h-6" />
-      </button>
     </div>
   </div>
 </template>
@@ -100,13 +94,20 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useCmnSubscriptionStore } from '~/stores/cmnSubscription';
-import { IconMenu2, IconX, IconChevronDown, IconUser, IconLogout, IconSettings, IconReceipt } from '@tabler/icons-vue';
+import { IconChevronDown, IconUser, IconLogout, IconSettings, IconReceipt } from '@tabler/icons-vue';
 
 defineProps<{
   menuOpen: boolean;
 }>();
 
-defineEmits(['toggle-menu']);
+const emit = defineEmits(['toggle-menu']);
+
+const handleLogoClick = (event: MouseEvent) => {
+  if (window.innerWidth < 1024) { // lg breakpoint is 1024px
+    event.preventDefault();
+    emit('toggle-menu');
+  }
+};
 
 const authStore = useCmnAuthStore();
 const subscriptionStore = useCmnSubscriptionStore();

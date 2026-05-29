@@ -1,30 +1,15 @@
 <template>
   <aside
-    class="flex-shrink-0 hidden lg:flex flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out h-[calc(100vh-64px)] relative z-40"
-    :class="[collapsed ? 'w-20' : 'w-72']">
+    :class="[
+      mobile
+        ? 'fixed top-[61px] left-0 bottom-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out z-40 lg:hidden'
+        : 'flex-shrink-0 hidden lg:flex border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-all duration-300 ease-in-out h-[calc(100vh-64px)] relative z-40',
+      mobile
+        ? (open ? 'translate-x-0' : '-translate-x-full')
+        : (collapsed ? 'w-20' : 'w-72')
+    ]">
 
     <div class="flex flex-col h-full overflow-hidden">
-      <!-- User Profile Section -->
-      <div class="p-4 border-b border-gray-100 dark:border-gray-700/50 flex items-center transition-all duration-300"
-        :class="collapsed ? 'justify-center' : 'gap-3'">
-
-        <div class="relative shrink-0">
-          <div
-            class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 font-bold text-sm ring-2 ring-white dark:ring-gray-800 shadow-sm">
-            <img v-if="userAvatar" :src="userAvatar" alt="Avatar" class="w-full h-full object-cover" />
-            <span v-else>{{ userInitials }}</span>
-          </div>
-          <div
-            class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full">
-          </div>
-        </div>
-
-        <div v-if="!collapsed" class="flex-1 min-w-0">
-          <h3 class="font-bold text-sm text-gray-900 dark:text-white truncate">{{ userName }}</h3>
-          <p class="text-xs text-gray-500 dark:text-gray-400 truncate capitalize">{{ userRole }}</p>
-        </div>
-      </div>
-
       <!-- Navigation -->
       <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1 overflow-x-hidden">
         <NuxtLink v-for="item in filteredMenuItems" :key="item.to" :to="item.to"
@@ -32,12 +17,13 @@
           active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium shadow-sm ring-1 ring-primary-100 dark:ring-primary-900/30"
           :class="{
             'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium shadow-sm ring-1 ring-primary-100 dark:ring-primary-900/30': item.label === 'Tableau de bord' ? $route.path === item.to : $route.path.startsWith(item.to),
-            'justify-center px-2': collapsed
-          }" :title="collapsed ? item.label : ''">
+            'justify-center px-2': !mobile && collapsed
+          }" :title="(!mobile && collapsed) ? item.label : ''"
+          @click="handleLinkClick">
 
           <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
 
-          <div v-if="!collapsed" class="flex-1 flex justify-between items-center truncate">
+          <div v-if="mobile || !collapsed" class="flex-1 flex justify-between items-center truncate">
             <span>{{ item.label }}</span>
             <span v-if="item.badge && item.badge > 0"
               class="bg-red-500 text-white text-[10px] font-bold rounded-full h-5 min-w-[1.25rem] flex items-center justify-center px-1">
@@ -50,7 +36,7 @@
       </div>
 
       <!-- Pricing & Logout block -->
-      <div v-if="!collapsed" class="px-3 pb-3 space-y-2">
+      <div v-if="mobile || !collapsed" class="px-3 pb-3 space-y-2">
         <!-- Subscription status card -->
         <div
           class="rounded-xl p-3 bg-gradient-to-br from-primary-50 to-primary-100/50 dark:from-primary-900/20 dark:to-primary-800/10 border border-primary-100 dark:border-primary-800/30">
@@ -70,7 +56,7 @@
               ? 'Annuelle' : 'Mensuelle') : 'Aucune' }}
           </p>
           <NuxtLink v-if="currentUser?.subscriptionStatus !== 'active' || currentUser?.subscriptionPlan !== 'pro'"
-            to="/pricing" class="mt-2 w-full btn btn-primary btn-xs">
+            to="/pricing" class="mt-2 w-full btn btn-primary btn-xs" @click="handleLinkClick">
             Passer Pro
           </NuxtLink>
         </div>
@@ -90,15 +76,15 @@
       </div>
 
       <!-- Footer Section -->
-      <div class="p-4 border-t border-gray-100 dark:border-gray-700/50" v-if="!collapsed">
+      <div class="p-4 border-t border-gray-100 dark:border-gray-700/50" v-if="mobile || !collapsed">
         <div class="flex flex-col space-y-3">
           <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-500 dark:text-gray-400">
-            <NuxtLink to="/legal/terms" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <NuxtLink to="/legal/terms" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors" @click="handleLinkClick">
               Conditions
             </NuxtLink>
-            <NuxtLink to="/legal/privacy" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <NuxtLink to="/legal/privacy" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors" @click="handleLinkClick">
               Confidentialité</NuxtLink>
-            <NuxtLink to="/support/help" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <NuxtLink to="/support/help" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors" @click="handleLinkClick">
               Aide
             </NuxtLink>
           </div>
@@ -110,7 +96,7 @@
     </div>
 
     <!-- Collapse Toggle (Absolute) -->
-    <button @click="$emit('toggle-collapse')"
+    <button v-if="!mobile" @click="$emit('toggle-collapse')"
       class="absolute -right-3 top-20 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1 shadow-md text-gray-500 hover:text-primary-600 hidden lg:flex items-center justify-center z-50 transition-colors transform hover:scale-110"
       title="Réduire/Agrandir">
       <IconChevronLeft v-if="!collapsed" class="w-4 h-4" />
@@ -121,32 +107,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IconTruck, IconDashboard, IconMessage, IconSettings, IconChevronLeft, IconChevronRight, IconListCheck, IconLogout } from '@tabler/icons-vue';
+import { useRouter, useRoute } from 'vue-router';
+import { IconTruck, IconDashboard, IconMessage, IconChevronLeft, IconChevronRight, IconListCheck, IconLogout } from '@tabler/icons-vue';
 import { ROLES } from '~/utils/roles';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-
-const props = defineProps<{
-  userInitials: string;
-  userAvatar?: string;
-  userName: string;
-  userRole: string;
-  userEmail: string;
-  isShipper: boolean;
-  unreadCount: number;
-  collapsed: boolean;
-}>();
-
-defineEmits(['toggle-collapse']);
-
-const authStore = useCmnAuthStore();
-const router = useRouter();
-
-const currentUser = computed(() => authStore.currentUser);
-
-const handleLogout = () => {
-  authStore.logoutUser();
-  router.push('/auth/login');
-};
+import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 
 interface MenuItem {
   label: string;
@@ -155,6 +120,27 @@ interface MenuItem {
   roles: string[];
   badge?: number;
 }
+
+const props = withDefaults(defineProps<{
+  mobile?: boolean;
+  open?: boolean;
+  collapsed?: boolean;
+}>(), {
+  mobile: false,
+  open: false,
+  collapsed: false
+});
+
+const emit = defineEmits(['toggle-collapse', 'close']);
+
+const authStore = useCmnAuthStore();
+const messagingStore = useCmnMessagingStore();
+const router = useRouter();
+const route = useRoute();
+
+const currentUser = computed(() => authStore.currentUser);
+const isShipper = computed(() => authStore.isShipper);
+const unreadCount = computed(() => currentUser.value ? messagingStore.unreadCount : 0);
 
 const menuItems = computed<MenuItem[]>(() => [
   // Expediteur
@@ -207,7 +193,7 @@ const menuItems = computed<MenuItem[]>(() => [
     to: '/app/messages',
     icon: IconMessage,
     roles: ['all'],
-    badge: props.unreadCount
+    badge: unreadCount.value
   }
 ]);
 
@@ -220,6 +206,20 @@ const filteredMenuItems = computed(() => {
     return item.roles.includes(userRole);
   });
 });
+
+const handleLinkClick = () => {
+  if (props.mobile) {
+    emit('close');
+  }
+};
+
+const handleLogout = () => {
+  authStore.logoutUser();
+  if (props.mobile) {
+    emit('close');
+  }
+  router.push('/auth/login');
+};
 
 const currentYear = computed(() => new Date().getFullYear());
 </script>
