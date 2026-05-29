@@ -108,12 +108,26 @@ const fetchData = async () => {
       user.value = { ...res.data.carrier, role: 'carrier' };
     }
     await pbcAvailStore.fetchPbcAvailabilities(); // To filter by carrier
-  } else {
+  } else if (userRole === 'shipper') {
     const res = await userStore.fetchPublicProfile(id, 'shipper');
     if (res.success && res.data?.shipper) {
       user.value = { ...res.data.shipper, role: 'shipper' };
     }
     await fretStore.fetchPbcAnnouncements(); // To filter by shipper
+  } else {
+    // Try to load as carrier first
+    const resCarrier = await userStore.fetchPublicProfile(id, 'carrier');
+    if (resCarrier.success && resCarrier.data?.carrier) {
+      user.value = { ...resCarrier.data.carrier, role: 'carrier' };
+      await pbcAvailStore.fetchPbcAvailabilities();
+    } else {
+      // Fallback to shipper
+      const resShipper = await userStore.fetchPublicProfile(id, 'shipper');
+      if (resShipper.success && resShipper.data?.shipper) {
+        user.value = { ...resShipper.data.shipper, role: 'shipper' };
+        await fretStore.fetchPbcAnnouncements();
+      }
+    }
   }
   loading.value = false;
 };

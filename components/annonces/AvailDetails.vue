@@ -111,28 +111,31 @@
         <div v-if="isOwner" class="space-y-3">
           <p class="text-sm text-gray-500 italic">Vous êtes le propriétaire de cette disponibilité.</p>
         </div>
-        <div v-else-if="authStore.isShipper" class="space-y-4">
-          <button v-if="!alreadyEnrolled" @click="$emit('enroll')" class="btn btn-primary w-full py-4 rounded-2xl">
-            S'inscrire sur le trajet
-          </button>
-          <div v-else class="space-y-4">
-            <div class="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl border border-blue-100 dark:border-blue-900/20">
-              <p class="text-blue-700 dark:text-blue-400 font-bold flex items-center mb-4">
-                <IconCheck class="w-5 h-5 mr-2" />
-                {{ getMyEnrollmentStatusText() }}
-              </p>
-              <div v-if="myEnrollment" class="mt-4 border-t border-blue-200 dark:border-blue-800/50 pt-4">
-                <AnnoncesNegotiationList :items="[myEnrollment]" type="avail" @refresh="$emit('refresh')"
-                  @counter="$emit('counter', $event)" />
+        <div v-else-if="authStore.isShipper" class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:space-y-0 space-y-4">
+          <div :class="[alreadyEnrolled ? 'lg:col-span-3' : 'lg:col-span-1']">
+            <button v-if="!alreadyEnrolled" @click="$emit('enroll')" class="btn btn-primary w-full py-4 rounded-2xl">
+              S'inscrire sur le trajet
+            </button>
+            <div v-else class="space-y-4">
+              <div class="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl border border-blue-100 dark:border-blue-900/20">
+                <p class="text-blue-700 dark:text-blue-400 font-bold flex items-center mb-4">
+                  <IconCheck class="w-5 h-5 mr-2" />
+                  {{ getMyEnrollmentStatusText() }}
+                </p>
+                <div v-if="myEnrollment" class="mt-4 border-t border-blue-200 dark:border-blue-800/50 pt-4">
+                  <AnnoncesNegotiationList :items="[myEnrollment]" type="avail" @refresh="$emit('refresh')"
+                    @counter="$emit('counter', $event)" />
+                </div>
               </div>
             </div>
           </div>
-          <button class="btn btn-outline w-full py-4 rounded-2xl">
+          
+          <button class="btn btn-outline w-full py-4 rounded-2xl" :class="[alreadyEnrolled ? (canRate ? 'lg:col-span-2' : 'lg:col-span-3') : (canRate ? 'lg:col-span-1' : 'lg:col-span-2')]">
             Contacter le transporteur
           </button>
-
+          
           <!-- Rating Action -->
-          <button v-if="canRate" @click="$emit('showRatingModal')" class="btn btn-secondary btn-sm w-full rounded-xl">
+          <button v-if="canRate" @click="$emit('showRatingModal')" class="btn btn-secondary w-full py-4 rounded-2xl">
             Noter ce transporteur
           </button>
         </div>

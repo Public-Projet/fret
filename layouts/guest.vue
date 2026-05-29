@@ -14,11 +14,11 @@
       </div>
     </div>
 
-    <LayoutGuestHeader class="relative z-10" />
+    <LayoutGuestHeader class="relative z-30" />
     <main class="flex-grow relative z-10">
       <slot />
     </main>
-    <LayoutGuestFooter class="relative z-10" />
+    <LayoutGuestFooter class="relative z-0" />
   </div>
 </template>
 
