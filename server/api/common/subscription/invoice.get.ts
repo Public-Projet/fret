@@ -17,5 +17,5 @@ export default defineEventHandler(async (event) => {
     event.node.req.headers['authorization'] = `Bearer ${token}`;
   }
 
-  return proxyBinaryToBackend(event, `/subscription/transactions/${id}/invoice`);
+  return proxyBinaryToBackend(event, `/subscription/transactions/${id}/invoice`, { query });
 });

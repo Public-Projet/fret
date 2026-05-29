@@ -106,9 +106,9 @@ onMounted(async () => {
 });
 
 const handleDownload = () => {
-  if (!invoicePreviewUrl.value) return;
+  if (!transaction.value) return;
   const link = window.document.createElement('a');
-  link.href = invoicePreviewUrl.value;
+  link.href = `/api/common/subscription/invoice?id=${transaction.value.id}&download=true`;
   const baseName = `recu_${transaction.value?.reference || txId}.pdf`;
   link.download = baseName;
   link.target = '_blank';
