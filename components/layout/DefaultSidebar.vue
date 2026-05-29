@@ -12,6 +12,14 @@
     <div class="flex flex-col h-full overflow-hidden">
       <!-- Navigation -->
       <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1 overflow-x-hidden">
+        <!-- Mobile: Accueil link -->
+        <NuxtLink v-if="mobile" to="/"
+          class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200"
+          @click="handleLinkClick">
+          <IconHome2 class="w-5 h-5 flex-shrink-0" />
+          <span>Accueil</span>
+        </NuxtLink>
+        <div v-if="mobile" class="my-1 border-t border-gray-100 dark:border-gray-700/50"></div>
         <NuxtLink v-for="item in filteredMenuItems" :key="item.to" :to="item.to"
           class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group relative"
           active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium shadow-sm ring-1 ring-primary-100 dark:ring-primary-900/30"
@@ -108,7 +116,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { IconTruck, IconDashboard, IconMessage, IconChevronLeft, IconChevronRight, IconListCheck, IconLogout } from '@tabler/icons-vue';
+import { IconTruck, IconDashboard, IconMessage, IconChevronLeft, IconChevronRight, IconListCheck, IconLogout, IconHome2 } from '@tabler/icons-vue';
 import { ROLES } from '~/utils/roles';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
