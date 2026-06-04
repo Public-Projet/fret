@@ -11,7 +11,7 @@
 
       <div v-if="contentStore.loading.testimonials" class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div v-for="i in 3" :key="i" class="card p-8 bg-gray-50 dark:bg-gray-700/30 rounded-[2rem] border border-gray-100 dark:border-gray-700">
-          <UiAppSkeleton type="text" count="2" gap="3" class="mb-8" />
+          <UiAppSkeleton type="text" :count="2" gap="3" class="mb-8" />
           <div class="flex items-center space-x-4">
             <UiAppSkeleton type="avatar" />
             <div class="flex-1 space-y-2">
