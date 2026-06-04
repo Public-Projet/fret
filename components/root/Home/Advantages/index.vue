@@ -15,19 +15,19 @@
           </p>
 
           <div class="space-y-6">
-            <UiAdvantageItem :icon="IconShieldCheck" title="Sécurité garantie à 100%"
+            <RootHomeAdvantagesItem :icon="IconShieldCheck" title="Sécurité garantie à 100%"
               description="Tous nos transporteurs sont vérifiés, certifiés et assurés. Vos marchandises sont protégées du départ à l'arrivée."
               icon-class="from-blue-500 to-blue-700" />
 
-            <UiAdvantageItem :icon="IconTag" title="Economisez jusqu'à 40%"
+            <RootHomeAdvantagesItem :icon="IconTag" title="Economisez jusqu'à 40%"
               description="Comparez les offres en temps réel et négociez pour obtenir les meilleurs tarifs du marché."
               icon-class="from-green-500 to-green-700" />
 
-            <UiAdvantageItem :icon="IconBolt" title="Rapidité incomparable"
+            <RootHomeAdvantagesItem :icon="IconBolt" title="Rapidité incomparable"
               description="Trouvez un transporteur qualifié en moins de 30 minutes au lieu de plusieurs jours."
               icon-class="from-blue-500 to-blue-700" />
 
-            <UiAdvantageItem :icon="IconMessage" title="Communication simplifiée"
+            <RootHomeAdvantagesItem :icon="IconMessage" title="Communication simplifiée"
               description="Messagerie instantanée intégrée, suivi en temps réel et notifications automatiques."
               icon-class="from-green-500 to-green-700" />
           </div>
