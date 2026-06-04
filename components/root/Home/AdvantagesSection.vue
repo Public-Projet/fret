@@ -67,12 +67,13 @@
           </div>
 
           <!-- Stats flottantes -->
-          <UiFloatingStats value="98%" label="Satisfaction" :icon="IconCircleCheck" position-classes="-top-6 -right-6 hidden sm:flex"
-            icon-bg-color="bg-green-100 dark:bg-green-900/30" icon-color="text-green-600 dark:text-green-400" />
+          <UiFloatingStats value="98%" label="Satisfaction" :icon="IconCircleCheck"
+            position-classes="-top-6 -right-6 hidden sm:flex" icon-bg-color="bg-green-100 dark:bg-green-900/30"
+            icon-color="text-green-600 dark:text-green-400" />
 
           <UiFloatingStats value="24/7" label="Support" :icon="IconBolt"
-            position-classes="-bottom-6 -left-6 animation-delay-2000 hidden sm:flex" icon-bg-color="bg-blue-100 dark:bg-blue-900/30"
-            icon-color="text-blue-600 dark:text-blue-400" />
+            position-classes="-bottom-6 -left-6 animation-delay-2000 hidden sm:flex"
+            icon-bg-color="bg-blue-100 dark:bg-blue-900/30" icon-color="text-blue-600 dark:text-blue-400" />
         </div>
       </div>
     </div>

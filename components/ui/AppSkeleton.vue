@@ -10,7 +10,7 @@
       ]" :style="style">
         <!-- Effet de balayage Shimmer -->
         <div v-if="animated && animationType === 'shimmer'"
-          class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 dark:via-white/5 to-transparent shimmer animate-shimmer">
+          class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 dark:via-white/20 to-transparent shimmer animate-shimmer">
         </div>
 
         <!-- Icône spécifique pour type image pour rendre le rendu premium -->

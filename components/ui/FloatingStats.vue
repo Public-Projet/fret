@@ -1,6 +1,6 @@
 <template>
   <div :class="[
-    'absolute bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-2xl border border-gray-200 dark:border-gray-700 animate-bounce-slow',
+    'absolute bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-2xl border border-gray-200 dark:border-gray-700',
     positionClasses
   ]">
     <div class="flex items-center space-x-3">
