@@ -13,7 +13,7 @@
       <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white dark:text-gray-100 mb-6 leading-tight">
         Révolutionnez votre
         <span
-          class="block mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">
+          class="inline lg:block lg:mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">
           logistique de transport
         </span>
       </h1>
@@ -26,23 +26,19 @@
 
       <!-- CTA Buttons -->
       <div class="flex flex-col sm:flex-row gap-4 mb-12 lg:mb-16">
-        <NuxtLink to="/auth/register?role=shipper"
-          class="group relative px-6 py-4 lg:px-8 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 flex items-center justify-center sm:justify-start space-x-3 dark:border dark:border-gray-700">
-          <IconTruck class="w-6 h-6 group-hover:rotate-12 transition-transform" />
-          <span>Je suis chargeur</span>
-          <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-        </NuxtLink>
-
-        <NuxtLink to="/auth/register?role=carrier"
-          class="group relative px-6 py-4 lg:px-8 bg-green-500 dark:bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 dark:hover:shadow-emerald-400/40 transition-all duration-300 hover:scale-105 flex items-center justify-center sm:justify-start space-x-3">
-          <IconUsersGroup class="w-6 h-6 group-hover:scale-110 transition-transform" />
-          <span>Je suis transporteur</span>
+        <NuxtLink v-for="(btn, index) in ctaButtons" :key="index" :to="btn.to" :class="[
+          'group relative px-6 py-4 lg:px-8 rounded-xl font-bold text-lg shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center sm:justify-start space-x-3',
+          btn.baseClass,
+          btn.hoverClass
+        ]">
+          <component :is="btn.icon" :class="['w-6 h-6 transition-transform', btn.iconHoverClass]" />
+          <span>{{ btn.label }}</span>
           <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
         </NuxtLink>
       </div>
 
       <!-- Stats -->
-      <div class="grid grid-cols-3 gap-4 lg:gap-6 max-w-2xl">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 max-w-2xl">
         <UiStatCard :value="shippers" label="Chargeurs actifs" />
         <UiStatCard :value="carriers" label="Transporteurs" />
         <UiStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
@@ -58,6 +54,25 @@ import { IconArrowRight, IconSparkles, IconTruck, IconUsersGroup } from '@tabler
 const shippers = ref(0);
 const carriers = ref(0);
 const deliveries = ref(0);
+
+const ctaButtons = [
+  {
+    to: '/auth/register?role=shipper',
+    label: 'Je suis chargeur',
+    icon: IconTruck,
+    baseClass: 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 dark:border dark:border-gray-700',
+    hoverClass: 'hover:shadow-green-500/50 dark:hover:shadow-emerald-500/30',
+    iconHoverClass: 'group-hover:rotate-12'
+  },
+  {
+    to: '/auth/register?role=carrier',
+    label: 'Je suis transporteur',
+    icon: IconUsersGroup,
+    baseClass: 'bg-green-500 dark:bg-emerald-600 text-white',
+    hoverClass: 'hover:shadow-green-400/50 dark:hover:shadow-emerald-400/40',
+    iconHoverClass: 'group-hover:scale-110'
+  }
+];
 
 const animateValue = (target: any, start: number, end: number, duration: number) => {
   const startTime = performance.now();
