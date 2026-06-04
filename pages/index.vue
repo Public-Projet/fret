@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden">
     <RootHomeHero />
-    <RootHomeTrustBar />
+    <RootHomePartners />
     <RootHomeHowItWorks />
     <RootHomeAdvantages />
     <RootHomeTestimonials />
