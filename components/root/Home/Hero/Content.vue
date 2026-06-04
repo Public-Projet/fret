@@ -39,9 +39,9 @@
 
       <!-- Stats -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 max-w-2xl">
-        <UiStatCard :value="shippers" label="Chargeurs actifs" />
-        <UiStatCard :value="carriers" label="Transporteurs" />
-        <UiStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
+        <UtilsStatCard :value="shippers" label="Chargeurs actifs" />
+        <UtilsStatCard :value="carriers" label="Transporteurs" />
+        <UtilsStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
       </div>
     </div>
   </div>
