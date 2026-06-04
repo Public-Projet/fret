@@ -36,7 +36,7 @@ import { IconArrowRight, IconCircleCheck } from '@tabler/icons-vue';
 const ctaButtons = [
   {
     to: '/auth/register',
-    label: 'Créer un compte gratuit',
+    label: 'Créer un compte',
     class: 'w-full sm:w-auto group px-8 py-4 lg:px-10 lg:py-5 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-2xl font-black text-lg lg:text-xl shadow-2xl hover:shadow-white/30 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-3 dark:border dark:border-gray-700',
     hasArrow: true
   },
