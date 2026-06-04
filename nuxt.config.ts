@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 
   modules: [
     ['nuxt-gtag', {
-      id: 'G-S2H4ZNE84G',
+      id: 'G-YMC3DKW82S',
       enabled: true
     }],
     '@nuxtjs/tailwindcss',
