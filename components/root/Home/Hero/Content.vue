@@ -5,8 +5,8 @@
       <div
         class="inline-flex items-center space-x-2 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-full px-6 py-3 mb-8 animate-fade-in">
         <IconSparkles class="w-5 h-5 text-yellow-300 dark:text-yellow-400" />
-        <span class="text-sm text-white dark:text-gray-200 font-medium">La plateforme n°1 du transport au
-          Bénin</span>
+        <span class="text-xs text-white dark:text-gray-200 font-medium">
+          La plateforme n°1 du transport au Bénin</span>
       </div>
 
       <!-- Titre principal -->
