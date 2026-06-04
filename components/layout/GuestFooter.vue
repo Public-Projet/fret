@@ -68,6 +68,7 @@ const currentYear = computed(() => new Date().getFullYear());
 // API Status Check
 onMounted(() => {
   otherStore.fetchApiStatus();
+  store.fetchSocialLinks();
 });
 
 const apiStatus = computed(() => otherStore.apiStatus);
