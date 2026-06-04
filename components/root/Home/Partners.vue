@@ -1,17 +1,17 @@
 <template>
-  <section v-if="contentStore.loading.partners || contentStore.partners.length > 0"
-    class="bg-gray-50 dark:bg-gray-900 py-12">
+  <section class="bg-gray-50 dark:bg-gray-900 py-12">
     <div class="container-custom">
       <p class="text-center text-gray-600 dark:text-gray-400 text-sm font-semibold mb-8 uppercase tracking-wider">
         Nos Partenaires de Confiance
       </p>
 
-      <div v-if="contentStore.loading.partners" class="flex justify-center items-center py-4">
-        <div class="animate-pulse flex space-x-12 opacity-30">
-          <div v-for="i in 3" :key="i" class="h-8 w-24 bg-gray-400 rounded"></div>
-        </div>
+      <!-- Squelettes de chargement via AppSkeleton -->
+      <div v-if="contentStore.loading.partners" class="flex flex-wrap justify-center items-center gap-10">
+        <UiAppSkeleton v-for="i in 5" :key="i" :loading="true" type="rectangle" width="110px" height="40px" radius="8px"
+          animation-type="shimmer" />
       </div>
 
+      <!-- Partenaires chargés -->
       <div v-else-if="contentStore.partners.length > 0"
         class="flex flex-wrap mx-auto justify-center items-center gap-12 opacity-60">
         <div v-for="partner in contentStore.partners" :key="partner.id"
@@ -24,6 +24,9 @@
           </div>
         </div>
       </div>
+
+      <!-- Aucun partenaire après chargement : masquer la section -->
+      <template v-else></template>
     </div>
   </section>
 </template>
