@@ -1,180 +1,27 @@
 <template>
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <!-- Background animé avec gradient moderne -->
-    <div
-      class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 dark:from-slate-900 dark:via-gray-900 dark:to-slate-950">
-      <div class="absolute inset-0 opacity-20">
-        <div
-          class="absolute top-20 left-10 w-72 h-72 bg-white dark:bg-blue-500/30 rounded-full mix-blend-overlay filter blur-3xl animate-blob">
-        </div>
-        <div
-          class="absolute top-40 right-10 w-72 h-72 bg-green-400 dark:bg-emerald-500/30 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-2000">
-        </div>
-        <div
-          class="absolute -bottom-8 left-20 w-72 h-72 bg-blue-400 dark:bg-purple-500/30 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000">
-        </div>
-      </div>
-    </div>
-
-    <!-- Image AP -->
-    <div class="absolute inset-0">
-      <img src="https://transportsgranger.com/wp-content/uploads/2025/06/Transport-de-fret-par-conteneur.jpg"
-        alt="background transport" class="w-full h-full object-cover opacity-20 mix-blend-overlay" />
-    </div>
+    <!-- Background -->
+    <RootHomeHeroBackground />
 
     <!-- Contenu Hero -->
     <div class="container-custom relative z-10 py-12 lg:py-20">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-center">
-        <!-- TEXTE -->
-        <div class="lg:col-span-2">
-          <div class="text-left max-w-3xl">
-            <!-- Badge animé -->
-            <div
-              class="inline-flex items-center space-x-2 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-full px-6 py-3 mb-8 animate-fade-in">
-              <IconSparkles class="w-5 h-5 text-yellow-300 dark:text-yellow-400" />
-              <span class="text-sm text-white dark:text-gray-200 font-medium">La plateforme n°1 du transport au
-                Bénin</span>
-            </div>
-
-            <!-- Titre principal -->
-            <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white dark:text-gray-100 mb-6 leading-tight">
-              Révolutionnez votre
-              <span
-                class="block mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">
-                logistique de transport
-              </span>
-            </h1>
-
-            <!-- Sous-titre -->
-            <p class="text-xl md:text-2xl text-blue-100 dark:text-gray-300 mb-12 leading-relaxed max-w-2xl">
-              Connectez-vous instantanément avec des milliers de transporteurs qualifiés.
-              Economisez jusqu'à 40% sur vos coûts de transport.
-            </p>
-
-            <!-- CTA Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-12 lg:mb-16">
-              <NuxtLink to="/auth/register?role=shipper"
-                class="group relative px-6 py-4 lg:px-8 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 flex items-center justify-center sm:justify-start space-x-3 dark:border dark:border-gray-700">
-                <IconTruck class="w-6 h-6 group-hover:rotate-12 transition-transform" />
-                <span>Je suis chargeur</span>
-                <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </NuxtLink>
-
-              <NuxtLink to="/auth/register?role=carrier"
-                class="group relative px-6 py-4 lg:px-8 bg-green-500 dark:bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-green-400/50 dark:hover:shadow-emerald-400/40 transition-all duration-300 hover:scale-105 flex items-center justify-center sm:justify-start space-x-3">
-                <IconUsersGroup class="w-6 h-6 group-hover:scale-110 transition-transform" />
-                <span>Je suis transporteur</span>
-                <IconArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </NuxtLink>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-3 gap-4 lg:gap-6 max-w-2xl">
-              <UiStatCard :value="shippers" label="Chargeurs actifs" />
-              <UiStatCard :value="carriers" label="Transporteurs" />
-              <UiStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
-            </div>
-          </div>
-        </div>
+        <!-- TEXTE & STATS -->
+        <RootHomeHeroContent />
 
         <!-- IMAGE -->
-        <div class="hidden lg:flex lg:col-span-1 justify-center">
-          <div class="relative max-w-md w-full animate-slide-right">
-            <img src="https://developers.google.com/static/maps/solutions/images/store_locator.png"
-              alt="Transport Logistics" class="w-full h-auto" />
-
-            <!-- Décorations -->
-            <div
-              class="absolute -top-6 -right-6 w-32 h-32 bg-white/10 dark:bg-blue-400/10 rounded-full blur-3xl animate-pulse">
-            </div>
-            <div
-              class="absolute -bottom-8 -left-8 w-40 h-40 bg-green-400/20 dark:bg-emerald-500/15 rounded-full blur-3xl animate-pulse animation-delay-2000">
-            </div>
-          </div>
-        </div>
+        <RootHomeHeroImage />
       </div>
     </div>
 
-    <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-      <IconChevronDown class="w-8 h-8 text-white/70 dark:text-gray-400" />
-    </div>
-
-    <!-- Wave separator moderne -->
-    <div class="absolute bottom-0 left-0 right-0">
-      <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
-        <path
-          d="M0 200L48 183.3C96 166.7 192 133.3 288 116.7C384 100 480 100 576 108.3C672 116.7 768 133.3 864 133.3C960 133.3 1056 116.7 1152 108.3C1248 100 1344 100 1392 100L1440 100V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z"
-          fill="currentColor" class="text-gray-50 dark:text-gray-900" />
-      </svg>
-    </div>
+    <!-- Wave & Scroll indicator -->
+    <RootHomeHeroWave />
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { IconArrowRight, IconChevronDown, IconSparkles, IconTruck, IconUsersGroup } from '@tabler/icons-vue';
-
-const shippers = ref(0);
-const carriers = ref(0);
-const deliveries = ref(0);
-
-const animateValue = (target: any, start: number, end: number, duration: number) => {
-  const startTime = performance.now();
-
-  const animate = (currentTime: number) => {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-
-    target.value = Math.floor(start + (end - start) * progress);
-
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    }
-  };
-
-  requestAnimationFrame(animate);
-};
-
-onMounted(() => {
-  setTimeout(() => {
-    animateValue(shippers, 0, 5247, 2000);
-    animateValue(carriers, 0, 12389, 2000);
-    animateValue(deliveries, 0, 847, 2000);
-  }, 500);
-});
+import RootHomeHeroBackground from './Hero/HeroBackground.vue';
+import RootHomeHeroContent from './Hero/HeroContent.vue';
+import RootHomeHeroImage from './Hero/HeroImage.vue';
+import RootHomeHeroWave from './Hero/HeroWave.vue';
 </script>
-
-<style scoped>
-@keyframes blob {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  25% {
-    transform: translate(20px, -50px) scale(1.1);
-  }
-
-  50% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-
-  75% {
-    transform: translate(50px, 50px) scale(1.05);
-  }
-}
-
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-</style>
