@@ -2,7 +2,7 @@
   <div class="overflow-hidden">
     <RootHomeHero />
     <RootHomePartners />
-    <RootHomeHowItWorks />
+    <RootHomeFeatures />
     <RootHomeAdvantages />
     <RootHomeTestimonials />
     <RootHomeCta />
