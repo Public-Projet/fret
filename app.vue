@@ -10,6 +10,9 @@
       class="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 flex items-center justify-center">
       <IconBrandWhatsapp class="w-4 h-4" />
     </a>
+
+    <!-- Bannière de consentement aux cookies -->
+    <UiCookieBanner />
   </div>
 </template>
 
