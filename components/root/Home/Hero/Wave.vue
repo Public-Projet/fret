@@ -1,10 +1,5 @@
 <template>
   <div>
-    <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-      <IconChevronDown class="w-8 h-8 text-white/70 dark:text-gray-400" />
-    </div>
-
     <!-- Wave separator moderne -->
     <div class="absolute bottom-0 left-0 right-0">
       <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
@@ -15,7 +10,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { IconChevronDown } from '@tabler/icons-vue';
-</script>
