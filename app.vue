@@ -12,7 +12,7 @@
     </a>
 
     <!-- Bannière de consentement aux cookies -->
-    <UiCookieBanner />
+    <UtilsCookieBanner />
   </div>
 </template>
 
