@@ -15,21 +15,8 @@
           </p>
 
           <div class="space-y-6">
-            <RootHomeAdvantagesItem :icon="IconShieldCheck" title="Sécurité garantie à 100%"
-              description="Tous nos transporteurs sont vérifiés, certifiés et assurés. Vos marchandises sont protégées du départ à l'arrivée."
-              icon-class="from-blue-500 to-blue-700" />
-
-            <RootHomeAdvantagesItem :icon="IconTag" title="Economisez jusqu'à 40%"
-              description="Comparez les offres en temps réel et négociez pour obtenir les meilleurs tarifs du marché."
-              icon-class="from-green-500 to-green-700" />
-
-            <RootHomeAdvantagesItem :icon="IconBolt" title="Rapidité incomparable"
-              description="Trouvez un transporteur qualifié en moins de 30 minutes au lieu de plusieurs jours."
-              icon-class="from-blue-500 to-blue-700" />
-
-            <RootHomeAdvantagesItem :icon="IconMessage" title="Communication simplifiée"
-              description="Messagerie instantanée intégrée, suivi en temps réel et notifications automatiques."
-              icon-class="from-green-500 to-green-700" />
+            <RootHomeAdvantagesItem v-for="(item, idx) in advantagesItems" :key="idx" :icon="item.icon"
+              :title="item.title" :description="item.description" :icon-class="item.iconClass" />
           </div>
         </div>
 
@@ -48,18 +35,10 @@
               </div>
 
               <!-- Cards transport -->
-              <RootHomeAdvantagesCard icon-class="from-blue-500 to-blue-700" :icon="IconTruck" title="Transport Express"
-                subtitle="Cotonou → Parakou" status="LIVRÉ" status-class="bg-green-500" weight="2.5 tonnes"
-                price="180.000 FCFA" price-class="text-blue-600 dark:text-blue-400" />
-
-              <RootHomeAdvantagesCard icon-class="from-green-500 to-green-700" :icon="IconCube"
-                title="sssPalettes fragiles" subtitle="Bohicon → Covè" status="EN COURS"
-                status-class="bg-yellow-500 animate-pulse" weight="1.8 tonnes" price="75.000 FCFA"
-                price-class="text-green-600 dark:text-green-400" />
-
-              <RootHomeAdvantagesCard icon-class="from-gray-500 to-gray-700" :icon="IconTruckDelivery"
-                title="Vrac matériaux" subtitle="Abomey-Calavi → Comè" status="NOUVEAU" status-class="bg-blue-500"
-                weight="5.0 tonnes" price="225.000FCFA" price-class="text-gray-600 dark:text-gray-400" />
+              <RootHomeAdvantagesCard v-for="(card, idx) in transportCards" :key="idx" :icon-class="card.iconClass"
+                :icon="card.icon" :title="card.title" :subtitle="card.subtitle" :status="card.status"
+                :status-class="card.statusClass" :weight="card.weight" :price="card.price"
+                :price-class="card.priceClass" />
             </div>
 
             <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
@@ -82,4 +61,67 @@
 
 <script setup lang="ts">
 import { IconBolt, IconCircleCheck, IconCube, IconMessage, IconShieldCheck, IconTag, IconTruck, IconTruckDelivery } from '@tabler/icons-vue';
+
+const advantagesItems = [
+  {
+    icon: IconShieldCheck,
+    title: "Sécurité garantie à 100%",
+    description: "Tous nos transporteurs sont vérifiés, certifiés et assurés. Vos marchandises sont protégées du départ à l'arrivée.",
+    iconClass: "from-blue-500 to-blue-700"
+  },
+  {
+    icon: IconTag,
+    title: "Economisez jusqu'à 40%",
+    description: "Comparez les offres en temps réel et négociez pour obtenir les meilleurs tarifs du marché.",
+    iconClass: "from-green-500 to-green-700"
+  },
+  {
+    icon: IconBolt,
+    title: "Rapidité incomparable",
+    description: "Trouvez un transporteur qualifié en moins de 30 minutes au lieu de plusieurs jours.",
+    iconClass: "from-blue-500 to-blue-700"
+  },
+  {
+    icon: IconMessage,
+    title: "Communication simplifiée",
+    description: "Messagerie instantanée intégrée, suivi en temps réel et notifications automatiques.",
+    iconClass: "from-green-500 to-green-700"
+  }
+];
+
+const transportCards = [
+  {
+    iconClass: "from-blue-500 to-blue-700",
+    icon: IconTruck,
+    title: "Transport Express",
+    subtitle: "Cotonou → Parakou",
+    status: "LIVRÉ",
+    statusClass: "bg-green-500",
+    weight: "2.5 tonnes",
+    price: "180.000 FCFA",
+    priceClass: "text-blue-600 dark:text-blue-400"
+  },
+  {
+    iconClass: "from-green-500 to-green-700",
+    icon: IconCube,
+    title: "sssPalettes fragiles",
+    subtitle: "Bohicon → Covè",
+    status: "EN COURS",
+    statusClass: "bg-yellow-500 animate-pulse",
+    weight: "1.8 tonnes",
+    price: "75.000 FCFA",
+    priceClass: "text-green-600 dark:text-green-400"
+  },
+  {
+    iconClass: "from-gray-500 to-gray-700",
+    icon: IconTruckDelivery,
+    title: "Vrac matériaux",
+    subtitle: "Abomey-Calavi → Comè",
+    status: "NOUVEAU",
+    statusClass: "bg-blue-500",
+    weight: "5.0 tonnes",
+    price: "225.000FCFA",
+    priceClass: "text-gray-600 dark:text-gray-400"
+  }
+];
 </script>
