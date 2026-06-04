@@ -24,8 +24,8 @@
       </div>
 
       <div v-else-if="contentStore.testimonials.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <UiTestimonialCard v-for="(t, index) in contentStore.testimonials" :key="t.id" :quote="t.quote" :name="t.name"
-          :role="t.role" :photo="t.photo" :rating="t.rating" :initials="getInitials(t.name)"
+        <RootHomeTestimonialsCard v-for="(t, index) in contentStore.testimonials" :key="t.id" :quote="t.quote"
+          :name="t.name" :role="t.role" :photo="t.photo" :rating="t.rating" :initials="getInitials(t.name)"
           :avatar-class="getAvatarClass(index)" />
       </div>
     </div>
