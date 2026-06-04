@@ -3,8 +3,8 @@
     <div :class="['flex flex-col', gapClasses[gap]]">
       <div v-for="i in count" :key="i" :class="[
         'relative overflow-hidden',
-        themeClasses[theme],
-        typeClasses[type],
+        themeClasses,
+        typeClasses[type || 'rectangle'],
         animatedClass,
         customClass
       ]" :style="style">
@@ -64,7 +64,7 @@ const props = withDefaults(defineProps<Props>(), {
 const customClass = computed(() => props.class)
 
 // Classes de styles prédéfinies selon le type (avec correction orthographique "rectangle")
-const typeClasses = {
+const typeClasses: Record<string, string> = {
   text: 'h-4 w-full rounded-md',
   avatar: 'h-12 w-12 rounded-full shrink-0',
   circle: 'rounded-full shrink-0',
@@ -83,10 +83,10 @@ const themeClasses = computed(() => {
   if (props.theme === 'light') {
     return 'bg-gray-200'
   } else if (props.theme === 'dark') {
-    return 'bg-gray-800'
+    return 'bg-gray-700'
   } else {
     // Mode auto utilisant Tailwind dark mode
-    return 'bg-gray-200 dark:bg-gray-800'
+    return 'bg-gray-200 dark:bg-gray-700'
   }
 })
 
