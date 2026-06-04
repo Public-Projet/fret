@@ -12,31 +12,18 @@
       </p>
 
       <div class="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center mb-12 px-4">
-        <NuxtLink to="/auth/register"
-          class="w-full sm:w-auto group px-8 py-4 lg:px-10 lg:py-5 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-2xl font-black text-lg lg:text-xl shadow-2xl hover:shadow-white/30 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-3 dark:border dark:border-gray-700">
-          <span>Créer un compte gratuit</span>
-          <IconArrowRight class="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-        </NuxtLink>
-
-        <NuxtLink to="/annonces?tab=fret"
-          class="w-full sm:w-auto px-8 py-4 lg:px-10 lg:py-5 border-2 lg:border-4 border-white dark:border-gray-600 text-white dark:text-gray-200 rounded-2xl font-black text-lg lg:text-xl hover:bg-white hover:text-blue-600 dark:hover:bg-gray-800 dark:hover:text-emerald-400 transition-all duration-300 hover:scale-105">
-          Voir les annonces
+        <NuxtLink v-for="(btn, index) in ctaButtons" :key="index" :to="btn.to" :class="btn.class">
+          <span>{{ btn.label }}</span>
+          <IconArrowRight v-if="btn.hasArrow" class="w-6 h-6 group-hover:translate-x-2 transition-transform" />
         </NuxtLink>
       </div>
 
       <!-- Mini features -->
-      <div class="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 lg:gap-8 text-white dark:text-gray-300">
-        <div class="flex items-center space-x-2">
+      <div
+        class="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 lg:gap-8 text-white dark:text-gray-300">
+        <div v-for="(feature, index) in miniFeatures" :key="index" class="flex items-center space-x-2">
           <IconCircleCheck class="w-5 h-5 lg:w-6 lg:h-6 dark:text-emerald-400" />
-          <span class="font-semibold text-sm lg:text-base">Sans engagement</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <IconCircleCheck class="w-5 h-5 lg:w-6 lg:h-6 dark:text-emerald-400" />
-          <span class="font-semibold text-sm lg:text-base">Inscription gratuite</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <IconCircleCheck class="w-5 h-5 lg:w-6 lg:h-6 dark:text-emerald-400" />
-          <span class="font-semibold text-sm lg:text-base">Support 24/7</span>
+          <span class="font-semibold text-sm lg:text-base">{{ feature.label }}</span>
         </div>
       </div>
     </div>
@@ -45,4 +32,25 @@
 
 <script setup lang="ts">
 import { IconArrowRight, IconCircleCheck } from '@tabler/icons-vue';
+
+const ctaButtons = [
+  {
+    to: '/auth/register',
+    label: 'Créer un compte gratuit',
+    class: 'w-full sm:w-auto group px-8 py-4 lg:px-10 lg:py-5 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-2xl font-black text-lg lg:text-xl shadow-2xl hover:shadow-white/30 dark:hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-3 dark:border dark:border-gray-700',
+    hasArrow: true
+  },
+  {
+    to: '/annonces?tab=fret',
+    label: 'Voir les annonces',
+    class: 'w-full sm:w-auto px-8 py-4 lg:px-10 lg:py-5 border-2 lg:border-4 border-white dark:border-gray-600 text-white dark:text-gray-200 rounded-2xl font-black text-lg lg:text-xl hover:bg-white hover:text-blue-600 dark:hover:bg-gray-800 dark:hover:text-emerald-400 transition-all duration-300 hover:scale-105',
+    hasArrow: false
+  }
+];
+
+const miniFeatures = [
+  { label: 'Sans engagement' },
+  { label: 'Inscription gratuite' },
+  { label: 'Support 24/7' }
+];
 </script>
