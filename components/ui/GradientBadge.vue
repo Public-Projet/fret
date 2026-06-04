@@ -1,12 +1,6 @@
 <template>
-  <div :class="[
-    'inline-block px-6 py-2 rounded-full mb-4',
-    bgClasses
-  ]">
-    <span :class="[
-      'font-bold text-sm uppercase tracking-wide',
-      textClasses
-    ]">
+  <div :class="['inline-block px-3 py-1 rounded-full mb-4', bgClasses]">
+    <span :class="['font-bold text-xs uppercase tracking-wide', textClasses]">
       <slot>{{ text }}</slot>
     </span>
   </div>
