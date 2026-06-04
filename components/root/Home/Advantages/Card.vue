@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-gradient-to-r p-5 rounded-2xl border-2 transform hover:scale-105 transition-all duration-300 cursor-pointer" :class="[iconClass === 'from-blue-500 to-blue-700' ? 'from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800' : iconClass === 'from-green-500 to-green-700' ? 'from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800' : 'from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 border-gray-200 dark:border-gray-600']">
+  <div
+    class="bg-gradient-to-r p-5 rounded-2xl border-2 transform hover:scale-105 transition-all duration-300 cursor-pointer"
+    :class="[iconClass === 'from-blue-500 to-blue-700' ? 'from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800' : iconClass === 'from-green-500 to-green-700' ? 'from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800' : 'from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 border-gray-200 dark:border-gray-600']">
     <div class="flex items-center justify-between mb-3">
       <div class="flex items-center space-x-3">
         <div :class="['w-12 h-12 bg-gradient-to-br rounded-xl flex items-center justify-center', iconClass]">

@@ -48,16 +48,16 @@
               </div>
 
               <!-- Cards transport -->
-              <UiTransportActivityCard icon-class="from-blue-500 to-blue-700" :icon="IconTruck"
-                title="Transport Express" subtitle="Cotonou → Parakou" status="LIVRÉ" status-class="bg-green-500"
-                weight="2.5 tonnes" price="180.000 FCFA" price-class="text-blue-600 dark:text-blue-400" />
+              <RootHomeAdvantagesCard icon-class="from-blue-500 to-blue-700" :icon="IconTruck" title="Transport Express"
+                subtitle="Cotonou → Parakou" status="LIVRÉ" status-class="bg-green-500" weight="2.5 tonnes"
+                price="180.000 FCFA" price-class="text-blue-600 dark:text-blue-400" />
 
-              <UiTransportActivityCard icon-class="from-green-500 to-green-700" :icon="IconCube"
-                title="Palettes fragiles" subtitle="Bohicon → Covè" status="EN COURS"
+              <RootHomeAdvantagesCard icon-class="from-green-500 to-green-700" :icon="IconCube"
+                title="sssPalettes fragiles" subtitle="Bohicon → Covè" status="EN COURS"
                 status-class="bg-yellow-500 animate-pulse" weight="1.8 tonnes" price="75.000 FCFA"
                 price-class="text-green-600 dark:text-green-400" />
 
-              <UiTransportActivityCard icon-class="from-gray-500 to-gray-700" :icon="IconTruckDelivery"
+              <RootHomeAdvantagesCard icon-class="from-gray-500 to-gray-700" :icon="IconTruckDelivery"
                 title="Vrac matériaux" subtitle="Abomey-Calavi → Comè" status="NOUVEAU" status-class="bg-blue-500"
                 weight="5.0 tonnes" price="225.000FCFA" price-class="text-gray-600 dark:text-gray-400" />
             </div>
