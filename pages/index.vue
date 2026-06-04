@@ -1,11 +1,11 @@
 <template>
   <div class="overflow-hidden">
-    <RootHomeHeroSection />
+    <RootHomeHero />
     <RootHomeTrustBar />
     <RootHomeHowItWorks />
-    <RootHomeAdvantagesSection />
-    <RootHomeTestimonialsSection />
-    <RootHomeCtaSection />
+    <RootHomeAdvantages />
+    <RootHomeTestimonials />
+    <RootHomeCta />
   </div>
 </template>
 
