@@ -1,9 +1,9 @@
 <template>
   <footer class="bg-gray-900 text-gray-300">
     <div class="container-custom py-12">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
         <!-- À propos -->
-        <div class="lg:col-span-1">
+        <div class="col-span-2 md:col-span-1">
           <div class="flex items-center space-x-2 mb-4">
             <span class="text-xl font-bold text-white">Bourse de Fret Bénin</span>
           </div>
@@ -39,10 +39,11 @@
         <p class="text-sm text-gray-400">
           © {{ currentYear }} Bourse de Fret Bénin. Tous droits réservés.
         </p>
-        
+
         <div class="flex items-center gap-2 px-3 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
           <div class="relative flex h-2 w-2">
-            <span v-if="apiStatus === 'online'" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span v-if="apiStatus === 'online'"
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2" :class="statusColor"></span>
           </div>
           <span class="text-[10px] font-bold uppercase tracking-wider transition-colors" :class="statusTextColor">
@@ -127,8 +128,8 @@ const footerSections = [
   {
     title: 'Légal',
     links: [
-      { label: "Conditions d'utilisation", to: '/legal/terms' },
-      { label: 'Politique de confidentialité', to: '/legal/privacy' },
+      { label: "CGU", to: '/legal/terms' },
+      { label: 'Confidentialité', to: '/legal/privacy' },
       { label: 'Cookies', to: '/legal/cookies' },
       { label: 'Mentions légales', to: '/legal/mention' }
     ]
