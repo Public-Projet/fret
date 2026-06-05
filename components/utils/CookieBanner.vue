@@ -1,20 +1,21 @@
 <template>
   <Transition name="cookie-banner">
-    <div v-if="isVisible"
-      class="fixed bottom-4 left-4 right-4 md:left-6 md:right-auto md:bottom-6 md:max-w-md z-[999]">
-      <div
-        class="glass rounded-2xl p-5 shadow-2xl border border-white/20 dark:border-gray-700/60 flex flex-col gap-4">
+    <div v-if="isVisible" class="fixed bottom-4 right-4 md:right-6 md:bottom-6 md:max-w-md z-[999]">
+      <div class="glass rounded-2xl p-5 shadow-2xl border border-white/20 dark:border-gray-700/60 flex flex-col gap-4">
         <!-- Icône + texte -->
         <div class="flex items-start gap-3">
-          <div class="shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-md">
+          <div
+            class="shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-md">
             <IconCookie class="w-5 h-5 text-white" />
           </div>
           <div>
             <p class="text-sm font-bold text-gray-900 dark:text-white mb-1">🍪 Cookies & confidentialité</p>
             <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-              Ce site utilise des cookies pour améliorer votre expérience, analyser le trafic et personnaliser le contenu.
+              Ce site utilise des cookies pour améliorer votre expérience, analyser le trafic et personnaliser le
+              contenu.
               En continuant, vous acceptez notre
-              <NuxtLink to="/legal/cookies" class="underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <NuxtLink to="/legal/cookies"
+                class="underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 politique de cookies
               </NuxtLink>.
             </p>
