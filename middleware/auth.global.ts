@@ -1,15 +1,17 @@
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware((to) => {
   const authStore = useCmnAuthStore();
 
-  // Restaurer la session si nécessaire (attente async du chargement)
-  if (!authStore.isAuthenticated && !authStore.isLoading) {
-    await authStore.loadUser();
-  }
+  // Lire le token depuis le cookie de façon synchrone
+  const tokenCookie = useCookie('auth_token');
+  const hasToken = !!tokenCookie.value;
 
-  // Utilisateur connecté
-  if (authStore.isAuthenticated) {
+  // Si déjà authentifié dans le store → utiliser le state actuel
+  const isAuthenticated = authStore.isAuthenticated || hasToken;
+
+  // Utilisateur connecté (ou token présent)
+  if (isAuthenticated) {
     if (to.path.startsWith('/auth') || to.path === '/app' || to.path === '/app/') {
       return navigateTo(authStore.isShipper ? '/app/us' : '/app/uc');
     }
