@@ -230,7 +230,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
     },
 
     // Déconnexion
-    async logoutUser() {
+    async logoutUser(redirect: boolean = true) {
       const role = this.user?.role;
 
       if (role) {
@@ -260,9 +260,15 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
       const notificationStore = useCmnNotificationStore();
       notificationStore.stopPolling();
 
-      // Rediriger vers la page de connexion
-      const router = useRouter();
-      router.push('/auth/login');
+      // Notification de déconnexion
+      const toastStore = useCmnToastStore();
+      toastStore.addToast('Vous avez été déconnecté avec succès.', 'success');
+
+      if (redirect) {
+        // Rediriger vers la page de connexion
+        const router = useRouter();
+        router.push('/auth/login');
+      }
     },
 
     // Charge l'utilisateur depuis les cookies (tokenCookie, roleCookie)
