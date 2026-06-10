@@ -233,6 +233,7 @@ definePageMeta({
 
 const authStore = useCmnAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 // form
 const email = ref('');
@@ -292,11 +293,17 @@ const handleLogin = async () => {
     const result = await authStore.loginUser(email.value, password.value, selectedRole.value, rememberMe.value);
 
     if (result.success && result.user) {
-      // Redirection selon le rôle
-      if (result.user.role === 'shipper') {
-        router.push('/app/us');
+      // Redirection après connexion
+      const redirectPath = route.query.redirect as string;
+      if (redirectPath && redirectPath.startsWith('/')) {
+        router.push(redirectPath);
       } else {
-        router.push('/app/uc');
+        // Redirection selon le rôle par défaut
+        if (result.user.role === 'shipper') {
+          router.push('/app/us');
+        } else {
+          router.push('/app/uc');
+        }
       }
     } else {
       error.value = result.error || 'Erreur de connexion';
