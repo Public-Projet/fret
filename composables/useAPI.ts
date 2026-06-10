@@ -62,7 +62,8 @@ export function useAPI() {
 
           if (!isBadCombo && !skipRedirect) {
             const router = useRouter();
-            router.push('/auth/login');
+            const route = useRoute();
+            router.push(`/auth/login?redirect=${encodeURIComponent(route.fullPath)}`);
           }
         }
 
