@@ -97,13 +97,13 @@
                 ? 'bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 shadow-primary-500/30'
                 : 'bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500 shadow-secondary-500/30'
             ]" :disabled="loading">
-            <span v-if="loading" class="flex items-center gap-2">
-              <IconLoader2 class="h-4 w-4 animate-spin" />
-              Création du compte...
-            </span>
-            <span v-else>
+            <template v-if="loading">
+              <UiStepLoading :steps="['Création', 'Envoi de mail']" :active-step="activeStep" :auto-play="false"
+                color="white" mode="replace" />
+            </template>
+            <template v-else>
               S'inscrire en tant que {{ role === 'shipper' ? 'Expéditeur' : 'Transporteur' }}
-            </span>
+            </template>
           </button>
         </div>
       </form>
@@ -135,6 +135,7 @@ const authStore = useCmnAuthStore();
 
 const role = ref<UserRole>('shipper');
 const loading = ref(false);
+const activeStep = ref(0);
 const error = ref('');
 const successMessage = ref('');
 const showPassword = ref(false);
@@ -153,12 +154,19 @@ onMounted(() => {
   }
 });
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const handleRegister = async () => {
   loading.value = true;
   error.value = '';
   successMessage.value = '';
+  activeStep.value = 0; // Initialisation
 
   try {
+    await sleep(800); // Laisse le temps de voir l'initialisation
+    activeStep.value = 1; // Création
+    await sleep(400); // Laisse le temps de voir la transition vers Création
+
     const result = await authStore.registerUser({
       email: form.email,
       password: form.password,
@@ -167,6 +175,12 @@ const handleRegister = async () => {
     }, role.value);
 
     if (result.success) {
+      activeStep.value = 2; // Envoi de mail
+      await sleep(1200); // Laisse le temps de voir l'envoi de mail
+
+      activeStep.value = 3; // Finalisation
+      await sleep(800); // Laisse le temps de voir la finalisation
+
       successMessage.value = result.message || 'Inscription réussie ! Vérifiez votre email pour activer votre compte.';
 
       // Réinitialiser le formulaire
