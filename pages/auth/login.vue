@@ -234,6 +234,7 @@ definePageMeta({
 const authStore = useCmnAuthStore();
 const router = useRouter();
 const route = useRoute();
+const toastStore = useCmnToastStore();
 
 // form
 const email = ref('');
@@ -293,6 +294,7 @@ const handleLogin = async () => {
     const result = await authStore.loginUser(email.value, password.value, selectedRole.value, rememberMe.value);
 
     if (result.success && result.user) {
+      toastStore.addToast(`Connexion réussie ! Ravis de vous revoir, ${result.user.firstName}.`, 'success');
       // Redirection après connexion
       const redirectPath = route.query.redirect as string;
       if (redirectPath && redirectPath.startsWith('/')) {
@@ -347,6 +349,7 @@ const handleForgotPassword = async () => {
         const data = response.data as { message?: string };
         forgotSuccessMessage.value = data.message || 'Un email de réinitialisation a été envoyé.';
       }
+      toastStore.addToast("Lien de réinitialisation envoyé par email !", "success");
     } else {
       forgotError.value = response.error?.message || 'Une erreur est survenue.';
     }
