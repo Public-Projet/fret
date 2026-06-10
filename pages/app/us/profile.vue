@@ -102,9 +102,19 @@
             <button @click="handleCancelSubscription"
               class="flex items-center justify-center btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 btn-sm w-full"
               :disabled="cancelLoading">
-              <IconLoader2 v-if="cancelLoading" class="w-4 h-4 animate-spin mr-2" />
-              <IconCircleX v-else class="w-4 h-4 mr-2" />
-              Annuler et rembourser
+              <template v-if="cancelLoading">
+                <UiStepLoading
+                  :steps="['Annulation', 'Génération de la facture', 'Envoi de la facture']"
+                  :active-step="cancelActiveStep"
+                  :auto-play="false"
+                  color="primary"
+                  mode="replace"
+                />
+              </template>
+              <template v-else>
+                <IconCircleX class="w-4 h-4 mr-2" />
+                Annuler et rembourser
+              </template>
             </button>
             <p v-if="cancelError" class="text-xs text-red-500 mt-2">{{ cancelError }}</p>
             <p v-if="cancelSuccess" class="text-xs text-green-500 mt-2">{{ cancelSuccess }}</p>
@@ -166,8 +176,11 @@ const showEmailModal = ref(false);
 const showSecurityModal = ref(false);
 
 const cancelLoading = ref(false);
+const cancelActiveStep = ref(0);
 const cancelError = ref('');
 const cancelSuccess = ref('');
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const canCancelSubscription = computed(() => {
   if (profile.value?.subscriptionStatus !== 'active' || !profile.value?.subscriptionExpiresAt) return false;
@@ -282,17 +295,37 @@ const handleCancelSubscription = async () => {
   if (!confirm('Êtes-vous sûr de vouloir annuler votre abonnement ? Cette action est irréversible et un administrateur traitera votre remboursement sous peu.')) return;
 
   cancelLoading.value = true;
+  cancelActiveStep.value = 0; // Initialisation
   cancelError.value = '';
   cancelSuccess.value = '';
 
-  const result = await subscriptionStore.cancelSubscription();
-  cancelLoading.value = false;
+  try {
+    await sleep(800); // Laisse le temps de voir l'initialisation
+    cancelActiveStep.value = 1; // Annulation
+    await sleep(400);
 
-  if (result.success) {
-    cancelSuccess.value = result.message;
-    await profileStore.fetchProfile('shipper', { skipAuthRedirect: true });
-  } else {
-    cancelError.value = result.error || 'Erreur lors de l\'annulation';
+    const result = await subscriptionStore.cancelSubscription();
+
+    if (result.success) {
+      cancelActiveStep.value = 2; // Génération de la facture
+      await sleep(1000);
+
+      cancelActiveStep.value = 3; // Envoi de la facture
+      await sleep(1200);
+
+      cancelActiveStep.value = 4; // Finalisation
+      await sleep(800);
+
+      cancelSuccess.value = result.message;
+      await profileStore.fetchProfile('shipper', { skipAuthRedirect: true });
+    } else {
+      cancelError.value = result.error || 'Erreur lors de l\'annulation';
+    }
+  } catch (err: any) {
+    console.error('Cancel error:', err);
+    cancelError.value = 'Une erreur est survenue lors de l\'annulation.';
+  } finally {
+    cancelLoading.value = false;
   }
 };
 
