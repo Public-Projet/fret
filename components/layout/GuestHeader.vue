@@ -283,9 +283,8 @@ const closeMobileMenu = () => {
 };
 
 const handleLogout = () => {
-  authStore.logoutUser();
+  authStore.logoutUser(false);
   closeUserMenu();
-  router.push('/');
 };
 
 const handleClickOutside = (event: MouseEvent) => {
