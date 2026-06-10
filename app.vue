@@ -13,6 +13,9 @@
 
     <!-- Bannière de consentement aux cookies -->
     <UtilsCookieBanner />
+
+    <!-- Notifications Toast -->
+    <UiAppToast />
   </div>
 </template>
 
