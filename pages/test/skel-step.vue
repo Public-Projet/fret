@@ -239,4 +239,12 @@ const restartSteps = () => {
   inlineKey.value++
   resetSubscriptionSim()
 }
+
+useHead({
+  title: 'Test Components',
+  meta: [
+    { name: 'description', content: 'Test Components' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+});
 </script>
