@@ -1,7 +1,6 @@
 <template>
   <div
     class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-200 relative selection:bg-primary-500 selection:text-white">
-    <!-- Background Decorator -->
     <LayoutGuestBackground />
 
     <LayoutGuestHeader class="relative z-30" />
