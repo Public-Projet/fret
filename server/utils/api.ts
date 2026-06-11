@@ -9,10 +9,13 @@ interface ProxyOptions {
 }
 
 // Récupère le token JWT depuis le header Authorization de la requête entrante
-function getTokenFromEvent(event: H3Event): string | null {
+export function getTokenFromEvent(event: H3Event): string | null {
   const authorization = getHeader(event, 'authorization');
   if (authorization?.startsWith('Bearer ')) {
-    return authorization.slice(7);
+    const val = authorization.slice(7);
+    if (val && val !== 'undefined' && val !== 'null') {
+      return val;
+    }
   }
 
   const token = getCookie(event, 'auth_token');

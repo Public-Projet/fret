@@ -1,3 +1,6 @@
+import { proxyRequest } from 'h3';
+import { getTokenFromEvent } from '~/server/utils/api';
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const role = query.role as string;
@@ -11,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig();
   const baseUrl = config.apiBaseUrl as string;
-  const token = getHeader(event, 'authorization')?.slice(7) || getCookie(event, 'auth_token');
+  const token = getTokenFromEvent(event);
 
   if (token) {
     event.node.req.headers['authorization'] = `Bearer ${token}`;

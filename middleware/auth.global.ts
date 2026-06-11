@@ -3,9 +3,10 @@ import { useCmnAuthStore } from '~/stores/cmnAuth';
 export default defineNuxtRouteMiddleware((to) => {
   const authStore = useCmnAuthStore();
 
-  // Lire le token depuis le cookie de façon synchrone
+  // Lire le rôle ou le token depuis le cookie
   const tokenCookie = useCookie('auth_token');
-  const hasToken = !!tokenCookie.value;
+  const roleCookie = useCookie('auth_role');
+  const hasToken = process.server ? !!tokenCookie.value : !!roleCookie.value;
 
   // Si déjà authentifié dans le store → utiliser le state actuel
   const isAuthenticated = authStore.isAuthenticated || hasToken;

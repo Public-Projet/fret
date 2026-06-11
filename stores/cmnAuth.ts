@@ -131,7 +131,8 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
         const tokenCookie = useCookie('auth_token', {
           maxAge: 60 * 60 * 24 * 7,
           secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax'
+          sameSite: 'lax',
+          httpOnly: true
         });
         const roleCookie = useCookie<UserRole>('auth_role', {
           maxAge: 60 * 60 * 24 * 7,
@@ -283,7 +284,8 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
       this.lastConnectedAt = lastAtCookie.value;
 
       // Si pas de token, pas d'utilisateur authentifié
-      if (!tokenCookie.value || !roleCookie.value) {
+      const hasToken = process.server ? !!tokenCookie.value : !!roleCookie.value;
+      if (!hasToken || !roleCookie.value) {
         this.user = null;
         this.isAuthenticated = false;
         return { success: false, error: 'Aucune session active' };
