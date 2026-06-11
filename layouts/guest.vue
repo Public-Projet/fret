@@ -3,7 +3,7 @@
     class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-200 relative selection:bg-primary-500 selection:text-white">
     <LayoutGuestBackground />
 
-    <LayoutGuestHeader class="relative z-30" />
+    <LayoutGuestHeaderBlock class="relative z-30" />
     <main class="flex-grow relative z-10">
       <slot />
     </main>

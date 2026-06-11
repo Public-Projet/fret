@@ -3,7 +3,7 @@
     class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors duration-200 relative selection:bg-primary-500 selection:text-white">
 
     <LayoutLegalBackground />
-    <LayoutGuestHeader class="relative z-30" />
+    <LayoutGuestHeaderBlock class="relative z-30" />
     <LayoutLegalHero :title="title" :last-update="lastUpdate" />
 
     <!-- Main Content -->
