@@ -34,23 +34,11 @@
         </div>
 
         <div class="py-1">
-          <NuxtLink :to="isShipper ? '/app/us/profile' : '/app/uc/profile'"
+          <NuxtLink v-for="link in dropdownLinks" :key="link.to" :to="link.to"
             class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             @click="isDropdownOpen = false">
-            <IconUser class="w-4 h-4" />
-            Mon Profil
-          </NuxtLink>
-          <NuxtLink :to="isShipper ? '/app/us/transactions' : '/app/uc/transactions'"
-            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-            @click="isDropdownOpen = false">
-            <IconReceipt class="w-4 h-4" />
-            <span class="flex-1">Transactions</span>
-          </NuxtLink>
-          <NuxtLink to="/app/settings"
-            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-            @click="isDropdownOpen = false">
-            <IconSettings class="w-4 h-4" />
-            Paramètres
+            <component :is="link.icon" class="w-4 h-4" />
+            <span class="flex-1">{{ link.label }}</span>
           </NuxtLink>
           <div class="border-t border-gray-100 dark:border-gray-700/50 my-1"></div>
           <button @click="emit('logout')"
@@ -65,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { IconChevronDown, IconUser, IconLogout, IconSettings, IconReceipt } from '@tabler/icons-vue';
 
 const props = defineProps<{
@@ -82,6 +70,24 @@ const emit = defineEmits<{
 
 const isDropdownOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
+
+const dropdownLinks = computed(() => [
+  {
+    to: props.isShipper ? '/app/us/profile' : '/app/uc/profile',
+    icon: IconUser,
+    label: 'Mon Profil',
+  },
+  {
+    to: props.isShipper ? '/app/us/transactions' : '/app/uc/transactions',
+    icon: IconReceipt,
+    label: 'Transactions',
+  },
+  {
+    to: '/app/settings',
+    icon: IconSettings,
+    label: 'Paramètres',
+  }
+]);
 
 const handleClickOutside = (event: MouseEvent) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
