@@ -61,6 +61,17 @@ export function useAPI() {
           const skipRedirect = (options as any).skipAuthRedirect === true;
 
           if (!isBadCombo && !skipRedirect) {
+            // Supprimer les cookies de session
+            const tokenCookie = useCookie('auth_token');
+            const roleCookie = useCookie('auth_role');
+            tokenCookie.value = null;
+            roleCookie.value = null;
+
+            // Mettre à jour le store d'authentification
+            const authStore = useCmnAuthStore();
+            authStore.user = null;
+            authStore.isAuthenticated = false;
+
             const router = useRouter();
             const route = useRoute();
             router.push(`/auth/login?redirect=${encodeURIComponent(route.fullPath)}`);

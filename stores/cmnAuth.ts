@@ -311,9 +311,27 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
           this.user = null;
           this.isAuthenticated = false;
           this.isLoading = false;
+
+          const route = useRoute();
+          if (route.path.startsWith('/app')) {
+            const router = useRouter();
+            router.push(`/auth/login?redirect=${encodeURIComponent(route.fullPath)}`);
+          }
+
           return { success: false, error: 'Session expirée' };
         }
-      } catch (e) {
+      } catch (e: any) {
+        const status = e.statusCode || e.status || (e.response ? e.response.status : null);
+        if (status === 401 || status === 403) {
+          tokenCookie.value = null;
+          roleCookie.value = null;
+
+          const route = useRoute();
+          if (route.path.startsWith('/app')) {
+            const router = useRouter();
+            router.push(`/auth/login?redirect=${encodeURIComponent(route.fullPath)}`);
+          }
+        }
         this.user = null;
         this.isAuthenticated = false;
         this.isLoading = false;
@@ -322,8 +340,8 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
     },
 
     // Restaurer la session depuis les cookies
-    restoreSession() {
-      this.loadUser();
+    async restoreSession() {
+      await this.loadUser();
     },
 
     // Mettre à jour le profil utilisateur

@@ -29,8 +29,8 @@ const baseUrl = "https://boursefret.netlify.app";
 const authStore = useCmnAuthStore();
 const notificationStore = useCmnNotificationStore();
 
-onMounted(() => {
-  authStore.restoreSession();
+onMounted(async () => {
+  await authStore.restoreSession();
   if (authStore.isAuthenticated) {
     notificationStore.fetchUserNotifications();
     notificationStore.startPolling();
