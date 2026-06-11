@@ -1,22 +1,17 @@
 <template>
   <div class="min-h-screen flex w-full bg-white dark:bg-gray-900">
-    <!-- Dynamic Column (2/3) - Hidden on mobile, visible on lg and up -->
+    <!-- Dynamic Column (2/3) -->
     <div class="hidden lg:flex w-2/3 relative overflow-hidden bg-gray-900">
-      <!-- Background Image -->
       <img :src="bgImage" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Auth Background" />
-
-      <!-- Overlay Gradient -->
       <div class="absolute inset-0 bg-gradient-to-br from-primary-900/80 to-black/40 mix-blend-multiply"></div>
 
       <!-- Content -->
       <div class="relative z-10 w-full flex flex-col justify-between p-12 text-white">
-        <!-- Logo or Brand -->
         <NuxtLink to="/" class="flex items-center gap-3 group">
           <img src="/img/Logo.png" alt="BourseFret Logo" class="h-10 w-auto bg-white rounded-lg p-1" />
           <span class="text-3xl font-bold tracking-tight text-white">BourseFret</span>
         </NuxtLink>
 
-        <!-- Dynamic Text -->
         <div class="mb-12 max-w-2xl">
           <blockquote class="text-3xl font-medium leading-relaxed mb-6">
             "{{ quote }}"
@@ -38,12 +33,9 @@
     <div
       class="w-full lg:w-1/3 flex flex-col justify-center items-center p-6 sm:p-12 relative bg-white dark:bg-gray-900 transition-colors duration-300">
 
-      <!-- Top Right Controls -->
       <div class="absolute top-4 right-4 flex items-center gap-3">
-        <!-- Theme Toggle -->
         <UiThemeToggle />
 
-        <!-- Home Button -->
         <NuxtLink to="/"
           class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors">
           <IconHome class="w-4 h-4" />
@@ -51,7 +43,6 @@
         </NuxtLink>
       </div>
 
-      <!-- Mobile Header (Logo) -->
       <div class="lg:hidden w-full mb-8">
         <div class="mb-8 text-center sm:text-left">
           <NuxtLink to="/" class="inline-block relative z-10">
@@ -73,7 +64,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { IconHome } from '@tabler/icons-vue';
 
 interface Props {
