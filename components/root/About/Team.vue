@@ -14,11 +14,11 @@
 
       <div v-if="contentStore.loading.team" class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
         <div v-for="i in 3" :key="i"
-          class="bg-white dark:bg-gray-800 rounded-3xl p-8 animate-pulse shadow-lg border border-gray-200 dark:border-gray-700">
-          <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-3"></div>
-          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto mb-6"></div>
-          <div class="h-16 bg-gray-200 dark:bg-gray-700 rounded w-full mx-auto"></div>
+          class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center gap-4">
+          <UiAppSkeleton :loading="true" type="circle" width="96px" height="96px" />
+          <UiAppSkeleton :loading="true" type="heading" width="75%" height="20px" />
+          <UiAppSkeleton :loading="true" type="text" width="50%" height="16px" />
+          <UiAppSkeleton :loading="true" type="text" :count="3" gap="2" />
         </div>
       </div>
 
