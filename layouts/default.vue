@@ -1,18 +1,14 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-    <!-- Mobile Header -->
     <LayoutDefaultHeaderBlock :menu-open="mobileMenuOpen" @toggle-menu="mobileMenuOpen = !mobileMenuOpen" />
 
-    <!-- Mobile Menu Overlay -->
     <div v-if="mobileMenuOpen" class="lg:hidden fixed inset-0 z-20 bg-gray-900/50 backdrop-blur-sm"
       @click="mobileMenuOpen = false"></div>
-
-    <!-- Mobile Sidebar (Drawer) -->
-    <LayoutDefaultSidebar mobile :open="mobileMenuOpen" @close="mobileMenuOpen = false" />
+    <LayoutDefaultSidebarBlock mobile :open="mobileMenuOpen" @close="mobileMenuOpen = false" />
 
     <div class="flex flex-grow relative">
-      <!-- Desktop Sidebar -->
-      <LayoutDefaultSidebar :collapsed="isSidebarCollapsed" @toggle-collapse="isSidebarCollapsed = !isSidebarCollapsed" />
+      <LayoutDefaultSidebarBlock :collapsed="isSidebarCollapsed"
+        @toggle-collapse="isSidebarCollapsed = !isSidebarCollapsed" />
 
       <!-- Main Content -->
       <main
