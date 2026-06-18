@@ -3,7 +3,35 @@
     <RootSupportHelpCatDetailBreadcrumb :category-slug="categorySlug" :category-title="category?.title"
       :article-title="article?.title" class="mb-6" />
 
-    <div v-if="article" class="animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div v-if="store.loading.article" class="animate-in fade-in duration-500">
+      <!-- Skeleton Header -->
+      <div
+        class="relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden mb-10 shadow-sm border border-gray-100 dark:border-gray-700/50">
+        <div class="relative p-8 md:p-12">
+          <div class="flex flex-wrap items-center gap-4 mb-6">
+            <UiAppSkeleton class="h-8 w-24 rounded-full" />
+            <UiAppSkeleton class="h-8 w-40 rounded-full" />
+          </div>
+          <UiAppSkeleton class="h-12 md:h-14 w-3/4 mb-6 rounded-xl" />
+          <UiAppSkeleton class="h-6 w-full max-w-3xl mb-2 rounded-lg" />
+          <UiAppSkeleton class="h-6 w-2/3 rounded-lg" />
+        </div>
+      </div>
+      <!-- Skeleton Content -->
+      <div
+        class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700/50 p-8 md:p-12 mb-10">
+        <div class="space-y-4">
+          <UiAppSkeleton class="h-4 w-full rounded-md" />
+          <UiAppSkeleton class="h-4 w-full rounded-md" />
+          <UiAppSkeleton class="h-4 w-5/6 rounded-md" />
+          <br>
+          <UiAppSkeleton class="h-4 w-full rounded-md" />
+          <UiAppSkeleton class="h-4 w-4/5 rounded-md" />
+        </div>
+      </div>
+    </div>
+
+    <div v-else-if="article" class="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <RootSupportHelpCatDetailArticleHeader :title="article.title" :excerpt="article.excerpt" :views="article.views"
         :uniqueViews="article.uniqueViews" :category-title="category?.title"
         :category-badge-class="categoryBadgeClass" />
@@ -11,7 +39,7 @@
       <div
         class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700/50 p-8 md:p-12 mb-10">
         <RootSupportHelpCatDetailArticleContent :content="article.content" />
-        <RootSupportHelpCatDetailArticleFooter :updated-at="article.updatedAt" @rate="rateArticle" />
+        <RootSupportHelpCatDetailArticleFooter :updated-at="article.updatedAt" :article="article" @rate="rateArticle" />
       </div>
 
       <RootSupportHelpCatDetailRelatedArticles :articles="relatedArticles" :category-slug="categorySlug"
@@ -86,11 +114,23 @@ const categoryBadgeClass = computed(() => {
   return colors[categorySlug.value] || colors.compte;
 });
 
-const hasRated = ref(false);
-const rateArticle = (rating: 'yes' | 'no') => {
-  if (hasRated.value) return;
-  hasRated.value = true;
-  alert(rating === 'yes' ? 'Merci pour votre retour ! 🎉' : 'Nous allons améliorer cet article. Merci !');
+import { useToast } from 'vue-toastification';
+const toast = useToast();
+
+const rateArticle = async (action: 'like' | 'dislike') => {
+  if (!article.value) return;
+  try {
+    const res = await store.rateArticle(article.value.slug, action);
+    if (res?.success) {
+      if (action === 'like') {
+        toast.success('Merci pour votre retour ! 🎉');
+      } else {
+        toast.info('Nous allons améliorer cet article. Merci !');
+      }
+    }
+  } catch (error) {
+    toast.error("Une erreur est survenue lors de l'enregistrement de votre avis.");
+  }
 };
 
 definePageMeta({

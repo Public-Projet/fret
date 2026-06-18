@@ -11,12 +11,20 @@
             La plateforme moderne de mise en relation entre chargeurs et transporteurs.
           </p>
           <div class="flex space-x-4">
-            <template v-for="link in store.socialLinks" :key="link.id">
-              <a v-if="link.isActive" :href="link.url" target="_blank" rel="noopener noreferrer"
-                class="group text-gray-400 hover:text-white transition-all transform hover:scale-110"
-                :title="link.label">
-                <component :is="getIconComponent(link.icon)" class="w-6 h-6" />
-              </a>
+            <template v-if="store.loading.socialLinks">
+              <UiAppSkeleton v-for="i in 4" :key="i" class="w-6 h-6 rounded-full" />
+            </template>
+            <template v-else-if="store.socialLinks.length === 0">
+              <span class="text-xs text-red-400">Impossible de charger les réseaux sociaux.</span>
+            </template>
+            <template v-else>
+              <template v-for="link in store.socialLinks" :key="link.id">
+                <a v-if="link.isActive" :href="link.url" target="_blank" rel="noopener noreferrer"
+                  class="group text-gray-400 hover:text-white transition-all transform hover:scale-110"
+                  :title="link.label">
+                  <component :is="getIconComponent(link.icon)" class="w-6 h-6" />
+                </a>
+              </template>
             </template>
           </div>
         </div>

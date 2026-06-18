@@ -2,8 +2,17 @@
   <div class="container-custom py-12 max-w-4xl">
     <RootSupportHelpCategoryBreadcrumb :category-title="category?.title" />
     <div class="card p-8 md:p-12">
-      <RootSupportHelpCategoryHeader :category="category" />
-      <RootSupportHelpCategoryArticleList :articles="articles" :category-slug="categorySlug" />
+      <template v-if="store.loading.help">
+        <UiAppSkeleton class="h-10 w-1/3 mb-4 rounded-xl" />
+        <UiAppSkeleton class="h-6 w-2/3 mb-8 rounded-xl" />
+        <div class="space-y-4">
+          <UiAppSkeleton class="h-24 w-full rounded-2xl" v-for="i in 3" :key="i" />
+        </div>
+      </template>
+      <template v-else>
+        <RootSupportHelpCategoryHeader :category="category" />
+        <RootSupportHelpCategoryArticleList :articles="articles" :category-slug="categorySlug" />
+      </template>
     </div>
   </div>
 </template>

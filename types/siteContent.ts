@@ -81,6 +81,11 @@ export interface HelpArticle {
   content: string;
   category: string | HelpCategory;
   views: number;
+  uniqueViews?: number;
+  likesCount?: number;
+  dislikesCount?: number;
+  hasLiked?: boolean;
+  hasDisliked?: boolean;
   updatedAt: string;
 }
 
