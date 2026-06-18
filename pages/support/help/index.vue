@@ -1,17 +1,17 @@
 <template>
   <div class="container-custom py-12 max-w-4xl">
     <div class="card p-8 md:p-12">
-      <HelpHeader />
-      <HelpSearch v-model="searchQuery" />
+      <RootSupportHelpHomeHeader />
+      <RootSupportHelpHomeSearch v-model="searchQuery" />
 
       <template v-if="searchQuery">
-        <HelpSearchResults :results="searchResults" :query="searchQuery" />
+        <RootSupportHelpHomeSearchResults :results="searchResults" :query="searchQuery" />
       </template>
 
       <template v-else>
-        <HelpCategories :categories="categoriesWithCount" />
-        <HelpPopular :articles="popularArticles" />
-        <HelpContact />
+        <RootSupportHelpHomeCategories :categories="categoriesWithCount" />
+        <RootSupportHelpHomePopular :articles="popularArticles" />
+        <RootSupportHelpHomeContact />
       </template>
     </div>
   </div>
