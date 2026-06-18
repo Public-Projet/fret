@@ -1,30 +1,42 @@
 <template>
-  <div class="container-custom py-12 max-w-4xl">
+  <div class="container-custom py-12 max-w-5xl">
     <RootSupportHelpCatDetailBreadcrumb :category-slug="categorySlug" :category-title="category?.title"
-      :article-title="article?.title" />
+      :article-title="article?.title" class="mb-6" />
 
-    <div class="card p-8 md:p-12" v-if="article">
+    <div v-if="article" class="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <RootSupportHelpCatDetailArticleHeader :title="article.title" :excerpt="article.excerpt" :views="article.views"
-        :category-title="category?.title" :category-badge-class="categoryBadgeClass" />
-      <RootSupportHelpCatDetailArticleContent :content="article.content" />
-      <RootSupportHelpCatDetailArticleFooter :updated-at="article.updatedAt" @rate="rateArticle" />
-      <RootSupportHelpCatDetailRelatedArticles :articles="relatedArticles" :category-slug="categorySlug" />
-      <div class="mt-8">
+        :uniqueViews="article.uniqueViews" :category-title="category?.title"
+        :category-badge-class="categoryBadgeClass" />
+
+      <div
+        class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700/50 p-8 md:p-12 mb-10">
+        <RootSupportHelpCatDetailArticleContent :content="article.content" />
+        <RootSupportHelpCatDetailArticleFooter :updated-at="article.updatedAt" @rate="rateArticle" />
+      </div>
+
+      <RootSupportHelpCatDetailRelatedArticles :articles="relatedArticles" :category-slug="categorySlug"
+        class="mb-10" />
+
+      <div class="mt-8 text-center">
         <NuxtLink :to="`/support/help/${categorySlug}`"
-          class="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline">
-          <IconArrowLeft class="w-4 h-4" />
+          class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+          <IconArrowLeft class="w-5 h-5" />
           Retour à {{ category?.title }}
         </NuxtLink>
       </div>
     </div>
 
     <!-- 404 State -->
-    <div v-else class="card p-12 text-center">
-      <IconFileOff class="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Article introuvable</h2>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">L'article que vous recherchez n'existe pas ou a été déplacé.</p>
+    <div v-else
+      class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700/50 p-16 text-center animate-in fade-in zoom-in duration-500">
+      <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+        <IconFileOff class="w-12 h-12 text-gray-400" />
+      </div>
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Article introuvable</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">L'article que vous recherchez n'existe
+        pas ou a été déplacé.</p>
       <NuxtLink to="/support/help"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors">
+        class="inline-flex items-center gap-2 px-8 py-4 bg-primary-500 text-white rounded-2xl font-semibold hover:bg-primary-600 transition-all hover:shadow-lg hover:shadow-primary-500/25">
         Retour au centre d'aide
       </NuxtLink>
     </div>
