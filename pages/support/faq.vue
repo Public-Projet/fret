@@ -1,7 +1,7 @@
 <template>
   <div class="container-custom py-12 max-w-4xl">
     <div class="card p-8 md:p-12">
-      <HelpFaqHeader />
+      <RootHelpFaqHeader />
 
       <!-- Loading State -->
       <div v-if="store.loading.faqs" class="flex flex-col items-center justify-center py-20 gap-4">
@@ -10,12 +10,12 @@
       </div>
 
       <template v-else>
-        <HelpFaqCategories :categories="categories" :activeCategory="activeCategory"
+        <RootHelpFaqCategories :categories="categories" :activeCategory="activeCategory"
           @update:activeCategory="activeCategory = $event" />
-        <HelpFaqList :faqs="filteredFaqs" />
+        <RootHelpFaqList :faqs="filteredFaqs" />
       </template>
 
-      <HelpFaqContact />
+      <RootHelpFaqContact />
     </div>
   </div>
 </template>
