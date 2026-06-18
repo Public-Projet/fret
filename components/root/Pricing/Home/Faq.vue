@@ -5,9 +5,9 @@
 
       <!-- Loading State -->
       <div v-if="store.loading.faqs" class="space-y-6">
-        <div v-for="i in 4" :key="i" class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 animate-pulse">
-          <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
-          <div class="h-4 bg-gray-100 dark:bg-gray-700/50 rounded w-full"></div>
+        <div v-for="i in 4" :key="i" class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6">
+          <UiAppSkeleton type="heading" class="w-3/4 mb-4" />
+          <UiAppSkeleton type="text" class="w-full" />
         </div>
       </div>
 
