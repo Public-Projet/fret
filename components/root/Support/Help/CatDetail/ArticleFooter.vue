@@ -35,7 +35,7 @@
 import { computed } from 'vue';
 import { IconThumbUp, IconThumbDown } from '@tabler/icons-vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { useToast } from 'vue-toastification';
+import { useCmnToastStore } from '~/stores/cmnToast';
 import type { HelpArticle } from '~/types';
 
 const props = defineProps<{
@@ -48,7 +48,7 @@ const emit = defineEmits<{
 }>();
 
 const authStore = useCmnAuthStore();
-const toast = useToast();
+const toastStore = useCmnToastStore();
 
 const formattedDate = computed(() => {
   const date = new Date(props.updatedAt);
@@ -57,7 +57,7 @@ const formattedDate = computed(() => {
 
 const handleRate = (action: 'like' | 'dislike') => {
   if (!authStore.isAuthenticated) {
-    toast.warning("Vous devez être connecté pour donner votre avis.");
+    toastStore.addToast("Vous devez être connecté pour donner votre avis.", 'warning');
     return;
   }
   emit('rate', action);

@@ -114,8 +114,8 @@ const categoryBadgeClass = computed(() => {
   return colors[categorySlug.value] || colors.compte;
 });
 
-import { useToast } from 'vue-toastification';
-const toast = useToast();
+import { useCmnToastStore } from '~/stores/cmnToast';
+const toastStore = useCmnToastStore();
 
 const rateArticle = async (action: 'like' | 'dislike') => {
   if (!article.value) return;
@@ -123,13 +123,13 @@ const rateArticle = async (action: 'like' | 'dislike') => {
     const res = await store.rateArticle(article.value.slug, action);
     if (res?.success) {
       if (action === 'like') {
-        toast.success('Merci pour votre retour ! 🎉');
+        toastStore.addToast('Merci pour votre retour ! 🎉', 'success');
       } else {
-        toast.info('Nous allons améliorer cet article. Merci !');
+        toastStore.addToast('Nous allons améliorer cet article. Merci !', 'info');
       }
     }
   } catch (error) {
-    toast.error("Une erreur est survenue lors de l'enregistrement de votre avis.");
+    toastStore.addToast("Une erreur est survenue lors de l'enregistrement de votre avis.", 'error');
   }
 };
 

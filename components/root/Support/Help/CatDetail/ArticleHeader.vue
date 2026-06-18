@@ -31,7 +31,7 @@ defineProps<{
   title: string;
   excerpt: string;
   views: number;
-  uniqueViews: number;
+  uniqueViews?: number;
   categoryTitle: string | undefined;
   categoryBadgeClass: string;
 }>();
