@@ -26,7 +26,7 @@ const CONTACT_ITEMS = [
     iconBg: 'bg-primary-100 dark:bg-primary-900/30',
     iconColor: 'text-primary-600 dark:text-primary-400',
     linkColor: 'text-primary-600 dark:text-primary-400',
-    href: 'mailto:contddddddddddact@boursefret.bj',
+    href: 'mailto:contact@boursefret.bj',
     value: 'contact@boursefret.bj'
   },
   {
