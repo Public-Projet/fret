@@ -26,7 +26,7 @@
       <h1 class="text-5xl md:text-7xl font-black text-white dark:text-gray-100 mb-6 leading-tight">
         Notre
         <span
-          class="block mt-2 bg-gradient-to-r from-green-400 via-green-300 to-green-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">
+          class="bg-gradient-to-r from-green-400 via-green-300 to-green-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">
           Histoire
         </span>
       </h1>
