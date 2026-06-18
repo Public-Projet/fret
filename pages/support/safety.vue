@@ -1,7 +1,7 @@
 <template>
   <div class="container-custom py-12 max-w-4xl">
     <div class="card p-8 md:p-12">
-      <HelpSafetyHeader />
+      <RootHelpSafetyHeader />
 
       <!-- Loading State -->
       <div v-if="store.loading.safetyItems" class="flex flex-col items-center justify-center py-20 gap-4">
@@ -10,9 +10,9 @@
       </div>
 
       <div v-else class="prose dark:prose-invert max-w-none space-y-8">
-        <HelpSafetyFeatures :features="features" />
-        <HelpSafetyTips :tips="tips" />
-        <HelpSafetyReport />
+        <RootHelpSafetyFeatures :features="features" />
+        <RootHelpSafetyTips :tips="tips" />
+        <RootHelpSafetyReport />
       </div>
     </div>
   </div>
