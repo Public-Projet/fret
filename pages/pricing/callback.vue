@@ -7,55 +7,13 @@
       <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-primary-500 via-blue-500 to-indigo-600"></div>
 
       <!-- Loading State -->
-      <div v-if="status === 'loading'" class="py-6 flex flex-col items-center">
-        <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-6">Traitement en cours</h2>
-        <div class="w-full max-w-sm text-left">
-          <UiStepLoading :steps="['Vérification', 'Génération de la facture', 'Envoi de la facture']"
-            :active-step="activeStep" :auto-play="false" mode="cascade" color="primary" />
-        </div>
-        <p class="text-gray-500 dark:text-gray-400 text-sm">
-          Veuillez patienter un instant pendant que nous sécurisons et confirmons votre transaction auprès de FedaPay...
-        </p>
-      </div>
+      <RootPricingCallbackLoading v-if="status === 'loading'" :active-step="activeStep" />
 
       <!-- Success State -->
-      <div v-else-if="status === 'success'" class="py-6 flex flex-col items-center animate-fade-in">
-        <div
-          class="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-500 mb-6 border border-green-100 dark:border-green-800/30">
-          <IconCircleCheck class="w-12 h-12" />
-        </div>
-        <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-2">Paiement Réussi !</h2>
-        <p class="text-gray-600 dark:text-gray-300 text-sm mb-6">
-          Félicitations, votre abonnement <strong>Transporteur Pro</strong> est maintenant actif ! Vous allez être
-          redirigé vers votre espace.
-        </p>
-        <span class="text-xs text-gray-400 dark:text-gray-500">Redirection automatique dans quelques secondes...</span>
-        <NuxtLink to="/app"
-          class="mt-6 btn btn-primary w-full rounded-xl py-3 font-semibold shadow-lg shadow-primary-500/20">
-          Accéder à mon espace
-        </NuxtLink>
-      </div>
+      <RootPricingCallbackSuccess v-else-if="status === 'success'" />
 
       <!-- Error / Cancel State -->
-      <div v-else class="py-6 flex flex-col items-center animate-fade-in">
-        <div
-          class="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-500 mb-6 border border-red-100 dark:border-red-800/30">
-          <IconCircleX class="w-12 h-12" />
-        </div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Paiement non finalisé</h2>
-        <p class="text-gray-600 dark:text-gray-300 text-sm mb-6">
-          {{ message || "Le paiement n'a pas pu être validé ou a été annulé." }}
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 w-full">
-          <NuxtLink to="/pricing"
-            class="btn btn-outline border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700/50 w-full sm:w-1/2 rounded-xl py-3 font-semibold">
-            Réessayer
-          </NuxtLink>
-          <NuxtLink to="/app" class="btn btn-primary w-full sm:w-1/2 rounded-xl py-3 font-semibold">
-            Mon espace
-          </NuxtLink>
-        </div>
-      </div>
+      <RootPricingCallbackError v-else :message="message" />
     </div>
   </div>
 </template>
@@ -63,7 +21,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from '#app';
-import { IconCircleCheck, IconCircleX } from '@tabler/icons-vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 
 definePageMeta({
@@ -120,7 +77,7 @@ onMounted(async () => {
       // Rediriger après 3 secondes vers l'espace applicatif
       setTimeout(() => {
         router.push('/app');
-      }, 3500);
+      }, 3000);
     } else {
       status.value = 'error';
       message.value = response?.message || "Le statut de votre paiement n'est pas approuvé.";
@@ -132,21 +89,3 @@ onMounted(async () => {
   }
 });
 </script>
-
-<style scoped>
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-</style>
