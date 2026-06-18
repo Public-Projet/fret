@@ -4,9 +4,14 @@
       <RootSupportSafetyHeader />
 
       <!-- Loading State -->
-      <div v-if="store.loading.safetyItems" class="flex flex-col items-center justify-center py-20 gap-4">
-        <div class="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-gray-500 animate-pulse">Chargement des informations de sécurité...</p>
+      <div v-if="store.loading.safetyItems" class="space-y-6 mt-8">
+        <div v-for="i in 4" :key="i" class="flex gap-4">
+          <UiAppSkeleton type="square" width="48px" height="48px" />
+          <div class="flex-1 space-y-2">
+            <UiAppSkeleton type="heading" width="40%" />
+            <UiAppSkeleton type="text" :count="2" gap="2" />
+          </div>
+        </div>
       </div>
 
       <div v-else class="prose dark:prose-invert max-w-none space-y-8">
