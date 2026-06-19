@@ -3,7 +3,7 @@
 
 
 
-  <NuxtLayout name="auth"
+  <div
     bg-image="https://images.unsplash.com/photo-1700716465891-9e5e9f501d7d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGltcG9ydGF0aW9ufGVufDB8fDB8fHww"
     quote="Le réseau qui fait circuler le fret sans perte de temps">
     <div class="w-full space-y-8">
@@ -13,7 +13,7 @@
       <RootAuthLoginRoleTabs v-model="selectedRole" :last-connected-role="lastConnectedRole" />
 
       <!-- Formulaire de connexion -->
-      <RootAuthLoginLoginForm v-model:email="email" v-model:password="password" v-model:rememberMe="rememberMe"
+      <RootAuthLoginForm v-model:email="email" v-model:password="password" v-model:rememberMe="rememberMe"
         :role="selectedRole" :loading="loading" :error="error" @submit="handleLogin"
         @forgot-password="openForgotPasswordModal" @resend-email="showResendModal = true" />
 
@@ -26,7 +26,7 @@
 
     <!-- Modal Resend Verification -->
     <ModalResendVerification v-model="showResendModal" :role="selectedRole" :initial-email="email" />
-  </NuxtLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -35,7 +35,7 @@ import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { UserRole } from '~/types';
 
 definePageMeta({
-  layout: false
+  layout: 'auth'
 });
 
 const authStore = useCmnAuthStore();
