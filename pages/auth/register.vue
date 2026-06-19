@@ -6,11 +6,14 @@
     <div class="w-full space-y-6">
       <RootAuthRegisterHeader />
 
+      <!-- Tabs Expéditeur / Transporteur -->
       <RootAuthRegisterRoleCards v-model="role" />
 
+      <!-- Formulaire de connexion -->
       <RootAuthRegisterForm v-model:form="form" :role="role" :loading="loading" :active-step="activeStep" :error="error"
         :success-message="successMessage" @submit="handleRegister" />
 
+      <!-- Footer -->
       <RootAuthRegisterTermsFooter />
     </div>
   </NuxtLayout>
