@@ -2,7 +2,7 @@
   <div class="min-h-screen flex w-full bg-white dark:bg-gray-900">
     <!-- Dynamic Column (2/3) -->
     <div class="hidden lg:flex w-2/3 relative overflow-hidden bg-gray-900">
-      <img :src="resolvedBgImage" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Auth Background" />
+      <img :src="bgImage" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Auth Background" />
       <div class="absolute inset-0 bg-gradient-to-br from-primary-900/80 to-black/40 mix-blend-multiply"></div>
 
       <!-- Content -->
@@ -14,11 +14,11 @@
 
         <div class="mb-12 max-w-2xl">
           <blockquote class="text-3xl font-medium leading-relaxed mb-6">
-            "{{ resolvedQuote }}"
+            "{{ quote }}"
           </blockquote>
           <div class="flex items-center gap-4">
             <div class="h-1 w-12 bg-primary-500 rounded-full"></div>
-            <p class="text-lg text-gray-300 font-medium">{{ resolvedAuthor }}</p>
+            <p class="text-lg text-gray-300 font-medium">{{ author }}</p>
           </div>
         </div>
 
@@ -64,8 +64,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
 import { IconHome } from '@tabler/icons-vue';
 
 interface Props {
@@ -79,9 +77,4 @@ const props = withDefaults(defineProps<Props>(), {
   quote: 'Connectez-vous pour accéder à la meilleure bourse de fret en temps réel.',
   author: 'L\'équipe BourseFret'
 });
-
-const route = useRoute();
-const resolvedBgImage = computed(() => (route.meta.bgImage as string) || props.bgImage);
-const resolvedQuote = computed(() => (route.meta.quote as string) || props.quote);
-const resolvedAuthor = computed(() => (route.meta.author as string) || props.author);
 </script>
