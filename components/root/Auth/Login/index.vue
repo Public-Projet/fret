@@ -1,36 +1,13 @@
 <template>
-  <NuxtLayout name="auth"
-    bg-image="https://images.unsplash.com/photo-1700716465891-9e5e9f501d7d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGltcG9ydGF0aW9ufGVufDB8fDB8fHww"
-    quote="Le réseau qui fait circuler le fret sans perte de temps">
+  <NuxtLayout name="auth">
     <div class="w-full space-y-8">
-      <div>
-        <h2 class="mt-4 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-          Connexion
-        </h2>
-        <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          Ou
-          <NuxtLink to="/auth/register" class="font-medium text-primary-600 hover:text-primary-500">
-            créez un compte gratuitement
-          </NuxtLink>
-        </p>
-      </div>
-
-      <!-- Tabs Expéditeur / Transporteur -->
-      <RootAuthLoginRoleTabs v-model="selectedRole" :last-connected-role="lastConnectedRole" />
-
-      <!-- Formulaire de connexion -->
       <RootAuthLoginLoginForm v-model:email="email" v-model:password="password" v-model:rememberMe="rememberMe"
         :role="selectedRole" :loading="loading" :error="error" @submit="handleLogin"
         @forgot-password="openForgotPasswordModal" @resend-email="showResendModal = true" />
-
-      <!-- Info sur le dernier accès -->
-      <RootAuthLoginLastConnectionInfo :last-connected-role="lastConnectedRole" :last-connected-at="lastConnectedAt" />
     </div>
 
-    <!-- Modal Mot de passe oublié -->
     <ModalForgotPassword v-model="showForgotModal" :role="selectedRole" :initial-email="email" />
 
-    <!-- Modal Resend Verification -->
     <ModalResendVerification v-model="showResendModal" :role="selectedRole" :initial-email="email" />
   </NuxtLayout>
 </template>
