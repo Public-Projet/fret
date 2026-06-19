@@ -54,7 +54,7 @@
           role === 'shipper'
             ? 'bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 shadow-primary-500/30'
             : 'bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500 shadow-secondary-500/30'
-        ]" :disabled="loading">
+        ]" :disabled="loading || !isFormValid">
         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
           <IconLock class="h-5 w-5 opacity-70" aria-hidden="true" />
         </span>
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { IconLock, IconEye, IconEyeOff, IconLoader2 } from '@tabler/icons-vue';
 import type { UserRole } from '~/types';
 
@@ -92,4 +92,9 @@ const password = defineModel<string>('password', { required: true });
 const rememberMe = defineModel<boolean>('rememberMe', { required: true });
 
 const showPassword = ref(false);
+
+const isFormValid = computed(() =>
+  (email.value?.trim() ?? '').length > 0 &&
+  (password.value?.trim() ?? '').length > 0
+);
 </script>
