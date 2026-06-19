@@ -2,8 +2,6 @@
   <NuxtLayout name="auth"
     bg-image="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
     quote="Un réseau puissant pour faire avancer votre business.">
-    <RootAuthRegister />
-
 
     <div class="w-full space-y-6">
       <RootAuthRegisterHeader />
