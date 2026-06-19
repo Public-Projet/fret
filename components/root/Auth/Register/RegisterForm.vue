@@ -1,0 +1,140 @@
+<template>
+  <form class="space-y-5" @submit.prevent="$emit('submit')">
+    <div class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="firstname" class="label">Prénom</label>
+          <input
+            id="firstname"
+            type="text"
+            required
+            v-model="form.firstname"
+            class="input"
+            placeholder="Jean"
+          />
+        </div>
+        <div>
+          <label for="lastname" class="label">Nom</label>
+          <input
+            id="lastname"
+            type="text"
+            required
+            v-model="form.lastname"
+            class="input"
+            placeholder="Dossou"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label for="email" class="label">Adresse email</label>
+        <input
+          id="email"
+          type="email"
+          required
+          v-model="form.email"
+          class="input"
+          placeholder="jean.dossou@email.com"
+        />
+      </div>
+
+      <div>
+        <label for="password" class="label">Mot de passe</label>
+        <div class="relative">
+          <input
+            id="password"
+            :type="showPassword ? 'text' : 'password'"
+            required
+            v-model="form.password"
+            class="input pr-12"
+            placeholder="••••••••"
+          />
+          <button
+            type="button"
+            @click="showPassword = !showPassword"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          >
+            <IconEye v-if="!showPassword" class="w-5 h-5" />
+            <IconEyeOff v-else class="w-5 h-5" />
+          </button>
+        </div>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          Min. 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
+        </p>
+      </div>
+    </div>
+
+    <!-- Message de succès -->
+    <div
+      v-if="successMessage"
+      class="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+    >
+      <div class="flex items-center gap-2">
+        <IconCheck class="w-5 h-5 text-green-600 dark:text-green-400" />
+        <p class="text-green-600 dark:text-green-400 text-sm">{{ successMessage }}</p>
+      </div>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div
+      v-if="error"
+      class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+    >
+      <p class="text-red-600 dark:text-red-400 text-sm text-center">{{ error }}</p>
+    </div>
+
+    <div>
+      <button
+        type="submit"
+        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        :class="[
+          role === 'shipper'
+            ? 'bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 shadow-primary-500/30'
+            : 'bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500 shadow-secondary-500/30'
+        ]"
+        :disabled="loading"
+      >
+        <template v-if="loading">
+          <UiStepLoading
+            :steps="['Création', 'Envoi de mail']"
+            :active-step="activeStep"
+            :auto-play="false"
+            color="white"
+            mode="replace"
+          />
+        </template>
+        <template v-else>
+          S'inscrire en tant que {{ role === 'shipper' ? 'Expéditeur' : 'Transporteur' }}
+        </template>
+      </button>
+    </div>
+  </form>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { IconEye, IconEyeOff, IconCheck } from '@tabler/icons-vue';
+import type { UserRole } from '~/types';
+
+interface RegisterForm {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+}
+
+const props = defineProps<{
+  role: UserRole;
+  loading: boolean;
+  activeStep: number;
+  error: string;
+  successMessage: string;
+}>();
+
+defineEmits<{
+  (e: 'submit'): void;
+}>();
+
+const form = defineModel<RegisterForm>('form', { required: true });
+const showPassword = ref(false);
+</script>
