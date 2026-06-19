@@ -1,7 +1,5 @@
 <template>
-  <NuxtLayout name="auth"
-    bg-image="https://images.unsplash.com/photo-1700716465891-9e5e9f501d7d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGltcG9ydGF0aW9ufGVufDB8fDB8fHww"
-    quote="Le réseau qui fait circuler le fret sans perte de temps">
+  <div>
     <div class="w-full space-y-8">
       <RootAuthLoginHeader />
 
@@ -22,7 +20,7 @@
 
     <!-- Modal Resend Verification -->
     <ModalResendVerification v-model="showResendModal" :role="selectedRole" :initial-email="email" />
-  </NuxtLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -31,7 +29,9 @@ import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { UserRole } from '~/types';
 
 definePageMeta({
-  layout: false
+  layout: 'auth',
+  bgImage: 'https://images.unsplash.com/photo-1700716465891-9e5e9f501d7d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGltcG9ydGF0aW9ufGVufDB8fDB8fHww',
+  quote: 'Le réseau qui fait circuler le fret sans perte de temps'
 });
 
 const authStore = useCmnAuthStore();
