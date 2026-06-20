@@ -9,9 +9,8 @@
       <!-- Tabs Expéditeur / Transporteur -->
       <RootAuthRegisterRoleCards v-model="role" />
 
-      <!-- Formulaire de connexion -->
-      <RootAuthRegisterForm v-model:form="form" :role="role" :loading="loading" :active-step="activeStep" :error="error"
-        :success-message="successMessage" @submit="handleRegister" />
+      <!-- Formulaire d'inscription -->
+      <RootAuthRegisterForm v-model:form="form" :role="role" :loading="loading" :active-step="activeStep" @submit="handleRegister" />
 
       <!-- Footer -->
       <RootAuthRegisterTermsFooter />
@@ -31,12 +30,11 @@ definePageMeta({
 const route = useRoute();
 const router = useRouter();
 const authStore = useCmnAuthStore();
+const toastStore = useCmnToastStore();
 
 const role = ref<UserRole>('shipper');
 const loading = ref(false);
 const activeStep = ref(0);
-const error = ref('');
-const successMessage = ref('');
 
 const form = reactive({
   firstname: '',
@@ -56,8 +54,6 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const handleRegister = async () => {
   loading.value = true;
-  error.value = '';
-  successMessage.value = '';
   activeStep.value = 0;
 
   try {
@@ -79,7 +75,10 @@ const handleRegister = async () => {
       activeStep.value = 3;
       await sleep(800);
 
-      successMessage.value = result.message || 'Inscription réussie ! Vérifiez votre email pour activer votre compte.';
+      toastStore.addToast(
+        result.message || 'Inscription réussie ! Vérifiez votre email pour activer votre compte.',
+        'success'
+      );
 
       // Réinitialiser le formulaire
       form.firstname = '';
@@ -92,11 +91,11 @@ const handleRegister = async () => {
         router.push('/auth/login');
       }, 3000);
     } else {
-      error.value = result.error || 'Erreur lors de l\'inscription';
+      toastStore.addToast(result.error || 'Erreur lors de l\'inscription', 'error');
     }
   } catch (e) {
     console.error('Erreur register:', e);
-    error.value = 'Une erreur inattendue est survenue';
+    toastStore.addToast('Une erreur inattendue est survenue', 'error');
   } finally {
     loading.value = false;
   }
