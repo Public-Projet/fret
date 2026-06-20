@@ -32,6 +32,20 @@
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
           Min. 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
         </p>
+        <!-- Critères visuels (affichés uniquement si le champ a du contenu) -->
+        <ul v-if="form?.password" class="mt-2 grid grid-cols-2 gap-x-4 gap-y-1">
+          <li v-for="c in passwordCriteria" :key="c.label"
+            class="flex items-center gap-1 text-xs transition-colors"
+            :class="c.met ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'">
+            <svg v-if="c.met" class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+            <svg v-else class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <circle cx="10" cy="10" r="3"/>
+            </svg>
+            {{ c.label }}
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -56,7 +70,7 @@
           role === 'shipper'
             ? 'bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 shadow-primary-500/30'
             : 'bg-secondary-600 hover:bg-secondary-700 focus:ring-secondary-500 shadow-secondary-500/30'
-        ]" :disabled="loading">
+        ]" :disabled="loading || !isFormValid">
         <template v-if="loading">
           <UiStepLoading :steps="['Création', 'Envoi de mail']" :active-step="activeStep" :auto-play="false"
             color="white" mode="replace" />
@@ -70,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { IconEye, IconEyeOff, IconCheck } from '@tabler/icons-vue';
 import type { UserRole } from '~/types';
 
@@ -95,4 +109,25 @@ defineEmits<{
 
 const form = defineModel<RegisterForm>('form', { required: true });
 const showPassword = ref(false);
+
+// Critères de validation du mot de passe
+const passwordCriteria = computed(() => {
+  const pwd = form.value?.password ?? '';
+  return [
+    { label: '8 caractères min.', met: pwd.length >= 8 },
+    { label: '1 majuscule', met: /[A-Z]/.test(pwd) },
+    { label: '1 minuscule', met: /[a-z]/.test(pwd) },
+    { label: '1 chiffre', met: /[0-9]/.test(pwd) },
+    { label: '1 caractère spécial', met: /[^A-Za-z0-9]/.test(pwd) },
+  ];
+});
+
+const isPasswordValid = computed(() => passwordCriteria.value.every((c) => c.met));
+
+const isFormValid = computed(() =>
+  (form.value?.firstname?.trim() ?? '').length > 0 &&
+  (form.value?.lastname?.trim() ?? '').length > 0 &&
+  (form.value?.email?.trim() ?? '').length > 0 &&
+  isPasswordValid.value
+);
 </script>
