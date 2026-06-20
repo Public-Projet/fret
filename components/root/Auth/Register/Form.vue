@@ -37,20 +37,6 @@
       </div>
     </div>
 
-    <!-- Message de succès -->
-    <div v-if="successMessage"
-      class="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-      <div class="flex items-center gap-2">
-        <IconCheck class="w-5 h-5 text-green-600 dark:text-green-400" />
-        <p class="text-green-600 dark:text-green-400 text-sm">{{ successMessage }}</p>
-      </div>
-    </div>
-
-    <!-- Message d'erreur -->
-    <div v-if="error" class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-      <p class="text-red-600 dark:text-red-400 text-sm text-center">{{ error }}</p>
-    </div>
-
     <div>
       <button type="submit"
         class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
@@ -73,7 +59,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { IconEye, IconEyeOff, IconCheck } from '@tabler/icons-vue';
+import { IconEye, IconEyeOff } from '@tabler/icons-vue';
 import type { UserRole } from '~/types';
 
 interface RegisterForm {
@@ -87,8 +73,6 @@ const props = defineProps<{
   role: UserRole;
   loading: boolean;
   activeStep: number;
-  error: string;
-  successMessage: string;
 }>();
 
 defineEmits<{
