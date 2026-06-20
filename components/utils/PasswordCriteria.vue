@@ -19,10 +19,10 @@ const props = defineProps<{
 
 const criteria = computed(() => [
   { label: '8 caractères min.', met: props.password.length >= 8 },
-  { label: '1 majuscule', met: /[A-Z]/.test(props.password) },
-  { label: '1 minuscule', met: /[a-z]/.test(props.password) },
-  { label: '1 chiffre', met: /[0-9]/.test(props.password) },
-  { label: '1 caractère spécial', met: /[^A-Za-z0-9]/.test(props.password) },
+  { label: '1 majuscule min.', met: /[A-Z]/.test(props.password) },
+  { label: '1 minuscule min.', met: /[a-z]/.test(props.password) },
+  { label: '1 chiffre min.', met: /[0-9]/.test(props.password) },
+  { label: '1 caractère spécial min.', met: /[^A-Za-z0-9]/.test(props.password) },
 ]);
 
 const isValid = computed(() => criteria.value.every((c) => c.met));
