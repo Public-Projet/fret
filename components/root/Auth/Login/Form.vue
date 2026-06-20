@@ -20,11 +20,10 @@
       </div>
     </div>
 
-    <div v-if="error"
+    <div v-if="error && error.includes('en attente de validation')"
       class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex flex-col items-center">
       <p class="text-red-600 dark:text-red-400 text-sm text-center">{{ error }}</p>
-      <button v-if="error.includes('en attente de validation')" type="button" @click="emit('resend-email')"
-        class="mt-2 text-sm font-medium hover:underline"
+      <button type="button" @click="emit('resend-email')" class="mt-2 text-sm font-medium hover:underline"
         :class="role === 'shipper' ? 'text-primary-600 hover:text-primary-500' : 'text-secondary-600 hover:text-secondary-500'">
         Renvoyer l'email de vérification
       </button>
