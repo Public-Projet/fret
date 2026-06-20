@@ -3,15 +3,14 @@
     <div class="space-y-4">
       <div>
         <label for="email-address" class="label">Adresse email</label>
-        <input id="email-address" name="email" type="email" autocomplete="email" required v-model="email"
-          class="input" placeholder="exemple@email.com" />
+        <input id="email-address" name="email" type="email" autocomplete="email" required v-model="email" class="input"
+          placeholder="exemple@email.com" />
       </div>
       <div>
         <label for="password" class="label">Mot de passe</label>
         <div class="relative">
           <input id="password" name="password" :type="showPassword ? 'text' : 'password'"
-            autocomplete="current-password" required v-model="password" class="input pr-12"
-            placeholder="••••••••" />
+            autocomplete="current-password" required v-model="password" class="input pr-12" placeholder="••••••••" />
           <button type="button" @click="showPassword = !showPassword"
             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
             <IconEye v-if="!showPassword" class="w-5 h-5" />
@@ -21,9 +20,12 @@
       </div>
     </div>
 
-    <div v-if="error" class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex flex-col items-center">
+    <div v-if="error"
+      class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex flex-col items-center">
       <p class="text-red-600 dark:text-red-400 text-sm text-center">{{ error }}</p>
-      <button v-if="error.includes('en attente de validation')" type="button" @click="emit('resend-email')" class="mt-2 text-sm font-medium hover:underline" :class="role === 'shipper' ? 'text-primary-600 hover:text-primary-500' : 'text-secondary-600 hover:text-secondary-500'">
+      <button v-if="error.includes('en attente de validation')" type="button" @click="emit('resend-email')"
+        class="mt-2 text-sm font-medium hover:underline"
+        :class="role === 'shipper' ? 'text-primary-600 hover:text-primary-500' : 'text-secondary-600 hover:text-secondary-500'">
         Renvoyer l'email de vérification
       </button>
     </div>
@@ -49,7 +51,7 @@
 
     <div>
       <button type="submit"
-        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:shadow-none"
         :class="[
           role === 'shipper'
             ? 'bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 shadow-primary-500/30'
