@@ -42,7 +42,7 @@
               </div>
 
               <button type="submit"
-                class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:shadow-none"
                 :class="[
                   role === 'shipper'
                     ? 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/30'
@@ -72,12 +72,11 @@
             <p class="text-gray-600 dark:text-gray-400 mb-6">
               {{ forgotSuccessMessage }}
             </p>
-            <button @click="closeModal"
-              class="px-6 py-2 text-sm font-medium rounded-lg transition-colors" :class="[
-                role === 'shipper'
-                  ? 'text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
-                  : 'text-secondary-600 hover:bg-secondary-50 dark:hover:bg-secondary-900/20'
-              ]">
+            <button @click="closeModal" class="px-6 py-2 text-sm font-medium rounded-lg transition-colors" :class="[
+              role === 'shipper'
+                ? 'text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20'
+                : 'text-secondary-600 hover:bg-secondary-50 dark:hover:bg-secondary-900/20'
+            ]">
               Fermer
             </button>
           </div>
