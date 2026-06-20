@@ -42,12 +42,12 @@
               </div>
 
               <button type="submit"
-                class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:opacity-50"
+                class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 :class="[
                   role === 'shipper'
                     ? 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/30'
                     : 'bg-secondary-600 hover:bg-secondary-700 shadow-secondary-500/30'
-                ]" :disabled="forgotLoading">
+                ]" :disabled="forgotLoading || !forgotEmail.trim()">
                 <span v-if="forgotLoading" class="flex items-center gap-2">
                   <IconLoader2 class="h-4 w-4 animate-spin" />
                   Envoi...
