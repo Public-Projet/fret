@@ -50,8 +50,8 @@
                 </div>
               </div>
 
-              <button @click="handleResend" :disabled="loading || !email" :class="[
-                'w-full flex justify-center items-center gap-3 py-4 px-6 border border-transparent text-base font-bold rounded-2xl text-white shadow-xl transition-all transform hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0',
+              <button @click="handleResend" :disabled="loading || !email.trim()" :class="[
+                'w-full flex justify-center items-center gap-3 py-4 px-6 border border-transparent text-base font-bold rounded-2xl text-white shadow-xl transition-all transform hover:-translate-y-1 active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:shadow-none disabled:hover:translate-y-0 disabled:active:scale-100',
                 role === 'shipper' ? 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/30' : 'bg-secondary-600 hover:bg-secondary-700 shadow-secondary-500/30'
               ]">
                 <IconLoader2 v-if="loading" class="w-5 h-5 animate-spin" />
@@ -117,7 +117,7 @@ const close = () => {
 };
 
 const handleResend = async () => {
-  if (!email.value || loading.value) return;
+  if (!email.value.trim() || loading.value) return;
 
   loading.value = true;
   error.value = '';
