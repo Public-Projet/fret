@@ -76,7 +76,7 @@ const handleLogin = async () => {
     const result = await authStore.loginUser(email.value, password.value, selectedRole.value, rememberMe.value);
 
     if (result.success && result.user) {
-      toastStore.addToast(`Connexion réussie ! Ravis de vous revoir, ${result.user.firstName}.`, 'success');
+      toastStore.addToast(`Connexion réussie ! Ravis de vous revoir, ${result.user.firstName}.`, 'success');
       // Redirection après connexion
       const redirectPath = route.query.redirect as string;
       if (redirectPath && redirectPath.startsWith('/')) {
@@ -90,11 +90,17 @@ const handleLogin = async () => {
         }
       }
     } else {
-      error.value = result.error || 'Erreur de connexion';
+      const msg = result.error || 'Erreur de connexion';
+      error.value = msg;
+      // Toast en attente de validation → warning, sinon erreur
+      const toastType = msg.includes('en attente de validation') ? 'warning' : 'error';
+      toastStore.addToast(msg, toastType);
     }
   } catch (e) {
     console.error('Erreur login:', e);
-    error.value = 'Une erreur inattendue est survenue';
+    const msg = 'Une erreur inattendue est survenue';
+    error.value = msg;
+    toastStore.addToast(msg, 'error');
   } finally {
     loading.value = false;
   }
