@@ -76,7 +76,7 @@ const handleLogin = async () => {
     const result = await authStore.loginUser(email.value, password.value, selectedRole.value, rememberMe.value);
 
     if (result.success && result.user) {
-      toastStore.addToast(`Connexion réussie ! Ravis de vous revoir, ${result.user.firstName}.`, 'success');
+      toastStore.addToast(`Connexion réussie ! Ravis de vous revoir, ${result.user.firstName}.`, 'success');
       // Redirection après connexion
       const redirectPath = route.query.redirect as string;
       if (redirectPath && redirectPath.startsWith('/')) {
