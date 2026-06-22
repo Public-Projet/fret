@@ -3,7 +3,6 @@ import { useCookie } from '#app';
 import { extractErrorMessage } from '~/utils/error';
 import { useCmnAuthStore } from './cmnAuth';
 
-
 export const useCmnSubscriptionStore = defineStore('cmnSubscription', {
   state: () => ({
     transactions: [] as any[],

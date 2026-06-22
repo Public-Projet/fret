@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { extractErrorMessage } from '~/utils/error';
 import { useCarVehiclesStore } from './carVehicles';
-
 import type { UserRole, UserProfile, UpdateProfileData, UpdatePasswordData, UpdateEmailData, } from '~/types';
 
 interface ProfileState {

@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import type { UserRole, AuthUser, AuthState, LoginResponse, RegisterResponse, RegisterData, ApiUser } from '~/types';
 import { mapApiUserToAuthUser as mapUser } from '~/types/auth';
-
 import { extractErrorMessage } from '~/utils/error';
 
 export const useCmnAuthStore = defineStore('cmnAuth', {

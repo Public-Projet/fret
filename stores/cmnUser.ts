@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import type { PublicUser } from '~/types';
 import { extractErrorMessage } from '~/utils/error';
 
-
 export const useCmnUserStore = defineStore('cmnUser', {
   state: () => ({
     carriers: [] as PublicUser[],
