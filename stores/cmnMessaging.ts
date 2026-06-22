@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useCmnAuthStore } from './cmnAuth';
+import { extractErrorMessage } from '~/utils/error';
 
 export const useCmnMessagingStore = defineStore('cmnMessaging', {
   state: () => ({
@@ -105,7 +106,7 @@ export const useCmnMessagingStore = defineStore('cmnMessaging', {
         return { success: true, message: res };
       } catch (e) {
         console.error('Failed to send message', e);
-        return { success: false };
+        return { success: false, error: extractErrorMessage(e) };
       } finally {
         this.loading = false;
       }
