@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, AnnouncementStatus, Offer } from '~/types';
 import { sharedAnnouncementGetters, sharedAnnouncementActions } from '~/utils/announcementHelpers';
+import { extractErrorMessage } from '~/utils/error';
 
 interface AnnouncementState {
   announcements: Announcement[];
@@ -34,7 +35,7 @@ export const useCmnAnnouncementStore = defineStore('cmnAnnouncement', {
         });
         return { success: true };
       } catch (error: any) {
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       }
     },
 
