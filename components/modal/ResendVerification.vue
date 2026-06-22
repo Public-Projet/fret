@@ -54,7 +54,15 @@
                 'w-full flex justify-center items-center gap-3 py-4 px-6 border border-transparent text-base font-bold rounded-2xl text-white shadow-xl transition-all transform hover:-translate-y-1 active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:shadow-none disabled:hover:translate-y-0 disabled:active:scale-100',
                 role === 'shipper' ? 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/30' : 'bg-secondary-600 hover:bg-secondary-700 shadow-secondary-500/30'
               ]">
-                <IconLoader2 v-if="loading" class="w-5 h-5 animate-spin" />
+                <template v-if="loading">
+                  <UiStepLoading
+                    :steps="['Génération de token', 'Envoi de mail']"
+                    :active-step="activeStep"
+                    :auto-play="false"
+                    mode="replace"
+                    color="white"
+                  />
+                </template>
                 <span v-else>Renvoyer le lien</span>
               </button>
             </div>
@@ -103,12 +111,16 @@ const loading = ref(false);
 const error = ref('');
 const success = ref(false);
 const successMessage = ref('');
+const activeStep = ref(0);
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 watch(() => props.modelValue, (newVal) => {
   if (newVal) {
     email.value = props.initialEmail || '';
     error.value = '';
     success.value = false;
+    activeStep.value = 0;
   }
 });
 
@@ -120,12 +132,23 @@ const handleResend = async () => {
   if (!email.value.trim() || loading.value) return;
 
   loading.value = true;
+  activeStep.value = 0; // Initialisation
   error.value = '';
 
   try {
+    await sleep(800);
+    activeStep.value = 1; // Génération de token
+    await sleep(600);
+
     const result = await authStore.resendUserVerificationEmail(email.value, props.role);
 
     if (result.success) {
+      activeStep.value = 2; // Envoi de mail
+      await sleep(1000);
+
+      activeStep.value = 3; // Finalisation
+      await sleep(800);
+
       success.value = true;
       successMessage.value = result.data?.message || 'Un nouveau lien de vérification a été envoyé.';
     } else {
