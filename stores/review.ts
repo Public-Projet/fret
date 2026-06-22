@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Review, Report, ReportType, ReportReason } from '~/types';
+import { extractErrorMessage } from '~/utils/error';
 
 interface ReviewState {
   reviews: Review[];
@@ -54,7 +55,7 @@ export const useReviewStore = defineStore('review', {
         return { success: false, error: 'Erreur technique' };
       } catch (error: any) {
         console.error('Erreur lors de la création de l\'avis:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -78,7 +79,7 @@ export const useReviewStore = defineStore('review', {
         return { success: false, error: 'Erreur technique' };
       } catch (error: any) {
         console.error('Erreur lors du signalement:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -108,7 +109,7 @@ export const useReviewStore = defineStore('review', {
         return { success: false, error: 'Erreur technique' };
       } catch (error: any) {
         console.error('Erreur lors de la mise à jour du signalement:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -131,7 +132,7 @@ export const useReviewStore = defineStore('review', {
         return { success: true };
       } catch (error: any) {
         console.error('Erreur lors de la suppression de l\'avis:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
