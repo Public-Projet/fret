@@ -48,10 +48,10 @@
                     ? 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/30'
                     : 'bg-secondary-600 hover:bg-secondary-700 shadow-secondary-500/30'
                 ]" :disabled="forgotLoading || !forgotEmail.trim()">
-                <span v-if="forgotLoading" class="flex items-center gap-2">
-                  <IconLoader2 class="h-4 w-4 animate-spin" />
-                  Envoi...
-                </span>
+                <template v-if="forgotLoading">
+                  <UiStepLoading :steps="['Génération de token', 'Envoi de mail']" :active-step="activeStep"
+                    :auto-play="false" mode="replace" color="white" />
+                </template>
                 <span v-else class="flex items-center gap-2">
                   <IconMail class="h-5 w-5" />
                   Envoyer le lien
@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { IconX, IconMail, IconMailCheck, IconLoader2 } from '@tabler/icons-vue';
+import { IconX, IconMail, IconMailCheck } from '@tabler/icons-vue';
 import type { UserRole } from '~/types';
 
 const props = defineProps<{
@@ -110,6 +110,9 @@ const forgotError = ref('');
 const forgotLoading = ref(false);
 const forgotEmailSent = ref(false);
 const forgotSuccessMessage = ref('');
+const activeStep = ref(0);
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 watch(() => props.modelValue, (newVal) => {
   if (newVal) {
@@ -117,6 +120,7 @@ watch(() => props.modelValue, (newVal) => {
     forgotError.value = '';
     forgotEmailSent.value = false;
     forgotSuccessMessage.value = '';
+    activeStep.value = 0;
   }
 });
 
@@ -125,13 +129,26 @@ const closeModal = () => {
 };
 
 const handleForgotPassword = async () => {
+  if (!forgotEmail.value.trim() || forgotLoading.value) return;
+
   forgotLoading.value = true;
+  activeStep.value = 0; // Initialisation
   forgotError.value = '';
 
   try {
+    await sleep(800);
+    activeStep.value = 1; // Génération de token
+    await sleep(600);
+
     const response = await authStore.forgotUserPassword(forgotEmail.value, props.role);
 
     if (response.success && response.data) {
+      activeStep.value = 2; // Envoi de mail
+      await sleep(1000);
+
+      activeStep.value = 3; // Finalisation
+      await sleep(800);
+
       forgotEmailSent.value = true;
       if (typeof response.data === 'string') {
         forgotSuccessMessage.value = response.data;
