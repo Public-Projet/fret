@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Partner, Testimonial, LegalPage, FaqCategory, FaqItem, SafetyItem, TeamMember, HelpCategory, HelpArticle, SocialLink, SiteContentState } from '~/types';
 
+
 export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
   state: (): SiteContentState => ({
     partners: [],
@@ -210,7 +211,7 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
           method: 'POST',
           body: { slug, action }
         });
-        
+
         if (res?.success && this.currentArticle && this.currentArticle.slug === slug) {
           this.currentArticle.hasLiked = res.data.hasLiked;
           this.currentArticle.hasDisliked = res.data.hasDisliked;

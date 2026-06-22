@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, AnnouncementStatus, Offer } from '~/types';
 import { sharedAnnouncementGetters, sharedAnnouncementActions } from '~/utils/announcementHelpers';
 
+
 interface AnnouncementState {
   announcements: Announcement[];
   offers: Offer[];
@@ -58,7 +59,7 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         this.loading = false;
       }
     },
-    
+
     // Obtenir une seule annonce
     async fetchShpAnnouncement(id: string) {
       this.loading = true;
@@ -69,7 +70,7 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         if (response) {
           const shipperId = typeof response.shipper === 'object' && response.shipper !== null ? (response.shipper as any).id : response.shipper;
           if (shipperId && !response.userId) response.userId = shipperId;
-          
+
           this.currentAnnouncement = response;
           return { success: true, announcement: response };
         }

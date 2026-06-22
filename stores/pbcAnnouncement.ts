@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, AnnouncementStatus } from '~/types';
 import { sharedAnnouncementGetters, sharedAnnouncementActions } from '~/utils/announcementHelpers';
 
+
 interface AnnouncementState {
   announcements: Announcement[];
   currentAnnouncement: Announcement | null;
