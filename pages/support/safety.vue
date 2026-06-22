@@ -3,6 +3,7 @@
     <div class="card p-8 md:p-12">
       <RootSupportSafetyHeader />
 
+
       <!-- Loading State -->
       <div v-if="store.loading.safetyItems" class="space-y-6 mt-8">
         <div v-for="i in 4" :key="i" class="flex gap-4">
