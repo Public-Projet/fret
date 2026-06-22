@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 
-
 export interface Toast {
   id: string;
   message: string;

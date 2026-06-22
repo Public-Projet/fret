@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { useCmnAuthStore } from './cmnAuth';
 
-
 export const useCmnMessagingStore = defineStore('cmnMessaging', {
   state: () => ({
     conversations: [] as any[],

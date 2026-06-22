@@ -9,7 +9,6 @@ export const useFrtThemeStore = defineStore('frtTheme', {
     isDark: false,
   }),
 
-
   getters: {
     theme: (state) => state.isDark ? 'dark' : 'light',
   },

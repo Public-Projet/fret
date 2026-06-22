@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, Offer } from '~/types';
 import { sharedAnnouncementGetters, sharedAnnouncementActions } from '~/utils/announcementHelpers';
 
-
 interface AnnouncementState {
   announcements: Announcement[];
   offers: Offer[];

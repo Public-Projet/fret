@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Notification } from '~/types';
 
-
 export const useCmnNotificationStore = defineStore('cmnNotification', {
   state: () => ({
     notifications: [] as Notification[],

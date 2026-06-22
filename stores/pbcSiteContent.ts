@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Partner, Testimonial, LegalPage, FaqCategory, FaqItem, SafetyItem, TeamMember, HelpCategory, HelpArticle, SocialLink, SiteContentState } from '~/types';
 
-
 export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
   state: (): SiteContentState => ({
     partners: [],
