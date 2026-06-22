@@ -9,7 +9,6 @@
           <UiAppSkeleton class="h-24 w-full rounded-2xl" v-for="i in 3" :key="i" />
         </div>
       </template>
-
       <template v-else>
         <RootSupportHelpCategoryHeader :category="category" />
         <RootSupportHelpCategoryArticleList :articles="articles" :category-slug="categorySlug" />

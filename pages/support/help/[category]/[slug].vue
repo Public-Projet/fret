@@ -17,7 +17,6 @@
           <UiAppSkeleton class="h-6 w-2/3 rounded-lg" />
         </div>
       </div>
-
       <!-- Skeleton Content -->
       <div
         class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700/50 p-8 md:p-12 mb-10">

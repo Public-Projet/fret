@@ -8,7 +8,6 @@
         <RootSupportHelpHomeSearchResults :results="searchResults" :query="searchQuery" />
       </template>
 
-
       <template v-else-if="store.loading.help">
         <!-- Loading State -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 mt-8">
