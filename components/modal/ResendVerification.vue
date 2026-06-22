@@ -110,6 +110,30 @@ const activeStep = ref(0);
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const getFriendlyErrorMessage = (rawError: string): string => {
+  if (!rawError) return 'Une erreur est survenue lors du renvoi.';
+
+  const rawLower = rawError.toLowerCase();
+
+  // Détecter les erreurs de base de données, réseaux, ou stack traces
+  if (
+    rawLower.includes('adaptererror') ||
+    rawLower.includes('database') ||
+    rawLower.includes('connection') ||
+    rawLower.includes('getaddrinfo') ||
+    rawLower.includes('enotfound') ||
+    rawLower.includes('sails') ||
+    rawLower.includes('postgresql') ||
+    rawLower.includes('at object.fn') ||
+    rawLower.includes('node_modules') ||
+    rawLower.includes('unexpected error')
+  ) {
+    return 'Une erreur de connexion au serveur est survenue. Veuillez réessayer ultérieurement.';
+  }
+
+  return rawError;
+};
+
 watch(() => props.modelValue, (newVal) => {
   if (newVal) {
     email.value = props.initialEmail || '';
@@ -147,10 +171,10 @@ const handleResend = async () => {
       success.value = true;
       successMessage.value = result.data?.message || 'Un nouveau lien de vérification a été envoyé.';
     } else {
-      error.value = result.error?.message || 'Une erreur est survenue lors du renvoi.';
+      error.value = getFriendlyErrorMessage(result.error?.message || 'Une erreur est survenue lors du renvoi.');
     }
-  } catch (e) {
-    error.value = 'Une erreur inattendue est survenue.';
+  } catch (e: any) {
+    error.value = getFriendlyErrorMessage(e?.message || 'Une erreur inattendue est survenue.');
   } finally {
     loading.value = false;
   }
