@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { extractErrorMessage } from '~/utils/error';
+
 import type { Vehicle, AddVehicleData, StoreAvailability as Availability, } from '~/types';
 
 interface ProfileState {
