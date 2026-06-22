@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, Offer } from '~/types';
 import { sharedAnnouncementGetters, sharedAnnouncementActions } from '~/utils/announcementHelpers';
+import { extractErrorMessage } from '~/utils/error';
 
 interface AnnouncementState {
   announcements: Announcement[];
@@ -41,7 +42,7 @@ export const useCarAnnouncementStore = defineStore('carAnnouncement', {
         return { success: true };
       } catch (error: any) {
         console.error('Erreur lors de la création de l\'offre:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -75,7 +76,7 @@ export const useCarAnnouncementStore = defineStore('carAnnouncement', {
         return { success: true };
       } catch (err: any) {
         console.error('Erreur lors de l\'acceptation de l\'offre:', err);
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) };
       } finally {
         this.loading = false;
       }
@@ -92,7 +93,7 @@ export const useCarAnnouncementStore = defineStore('carAnnouncement', {
         return { success: true };
       } catch (err: any) {
         console.error('Erreur lors du refus de l\'offre:', err);
-        return { success: false, error: err?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(err) };
       } finally {
         this.loading = false;
       }
