@@ -76,8 +76,35 @@ export const extractErrorMessage = (error: any): string => {
     if (!foundKey && errorData.message && typeof errorData.message === 'string') {
       message = errorData.message;
     }
-  } else if (error.message && !error.message.startsWith('Erreur HTTP')) {
-    message = error.message;
+  } else if (typeof errorData === 'string') {
+    const sanitized = sanitizeErrorMessage(errorData);
+    if (sanitized !== errorData) {
+      return sanitized;
+    }
+    if (errorData.includes('at ') || errorData.includes('node_modules') || errorData.length > 200) {
+      return 'Une erreur de connexion au serveur est survenue. Veuillez réessayer ultérieurement.';
+    }
+    message = errorData;
+  } else if (error.message) {
+    const isTechnicalHttpMsg = 
+      error.message.startsWith('Erreur HTTP') || 
+      error.message.includes('fetch failed') ||
+      error.message.includes('Erreur backend') ||
+      /^\[(GET|POST|PUT|DELETE|PATCH)\]/i.test(error.message);
+      
+    if (!isTechnicalHttpMsg) {
+      message = error.message;
+    }
+  }
+
+  // Fallback propre pour les codes HTTP connus si le message est toujours générique
+  const statusCode = error?.status || error?.statusCode || error?.response?.status;
+  if (message === 'Une erreur est survenue' || message.includes('Erreur backend')) {
+    if (statusCode === 500) {
+      message = 'Une erreur de connexion au serveur est survenue. Veuillez réessayer ultérieurement.';
+    } else if (statusCode === 404) {
+      message = 'La ressource demandée est introuvable.';
+    }
   }
 
   return sanitizeErrorMessage(message);
