@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { extractErrorMessage } from '~/utils/error';
 
+
 export const usePbcOtherStore = defineStore('pbcOther', {
   state: () => ({
     apiStatus: 'loading' as 'loading' | 'online' | 'offline',
