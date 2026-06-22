@@ -3,6 +3,7 @@ import { useCookie } from '#app';
 import { extractErrorMessage } from '~/utils/error';
 import { useCmnAuthStore } from './cmnAuth';
 
+
 export const useCmnSubscriptionStore = defineStore('cmnSubscription', {
   state: () => ({
     transactions: [] as any[],
@@ -69,13 +70,13 @@ export const useCmnSubscriptionStore = defineStore('cmnSubscription', {
             'Authorization': `Bearer ${useCookie('auth_token').value}`,
           },
         });
-        
+
         // Update user in authStore
         const authStore = useCmnAuthStore();
         if (response.user && authStore.user) {
           authStore.user = { ...authStore.user, ...response.user };
         }
-        
+
         return { success: true, message: response.message || 'Abonnement annulé' };
       } catch (e: any) {
         this.error = extractErrorMessage(e) || 'Erreur lors de l\'annulation de l\'abonnement';
