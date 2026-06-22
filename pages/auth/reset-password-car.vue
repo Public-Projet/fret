@@ -81,7 +81,7 @@ const handleResetPassword = async () => {
 };
 
 useHead({
-  title: 'Réinitialisation Mot de Passe - Bourse de Fret',
+  title: 'Réinitialisation Mot de Passe',
   meta: [
     { name: 'description', content: 'Réinitialisez le mot de passe de votre compte transporteur Bourse de Fret.' },
     { name: 'robots', content: 'noindex, nofollow' }

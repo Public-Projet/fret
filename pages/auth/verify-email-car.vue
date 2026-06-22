@@ -10,7 +10,8 @@
       <RootAuthCarrierVerifyEmailSuccess v-else-if="success" :success-message="successMessage" />
 
       <!-- Error State -->
-      <RootAuthCarrierVerifyEmailError v-else-if="error" :error-message="errorMessage" @resend="showResendModal = true" />
+      <RootAuthCarrierVerifyEmailError v-else-if="error" :error-message="errorMessage"
+        @resend="showResendModal = true" />
 
       <!-- No Token State -->
       <RootAuthCarrierVerifyEmailInvalid v-else @resend="showResendModal = true" />
@@ -69,7 +70,7 @@ onMounted(async () => {
 });
 
 useHead({
-  title: 'Vérification Email Transporteur - Bourse de Fret',
+  title: 'Vérification Email Transporteur',
   meta: [
     { name: 'description', content: 'Vérifiez votre adresse email pour activer votre compte transporteur Bourse de Fret.' },
     { name: 'robots', content: 'noindex, nofollow' }
