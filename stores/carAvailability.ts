@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { extractErrorMessage } from '~/utils/error';
+
 import type { StoreAvailability as Availability, StoreLocation as Location, CreateAvailabilityData, } from '~/types';
 
 export const useCarAvailabilityStore = defineStore('carAvailability', {
