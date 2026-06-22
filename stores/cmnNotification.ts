@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Notification } from '~/types';
+import { extractErrorMessage } from '~/utils/error';
 
 export const useCmnNotificationStore = defineStore('cmnNotification', {
   state: () => ({
@@ -44,6 +45,7 @@ export const useCmnNotificationStore = defineStore('cmnNotification', {
         }
       } catch (error) {
         console.error('Failed to fetch notifications:', error);
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.isLoading = false;
       }
@@ -75,6 +77,7 @@ export const useCmnNotificationStore = defineStore('cmnNotification', {
         }
       } catch (error) {
         console.error('Failed to mark notification as read:', error);
+        return { success: false, error: extractErrorMessage(error) };
       }
     },
 
@@ -98,6 +101,7 @@ export const useCmnNotificationStore = defineStore('cmnNotification', {
         this.unreadCount = 0;
       } catch (error) {
         console.error('Failed to mark all notifications as read:', error);
+        return { success: false, error: extractErrorMessage(error) };
       }
     },
 
@@ -121,6 +125,7 @@ export const useCmnNotificationStore = defineStore('cmnNotification', {
         this.updateUnreadCount();
       } catch (error) {
         console.error('Failed to delete notification:', error);
+        return { success: false, error: extractErrorMessage(error) };
       }
     },
 
