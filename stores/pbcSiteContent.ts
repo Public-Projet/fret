@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Partner, Testimonial, LegalPage, FaqCategory, FaqItem, SafetyItem, TeamMember, HelpCategory, HelpArticle, SocialLink, SiteContentState } from '~/types';
+import { extractErrorMessage } from '~/utils/error';
 
 export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
   state: (): SiteContentState => ({
@@ -220,7 +221,7 @@ export const usePbcSiteContentStore = defineStore('pbcSiteContent', {
         return res;
       } catch (e) {
         console.error(`[siteContent] Erreur vote article ${slug}:`, e);
-        throw e;
+        throw new Error(extractErrorMessage(e));
       }
     },
   },
