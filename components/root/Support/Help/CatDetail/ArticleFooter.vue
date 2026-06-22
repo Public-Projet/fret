@@ -6,23 +6,17 @@
       </p>
       <div class="flex items-center gap-4">
         <span class="text-sm text-gray-500 dark:text-gray-400">Cet article vous a-t-il été utile ?</span>
-        <button
-          @click="handleRate('like')"
-          :class="[
-            'p-2 rounded-lg flex items-center gap-2 transition-colors',
-            article?.hasLiked ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-green-50 dark:hover:bg-green-900/30 hover:text-green-600'
-          ]"
-        >
+        <button @click="handleRate('like')" :class="[
+          'p-2 rounded-lg flex items-center gap-2 transition-colors',
+          article?.hasLiked ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-green-50 dark:hover:bg-green-900/30 hover:text-green-600'
+        ]">
           <IconThumbUp class="w-5 h-5" :class="{ 'fill-current': article?.hasLiked }" />
           <span class="text-sm font-medium" v-if="article?.likesCount">{{ article.likesCount }}</span>
         </button>
-        <button
-          @click="handleRate('dislike')"
-          :class="[
-            'p-2 rounded-lg flex items-center gap-2 transition-colors',
-            article?.hasDisliked ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600'
-          ]"
-        >
+        <button @click="handleRate('dislike')" :class="[
+          'p-2 rounded-lg flex items-center gap-2 transition-colors',
+          article?.hasDisliked ? 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600'
+        ]">
           <IconThumbDown class="w-5 h-5" :class="{ 'fill-current': article?.hasDisliked }" />
           <span class="text-sm font-medium" v-if="article?.dislikesCount">{{ article.dislikesCount }}</span>
         </button>
