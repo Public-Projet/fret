@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { UserRole, AuthUser, AuthState, LoginResponse, RegisterResponse, RegisterData, ApiUser } from '~/types';
 import { mapApiUserToAuthUser as mapUser } from '~/types/auth';
+import { extractErrorMessage } from '~/utils/error';
 
 export const useCmnAuthStore = defineStore('cmnAuth', {
   state: (): AuthState => ({
@@ -83,7 +84,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
         return {
           success: false,
           error: {
-            message: error.data?.message || 'Erreur lors de la vérification',
+            message: extractErrorMessage(error),
             data: error.data?.data || error.data
           }
         };
@@ -105,7 +106,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
         return {
           success: false,
           error: {
-            message: error.data?.message || 'Erreur lors du renvoi de l\'email',
+            message: extractErrorMessage(error),
             data: error.data?.data || error.data
           }
         };
@@ -164,25 +165,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
         return { success: true, user };
       } catch (error: any) {
         this.isLoading = false;
-
-        let errorMessage = 'Erreur de connexion';
-        const errorData = error?.data?.data || error?.data;
-
-        if (errorData) {
-          if (errorData.badCombo && typeof errorData.badCombo === 'object') {
-            errorMessage = (errorData.badCombo as { message?: string }).message || errorMessage;
-          } else if (errorData.accountPending && typeof errorData.accountPending === 'object') {
-            errorMessage = (errorData.accountPending as { message?: string }).message || 'Votre compte est en attente de validation.';
-          } else if (errorData.accountSuspended && typeof errorData.accountSuspended === 'object') {
-            errorMessage = (errorData.accountSuspended as { message?: string }).message || 'Votre compte est suspendu.';
-          } else if (errorData.message) {
-            errorMessage = errorData.message as string;
-          }
-        } else if (error?.message && !error.message.startsWith('Erreur HTTP')) {
-          errorMessage = error.message;
-        }
-
-        return { success: false, error: errorMessage };
+        return { success: false, error: extractErrorMessage(error) };
       }
     },
 
@@ -201,7 +184,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
         return {
           success: false,
           error: {
-            message: error.data?.message || 'Erreur lors de l\'envoi de l\'email',
+            message: extractErrorMessage(error),
             data: error.data?.data || error.data
           }
         };
@@ -223,7 +206,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
         return {
           success: false,
           error: {
-            message: error.data?.message || 'Erreur lors de la réinitialisation',
+            message: extractErrorMessage(error),
             data: error.data?.data || error.data
           }
         };
