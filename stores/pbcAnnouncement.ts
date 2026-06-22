@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, AnnouncementStatus } from '~/types';
 import { sharedAnnouncementGetters, sharedAnnouncementActions } from '~/utils/announcementHelpers';
+import { extractErrorMessage } from '~/utils/error';
 
 interface AnnouncementState {
   announcements: Announcement[];
@@ -41,7 +42,7 @@ export const usePbcAnnouncementStore = defineStore('pbcAnnouncement', {
         return { success: true, total: response.total };
       } catch (error) {
         console.error('Erreur lors du chargement des annonces:', error);
-        return { success: false, error };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -60,7 +61,7 @@ export const usePbcAnnouncementStore = defineStore('pbcAnnouncement', {
         return { success: true, announcement };
       } catch (error) {
         console.error('Erreur lors du chargement de l\'annonce:', error);
-        return { success: false, error: 'Annonce non trouvée' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
