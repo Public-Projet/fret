@@ -3,7 +3,6 @@
     <div class="card p-8 md:p-12">
       <RootSupportSafetyHeader />
 
-      <!-- Loading State -->
       <RootSupportSafetyLoading v-if="store.loading.safetyItems" />
 
       <div v-else class="prose dark:prose-invert max-w-none space-y-8">
