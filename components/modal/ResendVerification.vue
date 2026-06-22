@@ -88,7 +88,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { IconX, IconMail, IconMailCheck, IconLoader2, IconAlertTriangle } from '@tabler/icons-vue';
+import { IconX, IconMail, IconMailCheck, IconAlertTriangle } from '@tabler/icons-vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { UserRole } from '~/types';
 
