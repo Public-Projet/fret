@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Announcement, AnnouncementFilters, AnnouncementStatus, Offer } from '~/types';
 import { sharedAnnouncementGetters, sharedAnnouncementActions } from '~/utils/announcementHelpers';
+import { extractErrorMessage } from '~/utils/error';
 
 interface AnnouncementState {
   announcements: Announcement[];
@@ -36,7 +37,7 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         return { success: true, announcement: newAnnouncement };
       } catch (error: any) {
         console.error('Erreur lors de la création de l\'annonce:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -76,7 +77,7 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         return { success: false, error: 'Annonce non trouvée' };
       } catch (error: any) {
         console.error('Erreur lors du chargement de l\'annonce:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -100,7 +101,7 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         return { success: true, announcement: updated };
       } catch (error: any) {
         console.error('Erreur lors de la mise à jour de l\'annonce:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -123,7 +124,7 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         return { success: true };
       } catch (error: any) {
         console.error('Erreur lors de la suppression de l\'annonce:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -169,7 +170,7 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         return { success: true };
       } catch (error: any) {
         console.error('Erreur lors de l\'acceptation de l\'offre:', error);
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       } finally {
         this.loading = false;
       }
@@ -181,7 +182,7 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         await $fetch(`/api/shipper/announce/offer-reject`, { method: 'POST' });
         return { success: true };
       } catch (error: any) {
-        return { success: false, error: error?.data?.message || 'Erreur technique' };
+        return { success: false, error: extractErrorMessage(error) };
       }
     },
 
