@@ -55,13 +55,8 @@
                 role === 'shipper' ? 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/30' : 'bg-secondary-600 hover:bg-secondary-700 shadow-secondary-500/30'
               ]">
                 <template v-if="loading">
-                  <UiStepLoading
-                    :steps="['Génération de token', 'Envoi de mail']"
-                    :active-step="activeStep"
-                    :auto-play="false"
-                    mode="replace"
-                    color="white"
-                  />
+                  <UiStepLoading :steps="['Génération de token', 'Envoi de mail']" :active-step="activeStep"
+                    :auto-play="false" mode="replace" color="white" />
                 </template>
                 <span v-else>Renvoyer le lien</span>
               </button>
