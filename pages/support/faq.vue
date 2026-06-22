@@ -2,8 +2,6 @@
   <div class="container-custom py-12 max-w-4xl">
     <div class="card p-8 md:p-12">
       <RootSupportFaqHeader />
-
-      <!-- Loading State -->
       <RootSupportFaqLoading v-if="store.loading.faqs" />
 
       <template v-else>
