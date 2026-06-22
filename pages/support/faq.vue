@@ -11,6 +11,7 @@
         </div>
       </div>
 
+
       <template v-else>
         <RootSupportFaqCategories :categories="categories" :activeCategory="activeCategory"
           @update:activeCategory="activeCategory = $event" />
