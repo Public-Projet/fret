@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import { extractErrorMessage } from '~/utils/error';
 import type { StoreAvailability as Availability, StoreLocation as Location } from '~/types';
 
-
 export const usePbcAvailabilityStore = defineStore('pbcAvailability', {
   state: () => ({
     availabilities: [] as Availability[],
