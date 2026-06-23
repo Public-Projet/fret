@@ -6,7 +6,7 @@
         class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
         <IconCheck class="w-8 h-8 text-green-600 dark:text-green-400" />
       </div>
-      <p class="text-lg font-bold text-BtW mb-2">Merci pour votre avis !</p>
+      <p class="text-lg font-bold text-gray-900 dark:text-white mb-2">Merci pour votre avis !</p>
       <p class="text-sm text-gray-500">Votre note a été enregistrée avec succès.</p>
       <button @click="resetForm" class="btn btn-ghost btn-sm mt-4">
         Laisser une autre note
