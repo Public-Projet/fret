@@ -26,7 +26,7 @@
       <RootUserDetailNotFound v-else />
     </div>
 
-    <RootUserDetailRatingModal v-if="showRatingModal" :userId="user?.id" :userRole="user?.role"
+    <ModalGlobalRatingForm :show="showRatingModal" :targetId="user?.id || ''" :targetRole="user?.role"
       :initialData="user?.myReview" @close="showRatingModal = false" @success="handleRateSuccess" />
   </div>
 </template>
