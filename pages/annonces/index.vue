@@ -13,7 +13,7 @@
         :fret-items="fretAnnouncements" @open-rate-modal="openRateModal" />
     </div>
 
-    <RootAnnonceHomeRatingModal :show="showRatingModal" :target="rateTarget" @close="showRatingModal = false"
+    <ModalGlobalRatingForm :show="showRatingModal" :targetId="rateTarget?.id || ''" targetRole="carrier" :initialData="rateTarget?.myReview" @close="showRatingModal = false"
       @success="handleRateSuccess" />
   </div>
 </template>
