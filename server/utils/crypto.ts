@@ -1,7 +1,5 @@
 /**
  * Chiffrement AES-256-GCM pour les tokens JWT stockés dans les cookies.
- *
- * Principe : similaire à Laravel Sanctum cookie encryption.
  */
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 
