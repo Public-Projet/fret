@@ -1,5 +1,6 @@
 import { getHeader, getCookie, proxyRequest } from 'h3';
 import type { H3Event } from 'h3';
+import { decryptToken, isEncryptedToken } from '~/server/utils/crypto';
 
 // Utilitaire serveur pour proxifier les appels vers le backend externe.
 interface ProxyOptions {
@@ -8,18 +9,31 @@ interface ProxyOptions {
   query?: Record<string, string>;
 }
 
-// Récupère le token JWT depuis le header Authorization de la requête entrante
+// Récupère et déchiffre le token JWT depuis la requête entrante.
+// Le cookie contient une valeur AES-256-GCM chiffrée (illisible dans DevTools).
+// Ce serveur Nuxt est le seul à pouvoir la déchiffrer via TOKEN_ENCRYPTION_KEY.
 export function getTokenFromEvent(event: H3Event): string | null {
   const authorization = getHeader(event, 'authorization');
   if (authorization?.startsWith('Bearer ')) {
     const val = authorization.slice(7);
     if (val && val !== 'undefined' && val !== 'null') {
+      // Déchiffrer si c'est un token chiffré (format iv.tag.data)
+      if (isEncryptedToken(val)) {
+        return decryptToken(val);
+      }
       return val;
     }
   }
 
-  const token = getCookie(event, 'auth_token');
-  return token || null;
+  const rawCookie = getCookie(event, 'auth_token');
+  if (!rawCookie) return null;
+
+  // Déchiffrer le cookie si nécessaire
+  if (isEncryptedToken(rawCookie)) {
+    return decryptToken(rawCookie);
+  }
+
+  return rawCookie;
 }
 // Proxy une requête vers le backend externe
 export async function proxyToBackend<T = unknown>(
