@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
-    <RootUserHeroSection />
+    <RootUserHomeHero />
 
     <div class="container-custom -mt-10">
       <RootUserFilters :active-tab="activeTab" :search-query="searchQuery" @update:active-tab="activeTab = $event"
