@@ -7,25 +7,25 @@
         @click.self="$emit('close')">
         <!-- Conteneur de la Modal -->
         <div
-          :class="['bg-WtB rounded-2xl shadow-2xl w-full p-6 space-y-4 border border-ash transition-all', maxWidthClass]">
+          :class="['bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full p-6 space-y-4 border border-gray-200 dark:border-gray-800 transition-all', maxWidthClass]">
           <div v-if="title || $slots.header" class="flex justify-between items-center">
             <slot name="header">
-              <h3 class="text-xl font-bold text-BtW">{{ title }}</h3>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ title }}</h3>
             </slot>
 
-            <button @click="$emit('close')" class="top-3 right-3 p-1 hover:bg-WtBAct rounded-full">
+            <button @click="$emit('close')" class="top-3 right-3 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
               <IconX
-                class="h-5 w-5 sm:h-6 sm:w-6 transform transition duration-300 ease-in-out hover:rotate-90 hover:text-danger" />
+                class="h-5 w-5 sm:h-6 sm:w-6 transform transition duration-300 ease-in-out hover:rotate-90 hover:text-red-500" />
             </button>
           </div>
 
           <!-- Corps de la Modal -->
-          <div class="relative max-h-[70vh] overflow-y-auto px-1 -mx-1 no-scrollbar">
+          <div class="relative max-h-[70vh] overflow-y-auto px-1 -mx-1 no-scrollbar text-gray-700 dark:text-gray-300">
             <slot />
           </div>
 
           <!-- Pied de page de la Modal -->
-          <div v-if="$slots.footer" class="pt-4 border-t border-ash/30 flex justify-end gap-3">
+          <div v-if="$slots.footer" class="pt-4 border-t border-gray-100 dark:border-gray-800/50 flex justify-end gap-3">
             <slot name="footer" />
           </div>
         </div>
