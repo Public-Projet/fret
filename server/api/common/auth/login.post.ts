@@ -1,3 +1,5 @@
+import { encryptToken } from '~/server/utils/crypto';
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const role = body?.role;
@@ -16,8 +18,16 @@ export default defineEventHandler(async (event) => {
     ? '/shipper/auth/login'
     : '/carrier/auth/login';
 
-  return proxyToBackend(event, endpoint, {
+  const response = await proxyToBackend<{ token: string; [key: string]: any }>(event, endpoint, {
     method: 'POST',
     body: loginData,
   });
+
+  // Chiffrer le JWT brut avant de l'exposer au client.
+  // Le navigateur ne verra qu'une valeur opaque AES-256-GCM, non décodable sur jwt.io.
+  return {
+    ...response,
+    token: encryptToken(response.token),
+  };
 });
+
