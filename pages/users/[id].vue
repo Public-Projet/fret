@@ -2,17 +2,13 @@
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 pt-12 relative overflow-hidden">
     <!-- Ambient decorative glow blobs for premium visual depth -->
     <div
-      class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/5 dark:bg-primary-500/10 rounded-full blur-3xl -z-10 pointer-events-none"
-    />
+      class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/5 dark:bg-primary-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
     <div
-      class="absolute top-[20%] left-[-200px] w-[600px] h-[600px] bg-secondary-500/5 dark:bg-secondary-500/10 rounded-full blur-3xl -z-10 pointer-events-none"
-    />
+      class="absolute top-[20%] left-[-200px] w-[600px] h-[600px] bg-secondary-500/5 dark:bg-secondary-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
 
     <div class="container-custom relative z-10">
-      <NuxtLink
-        to="/users"
-        class="group inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-primary-600 mb-8 transition-colors"
-      >
+      <NuxtLink to="/users"
+        class="group inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-primary-600 mb-8 transition-colors">
         <IconArrowLeft class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" />
         Retour à l'annuaire
       </NuxtLink>
@@ -34,14 +30,8 @@
     </div>
 
     <!-- Rating Modal -->
-    <RootUserRatingModal
-      v-if="showRatingModal"
-      :userId="user?.id"
-      :userRole="user?.role"
-      :initialData="user?.myReview"
-      @close="showRatingModal = false"
-      @success="handleRateSuccess"
-    />
+    <RootUserRatingModal v-if="showRatingModal" :userId="user?.id" :userRole="user?.role" :initialData="user?.myReview"
+      @close="showRatingModal = false" @success="handleRateSuccess" />
   </div>
 </template>
 
