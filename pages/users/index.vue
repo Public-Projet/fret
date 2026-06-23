@@ -3,12 +3,12 @@
     <RootUserHomeHero />
 
     <div class="container-custom -mt-10">
-      <RootUserFilters :active-tab="activeTab" :search-query="searchQuery" @update:active-tab="activeTab = $event"
+      <RootUserHomeFilters :active-tab="activeTab" :search-query="searchQuery" @update:active-tab="activeTab = $event"
         @update:search-query="searchQuery = $event" @search="handleSearch" />
 
       <RootUserHomeLoading v-if="loading" />
       <RootUserHomeEmpty v-else-if="filteredUsers.length === 0" :active-tab="activeTab" />
-      <RootUserGrid v-else :items="filteredUsers" />
+      <RootUserHomeGrid v-else :items="filteredUsers" />
     </div>
   </div>
 </template>
