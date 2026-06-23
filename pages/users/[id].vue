@@ -16,9 +16,10 @@
       <RootUserLoading v-if="loading" />
 
       <div v-else-if="user" class="animate-in fade-in slide-in-from-bottom-6 duration-500">
-        <UsersProfileHeader :user="user" :is-me="isMe" :can-rate="canRate" @open-rate-modal="showRatingModal = true" />
-        <UsersCarrierAvailabilities v-if="user.role === 'carrier'" :user-id="user.id" :items="availabilities" />
-        <UsersShipperOffers v-if="user.role === 'shipper'" :user-id="user.id" :items="fretOffers" />
+        <RootUserProfileHeader :user="user" :is-me="isMe" :can-rate="canRate"
+          @open-rate-modal="showRatingModal = true" />
+        <RootUserCarrierAvailabilities v-if="user.role === 'carrier'" :user-id="user.id" :items="availabilities" />
+        <RootUserShipperOffers v-if="user.role === 'shipper'" :user-id="user.id" :items="fretOffers" />
       </div>
 
       <RootUserNotFound v-else />
