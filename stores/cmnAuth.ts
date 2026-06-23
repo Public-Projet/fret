@@ -133,7 +133,7 @@ export const useCmnAuthStore = defineStore('cmnAuth', {
           maxAge: 60 * 60 * 24 * 7,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
-          httpOnly: true
+          // httpOnly: true
         });
         const roleCookie = useCookie<UserRole>('auth_role', {
           maxAge: 60 * 60 * 24 * 7,
