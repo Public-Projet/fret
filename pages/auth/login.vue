@@ -18,7 +18,7 @@
     </div>
 
     <!-- Modal Mot de passe oublié -->
-    <ModalForgotPassword v-model="showForgotModal" :role="selectedRole" :initial-email="email" />
+    <ModalAuthForgotPassword v-model="showForgotModal" :role="selectedRole" :initial-email="email" />
 
     <!-- Modal Resend Verification -->
     <ModalAuthResendVerification v-model="showResendModal" :role="selectedRole" :initial-email="email" />
