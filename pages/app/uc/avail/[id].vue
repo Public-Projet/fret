@@ -170,7 +170,7 @@
               </div>
               Propositions des chargeurs ({{ availability.bookings?.length || 0 }})
             </h2>
-            <AnnoncesNegotiationList :items="availability.bookings || []" type="avail" @refresh="loadAvailability"
+            <CommonNegotiationList :items="availability.bookings || []" type="avail" @refresh="loadAvailability"
               @counter="startCounterNegotiation" />
           </div>
         </div>

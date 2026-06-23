@@ -166,8 +166,7 @@
           v-else-if="authStore.isCarrier && (item.status === 'pending' || item.status === 'negotiating') && hasAlreadyOffered"
           class="bg-white dark:bg-gray-800 rounded-3xl p-6 lg:p-8 shadow-sm border border-gray-100 dark:border-gray-700 space-y-6">
           <div class="flex items-center gap-4 border-b border-gray-50 dark:border-gray-700 pb-4">
-            <div
-              class="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center">
+            <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center">
               <IconMessage class="w-6 h-6 text-amber-500" />
             </div>
             <div>
@@ -175,9 +174,10 @@
               <p class="text-xs text-gray-500">Vous avez déjà transmis une offre pour ce transport.</p>
             </div>
           </div>
-          
+
           <div v-if="myOffer" class="animate-in fade-in duration-500">
-             <AnnoncesNegotiationList :items="[myOffer]" type="offer" @refresh="$emit('refresh')" @counter="$emit('counter', $event)" />
+            <CommonNegotiationList :items="[myOffer]" type="offer" @refresh="$emit('refresh')"
+              @counter="$emit('counter', $event)" />
           </div>
 
           <NuxtLink to="/app/messages"
@@ -191,7 +191,8 @@
       <!-- Negotiations (Owner only) -->
       <div v-if="isOwner" class="mt-8 flex flex-col gap-4">
         <h3 class="text-xl font-bold text-gray-900 dark:text-white px-2">Tableau de Bord des Négociations</h3>
-        <AnnoncesNegotiationList :items="item.offers" type="offer" @refresh="$emit('refresh')" @counter="$emit('counter', $event)" />
+        <CommonNegotiationList :items="item.offers" type="offer" @refresh="$emit('refresh')"
+          @counter="$emit('counter', $event)" />
       </div>
 
     </div>

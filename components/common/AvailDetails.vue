@@ -117,23 +117,25 @@
               S'inscrire sur le trajet
             </button>
             <div v-else class="space-y-4">
-              <div class="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl border border-blue-100 dark:border-blue-900/20">
+              <div
+                class="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl border border-blue-100 dark:border-blue-900/20">
                 <p class="text-blue-700 dark:text-blue-400 font-bold flex items-center mb-4">
                   <IconCheck class="w-5 h-5 mr-2" />
                   {{ getMyEnrollmentStatusText() }}
                 </p>
                 <div v-if="myEnrollment" class="mt-4 border-t border-blue-200 dark:border-blue-800/50 pt-4">
-                  <AnnoncesNegotiationList :items="[myEnrollment]" type="avail" @refresh="$emit('refresh')"
+                  <CommonNegotiationList :items="[myEnrollment]" type="avail" @refresh="$emit('refresh')"
                     @counter="$emit('counter', $event)" />
                 </div>
               </div>
             </div>
           </div>
-          
-          <button class="btn btn-outline w-full py-4 rounded-2xl" :class="[alreadyEnrolled ? (canRate ? 'lg:col-span-2' : 'lg:col-span-3') : (canRate ? 'lg:col-span-1' : 'lg:col-span-2')]">
+
+          <button class="btn btn-outline w-full py-4 rounded-2xl"
+            :class="[alreadyEnrolled ? (canRate ? 'lg:col-span-2' : 'lg:col-span-3') : (canRate ? 'lg:col-span-1' : 'lg:col-span-2')]">
             Contacter le transporteur
           </button>
-          
+
           <!-- Rating Action -->
           <button v-if="canRate" @click="$emit('showRatingModal')" class="btn btn-secondary w-full py-4 rounded-2xl">
             Noter ce transporteur
@@ -149,7 +151,7 @@
     <!-- Negotiations (Owner only) -->
     <div v-if="isOwner" class="mt-8 flex flex-col gap-4">
       <h3 class="text-xl font-bold text-gray-900 dark:text-white px-2">Tableau de Bord des Négociations</h3>
-      <AnnoncesNegotiationList :items="item.bookings" type="avail" @refresh="$emit('refresh')" />
+      <CommonNegotiationList :items="item.bookings" type="avail" @refresh="$emit('refresh')" />
     </div>
   </div>
 </template>

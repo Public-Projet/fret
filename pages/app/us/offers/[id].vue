@@ -84,7 +84,7 @@
               Offres reçues ({{ offers.length }})
             </h2>
             <div class="animate-in fade-in slide-in-from-bottom-2">
-              <AnnoncesNegotiationList :items="offers" type="offer" @refresh="refreshData"
+              <CommonNegotiationList :items="offers" type="offer" @refresh="refreshData"
                 @counter="startCounterNegotiation" />
             </div>
           </div>

@@ -23,8 +23,7 @@
       </div>
 
       <!-- Not found -->
-      <div v-else-if="!offer"
-        class="max-w-xl mx-auto py-16 px-6 text-center animate-in fade-in zoom-in duration-500">
+      <div v-else-if="!offer" class="max-w-xl mx-auto py-16 px-6 text-center animate-in fade-in zoom-in duration-500">
         <div
           class="bg-white dark:bg-gray-800 rounded-[40px] p-12 shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-700 relative overflow-hidden">
           <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary-50 dark:bg-primary-900/10 rounded-full blur-3xl">
@@ -60,7 +59,8 @@
             <div class="relative">
               <div class="flex flex-wrap items-center gap-3 mb-4">
                 <span :class="getStatusClass(offer.status)" class="badge">{{ getStatusLabel(offer.status) }}</span>
-                <span class="text-xs font-bold text-gray-400 tabular-nums">Offre #{{ String(offer.id).slice(0, 8) }}</span>
+                <span class="text-xs font-bold text-gray-400 tabular-nums">Offre #{{ String(offer.id).slice(0, 8)
+                  }}</span>
               </div>
 
               <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-2">
@@ -90,12 +90,13 @@
           <div
             class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] border border-white dark:border-gray-700 p-8 shadow-xl shadow-gray-200/50 dark:shadow-none">
             <h2 class="text-xl font-black text-gray-900 dark:text-white mb-6 flex items-center">
-              <div class="p-3 bg-secondary-50 dark:bg-secondary-900/30 rounded-2xl text-secondary-600 mr-4 shadow-inner">
+              <div
+                class="p-3 bg-secondary-50 dark:bg-secondary-900/30 rounded-2xl text-secondary-600 mr-4 shadow-inner">
                 <IconGavel class="w-5 h-5" />
               </div>
               Suivi de la négociation
             </h2>
-            <AnnoncesNegotiationList :items="[offer]" type="offer" @refresh="refreshData"
+            <CommonNegotiationList :items="[offer]" type="offer" @refresh="refreshData"
               @counter="startCounterNegotiation" />
           </div>
         </div>
@@ -111,10 +112,10 @@
 
             <div v-if="offer.announcement" class="space-y-5">
               <!-- Route -->
-              <div
-                class="relative pl-6 border-l-2 border-gray-100 dark:border-gray-700/50 space-y-5">
+              <div class="relative pl-6 border-l-2 border-gray-100 dark:border-gray-700/50 space-y-5">
                 <div class="relative">
-                  <div class="absolute -left-[25px] top-1 w-3.5 h-3.5 rounded-full bg-white border-2 border-primary-500">
+                  <div
+                    class="absolute -left-[25px] top-1 w-3.5 h-3.5 rounded-full bg-white border-2 border-primary-500">
                   </div>
                   <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-0.5">Départ</p>
                   <p class="font-bold text-gray-900 dark:text-white">{{ offer.announcement.origin?.city }}</p>
@@ -137,7 +138,7 @@
                 <div class="flex justify-between text-sm">
                   <span class="text-gray-500">Marchandise</span>
                   <span class="font-bold text-gray-900 dark:text-white capitalize">{{ offer.announcement.cargoType
-                    }}</span>
+                  }}</span>
                 </div>
                 <div class="flex justify-between text-sm">
                   <span class="text-gray-500">Poids</span>
@@ -159,7 +160,8 @@
           <div
             class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2.5rem] border border-white dark:border-gray-700 p-6 shadow-xl shadow-gray-200/50 dark:shadow-none text-center">
             <IconMessage class="w-10 h-10 text-primary-500 mx-auto mb-3" />
-            <p class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">Discutez directement avec l'expéditeur</p>
+            <p class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4">Discutez directement avec l'expéditeur
+            </p>
             <NuxtLink to="/app/messages"
               class="btn btn-primary w-full py-3 rounded-2xl flex items-center justify-center">
               <IconMessage class="w-4 h-4 mr-2" />
@@ -172,14 +174,10 @@
 
     <!-- Counter-proposal modal -->
     <AnnoncesNegotiationModal v-if="showNegotiationModal && offer"
-      :targetId="String(offer.announcementId || offer.announcement?.id || '')"
-      :dataType="'announcement'"
-      :originalPrice="offer.announcement?.budget"
-      :originalOrigin="offer.announcement?.origin"
-      :originalDestination="offer.announcement?.destination"
-      :initial-data="selectedProposalForCounter"
-      @close="closeNegotiationModal"
-      @success="handleNegotiationSuccess" />
+      :targetId="String(offer.announcementId || offer.announcement?.id || '')" :dataType="'announcement'"
+      :originalPrice="offer.announcement?.budget" :originalOrigin="offer.announcement?.origin"
+      :originalDestination="offer.announcement?.destination" :initial-data="selectedProposalForCounter"
+      @close="closeNegotiationModal" @success="handleNegotiationSuccess" />
   </div>
 </template>
 
