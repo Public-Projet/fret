@@ -18,7 +18,7 @@
     </div>
 
     <!-- Modals -->
-    <ModalResendVerification v-model="showResendModal" role="shipper" />
+    <ModalAuthResendVerification v-model="showResendModal" role="shipper" />
   </NuxtLayout>
 </template>
 
