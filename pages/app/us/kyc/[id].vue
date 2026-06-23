@@ -49,9 +49,12 @@
                     <p class="text-sm text-gray-500">Impossible de charger l'aperçu</p>
                   </div>
                 </div>
-                <div v-else-if="isPdf" class="w-full h-[80vh] min-h-[600px] border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden relative">
-                   <iframe v-if="previewUrl" :src="previewUrl" class="w-full h-full border-0 absolute top-0 left-0" title="PDF Preview"></iframe>
-                   <div v-else class="p-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 flex flex-col items-center justify-center">
+                <div v-else-if="isPdf"
+                  class="w-full h-[80vh] min-h-[600px] border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden relative">
+                  <iframe v-if="previewUrl" :src="previewUrl" class="w-full h-full border-0 absolute top-0 left-0"
+                    title="PDF Preview"></iframe>
+                  <div v-else
+                    class="p-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 flex flex-col items-center justify-center">
                     <IconAlertCircle class="w-8 h-8 text-red-500 mx-auto mb-2" />
                     <p class="text-sm text-gray-500">Impossible de charger le PDF</p>
                   </div>
@@ -182,16 +185,16 @@ const handleDownload = () => {
   if (!urlPath) return;
 
   isDownloading.value = true;
-  
+
   const downloadProxyUrl = profileStore.getKycDownloadUrl(urlPath);
-  
+
   const link = window.document.createElement('a');
   link.href = downloadProxyUrl;
   link.download = document.value?.name || 'document';
   link.target = '_blank';
   window.document.body.appendChild(link);
   link.click();
-  
+
   setTimeout(() => {
     link.remove();
     isDownloading.value = false;
