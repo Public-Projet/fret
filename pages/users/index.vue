@@ -1,20 +1,13 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
-    <!-- Hero Section -->
     <RootUserHeroSection />
 
     <div class="container-custom -mt-10">
-      <!-- Tabs & Search -->
       <RootUserFilters :active-tab="activeTab" :search-query="searchQuery" @update:active-tab="activeTab = $event"
         @update:search-query="searchQuery = $event" @search="handleSearch" />
 
-      <!-- Loading State -->
       <RootUserHomeLoading v-if="loading" />
-
-      <!-- Empty State -->
       <RootUserHomeEmpty v-else-if="filteredUsers.length === 0" :active-tab="activeTab" />
-
-      <!-- Users Grid -->
       <RootUserGrid v-else :items="filteredUsers" />
     </div>
   </div>
