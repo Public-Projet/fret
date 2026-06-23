@@ -7,7 +7,7 @@
       </div>
 
       <!-- Availability View -->
-      <AnnoncesAvailDetails v-else-if="item" :item="item" :is-owner="false" :already-enrolled="alreadyEnrolled"
+      <CommonAvailDetails v-else-if="item" :item="item" :is-owner="false" :already-enrolled="alreadyEnrolled"
         :can-rate="canRate" @enroll="enroll" @show-rating-modal="showRatingModal = true" @refresh="fetchData"
         @counter="startCounterNegotiation" />
 

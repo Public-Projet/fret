@@ -7,7 +7,7 @@
       </div>
 
       <!-- Availability View -->
-      <AnnoncesAvailDetails v-else-if="dataType === 'avail' && item" :item="item" :is-owner="isOwner"
+      <CommonAvailDetails v-else-if="dataType === 'avail' && item" :item="item" :is-owner="isOwner"
         :already-enrolled="alreadyEnrolled" :can-rate="canRate" @enroll="enroll"
         @show-rating-modal="showRatingModal = true" @refresh="fetchData" @counter="startCounterNegotiation" />
 
