@@ -35,7 +35,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
+import { IconLoader2, IconAlertCircle } from '@tabler/icons-vue';
 
 const route = useRoute();
 const availStore = useShpAvailabilityStore();
