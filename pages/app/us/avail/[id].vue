@@ -19,7 +19,7 @@
     </div>
 
     <!-- Negotiation Modal -->
-    <ModalNegotiationModal v-if="showNegotiationModal" :targetId="id" :dataType="'avail'"
+    <ModalAnnonceNegotiation v-if="showNegotiationModal" :targetId="id" :dataType="'avail'"
       :originalPrice="item?.price || item?.budget" :originalOrigin="item?.origin"
       :originalDestination="item?.destination" :initial-data="selectedProposalForCounter" @close="closeNegotiationModal"
       @success="handleNegotiationSuccess" />

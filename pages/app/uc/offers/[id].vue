@@ -60,7 +60,7 @@
               <div class="flex flex-wrap items-center gap-3 mb-4">
                 <span :class="getStatusClass(offer.status)" class="badge">{{ getStatusLabel(offer.status) }}</span>
                 <span class="text-xs font-bold text-gray-400 tabular-nums">Offre #{{ String(offer.id).slice(0, 8)
-                }}</span>
+                  }}</span>
               </div>
 
               <h1 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-2">
@@ -138,7 +138,7 @@
                 <div class="flex justify-between text-sm">
                   <span class="text-gray-500">Marchandise</span>
                   <span class="font-bold text-gray-900 dark:text-white capitalize">{{ offer.announcement.cargoType
-                    }}</span>
+                  }}</span>
                 </div>
                 <div class="flex justify-between text-sm">
                   <span class="text-gray-500">Poids</span>
@@ -173,7 +173,7 @@
     </div>
 
     <!-- Counter-proposal modal -->
-    <ModalNegotiationModal v-if="showNegotiationModal && offer"
+    <ModalAnnonceNegotiation v-if="showNegotiationModal && offer"
       :targetId="String(offer.announcementId || offer.announcement?.id || '')" :dataType="'announcement'"
       :originalPrice="offer.announcement?.budget" :originalOrigin="offer.announcement?.origin"
       :originalDestination="offer.announcement?.destination" :initial-data="selectedProposalForCounter"

@@ -146,7 +146,7 @@
     <ModalDashboardEditAnnounce v-if="showEditModal" :announcement="announcement" @close="showEditModal = false"
       @update="handleUpdate" />
 
-    <ModalNegotiationModal v-if="showNegotiationModal" :targetId="announcementId" :dataType="'announcement'"
+    <ModalAnnonceNegotiation v-if="showNegotiationModal" :targetId="announcementId" :dataType="'announcement'"
       :originalPrice="announcement?.budget" :originalOrigin="announcement?.origin"
       :originalDestination="announcement?.destination" :initial-data="selectedProposalForCounter"
       @close="closeNegotiationModal" @success="handleNegotiationSuccess" />
