@@ -13,20 +13,21 @@
         Retour à l'annuaire
       </NuxtLink>
 
-      <RootUserLoading v-if="loading" />
+      <RootUserDetailLoading v-if="loading" />
 
       <div v-else-if="user" class="animate-in fade-in slide-in-from-bottom-6 duration-500">
-        <RootUserProfileHeader :user="user" :is-me="isMe" :can-rate="canRate"
+        <RootUserDetailProfileHeader :user="user" :is-me="isMe" :can-rate="canRate"
           @open-rate-modal="showRatingModal = true" />
-        <RootUserCarrierAvailabilities v-if="user.role === 'carrier'" :user-id="user.id" :items="availabilities" />
-        <RootUserShipperOffers v-if="user.role === 'shipper'" :user-id="user.id" :items="fretOffers" />
+        <RootUserDetailCarrierAvailabilities v-if="user.role === 'carrier'" :user-id="user.id"
+          :items="availabilities" />
+        <RootUserDetailShipperOffers v-if="user.role === 'shipper'" :user-id="user.id" :items="fretOffers" />
       </div>
 
-      <RootUserNotFound v-else />
+      <RootUserDetailNotFound v-else />
     </div>
 
-    <RootUserRatingModal v-if="showRatingModal" :userId="user?.id" :userRole="user?.role" :initialData="user?.myReview"
-      @close="showRatingModal = false" @success="handleRateSuccess" />
+    <RootUserDetailRatingModal v-if="showRatingModal" :userId="user?.id" :userRole="user?.role"
+      :initialData="user?.myReview" @close="showRatingModal = false" @success="handleRateSuccess" />
   </div>
 </template>
 
