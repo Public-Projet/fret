@@ -30,8 +30,10 @@
       @close="closeNegotiationModal" @success="handleNegotiationSuccess" />
 
     <!-- Rating Modal -->
-    <ModalGlobalRatingForm :show="showRatingModal" :targetId="dataType === 'avail' ? item?.carrier?.id || '' : item?.user?.id || ''"
-      :targetRole="dataType === 'avail' ? 'carrier' : 'shipper'" :initialData="dataType === 'avail' ? item?.carrier?.myReview : item?.user?.myReview"
+    <ModalGlobalRatingForm :show="showRatingModal"
+      :targetId="dataType === 'avail' ? item?.carrier?.id || '' : item?.user?.id || ''"
+      :targetRole="dataType === 'avail' ? 'carrier' : 'shipper'"
+      :initialData="dataType === 'avail' ? item?.carrier?.myReview : item?.user?.myReview"
       @close="showRatingModal = false" @success="handleRatingSuccess" />
   </div>
 </template>
@@ -42,7 +44,7 @@ import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { IconLoader2, IconAlertCircle, IconX } from '@tabler/icons-vue';
+import { IconLoader2, IconAlertCircle } from '@tabler/icons-vue';
 
 const route = useRoute();
 const pbcAvailStore = usePbcAvailabilityStore();
