@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Availabilities Grid -->
-    <RootAnnonceResultsAvailabilities v-if="activeTab === 'avail'" :items="availItems"
+    <RootAnnonceResultsAvailList v-if="activeTab === 'avail'" :items="availItems"
       @open-rate-modal="$emit('openRateModal', $event)" />
 
     <!-- Fret Announcements Grid -->
