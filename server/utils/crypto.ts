@@ -1,7 +1,5 @@
 /**
  * Chiffrement AES-256-GCM pour les tokens JWT stockés dans les cookies.
- * Le token brut n'est jamais exposé au navigateur — seule la valeur chiffrée
- * est stockée dans le cookie, illisible et non décodable sur jwt.io.
  *
  * Principe : similaire à Laravel Sanctum cookie encryption.
  */
