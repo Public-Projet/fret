@@ -1,62 +1,35 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
-    <!-- Hero Section -->
-    <AnnoncesHeroSection />
+    <RootAnnonceHomeHero />
 
     <div class="container-custom -mt-10">
-      <!-- Search & Filters Card -->
-      <AnnoncesFilters :active-tab="activeTab" v-model:avail-filters="availFilters" v-model:fret-filters="fretFilters"
-        @update:active-tab="switchTab" @apply-fret-filters="applyFretFilters" @reset-fret-filters="resetFretFilters"
-        @reset-avail-filters="resetAvailFilters" />
+      <RootAnnonceHomeFilters
+        :active-tab="activeTab"
+        v-model:avail-filters="availFilters"
+        v-model:fret-filters="fretFilters"
+        @update:active-tab="switchTab"
+        @apply-fret-filters="applyFretFilters"
+        @reset-fret-filters="resetFretFilters"
+        @reset-avail-filters="resetAvailFilters"
+      />
 
-      <!-- Loading State -->
-      <div v-if="loading" class="flex flex-col items-center justify-center py-20">
-        <IconLoader2 class="w-12 h-12 text-primary-600 animate-spin mb-4" />
-        <p class="text-gray-500">Chargement des données...</p>
-      </div>
-
-      <!-- Empty State -->
-      <div v-else-if="isEmpty"
-        class="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
-        <IconTruckOff v-if="activeTab === 'avail'" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <IconPackageOff v-else class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-          {{ activeTab === 'avail' ? 'Aucun véhicule disponible' : 'Aucune annonce de fret trouvée' }}
-        </h3>
-        <p class="text-gray-500 px-4">
-          {{ activeTab === 'avail' ?
-            "Il n'y a pas de véhicules correspondant à vos critères pour le moment."
-            : "Aucun chargement n'est disponible avec ces filtres actuellement." }}
-        </p>
-      </div>
-
-      <!-- List Results -->
-      <div v-else>
-        <!-- Availabilities Grid -->
-        <AnnoncesAvailabilitiesList v-if="activeTab === 'avail'" :items="filteredAvailabilities"
-          @open-rate-modal="openRateModal" />
-
-        <!-- Fret Announcements Grid -->
-        <AnnoncesFretList v-else :items="fretAnnouncements" />
-      </div>
+      <RootAnnonceHomeLoading v-if="loading" />
+      <RootAnnonceHomeEmpty v-else-if="isEmpty" :active-tab="activeTab" />
+      <RootAnnonceHomeResults
+        v-else
+        :active-tab="activeTab"
+        :avail-items="filteredAvailabilities"
+        :fret-items="fretAnnouncements"
+        @open-rate-modal="openRateModal"
+      />
     </div>
 
-    <!-- Rating Modal -->
-    <div v-if="showRatingModal"
-      class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
-      @click.self="showRatingModal = false">
-      <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
-        <div class="relative">
-          <button @click="showRatingModal = false"
-            class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
-            Fermer
-            <IconX class="ml-2 w-5 h-5" />
-          </button>
-          <ProfileRatingForm :targetId="rateTarget?.id" :targetRole="'carrier'" :initialData="rateTarget?.myReview"
-            @success="handleRateSuccess" />
-        </div>
-      </div>
-    </div>
+    <RootAnnonceHomeRatingModal
+      :show="showRatingModal"
+      :target="rateTarget"
+      @close="showRatingModal = false"
+      @success="handleRateSuccess"
+    />
   </div>
 </template>
 
@@ -65,7 +38,6 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useRoute } from 'vue-router';
-import { IconLoader2, IconTruckOff, IconPackageOff, IconX } from '@tabler/icons-vue';
 
 const pbcAvailStore = usePbcAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
@@ -80,7 +52,7 @@ const openRateModal = (carrier: any) => {
   showRatingModal.value = true;
 };
 
-const handleRateSuccess = (data: { rating: number, reviewsCount: number, myReview: any }) => {
+const handleRateSuccess = (data: { rating: number; reviewsCount: number; myReview: any }) => {
   if (rateTarget.value) {
     rateTarget.value.rating = data.rating;
     rateTarget.value.reviewsCount = data.reviewsCount;
@@ -91,19 +63,13 @@ const handleRateSuccess = (data: { rating: number, reviewsCount: number, myRevie
 
 const activeTab = ref<'avail' | 'fret'>('avail');
 
-// Availability State
-const availFilters = ref({
-  origin: '',
-  destination: '',
-  date: ''
-});
+// Availability Filters
+const availFilters = ref({ origin: '', destination: '', date: '' });
 
 const filteredAvailabilities = computed(() => {
   return pbcAvailStore.availabilities.filter(item => {
-    // Filter by User if provided in query
     const matchUserId = !route.query.userId || String(item.carrier?.id) === String(route.query.userId);
     if (!matchUserId) return false;
-
     const matchOrigin = !availFilters.value.origin || item.origin.city.toLowerCase().includes(availFilters.value.origin.toLowerCase());
     const matchDest = !availFilters.value.destination || (item.destination?.city || '').toLowerCase().includes(availFilters.value.destination.toLowerCase());
     const matchDate = !availFilters.value.date || item.startDate.includes(availFilters.value.date);
@@ -111,7 +77,7 @@ const filteredAvailabilities = computed(() => {
   });
 });
 
-// Fret State
+// Fret Filters
 const fretFilters = ref({
   originCity: '',
   destinationCity: '',
@@ -120,13 +86,11 @@ const fretFilters = ref({
 });
 
 const fretAnnouncements = computed(() => {
-  return fretStore.filteredAnnouncements.map(a => {
-    return {
-      ...a,
-      user: a.shipper || a.user,
-      shipper: a.shipper
-    };
-  });
+  return fretStore.filteredAnnouncements.map(a => ({
+    ...a,
+    user: a.shipper || a.user,
+    shipper: a.shipper
+  }));
 });
 
 const loading = computed(() => activeTab.value === 'avail' ? pbcAvailStore.loading : fretStore.loading);
@@ -155,6 +119,18 @@ const switchTab = (tab: 'avail' | 'fret') => {
   router.push({ query: { tab } });
 };
 
+// Handle Query Params
+const handleQueryParams = () => {
+  if (route.query.tab === 'fret') activeTab.value = 'fret';
+  else if (route.query.tab === 'avail') activeTab.value = 'avail';
+};
+
+watch(() => route.query.tab, (newTab) => {
+  if (newTab === 'fret' || newTab === 'avail') {
+    activeTab.value = newTab as 'avail' | 'fret';
+  }
+});
+
 // Data Fetching
 const fetchData = async () => {
   if (activeTab.value === 'avail') {
@@ -165,29 +141,11 @@ const fetchData = async () => {
     if (fretFilters.value.destinationCity) params.destinationCity = fretFilters.value.destinationCity;
     if (fretFilters.value.cargoType) params.cargoType = fretFilters.value.cargoType;
     if (fretFilters.value.minBudget) params.minBudget = fretFilters.value.minBudget;
-
     await fretStore.fetchPbcAnnouncements(params);
   }
 };
 
-// Handle Query Params
-const handleQueryParams = () => {
-  if (route.query.tab === 'fret') {
-    activeTab.value = 'fret';
-  } else if (route.query.tab === 'avail') {
-    activeTab.value = 'avail';
-  }
-};
-
-watch(() => route.query.tab, (newTab) => {
-  if (newTab === 'fret' || newTab === 'avail') {
-    activeTab.value = newTab as 'avail' | 'fret';
-  }
-});
-
-watch(activeTab, (newTab) => {
-  fetchData();
-});
+watch(activeTab, () => fetchData());
 
 onMounted(() => {
   handleQueryParams();
