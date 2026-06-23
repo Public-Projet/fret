@@ -3,33 +3,18 @@
     <RootAnnonceHomeHero />
 
     <div class="container-custom -mt-10">
-      <RootAnnonceHomeFilters
-        :active-tab="activeTab"
-        v-model:avail-filters="availFilters"
-        v-model:fret-filters="fretFilters"
-        @update:active-tab="switchTab"
-        @apply-fret-filters="applyFretFilters"
-        @reset-fret-filters="resetFretFilters"
-        @reset-avail-filters="resetAvailFilters"
-      />
+      <RootAnnonceHomeFilters :active-tab="activeTab" v-model:avail-filters="availFilters"
+        v-model:fret-filters="fretFilters" @update:active-tab="switchTab" @apply-fret-filters="applyFretFilters"
+        @reset-fret-filters="resetFretFilters" @reset-avail-filters="resetAvailFilters" />
 
       <RootAnnonceHomeLoading v-if="loading" />
       <RootAnnonceHomeEmpty v-else-if="isEmpty" :active-tab="activeTab" />
-      <RootAnnonceHomeResults
-        v-else
-        :active-tab="activeTab"
-        :avail-items="filteredAvailabilities"
-        :fret-items="fretAnnouncements"
-        @open-rate-modal="openRateModal"
-      />
+      <RootAnnonceHomeResults v-else :active-tab="activeTab" :avail-items="filteredAvailabilities"
+        :fret-items="fretAnnouncements" @open-rate-modal="openRateModal" />
     </div>
 
-    <RootAnnonceHomeRatingModal
-      :show="showRatingModal"
-      :target="rateTarget"
-      @close="showRatingModal = false"
-      @success="handleRateSuccess"
-    />
+    <RootAnnonceHomeRatingModal :show="showRatingModal" :target="rateTarget" @close="showRatingModal = false"
+      @success="handleRateSuccess" />
   </div>
 </template>
 
