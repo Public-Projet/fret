@@ -13,7 +13,8 @@
               <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ title }}</h3>
             </slot>
 
-            <button @click="$emit('close')" class="top-3 right-3 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+            <button @click="$emit('close')"
+              class="top-3 right-3 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
               <IconX
                 class="h-5 w-5 sm:h-6 sm:w-6 transform transition duration-300 ease-in-out hover:rotate-90 hover:text-red-500" />
             </button>
@@ -25,7 +26,8 @@
           </div>
 
           <!-- Pied de page de la Modal -->
-          <div v-if="$slots.footer" class="pt-4 border-t border-gray-100 dark:border-gray-800/50 flex justify-end gap-3">
+          <div v-if="$slots.footer"
+            class="pt-4 border-t border-gray-100 dark:border-gray-800/50 flex justify-end gap-3">
             <slot name="footer" />
           </div>
         </div>
