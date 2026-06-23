@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- Availabilities Grid -->
-    <RootAnnonceResultsAvailList v-if="activeTab === 'avail'" :items="availItems"
+    <RootAnnonceHomeResultsAvailList v-if="activeTab === 'avail'" :items="availItems"
       @open-rate-modal="$emit('openRateModal', $event)" />
 
     <!-- Fret Announcements Grid -->
-    <RootAnnonceResultsFretList v-else :items="fretItems" />
+    <RootAnnonceHomeResultsFretList v-else :items="fretItems" />
   </div>
 </template>
 
