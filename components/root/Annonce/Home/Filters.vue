@@ -1,13 +1,7 @@
 <template>
-  <AnnoncesFilters
-    :active-tab="activeTab"
-    v-model:avail-filters="availFilters"
-    v-model:fret-filters="fretFilters"
-    @update:active-tab="$emit('update:activeTab', $event)"
-    @apply-fret-filters="$emit('applyFretFilters')"
-    @reset-fret-filters="$emit('resetFretFilters')"
-    @reset-avail-filters="$emit('resetAvailFilters')"
-  />
+  <AnnoncesFilters :active-tab="activeTab" v-model:avail-filters="availFilters" v-model:fret-filters="fretFilters"
+    @update:active-tab="$emit('update:activeTab', $event)" @apply-fret-filters="$emit('applyFretFilters')"
+    @reset-fret-filters="$emit('resetFretFilters')" @reset-avail-filters="$emit('resetAvailFilters')" />
 </template>
 
 <script setup lang="ts">
