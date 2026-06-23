@@ -50,6 +50,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     apiBaseUrl: process.env.API_URL,
+    // Clé AES-256-GCM (32 octets en hex) pour chiffrer les JWT dans les cookies.
+    // Ne JAMAIS mettre cette valeur dans 'public:' — elle doit rester server-side uniquement.
+    tokenEncryptionKey: process.env.TOKEN_ENCRYPTION_KEY,
     public: {}
   },
 
