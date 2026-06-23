@@ -16,13 +16,8 @@
       <RootUserLoading v-if="loading" />
 
       <div v-else-if="user" class="animate-in fade-in slide-in-from-bottom-6 duration-500">
-        <!-- Profile Header -->
         <UsersProfileHeader :user="user" :is-me="isMe" :can-rate="canRate" @open-rate-modal="showRatingModal = true" />
-
-        <!-- Role Specific Section: Carrier Availabilities -->
         <UsersCarrierAvailabilities v-if="user.role === 'carrier'" :user-id="user.id" :items="availabilities" />
-
-        <!-- Role Specific Section: Shipper Offers -->
         <UsersShipperOffers v-if="user.role === 'shipper'" :user-id="user.id" :items="fretOffers" />
       </div>
 
