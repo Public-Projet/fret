@@ -10,8 +10,6 @@ interface ProxyOptions {
 }
 
 // Récupère et déchiffre le token JWT depuis la requête entrante.
-// Le cookie contient une valeur AES-256-GCM chiffrée (illisible dans DevTools).
-// Ce serveur Nuxt est le seul à pouvoir la déchiffrer via TOKEN_ENCRYPTION_KEY.
 export function getTokenFromEvent(event: H3Event): string | null {
   const authorization = getHeader(event, 'authorization');
   if (authorization?.startsWith('Bearer ')) {
@@ -101,7 +99,7 @@ export async function proxyBinaryToBackend(
   }
 
   let url = `${baseUrl}${path}`;
-  
+
   // Appendre les query params si présents
   if (options.query) {
     const params = new URLSearchParams();
