@@ -5,7 +5,7 @@
       @open-rate-modal="$emit('openRateModal', $event)" />
 
     <!-- Fret Announcements Grid -->
-    <RootAnnonceFretList v-else :items="fretItems" />
+    <RootAnnonceFret v-else :items="fretItems" />
   </div>
 </template>
 
