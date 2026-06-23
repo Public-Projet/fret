@@ -24,7 +24,6 @@
       <RootUserNotFound v-else />
     </div>
 
-    <!-- Rating Modal -->
     <RootUserRatingModal v-if="showRatingModal" :userId="user?.id" :userRole="user?.role" :initialData="user?.myReview"
       @close="showRatingModal = false" @success="handleRateSuccess" />
   </div>
