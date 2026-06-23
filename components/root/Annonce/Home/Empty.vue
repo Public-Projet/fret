@@ -1,7 +1,6 @@
 <template>
   <div
-    class="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700"
-  >
+    class="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
     <IconTruckOff v-if="activeTab === 'avail'" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
     <IconPackageOff v-else class="w-16 h-16 text-gray-300 mx-auto mb-4" />
     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
