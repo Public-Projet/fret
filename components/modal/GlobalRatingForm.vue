@@ -1,23 +1,20 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-    <h3 class="font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-      <IconStarFilled class="w-5 h-5 text-yellow-500 mr-2" />
-      {{ title }}
-    </h3>
-
+  <UiBaseModal :show="show" :title="modalTitle" max-width="md" @close="$emit('close')">
+    <!-- Success state -->
     <div v-if="success" class="text-center py-6">
       <div
         class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
         <IconCheck class="w-8 h-8 text-green-600 dark:text-green-400" />
       </div>
-      <p class="text-lg font-bold text-gray-900 dark:text-white mb-2">Merci pour votre avis !</p>
+      <p class="text-lg font-bold text-BtW mb-2">Merci pour votre avis !</p>
       <p class="text-sm text-gray-500">Votre note a été enregistrée avec succès.</p>
-      <button @click="success = false; score = 0; comment = ''" class="btn btn-ghost btn-sm mt-4">
+      <button @click="resetForm" class="btn btn-ghost btn-sm mt-4">
         Laisser une autre note
       </button>
     </div>
 
-    <div v-else class="space-y-6">
+    <!-- Form state -->
+    <div v-else class="space-y-6 py-2">
       <!-- Star Rating -->
       <div class="flex flex-col items-center">
         <div class="flex space-x-2 mb-2">
@@ -56,15 +53,16 @@
         {{ error }}
       </p>
     </div>
-  </div>
+  </UiBaseModal>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useCmnUserStore } from '~/stores/cmnUser';
 import { IconStarFilled, IconStar, IconCheck, IconLoader2, IconSend } from '@tabler/icons-vue';
 
 const props = defineProps<{
+  show: boolean;
   targetId: string;
   targetRole: 'carrier' | 'shipper';
   title?: string;
@@ -72,6 +70,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
+  'close': [];
   'success': [result: { rating: number, reviewsCount: number, myReview: { score: number, comment: string } }];
 }>();
 
@@ -82,8 +81,10 @@ const loading = ref(false);
 const error = ref('');
 const success = ref(false);
 
-const title = props.title || (props.initialData ? 'Modifier ma note' : (props.targetRole === 'carrier' ? 'Noter ce transporteur' : 'Noter cet expéditeur'));
-const submitButtonText = props.initialData ? 'Modifier ma note' : 'Envoyer mon avis';
+const modalTitle = computed(() =>
+  props.title || (props.initialData ? 'Modifier ma note' : (props.targetRole === 'carrier' ? 'Noter ce transporteur' : 'Noter cet expéditeur'))
+);
+const submitButtonText = computed(() => props.initialData ? 'Modifier ma note' : 'Envoyer mon avis');
 
 const scoreLabels: Record<number, string> = {
   1: 'Très médiocre',
@@ -91,6 +92,22 @@ const scoreLabels: Record<number, string> = {
   3: 'Bon',
   4: 'Très bon',
   5: 'Excellent'
+};
+
+// Reset form when modal opens with new data
+watch(() => props.show, (val) => {
+  if (val) {
+    score.value = props.initialData?.score || 0;
+    comment.value = props.initialData?.comment || '';
+    error.value = '';
+    success.value = false;
+  }
+});
+
+const resetForm = () => {
+  success.value = false;
+  score.value = 0;
+  comment.value = '';
 };
 
 const handleSubmit = async () => {
