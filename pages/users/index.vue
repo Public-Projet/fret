@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
     <!-- Hero Section -->
-    <UsersHeroSection />
+    <RootUserHeroSection />
 
     <div class="container-custom -mt-10">
       <!-- Tabs & Search -->
-      <UsersFilters :active-tab="activeTab" :search-query="searchQuery" @update:active-tab="activeTab = $event"
+      <RootUserFilters :active-tab="activeTab" :search-query="searchQuery" @update:active-tab="activeTab = $event"
         @update:search-query="searchQuery = $event" @search="handleSearch" />
 
       <!-- Loading State -->
@@ -15,7 +15,7 @@
       <RootUserHomeEmpty v-else-if="filteredUsers.length === 0" :active-tab="activeTab" />
 
       <!-- Users Grid -->
-      <UsersGrid v-else :items="filteredUsers" />
+      <RootUserGrid v-else :items="filteredUsers" />
     </div>
   </div>
 </template>
@@ -23,7 +23,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useCmnUserStore } from '~/stores/cmnUser';
-
 
 const userStore = useCmnUserStore();
 const route = useRoute();
