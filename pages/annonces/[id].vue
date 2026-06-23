@@ -12,7 +12,7 @@
         @show-rating-modal="showRatingModal = true" @refresh="fetchData" @counter="startCounterNegotiation" />
 
       <!-- Offer View -->
-      <AnnoncesOfferDetails v-else-if="(dataType === 'offer' || dataType === 'fret') && item" :item="item"
+      <RootAnnonceDetailOfferDetails v-else-if="(dataType === 'offer' || dataType === 'fret') && item" :item="item"
         :is-owner="isOwner" :can-rate="canRate" :rating-label="ratingLabel" @show-rating-modal="showRatingModal = true"
         @enroll="enroll" @refresh="fetchData" @counter="startCounterNegotiation" />
 
