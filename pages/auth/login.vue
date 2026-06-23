@@ -21,7 +21,7 @@
     <ModalForgotPassword v-model="showForgotModal" :role="selectedRole" :initial-email="email" />
 
     <!-- Modal Resend Verification -->
-    <ModalResendVerification v-model="showResendModal" :role="selectedRole" :initial-email="email" />
+    <ModalAuthResendVerification v-model="showResendModal" :role="selectedRole" :initial-email="email" />
   </NuxtLayout>
 </template>
 
