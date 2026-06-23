@@ -1,10 +1,7 @@
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div
-      v-for="i in 6"
-      :key="i"
-      class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6"
-    >
+    <div v-for="i in 6" :key="i"
+      class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
       <!-- Route: départ + destination -->
       <div class="flex items-start justify-between mb-6">
         <div class="space-y-4 flex-1">
