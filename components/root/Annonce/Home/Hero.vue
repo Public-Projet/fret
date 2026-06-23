@@ -1,0 +1,3 @@
+<template>
+  <AnnoncesHeroSection />
+</template>
