@@ -125,10 +125,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCmnProfileStore } from '~/stores/cmnProfile';
 import { useAPI } from '~/composables/useAPI';
-import {
-  IconArrowLeft, IconFileDescription, IconDownload, IconLoader2,
-  IconAlertCircle, IconFileTypePdf
-} from '@tabler/icons-vue';
+import { IconArrowLeft, IconFileDescription, IconDownload, IconLoader2, IconAlertCircle, IconFileTypePdf } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
