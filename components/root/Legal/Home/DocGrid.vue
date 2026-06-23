@@ -19,8 +19,7 @@
       </div>
       <div
         class="mt-6 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary-500 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-        s
-        Consulter le documentsssss
+        Consulter le document
         <IconArrowRight class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
       </div>
     </NuxtLink>
