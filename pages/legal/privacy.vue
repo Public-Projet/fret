@@ -1,12 +1,7 @@
 <template>
   <NuxtLayout name="legal" :title="content?.title || 'Politique de confidentialité'" :last-update="content?.lastUpdated">
     <div class="space-y-8">
-      <template v-if="loading">
-        <div v-for="i in 5" :key="i" class="space-y-3">
-          <UiAppSkeleton :loading="true" type="heading" width="45%" height="22px" />
-          <UiAppSkeleton :loading="true" type="text" :count="3" gap="2" />
-        </div>
-      </template>
+      <RootLegalDetailLoading v-if="loading" />
 
       <template v-else-if="content">
         <div v-for="(section, index) in content.sections" :key="index" class="space-y-3">
@@ -15,9 +10,7 @@
         </div>
       </template>
 
-      <div v-else class="text-center py-12">
-        <p class="text-gray-500">Contenu indisponible pour le moment.</p>
-      </div>
+      <RootLegalDetailEmpty v-else />
     </div>
   </NuxtLayout>
 </template>
