@@ -30,22 +30,9 @@
       @close="closeNegotiationModal" @success="handleNegotiationSuccess" />
 
     <!-- Rating Modal -->
-    <div v-if="showRatingModal"
-      class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
-      @click.self="showRatingModal = false">
-      <div class="w-full max-w-md animate-in fade-in zoom-in duration-200">
-        <div class="relative">
-          <button @click="showRatingModal = false"
-            class="absolute -top-12 right-0 text-white hover:text-secondary-400 transition-colors flex items-center text-xs font-black uppercase tracking-widest">
-            Fermer
-            <IconX class="ml-2 w-5 h-5" />
-          </button>
-          <ProfileRatingForm :targetId="dataType === 'avail' ? item.carrier?.id : item.user?.id"
-            :targetRole="dataType === 'avail' ? 'carrier' : 'shipper'" :initialData="null"
-            @success="handleRatingSuccess" />
-        </div>
-      </div>
-    </div>
+    <ModalGlobalRatingForm :show="showRatingModal" :targetId="dataType === 'avail' ? item?.carrier?.id || '' : item?.user?.id || ''"
+      :targetRole="dataType === 'avail' ? 'carrier' : 'shipper'" :initialData="dataType === 'avail' ? item?.carrier?.myReview : item?.user?.myReview"
+      @close="showRatingModal = false" @success="handleRatingSuccess" />
   </div>
 </template>
 
