@@ -1,7 +1,8 @@
 <template>
   <div class="space-y-8 animate-pulse">
     <!-- Profile Banner & Main Info skeleton -->
-    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mb-8">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mb-8">
       <!-- Banner skeleton -->
       <div class="h-48 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 relative"></div>
 
@@ -46,11 +47,8 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div
-          v-for="i in 2"
-          :key="i"
-          class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm space-y-4"
-        >
+        <div v-for="i in 2" :key="i"
+          class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm space-y-4">
           <div class="flex justify-between items-start">
             <div class="space-y-3 w-2/3">
               <UiAppSkeleton :loading="true" type="heading" width="90%" height="18px" />
