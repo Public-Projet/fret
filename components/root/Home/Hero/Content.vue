@@ -39,9 +39,18 @@
 
       <!-- Stats -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 max-w-2xl">
-        <UtilsStatCard :value="shippers" label="Chargeurs actifs" />
-        <UtilsStatCard :value="carriers" label="Transporteurs" />
-        <UtilsStatCard :value="deliveries" label="Transports réussis" suffix="k+" />
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+          <div class="text-4xl font-black text-white mb-2">{{ shippers }}</div>
+          <div class="text-blue-200 text-sm font-medium">Chargeurs actifs</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+          <div class="text-4xl font-black text-white mb-2">{{ carriers }}</div>
+          <div class="text-blue-200 text-sm font-medium">Transporteurs</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+          <div class="text-4xl font-black text-white mb-2">{{ deliveries }}k+</div>
+          <div class="text-blue-200 text-sm font-medium">Transports réussis</div>
+        </div>
       </div>
     </div>
   </div>
