@@ -155,7 +155,7 @@
           class="flex flex-col items-center p-2.5 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100 dark:border-gray-800">
           <span class="w-2.5 h-2.5 rounded-full bg-blue-500 mb-1"></span>
           <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">En
-            attente</span>
+            Cours</span>
           <span class="text-sm font-black text-gray-800 dark:text-white mt-0.5">{{ activeAnnouncementsCount -
             negotiatingCount }}</span>
         </div>
