@@ -11,20 +11,12 @@
 
     <template v-else>
       <!-- Stats Cards -->
-      <RootAppShpHomeStats
-        :active-announcements-count="activeAnnouncementsCount"
-        :negotiating-count="negotiatingCount"
-        :completed-count="completedCount"
-        :total-budget="totalBudget"
-      />
+      <RootAppShpHomeStats :active-announcements-count="activeAnnouncementsCount" :negotiating-count="negotiatingCount"
+        :completed-count="completedCount" :total-budget="totalBudget" />
 
       <!-- Interactive Charts -->
-      <RootAppShpHomeCharts
-        :active-announcements-count="activeAnnouncementsCount"
-        :negotiating-count="negotiatingCount"
-        :completed-count="completedCount"
-        :total-budget="totalBudget"
-      />
+      <RootAppShpHomeCharts :active-announcements-count="activeAnnouncementsCount" :negotiating-count="negotiatingCount"
+        :completed-count="completedCount" :total-budget="totalBudget" />
 
       <!-- Recent Activity & Quick Action -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
