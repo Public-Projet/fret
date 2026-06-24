@@ -158,7 +158,7 @@ const hoveredBar = ref<{ index: number; type: 'earned' | 'potential' } | null>(n
 const chartData = computed(() => {
   const result: any[] = [];
   const now = new Date();
-  
+
   // Générer les 5 derniers mois
   for (let i = 4; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -204,9 +204,9 @@ const chartData = computed(() => {
   // Si toutes les valeurs sont nulles (ex: nouveau compte sans données), on met un petit mock réaliste de base
   const totalSum = result.reduce((acc, r) => acc + r.earned + r.potential, 0);
   if (totalSum === 0) {
-    result[0].earned = 450000;  result[0].potential = 200000;
-    result[1].earned = 800000;  result[1].potential = 350000;
-    result[2].earned = 600000;  result[2].potential = 500000;
+    result[0].earned = 450000; result[0].potential = 200000;
+    result[1].earned = 800000; result[1].potential = 350000;
+    result[2].earned = 600000; result[2].potential = 500000;
     result[3].earned = 1200000; result[3].potential = 650000;
     result[4].earned = 1500000; result[4].potential = 900000;
   }
@@ -228,11 +228,11 @@ const chartData = computed(() => {
 });
 
 // Taux de réussite réel
-const acceptedOffersCount = computed(() => 
+const acceptedOffersCount = computed(() =>
   props.offers.filter((o: any) => ['accepted', 'completed'].includes(o.status)).length
 );
 
-const activeOffersCount = computed(() => 
+const activeOffersCount = computed(() =>
   props.offers.filter((o: any) => ['pending', 'counter', 'negotiating'].includes(o.status)).length
 );
 
