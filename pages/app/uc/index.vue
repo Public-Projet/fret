@@ -12,7 +12,7 @@
       </NuxtLink>
     </div>
 
-    <!-- Loading state with extracted module -->
+    <!-- Loading state -->
     <RootAppCarHomeLoading v-if="loading" />
 
     <template v-else>
