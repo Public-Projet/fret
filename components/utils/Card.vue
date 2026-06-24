@@ -66,7 +66,7 @@
           <p class="text-sm font-medium text-gray-900 dark:text-white">
             {{ (announcement.shipper || announcement.user)?.company || ((announcement.shipper ||
               announcement.user)?.firstname || '') + ' ' + ((announcement.shipper || announcement.user)?.lastname || '')
-            || 'Expéditeur' }}
+              || 'Expéditeur' }}
           </p>
           <div class="flex items-center text-yellow-500">
             <template v-for="i in 5" :key="i">
