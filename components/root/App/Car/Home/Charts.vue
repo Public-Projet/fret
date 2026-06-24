@@ -216,15 +216,7 @@ const chartData = computed(() => {
     }
   });
 
-  // Si toutes les valeurs sont nulles (ex: nouveau compte sans données), on met un petit mock réaliste de base
-  const totalSum = result.reduce((acc, r) => acc + r.earned + r.potential, 0);
-  if (totalSum === 0) {
-    result[0].earned = 450000; result[0].potential = 200000;
-    result[1].earned = 800000; result[1].potential = 350000;
-    result[2].earned = 600000; result[2].potential = 500000;
-    result[3].earned = 1200000; result[3].potential = 650000;
-    result[4].earned = 1500000; result[4].potential = 900000;
-  }
+
 
   // Calcul du maximum pour l'échelle y
   const maxVal = Math.max(...result.map(r => Math.max(r.earned, r.potential)), 100000);
