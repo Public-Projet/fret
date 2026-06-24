@@ -156,8 +156,8 @@
           <span class="w-2.5 h-2.5 rounded-full bg-blue-500 mb-1"></span>
           <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">En
             Cours</span>
-          <span class="text-sm font-black text-gray-800 dark:text-white mt-0.5">{{ activeAnnouncementsCount -
-            negotiatingCount }}</span>
+          <span class="text-sm font-black text-gray-800 dark:text-white mt-0.5">{{ activeAnnouncementsCount
+            -negotiatingCount }}</span>
         </div>
       </div>
     </div>
