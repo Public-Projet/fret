@@ -3,7 +3,7 @@
     <div>
       <h1 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-tight">
         Bienvenue, <span class="text-primary-600 dark:text-primary-400">{{ currentUser?.firstName || 'Transporteur'
-          }}</span>
+        }}</span>
       </h1>
       <p class="text-lg text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
