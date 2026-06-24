@@ -1,9 +1,10 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 lg:p-8 shadow-xl border border-gray-100 dark:border-gray-700/50">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 lg:p-8 shadow-xl border border-gray-100 dark:border-gray-700/50">
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-xl font-black text-gray-900 dark:text-white">Activité récente</h2>
-      <NuxtLink to="/app/us/offers"
-        class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors">Voir tout →</NuxtLink>
+      <NuxtLink to="/app/us/offers" class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors">
+        Voir tout →</NuxtLink>
     </div>
 
     <div v-if="recentActivity.length === 0" class="flex flex-col items-center justify-center py-12 text-center">
