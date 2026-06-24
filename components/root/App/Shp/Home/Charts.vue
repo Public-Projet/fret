@@ -6,7 +6,8 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h3 class="text-xl font-black text-gray-900 dark:text-white">Analyse des coûts</h3>
-          <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mt-1">Évolution mensuelle du budget de fret
+          <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mt-1">
+            Évolution mensuelle du budget de fret
           </p>
         </div>
         <div
@@ -50,7 +51,7 @@
           <line x1="0" y1="140" x2="500" y2="140" stroke="currentColor" class="text-gray-100 dark:text-gray-700/50"
             stroke-dasharray="4,4" />
 
-          <!-- Barres de fond de volume (simulé) -->
+          <!-- Barres de fond de volume -->
           <g>
             <rect v-for="(pt, idx) in chartData" :key="'bar-' + idx" :x="pt.x - 12" :y="pt.barY" width="24"
               :height="180 - pt.barY" rx="4" fill="url(#barGrad)" class="transition-all duration-700" />
@@ -80,11 +81,15 @@
             top: `${(chartData[hoveredIndex].y / 200) * 100 - 30}%`,
             transform: 'translate(-50%, -100%)'
           }">
-          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ chartData[hoveredIndex].month }}
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            {{ chartData[hoveredIndex].month }} {{ chartData[hoveredIndex].year }}
           </p>
-          <p class="text-sm font-black text-emerald-400 mt-0.5">{{ (chartData[hoveredIndex].budget).toLocaleString() }}
-            FCFA</p>
-          <p class="text-[10px] font-medium text-blue-300">{{ chartData[hoveredIndex].volume }} tonnes acheminées</p>
+          <p class="text-sm font-black text-emerald-400 mt-0.5">
+            {{ (chartData[hoveredIndex].budget).toLocaleString() }} FCFA
+          </p>
+          <p class="text-[10px] font-medium text-blue-300">
+            {{ chartData[hoveredIndex].volume.toFixed(1) }} tonnes acheminées
+          </p>
         </div>
       </div>
 
@@ -163,45 +168,101 @@
 import { ref, computed } from 'vue';
 
 const props = withDefaults(defineProps<{
-  activeAnnouncementsCount: number;
-  negotiatingCount: number;
-  completedCount: number;
-  totalBudget: number;
+  announcements: any[];
+  enrollments: any[];
 }>(), {
-  activeAnnouncementsCount: 0,
-  negotiatingCount: 0,
-  completedCount: 0,
-  totalBudget: 0
+  announcements: () => [],
+  enrollments: () => []
 });
 
 const activePeriod = ref('Trimestre');
 const hoveredIndex = ref<number | null>(null);
 
-// Simuler des données mensuelles basées sur le budget total
+// Regrouper les données réelles du store par mois
 const chartData = computed(() => {
-  const baseBudget = props.totalBudget || 4200000;
+  const result: any[] = [];
+  const now = new Date();
   const isYear = activePeriod.value === 'Année';
+  const steps = isYear ? 7 : 5;
 
-  if (isYear) {
-    return [
-      { month: 'Jan', x: 25, y: 130, barY: 150, budget: baseBudget * 0.4, volume: 45 },
-      { month: 'Mar', x: 100, y: 110, barY: 130, budget: baseBudget * 0.6, volume: 72 },
-      { month: 'Mai', x: 175, y: 140, barY: 160, budget: baseBudget * 0.5, volume: 55 },
-      { month: 'Jul', x: 250, y: 80, barY: 100, budget: baseBudget * 0.9, volume: 110 },
-      { month: 'Sep', x: 325, y: 90, barY: 110, budget: baseBudget * 0.8, volume: 95 },
-      { month: 'Nov', x: 400, y: 60, barY: 70, budget: baseBudget * 1.2, volume: 140 },
-      { month: 'Déc', x: 475, y: 50, barY: 60, budget: baseBudget * 1.4, volume: 165 },
-    ];
-  } else {
-    // Trimestre
-    return [
-      { month: 'Avril', x: 50, y: 130, barY: 140, budget: baseBudget * 0.7, volume: 68 },
-      { month: 'Mai', x: 162.5, y: 90, barY: 105, budget: baseBudget * 1.1, volume: 105 },
-      { month: 'Juin', x: 275, y: 60, barY: 80, budget: baseBudget * 1.4, volume: 145 },
-      { month: 'Juillet', x: 387.5, y: 85, barY: 90, budget: baseBudget * 1.2, volume: 120 },
-      { month: 'Août', x: 450, y: 50, barY: 55, budget: baseBudget * 1.6, volume: 180 },
-    ];
+  for (let i = steps - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    result.push({
+      monthNumber: d.getMonth(),
+      year: d.getFullYear(),
+      month: d.toLocaleDateString('fr-FR', { month: isYear ? 'short' : 'long' }),
+      budget: 0,
+      volume: 0
+    });
   }
+
+  // Aggréger les annonces réelles
+  props.announcements.forEach(a => {
+    const date = new Date(a.createdAt);
+    const m = date.getMonth();
+    const y = date.getFullYear();
+    const target = result.find(r => r.monthNumber === m && r.year === y);
+    if (target) {
+      let val = a.budget || 0;
+      if (a.offers && a.offers.length > 0) {
+        const acceptedOffer = a.offers.find((o: any) => ['accepted', 'confirmed'].includes(o.status));
+        if (acceptedOffer) {
+          val = acceptedOffer.proposedPrice || acceptedOffer.price || val;
+        }
+      }
+      target.budget += val;
+      target.volume += a.weight ? a.weight / 1000 : 0.5; // volume en tonnes
+    }
+  });
+
+  // Aggréger les inscriptions réelles (souscriptions)
+  props.enrollments.forEach(e => {
+    const date = new Date(e.createdAt);
+    const m = date.getMonth();
+    const y = date.getFullYear();
+    const target = result.find(r => r.monthNumber === m && r.year === y);
+    if (target) {
+      const val = e.proposedPrice || e.price || e.availability?.price || 0;
+      target.budget += val;
+      target.volume += 1.2;
+    }
+  });
+
+  // Fallback si pas de données réelles
+  const totalSum = result.reduce((acc, r) => acc + r.budget, 0);
+  if (totalSum === 0) {
+    if (isYear) {
+      result[0].budget = 800000;  result[0].volume = 4.5;
+      result[1].budget = 1200000; result[1].volume = 7.2;
+      result[2].budget = 900000;  result[2].volume = 5.5;
+      result[3].budget = 1800000; result[3].volume = 11.0;
+      result[4].budget = 1500000; result[4].volume = 9.5;
+      result[5].budget = 2400000; result[5].volume = 14.0;
+      result[6].budget = 2800000; result[6].volume = 16.5;
+    } else {
+      result[0].budget = 1400000; result[0].volume = 6.8;
+      result[1].budget = 2200000; result[1].volume = 10.5;
+      result[2].budget = 2800000; result[2].volume = 14.5;
+      result[3].budget = 2400000; result[3].volume = 12.0;
+      result[4].budget = 3200000; result[4].volume = 18.0;
+    }
+  }
+
+  const maxBudget = Math.max(...result.map(r => r.budget), 200000);
+  const maxVolume = Math.max(...result.map(r => r.volume), 5);
+
+  return result.map((r, idx) => {
+    const totalSteps = result.length;
+    const x = 30 + (idx / (totalSteps - 1)) * 440;
+    const y = 170 - (r.budget / maxBudget) * 120;
+    const barY = 170 - (r.volume / maxVolume) * 90;
+    return {
+      ...r,
+      x,
+      y,
+      barY
+    };
+  });
 });
 
 // Générer le tracé SVG
@@ -221,18 +282,36 @@ const areaPath = computed(() => {
     ` L ${last.x} 180 Z`;
 });
 
-// Donut math
+// Calcul de la répartition des chargements
+const activeAnnouncementsCount = computed(() => {
+  const activeOffers = props.announcements.filter(a => ['pending', 'negotiating'].includes(a.status)).length;
+  const activeEnrollments = props.enrollments.filter((e: any) => ['pending', 'negotiating', 'countered'].includes(e.status)).length;
+  return activeOffers + activeEnrollments;
+});
+
+const negotiatingCount = computed(() => {
+  const negOffers = props.announcements.filter(a => a.status === 'negotiating').length;
+  const negEnrollments = props.enrollments.filter((e: any) => ['negotiating', 'countered'].includes(e.status)).length;
+  return negOffers + negEnrollments;
+});
+
+const completedCount = computed(() => {
+  const compOffers = props.announcements.filter(a => a.status === 'completed').length;
+  const compEnrollments = props.enrollments.filter((e: any) => ['completed', 'accepted'].includes(e.status)).length;
+  return compOffers + compEnrollments;
+});
+
 const totalLoads = computed(() => {
-  const pending = Math.max(0, props.activeAnnouncementsCount - props.negotiatingCount);
-  return props.completedCount + props.negotiatingCount + pending;
+  const pending = Math.max(0, activeAnnouncementsCount.value - negotiatingCount.value);
+  return completedCount.value + negotiatingCount.value + pending;
 });
 
 const dashOffsets = computed(() => {
   const total = totalLoads.value || 1;
-  const pending = Math.max(0, props.activeAnnouncementsCount - props.negotiatingCount);
+  const pending = Math.max(0, activeAnnouncementsCount.value - negotiatingCount.value);
 
-  const compShare = props.completedCount / total;
-  const negShare = props.negotiatingCount / total;
+  const compShare = completedCount.value / total;
+  const negShare = negotiatingCount.value / total;
   const pendShare = pending / total;
 
   return {
@@ -244,10 +323,10 @@ const dashOffsets = computed(() => {
 
 const angles = computed(() => {
   const total = totalLoads.value || 1;
-  const pending = Math.max(0, props.activeAnnouncementsCount - props.negotiatingCount);
+  const pending = Math.max(0, activeAnnouncementsCount.value - negotiatingCount.value);
 
-  const compShare = props.completedCount / total;
-  const negShare = props.negotiatingCount / total;
+  const compShare = completedCount.value / total;
+  const negShare = negotiatingCount.value / total;
 
   const compAngle = compShare * 360;
   const negAngle = negShare * 360;
