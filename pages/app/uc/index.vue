@@ -20,19 +20,13 @@
 
     <template v-else>
       <!-- Stats Cards -->
-      <RootAppCarHomeStats
-        :active-availabilities-count="activeAvailabilitiesCount"
-        :active-offers-count="activeOffersCount"
-        :accepted-offers-count="acceptedOffersCount"
-        :potential-revenue="potentialRevenue"
-      />
+      <RootAppCarHomeStats :active-availabilities-count="activeAvailabilitiesCount"
+        :active-offers-count="activeOffersCount" :accepted-offers-count="acceptedOffersCount"
+        :potential-revenue="potentialRevenue" />
 
       <!-- Interactive Charts -->
-      <RootAppCarHomeCharts
-        :active-offers-count="activeOffersCount"
-        :accepted-offers-count="acceptedOffersCount"
-        :potential-revenue="potentialRevenue"
-      />
+      <RootAppCarHomeCharts :active-offers-count="activeOffersCount" :accepted-offers-count="acceptedOffersCount"
+        :potential-revenue="potentialRevenue" />
 
       <!-- Recent Activity & Recommendations -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -68,10 +62,10 @@ const publishAvailability = () => {
   useRouter().push('/app/uc/avail/create');
 };
 
-const loading = computed(() => 
-  announcementStore.loading || 
-  availabilityStore.loading || 
-  carVehicleStore.loading || 
+const loading = computed(() =>
+  announcementStore.loading ||
+  availabilityStore.loading ||
+  carVehicleStore.loading ||
   carStore.loading
 );
 
