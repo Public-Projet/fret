@@ -2,14 +2,13 @@
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <h2 class="text-xl font-black text-gray-900 dark:text-white">Activité récente</h2>
-      <NuxtLink to="/app/uc/avail"
-        class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors">Explorer →</NuxtLink>
+      <NuxtLink to="/app/uc/avail" class="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors">
+        Explorer →</NuxtLink>
     </div>
 
     <div v-if="recentActivity.length === 0"
       class="bg-white dark:bg-gray-800 rounded-[2rem] p-12 text-center border border-gray-100 dark:border-gray-700/50 shadow-xl">
-      <div
-        class="w-20 h-20 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div class="w-20 h-20 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
         <IconSend class="w-10 h-10 text-gray-300 dark:text-gray-600" />
       </div>
       <p class="text-gray-500 dark:text-gray-400 font-medium mb-6">Aucune activité récente.</p>
