@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import type { UserRole } from '~/types';
 
@@ -36,7 +36,7 @@ const role = ref<UserRole>('shipper');
 const loading = ref(false);
 const activeStep = ref(0);
 
-const form = reactive({
+const form = ref({
   firstname: '',
   lastname: '',
   email: '',
@@ -62,10 +62,10 @@ const handleRegister = async () => {
     await sleep(400);
 
     const result = await authStore.registerUser({
-      email: form.email,
-      password: form.password,
-      firstname: form.firstname,
-      lastname: form.lastname,
+      email: form.value.email,
+      password: form.value.password,
+      firstname: form.value.firstname,
+      lastname: form.value.lastname,
     }, role.value);
 
     if (result.success) {
@@ -81,10 +81,10 @@ const handleRegister = async () => {
       );
 
       // Réinitialiser le formulaire
-      form.firstname = '';
-      form.lastname = '';
-      form.email = '';
-      form.password = '';
+      form.value.firstname = '';
+      form.value.lastname = '';
+      form.value.email = '';
+      form.value.password = '';
 
       // Rediriger vers la page de login après 3 secondes
       setTimeout(() => {
