@@ -86,11 +86,21 @@
       </div>
     </div>
 
-    <!-- Taux d'acceptation des offres (Radial Gauge) -->
+    <!-- Taux d'acceptation (Radial Gauge) -->
     <div
       class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 lg:p-8 shadow-xl border border-gray-100 dark:border-gray-700/50 flex flex-col justify-between">
       <div>
-        <h3 class="text-xl font-black text-gray-900 dark:text-white">Taux d'acceptation</h3>
+        <div class="flex items-center gap-2">
+          <h3 class="text-xl font-black text-gray-900 dark:text-white">Taux d'acceptation</h3>
+          <!-- Tooltip Explanatory Icon -->
+          <div class="group relative">
+            <IconInfoCircle class="w-5 h-5 text-gray-400 hover:text-primary-500 cursor-pointer transition-colors" />
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-900/95 dark:bg-slate-950/95 text-white text-[11px] font-semibold rounded-xl shadow-2xl opacity-0 translate-y-1 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50 leading-relaxed text-center">
+              Pourcentage de vos offres de fret et réservations de véhicules acceptées par rapport au total des propositions actives ou complétées.
+              <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900/95 dark:border-t-slate-955/95"></div>
+            </div>
+          </div>
+        </div>
         <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mt-1">
           Efficacité de vos propositions tarifaires
         </p>
@@ -118,7 +128,7 @@
         </div>
       </div>
 
-      <!-- Métriques de conversion -->
+      <!-- Métriques de conversion réelles -->
       <div class="grid grid-cols-2 gap-4">
         <div
           class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-2xl border border-gray-100 dark:border-gray-800 text-center">
@@ -130,7 +140,7 @@
         <div
           class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-2xl border border-gray-100 dark:border-gray-800 text-center">
           <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest block">
-            Offres émises
+            Offres émise+active
           </span>
           <span class="text-lg font-black text-gray-800 dark:text-white mt-1 block">
             {{ activeOffersCount + acceptedOffersCount }}
@@ -143,6 +153,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { IconInfoCircle } from '@tabler/icons-vue';
 
 const props = withDefaults(defineProps<{
   offers: any[];
@@ -158,7 +169,7 @@ const hoveredBar = ref<{ index: number; type: 'earned' | 'potential' } | null>(n
 const chartData = computed(() => {
   const result: any[] = [];
   const now = new Date();
-
+  
   // Générer les 5 derniers mois
   for (let i = 4; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -171,14 +182,14 @@ const chartData = computed(() => {
     });
   }
 
-  // Aggréger les offres réelles
+  // Aggréger les offres réelles avec typage sécurisé
   props.offers.forEach(o => {
     const date = new Date(o.createdAt);
     const m = date.getMonth();
     const y = date.getFullYear();
     const target = result.find(r => r.monthNumber === m && r.year === y);
     if (target) {
-      const val = o.proposedPrice || o.price || 0;
+      const val = Number(o.proposedPrice || o.price || 0);
       if (['accepted', 'completed'].includes(o.status)) {
         target.earned += val;
       } else if (['pending', 'counter', 'negotiating'].includes(o.status)) {
@@ -187,14 +198,14 @@ const chartData = computed(() => {
     }
   });
 
-  // Aggréger les disponibilités réelles
+  // Aggréger les disponibilités réelles avec typage sécurisé
   props.availabilities.forEach(a => {
     const date = new Date(a.createdAt || a.startDate);
     const m = date.getMonth();
     const y = date.getFullYear();
     const target = result.find(r => r.monthNumber === m && r.year === y);
     if (target) {
-      const val = a.price || 0;
+      const val = Number(a.price || 0);
       if (['active', 'full'].includes(a.status)) {
         target.potential += val;
       }
@@ -227,14 +238,20 @@ const chartData = computed(() => {
   });
 });
 
-// Taux de réussite réel
-const acceptedOffersCount = computed(() =>
-  props.offers.filter((o: any) => ['accepted', 'completed'].includes(o.status)).length
-);
+// Taux de réussite réel complet (offres + réservations de véhicule)
+const acceptedOffersCount = computed(() => {
+  const fromOffers = props.offers.filter((o: any) => ['accepted', 'completed'].includes(o.status)).length;
+  const fromAvailabilities = props.availabilities.reduce((acc, a: any) => {
+    return acc + (a.bookings?.filter((b: any) => ['accepted', 'completed'].includes(b.status)).length || 0);
+  }, 0);
+  return fromOffers + fromAvailabilities;
+});
 
-const activeOffersCount = computed(() =>
-  props.offers.filter((o: any) => ['pending', 'counter', 'negotiating'].includes(o.status)).length
-);
+const activeOffersCount = computed(() => {
+  const fromOffers = props.offers.filter((o: any) => ['pending', 'counter', 'negotiating'].includes(o.status)).length;
+  const fromAvailabilities = props.availabilities.filter((a: any) => ['active'].includes(a.status)).length;
+  return fromOffers + fromAvailabilities;
+});
 
 const successRate = computed(() => {
   const total = activeOffersCount.value + acceptedOffersCount.value;
