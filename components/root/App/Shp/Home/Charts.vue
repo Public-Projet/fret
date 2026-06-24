@@ -178,7 +178,7 @@ const props = withDefaults(defineProps<{
 const activePeriod = ref('Trimestre');
 const hoveredIndex = ref<number | null>(null);
 
-// Regrouper les données réelles du store par mois
+// Regrouper les données réelles du store par mois en forçant la conversion numérique
 const chartData = computed(() => {
   const result: any[] = [];
   const now = new Date();
@@ -196,57 +196,39 @@ const chartData = computed(() => {
     });
   }
 
-  // Aggréger les annonces réelles
+  // Aggréger les annonces réelles (avec conversions de types robustes)
   props.announcements.forEach(a => {
-    const date = new Date(a.createdAt);
+    const date = new Date(a.createdAt || Date.now());
     const m = date.getMonth();
     const y = date.getFullYear();
     const target = result.find(r => r.monthNumber === m && r.year === y);
     if (target) {
-      let val = a.budget || 0;
+      let val = Number(a.budget) || 0;
       if (a.offers && a.offers.length > 0) {
         const acceptedOffer = a.offers.find((o: any) => ['accepted', 'confirmed'].includes(o.status));
         if (acceptedOffer) {
-          val = acceptedOffer.proposedPrice || acceptedOffer.price || val;
+          val = Number(acceptedOffer.proposedPrice || acceptedOffer.price || val);
         }
       }
       target.budget += val;
-      target.volume += a.weight ? a.weight / 1000 : 0.5; // volume en tonnes
+      target.volume += a.weight ? Number(a.weight) / 1000 : 0.5; // volume en tonnes
     }
   });
 
   // Aggréger les inscriptions réelles (souscriptions)
   props.enrollments.forEach(e => {
-    const date = new Date(e.createdAt);
+    const date = new Date(e.createdAt || Date.now());
     const m = date.getMonth();
     const y = date.getFullYear();
     const target = result.find(r => r.monthNumber === m && r.year === y);
     if (target) {
-      const val = e.proposedPrice || e.price || e.availability?.price || 0;
+      const val = Number(e.proposedPrice || e.price || e.availability?.price || 0);
       target.budget += val;
       target.volume += 1.2;
     }
   });
 
-  // Fallback si pas de données réelles
-  const totalSum = result.reduce((acc, r) => acc + r.budget, 0);
-  if (totalSum === 0) {
-    if (isYear) {
-      result[0].budget = 800000; result[0].volume = 4.5;
-      result[1].budget = 1200000; result[1].volume = 7.2;
-      result[2].budget = 900000; result[2].volume = 5.5;
-      result[3].budget = 1800000; result[3].volume = 11.0;
-      result[4].budget = 1500000; result[4].volume = 9.5;
-      result[5].budget = 2400000; result[5].volume = 14.0;
-      result[6].budget = 2800000; result[6].volume = 16.5;
-    } else {
-      result[0].budget = 1400000; result[0].volume = 6.8;
-      result[1].budget = 2200000; result[1].volume = 10.5;
-      result[2].budget = 2800000; result[2].volume = 14.5;
-      result[3].budget = 2400000; result[3].volume = 12.0;
-      result[4].budget = 3200000; result[4].volume = 18.0;
-    }
-  }
+
 
   const maxBudget = Math.max(...result.map(r => r.budget), 200000);
   const maxVolume = Math.max(...result.map(r => r.volume), 5);
