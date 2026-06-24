@@ -31,7 +31,8 @@
           <IconCube class="w-5 h-5 text-gray-400" />
           <div>
             <p class="text-xs text-gray-500 dark:text-gray-400">Type</p>
-            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ cargoTypeLabel(announcement.cargoType) }}</p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ cargoTypeLabel(announcement.cargoType) }}
+            </p>
           </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -70,7 +71,8 @@
             </p>
             <div class="flex items-center text-yellow-500">
               <template v-for="i in 5" :key="i">
-                <IconStarFilled v-if="i <= Math.round((announcement.shipper || announcement.user)?.rating || 0)" class="w-2.5 h-2.5" />
+                <IconStarFilled v-if="i <= Math.round((announcement.shipper || announcement.user)?.rating || 0)"
+                  class="w-2.5 h-2.5" />
                 <IconStar v-else class="w-2.5 h-2.5 text-gray-200" />
               </template>
               <span class="text-[10px] text-gray-400 font-bold ml-1">
@@ -113,34 +115,34 @@ defineProps<{
 const statusClass = (status: string) => {
   const base = 'badge';
   switch (status) {
-    case 'pending':      return `${base} badge-info`;
-    case 'negotiating':  return `${base} badge-warning`;
-    case 'accepted':     return `${base} badge-success`;
-    case 'completed':    return `${base} badge-neutral`;
-    case 'cancelled':    return `${base} badge-danger`;
-    default:             return `${base} badge-neutral`;
+    case 'pending': return `${base} badge-info`;
+    case 'negotiating': return `${base} badge-warning`;
+    case 'accepted': return `${base} badge-success`;
+    case 'completed': return `${base} badge-neutral`;
+    case 'cancelled': return `${base} badge-danger`;
+    default: return `${base} badge-neutral`;
   }
 };
 
 const statusLabel = (status: string) => {
   const labels: Record<string, string> = {
-    pending:     'En attente',
+    pending: 'En attente',
     negotiating: 'En négociation',
-    accepted:    'Accepté',
-    completed:   'Terminé',
-    cancelled:   'Annulé',
+    accepted: 'Accepté',
+    completed: 'Terminé',
+    cancelled: 'Annulé',
   };
   return labels[status] ?? status;
 };
 
 const cargoTypeLabel = (type: string) => {
   const labels: Record<string, string> = {
-    palettes:    'Palettes',
-    vrac:        'Vrac',
-    conteneur:   'Conteneur',
-    frigorifique:'Frigo',
-    dangereux:   'Dangereux',
-    autre:       'Autre',
+    palettes: 'Palettes',
+    vrac: 'Vrac',
+    conteneur: 'Conteneur',
+    frigorifique: 'Frigo',
+    dangereux: 'Dangereux',
+    autre: 'Autre',
   };
   return labels[type] ?? type;
 };
