@@ -216,8 +216,6 @@ const chartData = computed(() => {
     }
   });
 
-
-
   // Calcul du maximum pour l'échelle y
   const maxVal = Math.max(...result.map(r => Math.max(r.earned, r.potential)), 100000);
 
