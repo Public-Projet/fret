@@ -95,9 +95,13 @@
           <!-- Tooltip Explanatory Icon -->
           <div class="group relative">
             <IconInfoCircle class="w-5 h-5 text-gray-400 hover:text-primary-500 cursor-pointer transition-colors" />
-            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-900/95 dark:bg-slate-950/95 text-white text-[11px] font-semibold rounded-xl shadow-2xl opacity-0 translate-y-1 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50 leading-relaxed text-center">
-              Pourcentage de vos offres de fret et réservations de véhicules acceptées par rapport au total des propositions actives ou complétées.
-              <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900/95 dark:border-t-slate-955/95"></div>
+            <div
+              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-900/95 dark:bg-slate-950/95 text-white text-[11px] font-semibold rounded-xl shadow-2xl opacity-0 translate-y-1 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50 leading-relaxed text-center">
+              Pourcentage de vos offres de fret et réservations de véhicules acceptées par rapport au total des
+              propositions actives ou complétées.
+              <div
+                class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900/95 dark:border-t-slate-955/95">
+              </div>
             </div>
           </div>
         </div>
@@ -169,7 +173,7 @@ const hoveredBar = ref<{ index: number; type: 'earned' | 'potential' } | null>(n
 const chartData = computed(() => {
   const result: any[] = [];
   const now = new Date();
-  
+
   // Générer les 5 derniers mois
   for (let i = 4; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
