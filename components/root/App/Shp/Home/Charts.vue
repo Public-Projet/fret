@@ -232,9 +232,9 @@ const chartData = computed(() => {
   const totalSum = result.reduce((acc, r) => acc + r.budget, 0);
   if (totalSum === 0) {
     if (isYear) {
-      result[0].budget = 800000;  result[0].volume = 4.5;
+      result[0].budget = 800000; result[0].volume = 4.5;
       result[1].budget = 1200000; result[1].volume = 7.2;
-      result[2].budget = 900000;  result[2].volume = 5.5;
+      result[2].budget = 900000; result[2].volume = 5.5;
       result[3].budget = 1800000; result[3].volume = 11.0;
       result[4].budget = 1500000; result[4].volume = 9.5;
       result[5].budget = 2400000; result[5].volume = 14.0;
