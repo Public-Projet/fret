@@ -65,7 +65,7 @@
             transform: 'translate(-50%, -100%)'
           }">
           <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ chartData[hoveredBar.index].month
-            }}</p>
+          }}</p>
           <p class="text-xs font-semibold text-gray-300 mt-1">
             Revenu {{ hoveredBar.type === 'earned' ? 'Réel' : 'Potentiel' }} :
           </p>
