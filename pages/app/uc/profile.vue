@@ -11,18 +11,11 @@
       <!-- Main Info -->
       <div class="lg:col-span-2 space-y-8">
         <!-- Fleet Section -->
-        <RootAppCarProfilFleet
-          :vehicles="vehicles"
-          @add-vehicle="openVehicleModal"
-          @edit-vehicle="openEditVehicleModal"
-          @delete-vehicle="handleDeleteVehicle"
-        />
+        <RootAppCarProfilFleet :vehicles="vehicles" @add-vehicle="openVehicleModal" @edit-vehicle="openEditVehicleModal"
+          @delete-vehicle="handleDeleteVehicle" />
 
         <!-- Documents & Certifications -->
-        <RootAppCarProfilDocuments
-          :kyc-documents="profile?.kycDocuments"
-          @add-doc="openKycModal"
-        />
+        <RootAppCarProfilDocuments :kyc-documents="profile?.kycDocuments" @add-doc="openKycModal" />
       </div>
 
       <!-- Sidebar -->
@@ -30,20 +23,14 @@
         <ProfileContactCard :profile="profile" accent-color="secondary" @edit-email="openEmailModal" />
         <ProfileSecurityCard accent-color="secondary" @open-password="openPasswordModal" @open-email="openEmailModal" />
         <RootAppCarProfilKycStatusCard :profile="profile" />
-        <RootAppCarProfilSubscriptionCard
-          :profile="profile"
-          :can-cancel="canCancelSubscription"
-          :cancel-loading="cancelLoading"
-          :cancel-active-step="cancelActiveStep"
-          :cancel-error="cancelError"
-          :cancel-success="cancelSuccess"
-          @cancel-subscription="handleCancelSubscription"
-        />
+        <RootAppCarProfilSubscriptionCard :profile="profile" :can-cancel="canCancelSubscription"
+          :cancel-loading="cancelLoading" :cancel-active-step="cancelActiveStep" :cancel-error="cancelError"
+          :cancel-success="cancelSuccess" @cancel-subscription="handleCancelSubscription" />
       </div>
     </div>
 
     <!-- Modals -->
-    <ProfileEditModal :show="showEditModal" :profile="profile" :loading="editLoading" :error="editError"
+    <ModalProfileEdit :show="showEditModal" :profile="profile" :loading="editLoading" :error="editError"
       :success="editSuccess" accent-color="secondary" @close="showEditModal = false" @submit="handleUpdateProfile" />
 
     <ModalProfilePassword :show="showPasswordModal" :loading="passwordLoading" :error="passwordError"
