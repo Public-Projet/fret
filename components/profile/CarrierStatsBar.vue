@@ -20,11 +20,13 @@
           </div>
         </div>
         <div class="flex items-center space-x-2 sm:space-x-3 w-full md:w-auto justify-center md:justify-end">
-          <button @click="$emit('open-security')" class="flex-1 md:flex-none flex items-center justify-center btn btn-outline btn-sm py-2.5">
+          <button @click="$emit('open-security')"
+            class="flex-1 md:flex-none flex items-center justify-center btn btn-outline btn-sm py-2.5">
             <IconLock class="w-4 h-4 mr-1" />
             Sécurité
           </button>
-          <button @click="$emit('open-edit')" class="flex-1 md:flex-none flex items-center justify-center btn btn-primary btn-sm py-2.5">
+          <button @click="$emit('open-edit')"
+            class="flex-1 md:flex-none flex items-center justify-center btn btn-primary btn-sm py-2.5">
             <IconEdit class="w-4 h-4 mr-1" />
             Modifier Profil
           </button>
