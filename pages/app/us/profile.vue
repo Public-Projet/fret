@@ -23,7 +23,7 @@
           :cancel-success="cancelSuccess" @cancel-subscription="handleCancelSubscription" />
       </div>
 
-      <!-- Right Column (Main) -->
+      <!-- Right Column -->
       <div class="lg:col-span-2 space-y-6">
         <ProfileShipperKpiCards :announcements="0" reliability="-" rating="-" payment="-" />
 
