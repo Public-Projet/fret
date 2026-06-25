@@ -5,15 +5,15 @@
         Nos Partenaires de Confiance
       </p>
 
-      <!-- Squelettes de chargement via AppSkeleton avec défilement infini -->
+      <!-- Chargement -->
       <div v-if="contentStore.loading.partners" class="relative w-full overflow-hidden mask-gradient py-4">
         <div class="marquee-track flex w-max items-center gap-16 opacity-60">
-          <UiAppSkeleton v-for="i in 24" :key="i" :loading="true" type="rectangle" width="110px" height="40px" radius="8px"
-            animation-type="shimmer" class="shrink-0" />
+          <UiAppSkeleton v-for="i in 24" :key="i" :loading="true" type="rectangle" width="110px" height="40px"
+            radius="8px" animation-type="shimmer" class="shrink-0" />
         </div>
       </div>
 
-      <!-- Partenaires chargés avec défilement infini -->
+      <!-- Partenaires -->
       <div v-else-if="contentStore.partners.length > 0" class="relative w-full overflow-hidden mask-gradient py-4">
         <div class="marquee-track flex w-max items-center gap-16 opacity-60 hover:pause-marquee">
           <!-- Un seul groupe d'éléments contenant la liste doublée via le JS -->
