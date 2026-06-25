@@ -26,6 +26,8 @@
       <!-- Right Column (Main) -->
       <div class="lg:col-span-2 space-y-6">
         <ProfileShipperKpiCards :announcements="0" reliability="-" rating="-" payment="-" />
+
+        <!-- Recent Activity -->
         <RootAppShpProfilRecentActivity />
       </div>
     </div>
