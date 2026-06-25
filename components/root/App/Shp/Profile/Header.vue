@@ -57,10 +57,6 @@
           </button>
         </div>
       </div>
-
-      <!-- 3. AUCUNE DONNÉE / FALLBACK -->
-      <template v-else></template>
-
     </div>
   </div>
 </template>
