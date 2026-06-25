@@ -21,7 +21,8 @@
       <!-- Sidebar -->
       <div class="space-y-6">
         <RootAppCarProfilContactCard :profile="profile" accent-color="secondary" @edit-email="openEmailModal" />
-        <ProfileSecurityCard accent-color="secondary" @open-password="openPasswordModal" @open-email="openEmailModal" />
+        <RootAppShpProfileSecurityCard accent-color="secondary" @open-password="openPasswordModal"
+          @open-email="openEmailModal" />
         <RootAppCarProfilKycStatusCard :profile="profile" />
         <RootAppCarProfilSubscriptionCard :profile="profile" :can-cancel="canCancelSubscription"
           :cancel-loading="cancelLoading" :cancel-active-step="cancelActiveStep" :cancel-error="cancelError"
