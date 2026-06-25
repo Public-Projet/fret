@@ -1,32 +1,35 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
     <!-- Header -->
-    <RootAppCarProfilHeader :profile="profile" />
+    <RootAppCarProfilHeader :profile="profile" :loading="profileStore.isLoading" />
 
     <!-- Stats Bar -->
-    <RootAppCarProfilStatsBar :missions="0" :rating="'-'" :vehicles="vehicles.length"
+    <RootAppCarProfilStatsBar :missions="0" :rating="'-'" :vehicles="vehicles.length" :loading="profileStore.isLoading"
       @open-security="showSecurityModal = true" @open-edit="openEditModal" />
 
     <div class="container-custom mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Main Info -->
       <div class="lg:col-span-2 space-y-8">
         <!-- Fleet Section -->
-        <RootAppCarProfilFleet :vehicles="vehicles" @add-vehicle="openVehicleModal" @edit-vehicle="openEditVehicleModal"
-          @delete-vehicle="handleDeleteVehicle" />
+        <RootAppCarProfilFleet :vehicles="vehicles" :loading="carVehicleStore.vehiclesLoading"
+          @add-vehicle="openVehicleModal" @edit-vehicle="openEditVehicleModal" @delete-vehicle="handleDeleteVehicle" />
 
         <!-- Documents & Certifications -->
-        <RootAppCarProfilDocuments :kyc-documents="profile?.kycDocuments" @add-doc="openKycModal" />
+        <RootAppCarProfilDocuments :kyc-documents="profile?.kycDocuments" :loading="profileStore.isLoading"
+          @add-doc="openKycModal" />
       </div>
 
       <!-- Sidebar -->
       <div class="space-y-6">
-        <RootAppCarProfilContactCard :profile="profile" accent-color="secondary" @edit-email="openEmailModal" />
+        <RootAppCarProfilContactCard :profile="profile" accent-color="secondary" :loading="profileStore.isLoading"
+          @edit-email="openEmailModal" />
         <CommonProfileSecurityCard accent-color="secondary" @open-password="openPasswordModal"
           @open-email="openEmailModal" />
-        <RootAppCarProfilKycStatusCard :profile="profile" />
+        <RootAppCarProfilKycStatusCard :profile="profile" :loading="profileStore.isLoading" />
         <RootAppCarProfilSubscriptionCard :profile="profile" :can-cancel="canCancelSubscription"
           :cancel-loading="cancelLoading" :cancel-active-step="cancelActiveStep" :cancel-error="cancelError"
-          :cancel-success="cancelSuccess" @cancel-subscription="handleCancelSubscription" />
+          :cancel-success="cancelSuccess" :loading="profileStore.isLoading"
+          @cancel-subscription="handleCancelSubscription" />
       </div>
     </div>
 
