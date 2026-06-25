@@ -9,19 +9,28 @@
 
     <div class="container-custom h-full flex items-end pb-8 relative z-10">
       <div class="flex items-end space-x-6 w-full">
-        <UiAppSkeleton :loading="loading" type="avatar" theme="dark" width="8rem" height="8rem" radius="0.5rem" class="-mb-16">
-          <div class="w-32 h-32 bg-white rounded-lg shadow-xl p-1 flex items-center justify-center -mb-16">
-            <div
-              class="w-full h-full bg-slate-100 rounded flex items-center justify-center text-4xl font-bold text-slate-700 uppercase">
-              {{ profile?.firstname?.[0] }}{{ profile?.lastname?.[0] }}
-            </div>
+
+        <!-- Avatar : chargement -->
+        <div v-if="loading" class="w-32 h-32 -mb-16">
+          <UiAppSkeleton :loading="true" type="avatar" theme="dark" />
+        </div>
+        <!-- Avatar : contenu -->
+        <div v-else class="w-32 h-32 bg-white rounded-lg shadow-xl p-1 flex items-center justify-center -mb-16">
+          <div
+            class="w-full h-full bg-slate-100 rounded flex items-center justify-center text-4xl font-bold text-slate-700 uppercase">
+            {{ profile?.firstname?.[0] }}{{ profile?.lastname?.[0] }}
           </div>
-        </UiAppSkeleton>
+        </div>
+
         <div class="flex-1 pb-4">
-          <UiAppSkeleton :loading="loading" type="heading" theme="dark" class="h-8 w-48 mb-2">
+          <!-- Nom : chargement -->
+          <div v-if="loading" class="space-y-2">
+            <UiAppSkeleton :loading="true" type="heading" theme="dark" class="h-8 w-48" />
+            <UiAppSkeleton :loading="true" type="text" theme="dark" class="h-4 w-36" />
+          </div>
+          <!-- Nom : contenu -->
+          <template v-else>
             <h1 class="text-3xl font-bold text-white mb-1">{{ profile?.firstname }} {{ profile?.lastname }}</h1>
-          </UiAppSkeleton>
-          <UiAppSkeleton :loading="loading" type="text" theme="dark" class="h-4 w-36">
             <p class="text-slate-300 flex items-center">
               <IconBuildingSkyscraper class="w-4 h-4 mr-1" />
               Compte Expéditeur
@@ -30,26 +39,30 @@
                 <IconDiscountCheckFilled class="w-4 h-4 mr-1" />
                 Vérifié
               </span>
-              <span v-else class="text-yellow-400 text-sm font-medium">
-                En attente
-              </span>
+              <span v-else class="text-yellow-400 text-sm font-medium">En attente</span>
             </p>
-          </UiAppSkeleton>
+          </template>
         </div>
+
         <div class="pb-4 flex space-x-3">
-          <UiAppSkeleton :loading="loading" type="text" theme="dark" class="h-10 w-12 rounded-lg">
+          <!-- Boutons : chargement -->
+          <template v-if="loading">
+            <UiAppSkeleton :loading="true" type="text" theme="dark" class="h-10 w-12 rounded-lg" />
+            <UiAppSkeleton :loading="true" type="text" theme="dark" class="h-10 w-36 rounded-lg" />
+          </template>
+          <!-- Boutons : contenu -->
+          <template v-else>
             <button @click="$emit('open-security')"
               class="btn bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-sm">
               <IconLock class="w-5 h-5" />
             </button>
-          </UiAppSkeleton>
-          <UiAppSkeleton :loading="loading" type="text" theme="dark" class="h-10 w-36 rounded-lg">
             <button @click="$emit('open-edit')"
               class="btn bg-primary-600 hover:bg-primary-700 text-white border-0 shadow-lg shadow-primary-900/20">
               Modifier le profil
             </button>
-          </UiAppSkeleton>
+          </template>
         </div>
+
       </div>
     </div>
   </div>
