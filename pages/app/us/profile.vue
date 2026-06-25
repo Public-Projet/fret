@@ -1,34 +1,34 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
     <!-- Corporate Banner -->
-    <RootAppShpProfilHeader :profile="profile" @open-security="showSecurityModal = true" @open-edit="openEditModal" />
+    <RootAppShpProfileHeader :profile="profile" @open-security="showSecurityModal = true" @open-edit="openEditModal" />
 
     <!-- Main Content -->
     <div class="container-custom mt-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Left Column (Sidebar) -->
       <div class="space-y-6">
-        <RootAppShpProfilAboutCard :profile="profile" accent-color="primary" @edit-email="openEmailModal" />
-        <RootAppShpProfilSecurityCard accent-color="primary" @open-password="openPasswordModal"
+        <RootAppShpProfileAboutCard :profile="profile" accent-color="primary" @edit-email="openEmailModal" />
+        <RootAppShpProfileSecurityCard accent-color="primary" @open-password="openPasswordModal"
           @open-email="openEmailModal" />
 
         <!-- Documents KYC -->
-        <RootAppShpProfilDocuments :kyc-documents="profile?.kycDocuments" @add-doc="openKycModal" />
+        <RootAppShpProfileDocuments :kyc-documents="profile?.kycDocuments" @add-doc="openKycModal" />
 
         <!-- Statut compte / KYC -->
-        <RootAppShpProfilKycStatusCard :profile="profile" />
+        <RootAppShpProfileKycStatusCard :profile="profile" />
 
         <!-- Abonnement -->
-        <RootAppShpProfilSubscriptionCard :profile="profile" :can-cancel="canCancelSubscription"
+        <RootAppShpProfileSubscriptionCard :profile="profile" :can-cancel="canCancelSubscription"
           :cancel-loading="cancelLoading" :cancel-active-step="cancelActiveStep" :cancel-error="cancelError"
           :cancel-success="cancelSuccess" @cancel-subscription="handleCancelSubscription" />
       </div>
 
       <!-- Right Column -->
       <div class="lg:col-span-2 space-y-6">
-        <RootAppShpProfilKpiCards :announcements="0" reliability="-" rating="-" payment="-" />
+        <RootAppShpProfileKpiCards :announcements="0" reliability="-" rating="-" payment="-" />
 
         <!-- Recent Activity -->
-        <RootAppShpProfilRecentActivity />
+        <RootAppShpProfileRecentActivity />
       </div>
     </div>
 
