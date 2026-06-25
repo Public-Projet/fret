@@ -47,7 +47,7 @@
     <ModalProfileSecurity :show="showSecurityModal" :email="profile?.email" accent-color="secondary"
       @close="showSecurityModal = false" @open-password="openPasswordModal" @open-email="openEmailModal" />
 
-    <ProfileKycModal :show="showKycModal" :loading="kycLoading" :error="kycError" :success="kycSuccess"
+    <ModalProfileKyc :show="showKycModal" :loading="kycLoading" :error="kycError" :success="kycSuccess"
       @close="showKycModal = false" @submit="handleKycSubmit" />
   </div>
 </template>
