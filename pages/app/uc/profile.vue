@@ -20,7 +20,7 @@
 
       <!-- Sidebar -->
       <div class="space-y-6">
-        <ProfileContactCard :profile="profile" accent-color="secondary" @edit-email="openEmailModal" />
+        <RootAppCarProfilContactCard :profile="profile" accent-color="secondary" @edit-email="openEmailModal" />
         <ProfileSecurityCard accent-color="secondary" @open-password="openPasswordModal" @open-email="openEmailModal" />
         <RootAppCarProfilKycStatusCard :profile="profile" />
         <RootAppCarProfilSubscriptionCard :profile="profile" :can-cancel="canCancelSubscription"
