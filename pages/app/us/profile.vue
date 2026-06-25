@@ -33,7 +33,7 @@
     </div>
 
     <!-- Modals -->
-    <ProfileEditModal :show="showEditModal" :profile="profile" :loading="editLoading" :error="editError"
+    <ModalProfileEdit :show="showEditModal" :profile="profile" :loading="editLoading" :error="editError"
       :success="editSuccess" accent-color="primary" @close="showEditModal = false" @submit="handleUpdateProfile" />
 
     <ModalProfilePassword :show="showPasswordModal" :loading="passwordLoading" :error="passwordError"
