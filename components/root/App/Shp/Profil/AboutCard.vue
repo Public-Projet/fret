@@ -4,7 +4,10 @@
     <div class="space-y-4">
       <div>
         <label class="text-xs text-gray-500 block mb-1">Nom d'utilisateur</label>
-        <p class="font-medium text-gray-900 dark:text-white">@{{ profile?.username }}</p>
+        <p class="font-medium text-gray-900 dark:text-white flex items-center">
+          <IconAt class="w-4 h-4 mr-2 text-gray-400" />
+          {{ profile?.username }}
+        </p>
       </div>
       <div>
         <label class="text-xs text-gray-500 block mb-1">Email</label>
@@ -33,7 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IconMail, IconPhone } from '@tabler/icons-vue';
+import { IconAt, IconMail, IconPhone } from '@tabler/icons-vue';
 import type { UserProfile } from '~/types';
 
 const props = defineProps<{
