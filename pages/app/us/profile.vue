@@ -7,7 +7,7 @@
     <div class="container-custom mt-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Left Column (Sidebar) -->
       <div class="space-y-6">
-        <ProfileAboutCard :profile="profile" accent-color="primary" @edit-email="openEmailModal" />
+        <RootAppShpProfilAboutCard :profile="profile" accent-color="primary" @edit-email="openEmailModal" />
         <ProfileSecurityCard accent-color="primary" @open-password="openPasswordModal" @open-email="openEmailModal" />
 
         <!-- Documents KYC -->
