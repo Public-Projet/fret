@@ -8,7 +8,7 @@
       <!-- Left Column (Sidebar) -->
       <div class="space-y-6">
         <RootAppShpProfileAboutCard :profile="profile" accent-color="primary" @edit-email="openEmailModal" />
-        <RootAppShpProfileSecurityCard accent-color="primary" @open-password="openPasswordModal"
+        <CommonProfileSecurityCard accent-color="primary" @open-password="openPasswordModal"
           @open-email="openEmailModal" />
 
         <!-- Documents KYC -->
