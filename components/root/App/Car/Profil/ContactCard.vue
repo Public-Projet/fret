@@ -1,27 +1,29 @@
 <template>
   <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
     <h4 class="font-bold text-gray-900 dark:text-white mb-4">Coordonnées</h4>
-    <ul class="space-y-4 text-sm">
-      <li class="flex items-start">
-        <IconUser class="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
-        <div>
-          <span class="font-medium text-gray-900 dark:text-white">@{{ profile?.username }}</span>
-        </div>
-      </li>
-      <li class="flex items-start">
-        <IconPhone class="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
-        <div>
-          <span class="font-medium text-gray-900 dark:text-white">{{ profile?.phone || 'Non renseigné' }}</span>
-        </div>
-      </li>
-      <li class="flex items-center justify-between">
-        <div class="flex items-start">
-          <IconMail class="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
-          <span class="font-medium text-gray-900 dark:text-white">{{ profile?.email }}</span>
-        </div>
-        <button @click="$emit('edit-email')" :class="['text-xs hover:underline', linkColorClass]">Modifier</button>
-      </li>
-    </ul>
+    <UiAppSkeleton :loading="loading" type="text" :count="3" gap="4">
+      <ul class="space-y-4 text-sm">
+        <li class="flex items-start">
+          <IconUser class="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+          <div>
+            <span class="font-medium text-gray-900 dark:text-white">@{{ profile?.username }}</span>
+          </div>
+        </li>
+        <li class="flex items-start">
+          <IconPhone class="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+          <div>
+            <span class="font-medium text-gray-900 dark:text-white">{{ profile?.phone || 'Non renseigné' }}</span>
+          </div>
+        </li>
+        <li class="flex items-center justify-between">
+          <div class="flex items-start">
+            <IconMail class="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+            <span class="font-medium text-gray-900 dark:text-white">{{ profile?.email }}</span>
+          </div>
+          <button @click="$emit('edit-email')" :class="['text-xs hover:underline', linkColorClass]">Modifier</button>
+        </li>
+      </ul>
+    </UiAppSkeleton>
   </div>
 </template>
 
@@ -33,6 +35,7 @@ import type { UserProfile } from '~/types';
 const props = defineProps<{
   profile: UserProfile | null;
   accentColor?: 'primary' | 'secondary';
+  loading?: boolean;
 }>();
 
 defineEmits<{
