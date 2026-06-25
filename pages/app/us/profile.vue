@@ -11,24 +11,15 @@
         <ProfileSecurityCard accent-color="primary" @open-password="openPasswordModal" @open-email="openEmailModal" />
 
         <!-- Documents KYC -->
-        <RootAppShpProfilDocuments
-          :kyc-documents="profile?.kycDocuments"
-          @add-doc="openKycModal"
-        />
+        <RootAppShpProfilDocuments :kyc-documents="profile?.kycDocuments" @add-doc="openKycModal" />
 
         <!-- Statut compte / KYC -->
         <RootAppShpProfilKycStatusCard :profile="profile" />
 
         <!-- Abonnement -->
-        <RootAppShpProfilSubscriptionCard
-          :profile="profile"
-          :can-cancel="canCancelSubscription"
-          :cancel-loading="cancelLoading"
-          :cancel-active-step="cancelActiveStep"
-          :cancel-error="cancelError"
-          :cancel-success="cancelSuccess"
-          @cancel-subscription="handleCancelSubscription"
-        />
+        <RootAppShpProfilSubscriptionCard :profile="profile" :can-cancel="canCancelSubscription"
+          :cancel-loading="cancelLoading" :cancel-active-step="cancelActiveStep" :cancel-error="cancelError"
+          :cancel-success="cancelSuccess" @cancel-subscription="handleCancelSubscription" />
       </div>
 
       <!-- Right Column (Main) -->
