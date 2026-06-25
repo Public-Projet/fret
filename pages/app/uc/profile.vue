@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
     <!-- Header -->
-    <RootAppCarProfilCarrierHeader :profile="profile" />
+    <RootAppCarProfilHeader :profile="profile" />
 
     <!-- Stats Bar -->
     <ProfileCarrierStatsBar :missions="0" :rating="'-'" :vehicles="vehicles.length"
