@@ -16,28 +16,21 @@
           <!-- Photo Upload Section -->
           <div class="flex flex-col items-center space-y-4 mb-6">
             <div class="relative group">
-              <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 dark:border-gray-800 shadow-md">
-                <img v-if="form.photoUrl" :src="form.photoUrl" alt="Photo de profil" class="w-full h-full object-cover" />
+              <div
+                class="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-100 dark:border-gray-800 shadow-md">
+                <img v-if="form.photoUrl" :src="form.photoUrl" alt="Photo de profil"
+                  class="w-full h-full object-cover" />
                 <div v-else class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                   <IconUser class="w-10 h-10 text-gray-400" />
                 </div>
               </div>
-              <button 
-                type="button" 
-                @click="triggerFileUpload"
+              <button type="button" @click="triggerFileUpload"
                 class="absolute bottom-0 right-0 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:text-primary-600 transition-colors"
-                :disabled="uploadingPhoto"
-              >
+                :disabled="uploadingPhoto">
                 <IconLoader2 v-if="uploadingPhoto" class="w-4 h-4 animate-spin" />
                 <IconCamera v-else class="w-4 h-4" />
               </button>
-              <input 
-                ref="fileInput" 
-                type="file" 
-                accept="image/*" 
-                class="hidden" 
-                @change="handleFileUpload" 
-              />
+              <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileUpload" />
             </div>
             <p class="text-xs text-gray-500">Cliquez sur l'icône pour changer votre photo</p>
           </div>
