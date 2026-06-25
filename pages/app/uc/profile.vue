@@ -4,7 +4,7 @@
     <RootAppCarProfilHeader :profile="profile" />
 
     <!-- Stats Bar -->
-    <RootAppCarProfilCarrierStatsBar :missions="0" :rating="'-'" :vehicles="vehicles.length"
+    <RootAppCarProfilStatsBar :missions="0" :rating="'-'" :vehicles="vehicles.length"
       @open-security="showSecurityModal = true" @open-edit="openEditModal" />
 
     <div class="container-custom mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
