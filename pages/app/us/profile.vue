@@ -25,7 +25,7 @@
 
       <!-- Right Column -->
       <div class="lg:col-span-2 space-y-6">
-        <RootAppShpProfilShipperKpiCards :announcements="0" reliability="-" rating="-" payment="-" />
+        <RootAppShpProfilKpiCards :announcements="0" reliability="-" rating="-" payment="-" />
 
         <!-- Recent Activity -->
         <RootAppShpProfilRecentActivity />
