@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
-    <!-- Header with Map Background Effect -->
+    <!-- Header -->
     <ProfileCarrierHeader :profile="profile" />
 
     <!-- Stats Bar -->
