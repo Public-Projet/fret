@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
     <!-- Corporate Banner -->
-    <RootAppShpHeader :profile="profile" @open-security="showSecurityModal = true" @open-edit="openEditModal" />
+    <RootAppShpProfilHeader :profile="profile" @open-security="showSecurityModal = true" @open-edit="openEditModal" />
 
     <!-- Main Content -->
     <div class="container-custom mt-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
