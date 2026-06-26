@@ -6,7 +6,11 @@
     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
 
     <div class="container-custom h-full flex flex-col justify-end pb-8 relative z-10">
-      <UiAppSkeleton :loading="loading" type="heading" theme="dark" class="mb-4">
+      <div v-if="loading" class="space-y-4">
+        <UiAppSkeleton :loading="true" type="heading" theme="dark" class="mb-2" />
+        <UiAppSkeleton :loading="true" type="text" theme="dark" class="w-full md:w-2/3" />
+      </div>
+      <div v-else>
         <div class="flex items-center space-x-4 mb-2">
           <span v-if="profile?.status === 'active'"
             class="px-3 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full text-xs font-bold uppercase tracking-wider flex items-center">
@@ -21,12 +25,10 @@
         <h1 class="text-4xl font-extrabold text-white tracking-tight">
           {{ profile?.firstname }} {{ profile?.lastname }}
         </h1>
-      </UiAppSkeleton>
-      <UiAppSkeleton :loading="loading" type="text" theme="dark" class="mt-2 w-full md:w-2/3">
         <p class="text-slate-400 mt-2 max-w-2xl">
           {{ profile?.bio || 'Expert en logistique et transport de marchandises.' }}
         </p>
-      </UiAppSkeleton>
+      </div>
     </div>
   </div>
 </template>
