@@ -46,7 +46,7 @@
         <span class="badge" :class="{
           'badge-success': doc.status === 'verified',
           'badge-warning': doc.status === 'pending',
-          'badge-error': doc.status === 'rejected'
+          'badge-danger': doc.status === 'rejected'
         }">
           {{ getStatusLabel(doc.status) }}
         </span>
