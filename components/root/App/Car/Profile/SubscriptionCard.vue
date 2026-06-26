@@ -4,7 +4,15 @@
       <IconCreditCard class="w-5 h-5 mr-2 text-secondary-600" />
       Abonnement
     </h4>
-    <UiAppSkeleton :loading="loading" type="card">
+
+    <!-- Chargement -->
+    <div v-if="loading" class="space-y-3">
+      <UiAppSkeleton v-for="i in 3" :key="i" :loading="true" type="text" />
+      <UiAppSkeleton :loading="true" type="rectangle" class="mt-4" />
+    </div>
+
+    <!-- Contenu -->
+    <template v-else>
       <div class="space-y-3">
         <div class="flex justify-between items-center">
           <span class="text-sm text-gray-500">Plan</span>
@@ -51,7 +59,7 @@
         <p v-if="cancelError" class="text-xs text-red-500 mt-2">{{ cancelError }}</p>
         <p v-if="cancelSuccess" class="text-xs text-green-500 mt-2">{{ cancelSuccess }}</p>
       </div>
-    </UiAppSkeleton>
+    </template>
   </div>
 </template>
 
