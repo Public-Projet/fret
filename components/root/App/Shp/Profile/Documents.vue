@@ -33,7 +33,7 @@
           'badge-error': doc.status === 'rejected'
         }">{{ getStatusLabel(doc.status) }}</span>
       </div>
-      <button @click="$emit('add-doc')" class="btn btn-ghost btn-sm w-full text-primary-600 text-xs">
+      <button @click="openKycModal" class="btn btn-ghost btn-sm w-full text-primary-600 text-xs">
         + Ajouter un autre
       </button>
     </div>
@@ -41,24 +41,54 @@
     <!-- Vide -->
     <div v-else class="text-center py-4">
       <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Aucun document</p>
-      <button @click="$emit('add-doc')" class="flex items-center justify-center btn btn-primary btn-sm w-full">
+      <button @click="openKycModal" class="flex items-center justify-center btn btn-primary btn-sm w-full">
         <IconPlus class="w-4 h-4 mr-1" /> Ajouter
       </button>
     </div>
+
+    <!-- Modals -->
+    <ModalProfileKyc :show="showKycModal" :loading="kycLoading" :error="kycError" :success="kycSuccess" role="shipper"
+      @close="showKycModal = false" @submit="handleKycSubmit" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { IconCertificate, IconFileCheck, IconLoader2, IconX, IconPlus, IconEye } from '@tabler/icons-vue';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 
 defineProps<{
   kycDocuments?: any[];
   loading?: boolean;
 }>();
 
-defineEmits<{
-  (e: 'add-doc'): void;
-}>();
+const profileStore = useCmnProfileStore();
+
+// KYC Modal State
+const showKycModal = ref(false);
+const kycLoading = ref(false);
+const kycError = ref('');
+const kycSuccess = ref('');
+
+const openKycModal = () => {
+  kycError.value = '';
+  kycSuccess.value = '';
+  showKycModal.value = true;
+};
+
+const handleKycSubmit = async (data: { type: string; file: File }) => {
+  kycLoading.value = true;
+  kycError.value = '';
+  kycSuccess.value = '';
+  const result = await profileStore.uploadKycDocument(data.type, data.file, 'shipper');
+  kycLoading.value = false;
+  if (result.success) {
+    kycSuccess.value = result.message || 'Document soumis avec succès !';
+    setTimeout(() => { showKycModal.value = false; }, 1500);
+  } else {
+    kycError.value = result.error || 'Une erreur est survenue lors de l\'envoi';
+  }
+};
 
 const getDocTypeName = (type: string) => {
   const types: Record<string, string> = {
