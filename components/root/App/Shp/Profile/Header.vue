@@ -4,17 +4,17 @@
       <!-- CHARGEMENT -->
       <div v-if="loading" class="flex items-end space-x-6 w-full">
         <div class="w-32 h-32 -mb-16 shrink-0">
-          <UiAppSkeleton :loading="true" type="avatar" class="w-full h-full" />
+          <UiAppSkeleton :loading="true" type="avatar" width="8rem" height="8rem" radius="0.5rem" theme="dark" />
         </div>
 
         <div class="flex-1 pb-4 space-y-2">
-          <UiAppSkeleton :loading="true" type="heading" class="h-8 w-48" />
-          <UiAppSkeleton :loading="true" type="text" class="h-4 w-36" />
+          <UiAppSkeleton :loading="true" type="heading" width="12rem" height="2rem" theme="dark" />
+          <UiAppSkeleton :loading="true" type="text" width="9rem" height="1rem" theme="dark" />
         </div>
 
         <div class="pb-4 flex space-x-3">
-          <UiAppSkeleton :loading="true" type="text" class="h-10 w-12 rounded-lg" />
-          <UiAppSkeleton :loading="true" type="text" class="h-10 w-36 rounded-lg" />
+          <UiAppSkeleton :loading="true" type="rectangle" width="3rem" height="2.5rem" radius="0.5rem" theme="dark" />
+          <UiAppSkeleton :loading="true" type="rectangle" width="9rem" height="2.5rem" radius="0.5rem" theme="dark" />
         </div>
       </div>
 
@@ -51,19 +51,25 @@
             class="btn bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-sm" title="Sécurité">
             <IconLock class="w-5 h-5" />
           </button>
-          <button @click="$emit('open-edit')"
+          <button @click="openEditModal"
             class="btn bg-primary-600 hover:bg-primary-700 text-white border-0 shadow-lg shadow-primary-900/20">
             Modifier le profil
           </button>
         </div>
       </div>
     </div>
+
+    <!-- Modals -->
+    <ModalProfileEdit :show="showEditModal" :profile="profile" :loading="editLoading" :error="editError"
+      :success="editSuccess" accent-color="primary" @close="showEditModal = false" @submit="handleUpdateProfile" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { IconBuildingSkyscraper, IconDiscountCheckFilled, IconLock } from '@tabler/icons-vue';
 import type { UserProfile } from '~/types';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
 
 defineProps<{
   profile: UserProfile | null;
@@ -72,8 +78,35 @@ defineProps<{
 
 defineEmits<{
   'open-security': [];
-  'open-edit': [];
 }>();
+
+const profileStore = useCmnProfileStore();
+
+// Local States for edit modal
+const showEditModal = ref(false);
+const editLoading = ref(false);
+const editError = ref('');
+const editSuccess = ref('');
+
+const openEditModal = () => {
+  editError.value = '';
+  editSuccess.value = '';
+  showEditModal.value = true;
+};
+
+const handleUpdateProfile = async (data: { firstname: string; lastname: string; phone: string; bio: string; photoUrl: string }) => {
+  editLoading.value = true;
+  editError.value = '';
+  editSuccess.value = '';
+  const result = await profileStore.updateProfile('shipper', data);
+  editLoading.value = false;
+  if (result.success) {
+    editSuccess.value = result.message || 'Profil mis à jour !';
+    setTimeout(() => { showEditModal.value = false; }, 1500);
+  } else {
+    editError.value = result.error || 'Une erreur est survenue';
+  }
+};
 </script>
 
 <style scoped>
