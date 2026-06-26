@@ -1,7 +1,16 @@
 <template>
   <div
     class="bg-gradient-to-br from-primary-900 to-slate-900 text-white rounded-xl shadow-lg p-6 relative overflow-hidden">
-    <UiAppSkeleton :loading="loading" type="card" theme="dark">
+
+    <!-- Chargement -->
+    <div v-if="loading" class="space-y-3">
+      <UiAppSkeleton :loading="true" type="text" theme="dark" class="w-1/3" />
+      <UiAppSkeleton :loading="true" type="text" theme="dark" class="w-1/2" />
+      <UiAppSkeleton :loading="true" type="text" theme="dark" class="w-1/4 mt-2" />
+    </div>
+
+    <!-- Contenu -->
+    <template v-else>
       <div class="relative z-10">
         <h3 class="text-lg font-bold mb-1">Expéditeur</h3>
         <p class="text-primary-200 text-sm mb-2">
@@ -15,7 +24,7 @@
         </div>
       </div>
       <IconPremiumRights class="absolute -bottom-4 -right-4 w-32 h-32 text-white/5" />
-    </UiAppSkeleton>
+    </template>
   </div>
 </template>
 
