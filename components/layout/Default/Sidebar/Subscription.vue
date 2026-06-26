@@ -15,20 +15,21 @@
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-semibold text-primary-700 dark:text-primary-300">Mon abonnement</span>
           <span class="badge badge-xs"
-            :class="currentUser?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-ghost text-gray-500'">
+            :class="currentUser?.subscriptionStatus === 'active' ? 'badge-success' : 'badge-ghost text-gray-500'">
             {{ currentUser?.subscriptionStatus === 'active' ? 'Actif' : 'Inactif' }}
           </span>
         </div>
         <p class="text-sm font-bold text-gray-900 dark:text-white">
           {{ currentUser?.subscriptionStatus === 'active' && currentUser?.subscriptionPlan === 'pro' ? 'Plan Pro' :
-          'Plan Gratuit' }}
+            'Plan Gratuit' }}
         </p>
         <p class="text-xs text-gray-500 dark:text-gray-400">
           Facturation : {{ currentUser?.subscriptionStatus === 'active' ? (currentUser?.subscriptionType === 'annual'
             ? 'Annuelle' : 'Mensuelle') : 'Aucune' }}
         </p>
         <NuxtLink v-if="currentUser?.subscriptionStatus !== 'active' || currentUser?.subscriptionPlan !== 'pro'"
-          to="/pricing" class="mt-3 w-full btn btn-primary btn-xs flex items-center justify-center" @click="emit('linkClick')">
+          to="/pricing" class="mt-3 w-full btn btn-primary btn-xs flex items-center justify-center"
+          @click="emit('linkClick')">
           Passer Pro
         </NuxtLink>
       </div>
