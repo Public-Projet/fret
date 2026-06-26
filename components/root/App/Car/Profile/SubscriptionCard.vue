@@ -31,7 +31,7 @@
         <div class="flex justify-between items-center">
           <span class="text-sm text-gray-500">Statut</span>
           <span class="badge badge-sm"
-            :class="profile?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-error text-white'">
+            :class="profile?.subscriptionStatus === 'active' ? 'badge-success' : 'badge-error text-white'">
             {{ profile?.subscriptionStatus === 'active' ? 'Actif' : 'Inactif' }}
           </span>
         </div>
