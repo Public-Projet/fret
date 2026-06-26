@@ -44,7 +44,7 @@
         Passer Pro
       </NuxtLink>
       <div v-if="canCancel" class="mt-4">
-        <button @click="$emit('cancel-subscription')"
+        <button @click="handleCancelSubscription"
           class="flex items-center justify-center btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 btn-sm w-full"
           :disabled="cancelLoading">
           <template v-if="cancelLoading">
@@ -64,20 +64,65 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue';
 import { IconCreditCard, IconCircleX } from '@tabler/icons-vue';
 import { formatDate } from '~/utils/maps';
+import { useCmnProfileStore } from '~/stores/cmnProfile';
+import { useCmnSubscriptionStore } from '~/stores/cmnSubscription';
 
-defineProps<{
+const props = defineProps<{
   profile?: any;
-  canCancel?: boolean;
-  cancelLoading?: boolean;
-  cancelActiveStep?: number;
-  cancelError?: string;
-  cancelSuccess?: string;
   loading?: boolean;
+  role: 'carrier' | 'shipper';
 }>();
 
-defineEmits<{
-  (e: 'cancel-subscription'): void;
-}>();
+const profileStore = useCmnProfileStore();
+const subscriptionStore = useCmnSubscriptionStore();
+
+// Local states for cancel subscription
+const cancelLoading = ref(false);
+const cancelActiveStep = ref(0);
+const cancelError = ref('');
+const cancelSuccess = ref('');
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const canCancel = computed(() => {
+  if (props.profile?.subscriptionStatus !== 'active' || !props.profile?.subscriptionExpiresAt) return false;
+  const duration = props.profile.subscriptionType === 'annual' ? 365 : 30;
+  const createdDate = props.profile.subscriptionExpiresAt - (duration * 24 * 60 * 60 * 1000);
+  return (Date.now() - createdDate) <= (3 * 24 * 60 * 60 * 1000);
+});
+
+const handleCancelSubscription = async () => {
+  if (!confirm('Êtes-vous sûr de vouloir annuler votre abonnement ? Cette action est irréversible et un administrateur traitera votre remboursement sous peu.')) return;
+
+  cancelLoading.value = true;
+  cancelActiveStep.value = 0;
+  cancelError.value = '';
+  cancelSuccess.value = '';
+
+  try {
+    await sleep(800);
+    cancelActiveStep.value = 1;
+    await sleep(400);
+    const result = await subscriptionStore.cancelSubscription();
+    if (result.success) {
+      cancelActiveStep.value = 2;
+      await sleep(1000);
+      cancelActiveStep.value = 3;
+      await sleep(1200);
+      cancelActiveStep.value = 4;
+      await sleep(800);
+      cancelSuccess.value = result.message;
+      await profileStore.fetchProfile(props.role, { skipAuthRedirect: true });
+    } else {
+      cancelError.value = result.error || 'Erreur lors de l\'annulation';
+    }
+  } catch (err: any) {
+    cancelError.value = 'Une erreur est survenue lors de l\'annulation.';
+  } finally {
+    cancelLoading.value = false;
+  }
+};
 </script>
