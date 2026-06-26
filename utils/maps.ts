@@ -49,7 +49,7 @@ export const getTransactionStatusClass = (status?: string): string => {
   const map: Record<string, string> = {
     approved: 'badge-success text-white',
     pending: 'badge-warning text-white',
-    declined: 'badge-error text-white',
+    declined: 'badge-danger text-white',
     canceled: 'badge-ghost',
     refunded: 'badge-info text-white'
   };
