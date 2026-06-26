@@ -31,7 +31,7 @@
         <div class="flex justify-between items-center">
           <span class="text-sm text-gray-500">Statut</span>
           <span class="badge badge-sm"
-            :class="profile?.subscriptionStatus === 'active' ? 'badge-success text-white' : 'badge-error text-white'">
+            :class="profile?.subscriptionStatus === 'active' ? 'badge-success' : 'badge-error text-white'">
             {{ profile?.subscriptionStatus === 'active' ? 'Actif' : 'Inactif' }}
           </span>
         </div>
@@ -40,9 +40,11 @@
           <span class="text-sm font-medium">{{ formatDate(profile?.subscriptionExpiresAt) }}</span>
         </div>
       </div>
-      <NuxtLink v-if="profile?.subscriptionPlan !== 'pro'" to="/pricing" class="btn btn-primary btn-sm w-full mt-4">
-        Passer Pro
-      </NuxtLink>
+      <div v-if="profile?.subscriptionPlan !== 'pro'" class="mt-4">
+        <NuxtLink to="/pricing" class="flex items-center justify-center btn btn-primary btn-sm w-full">
+          Passer Pro
+        </NuxtLink>
+      </div>
       <div v-if="canCancel" class="mt-4">
         <button @click="handleCancelSubscription"
           class="flex items-center justify-center btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 btn-sm w-full"
