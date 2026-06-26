@@ -80,10 +80,12 @@
             </div>
           </div>
           <p class="text-gray-500 font-bold">Recherche de trajets disponibles...</p>
-          
+
           <!-- Optional Skeletons below -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full mt-12 opacity-50">
-            <div v-for="i in 2" :key="i" class="bg-white/50 dark:bg-gray-800/50 h-64 rounded-[2.5rem] animate-pulse border border-white dark:border-gray-700"></div>
+            <div v-for="i in 2" :key="i"
+              class="bg-white/50 dark:bg-gray-800/50 h-64 rounded-[2.5rem] animate-pulse border border-white dark:border-gray-700">
+            </div>
           </div>
         </div>
 
@@ -273,7 +275,7 @@
                     <span class="truncate">{{ enrollment.availability?.origin?.city }}</span>
                     <IconArrowRight class="w-5 h-5 text-primary-500 flex-shrink-0" />
                     <span class="truncate text-primary-600">{{ enrollment.availability?.destination?.city || 'Libre'
-                    }}</span>
+                      }}</span>
                   </p>
                   <div class="flex items-center mt-2 text-gray-500 font-bold text-sm">
                     <IconCalendar class="w-4 h-4 mr-2 text-primary-400" />
@@ -406,7 +408,7 @@ const getStatusClass = (enrollment: any) => {
     return enrollment.lastProposedBy === 'carrier' ? 'badge-primary' : 'badge-warning';
   }
   if (['confirmed', 'accepted'].includes(enrollment.status)) return 'badge-success';
-  if (['cancelled', 'rejected'].includes(enrollment.status)) return 'badge-error';
+  if (['cancelled', 'rejected'].includes(enrollment.status)) return 'badge-danger';
   return 'badge-neutral';
 };
 
