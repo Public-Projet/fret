@@ -1,36 +1,49 @@
 <template>
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+    <!-- Annonces -->
     <div
       class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center">
-      <UiAppSkeleton :loading="loading" type="text" class="h-8 w-16 mx-auto mb-1">
-        <span class="text-3xl font-bold text-slate-800 dark:text-white mb-1">{{ announcements }}</span>
-      </UiAppSkeleton>
+      <div v-if="loading" class="h-8 w-16 mx-auto mb-1">
+        <UiAppSkeleton :loading="true" type="text" />
+      </div>
+      <span v-else class="text-3xl font-bold text-slate-800 dark:text-white mb-1">{{ announcements }}</span>
       <span class="text-xs text-slate-500 uppercase font-medium">Annonces</span>
     </div>
+
+    <!-- Fiabilité -->
     <div
       class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center">
-      <UiAppSkeleton :loading="loading" type="text" class="h-8 w-16 mx-auto mb-1">
-        <span class="text-3xl font-bold text-green-600 mb-1">{{ reliability }}</span>
-      </UiAppSkeleton>
+      <div v-if="loading" class="h-8 w-16 mx-auto mb-1">
+        <UiAppSkeleton :loading="true" type="text" />
+      </div>
+      <span v-else class="text-3xl font-bold text-green-600 mb-1">{{ reliability }}</span>
       <span class="text-xs text-slate-500 uppercase font-medium">Fiabilité</span>
     </div>
+
+    <!-- Note -->
     <div
       class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center">
-      <UiAppSkeleton :loading="loading" type="text" class="h-8 w-20 mx-auto mb-1">
-        <div class="flex items-center text-yellow-500 mb-1">
-          <span class="text-3xl font-bold">{{ rating }}</span>
-          <IconStarFilled class="w-6 h-6 ml-1" />
-        </div>
-      </UiAppSkeleton>
+      <div v-if="loading" class="h-8 w-20 mx-auto mb-1">
+        <UiAppSkeleton :loading="true" type="text" />
+      </div>
+      <div v-else class="flex items-center text-yellow-500 mb-1">
+        <span class="text-3xl font-bold">{{ rating }}</span>
+        <IconStarFilled class="w-6 h-6 ml-1" />
+      </div>
       <span class="text-xs text-slate-500 uppercase font-medium">Note</span>
     </div>
+
+    <!-- Paiement -->
     <div
       class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center">
-      <UiAppSkeleton :loading="loading" type="text" class="h-8 w-16 mx-auto mb-1">
-        <span class="text-3xl font-bold text-blue-600 mb-1">{{ payment }}</span>
-      </UiAppSkeleton>
+      <div v-if="loading" class="h-8 w-16 mx-auto mb-1">
+        <UiAppSkeleton :loading="true" type="text" />
+      </div>
+      <span v-else class="text-3xl font-bold text-blue-600 mb-1">{{ payment }}</span>
       <span class="text-xs text-slate-500 uppercase font-medium">Paiement</span>
     </div>
+
   </div>
 </template>
 
