@@ -5,7 +5,7 @@
         <IconTruck class="w-5 h-5 mr-2 text-secondary-600" />
         Ma Flotte
       </h3>
-      <button v-if="!loading && vehicles.length > 0" @click="$emit('add-vehicle')"
+      <button v-if="!loading && vehicles.length > 0" @click="openVehicleModal(null)"
         class="btn btn-secondary btn-xs flex items-center">
         <IconPlus class="w-3 h-3 mr-1" />
         Ajouter
@@ -22,7 +22,7 @@
       class="bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 p-8 text-center">
       <IconTruck class="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
       <p class="text-gray-500 dark:text-gray-400 mb-4">Aucun véhicule enregistré</p>
-      <button @click="$emit('add-vehicle')" class="mx-auto flex items-center btn btn-secondary btn-sm">
+      <button @click="openVehicleModal(null)" class="mx-auto flex items-center btn btn-secondary btn-sm">
         <IconPlus class="w-4 h-4 mr-1" />
         Ajouter un véhicule
       </button>
@@ -38,12 +38,12 @@
             <p class="text-sm text-gray-500 dark:text-gray-400 font-mono">{{ vehicle.licensePlate }}</p>
           </div>
           <div class="flex space-x-1">
-            <button @click="$emit('edit-vehicle', vehicle)"
+            <button @click="openVehicleModal(vehicle)"
               class="p-1.5 text-gray-400 hover:text-secondary-600 transition-colors bg-gray-50 dark:bg-gray-700/30 rounded-lg"
               title="Modifier">
               <IconPencil class="w-3.5 h-3.5" />
             </button>
-            <button @click="$emit('delete-vehicle', vehicle.id)"
+            <button @click="handleDeleteVehicle(vehicle.id)"
               class="p-1.5 text-gray-400 hover:text-red-500 transition-colors bg-gray-50 dark:bg-gray-700/30 rounded-lg"
               title="Supprimer">
               <IconTrash class="w-3.5 h-3.5" />
@@ -63,21 +63,59 @@
         </NuxtLink>
       </div>
     </div>
+
+    <!-- Modal Véhicule -->
+    <ModalProfileVehicle :show="showVehicleModal" :vehicle="selectedVehicle" :loading="vehicleLoading"
+      :error="vehicleError" :success="vehicleSuccess" @close="showVehicleModal = false" @submit="handleVehicleSubmit" />
   </section>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { IconTruck, IconPlus, IconPencil, IconTrash } from '@tabler/icons-vue';
-import type { Vehicle } from '~/types';
+import type { Vehicle, AddVehicleData } from '~/types';
+import { useCarVehiclesStore } from '~/stores/carVehicles';
 
 defineProps<{
   vehicles: Vehicle[];
   loading?: boolean;
 }>();
 
-defineEmits<{
-  (e: 'add-vehicle'): void;
-  (e: 'edit-vehicle', vehicle: Vehicle): void;
-  (e: 'delete-vehicle', id: string): void;
-}>();
+const carVehicleStore = useCarVehiclesStore();
+
+// Modal & logic states
+const showVehicleModal = ref(false);
+const selectedVehicle = ref<Vehicle | null>(null);
+const vehicleLoading = ref(false);
+const vehicleError = ref('');
+const vehicleSuccess = ref('');
+
+const openVehicleModal = (vehicle: Vehicle | null) => {
+  selectedVehicle.value = vehicle;
+  vehicleError.value = '';
+  vehicleSuccess.value = '';
+  showVehicleModal.value = true;
+};
+
+const handleVehicleSubmit = async (data: AddVehicleData) => {
+  vehicleLoading.value = true;
+  vehicleError.value = '';
+  vehicleSuccess.value = '';
+  const result = selectedVehicle.value
+    ? await carVehicleStore.updateCarVehicleDetail(selectedVehicle.value.id, data)
+    : await carVehicleStore.addCarVehicle(data);
+  vehicleLoading.value = false;
+  if (result.success) {
+    vehicleSuccess.value = result.message || (selectedVehicle.value ? 'Véhicule mis à jour !' : 'Véhicule ajouté !');
+    setTimeout(() => { showVehicleModal.value = false; }, 1500);
+  } else {
+    vehicleError.value = result.error || 'Une erreur est survenue';
+  }
+};
+
+const handleDeleteVehicle = async (id: string) => {
+  if (!confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?')) return;
+  const result = await carVehicleStore.deleteCarVehicle(id);
+  if (!result.success) alert(result.error || 'Erreur lors de l\'suppression');
+};
 </script>
