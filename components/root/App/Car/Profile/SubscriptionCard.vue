@@ -40,9 +40,11 @@
           <span class="text-sm font-medium">{{ formatDate(profile?.subscriptionExpiresAt) }}</span>
         </div>
       </div>
-      <NuxtLink v-if="profile?.subscriptionPlan !== 'pro'" to="/pricing" class="btn btn-secondary btn-sm w-full mt-4">
-        Passer Pro
-      </NuxtLink>
+      <div v-if="profile?.subscriptionPlan !== 'pro'" class="mt-4">
+        <NuxtLink to="/pricing" class="flex items-center justify-center btn btn-secondary btn-sm w-full">
+          Passer Pro
+        </NuxtLink>
+      </div>
       <div v-if="canCancel" class="mt-4">
         <button @click="handleCancelSubscription"
           class="flex items-center justify-center btn btn-outline border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 btn-sm w-full"
