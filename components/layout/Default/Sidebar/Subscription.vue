@@ -28,7 +28,7 @@
             ? 'Annuelle' : 'Mensuelle') : 'Aucune' }}
         </p>
         <NuxtLink v-if="currentUser?.subscriptionStatus !== 'active' || currentUser?.subscriptionPlan !== 'pro'"
-          to="/pricing" class="mt-2 w-full btn btn-primary btn-xs" @click="emit('linkClick')">
+          to="/pricing" class="mt-3 w-full btn btn-primary btn-xs flex items-center justify-center" @click="emit('linkClick')">
           Passer Pro
         </NuxtLink>
       </div>
