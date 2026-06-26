@@ -163,7 +163,7 @@ const statusClass = computed(() => {
   return {
     'badge-success': status === 'verified' || status === 'approved',
     'badge-warning': status === 'pending',
-    'badge-error': status === 'rejected'
+    'badge-danger': status === 'rejected'
   };
 });
 
