@@ -30,7 +30,7 @@
         <span class="badge badge-sm" :class="{
           'badge-success': doc.status === 'verified',
           'badge-warning': doc.status === 'pending',
-          'badge-error': doc.status === 'rejected'
+          'badge-danger': doc.status === 'rejected'
         }">{{ getStatusLabel(doc.status) }}</span>
       </div>
       <button @click="openKycModal" class="btn btn-ghost btn-sm w-full text-primary-600 text-xs">
