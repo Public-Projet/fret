@@ -8,8 +8,8 @@
     <div class="container-custom h-full flex flex-col justify-end pb-8 relative z-10">
       <!-- CHARGEMENT -->
       <div v-if="loading" class="space-y-4">
-        <UiAppSkeleton :loading="true" type="heading" theme="dark" class="mb-2" />
-        <UiAppSkeleton :loading="true" type="text" theme="dark" class="w-full md:w-2/3" />
+        <UiAppSkeleton :loading="true" type="heading" class="mb-2" />
+        <UiAppSkeleton :loading="true" type="text" class="w-full md:w-2/3" />
       </div>
 
       <!-- DONNÉES -->
