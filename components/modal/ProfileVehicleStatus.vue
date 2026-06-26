@@ -41,7 +41,7 @@
                 <input type="radio" v-model="selectedStatus" value="maintenance"
                   class="radio radio-error radio-sm mr-3" />
                 <span class="flex-1 font-medium text-gray-900 dark:text-white">Maintenance</span>
-                <span class="badge badge-error badge-sm">Arrêt</span>
+                <span class="badge badge-danger badge-sm">Arrêt</span>
               </label>
             </div>
 
