@@ -2,9 +2,9 @@
   <div class="bg-secondary-600 text-white rounded-xl p-6 relative overflow-hidden">
     <!-- Chargement -->
     <div v-if="loading" class="space-y-3">
-      <UiAppSkeleton :loading="true" type="text" theme="dark" class="w-1/2" />
-      <UiAppSkeleton :loading="true" type="text" theme="dark" />
-      <UiAppSkeleton :loading="true" type="text" theme="dark" class="w-1/4 mt-2" />
+      <UiAppSkeleton :loading="true" type="text" class="w-1/2" />
+      <UiAppSkeleton :loading="true" type="text" />
+      <UiAppSkeleton :loading="true" type="text" class="w-1/4 mt-2" />
     </div>
 
     <!-- Contenu -->
