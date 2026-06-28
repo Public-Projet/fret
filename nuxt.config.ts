@@ -42,9 +42,51 @@ export default defineNuxtConfig({
         { name: 'author', content: 'AFR Bourse de Fret' },
         { name: 'keywords', content: 'transport, trasporteur, chargeur, Bénin, marchandise, camion, Véhicule, bourse, deplacé, deplacement, connexion, ensemble,facile, facilité' },
         { name: 'google-site-verification', content: 'OdKxHpVkBSxk0mj4vD4OTmZPdVi5pWzyCu4QPIMHy9A' },
+        // Couleur de la barre de navigation mobile (sync avec theme_color PWA)
+        { name: 'theme-color', content: '#020617' },
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      ],
+      noscript: [
+        {
+          innerHTML: `
+            <div style="
+              position:fixed;inset:0;z-index:99999;
+              background:#020617;
+              display:flex;align-items:center;justify-content:center;
+              padding:24px;text-align:center;font-family:system-ui,sans-serif;
+            ">
+              <div style="max-width:420px">
+                <div style="
+                  width:72px;height:72px;border-radius:50%;
+                  background:rgba(99,102,241,0.15);
+                  border:1px solid rgba(99,102,241,0.3);
+                  display:flex;align-items:center;justify-content:center;
+                  margin:0 auto 24px;
+                ">
+                  <svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24'
+                    fill='none' stroke='#818cf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                    <path d='M18.36 6.64a9 9 0 1 1-12.73 0'/>
+                    <line x1='12' y1='2' x2='12' y2='12'/>
+                  </svg>
+                </div>
+                <h1 style="color:#f1f5f9;font-size:22px;font-weight:900;margin:0 0 12px">JavaScript requis</h1>
+                <p style="color:#94a3b8;font-size:15px;margin:0 0 24px;line-height:1.6">
+                  La Bourse de Fret Bénin nécessite JavaScript pour fonctionner.<br>
+                  Merci de l'activer dans les paramètres de votre navigateur.
+                </p>
+                <a href='/'
+                  style="
+                    display:inline-block;padding:12px 28px;border-radius:12px;
+                    background:#6366f1;color:#fff;font-weight:700;
+                    text-decoration:none;font-size:15px;
+                  "
+                >Réessayer</a>
+              </div>
+            </div>
+          `
+        }
       ]
     }
   },
