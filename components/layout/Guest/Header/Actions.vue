@@ -4,7 +4,7 @@
     <!-- Utils -->
     <div class="hidden sm:flex items-center gap-2 pr-3 border-r border-gray-200 dark:border-gray-700">
       <UiThemeToggle class="hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-colors p-1" />
-      <LayoutNotificationDrop v-if="isAuthenticated" />
+      <ModalGlobalNotificationDrop v-if="isAuthenticated" />
     </div>
 
     <!-- Profile / Auth -->
@@ -44,7 +44,7 @@
               <div class="px-4 py-3 mb-2 bg-white/5 rounded-xl border border-white/5">
                 <p class="text-xs font-bold text-gray-400 mb-1">Session active ({{ userRole }})</p>
                 <p class="text-sm font-black text-white truncate">{{ currentUser?.firstName }} {{ currentUser?.lastName
-                  }}</p>
+                }}</p>
               </div>
 
               <NuxtLink v-for="link in userMenuLinks" :key="link.to" :to="link.to"
