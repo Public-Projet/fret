@@ -1,3 +1,9 @@
+import { ref, computed } from 'vue';
+
+const showPromptModal = ref(false);
+const SNOOZE_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 jours
+const LOCAL_STORAGE_KEY = 'bf-notification-prompt-dismissed';
+
 /**
  * Composable pour les notifications desktop natives (Web Notifications API)
  * Gère la demande de permission et l'envoi de notifications même quand l'onglet est en arrière-plan.
@@ -41,6 +47,43 @@ export const useDesktopNotifications = () => {
       console.warn('[DesktopNotifications] Impossible de demander la permission:', error);
       return false;
     }
+  };
+
+  /**
+   * Vérifie si on doit demander la permission avec notre modal personnalisé.
+   */
+  const checkAndPromptPermission = () => {
+    if (import.meta.server || !isSupported.value) return;
+
+    // Si déjà accordé ou bloqué au niveau du navigateur, on n'affiche rien
+    if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
+
+    // Vérifie le snooze du modal personnalisé
+    const dismissedTimeStr = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (dismissedTimeStr) {
+      const dismissedTime = parseInt(dismissedTimeStr, 10);
+      if (!isNaN(dismissedTime) && Date.now() - dismissedTime < SNOOZE_DURATION_MS) {
+        return; // Toujours sous snooze
+      }
+    }
+
+    showPromptModal.value = true;
+  };
+
+  /**
+   * Accepte la demande : ferme le modal et lance la demande native du navigateur
+   */
+  const acceptPrompt = async (): Promise<boolean> => {
+    showPromptModal.value = false;
+    return await requestPermission();
+  };
+
+  /**
+   * Reporte la demande : ferme le modal et enregistre le snooze
+   */
+  const dismissPrompt = () => {
+    showPromptModal.value = false;
+    localStorage.setItem(LOCAL_STORAGE_KEY, Date.now().toString());
   };
 
   /**
@@ -102,6 +145,10 @@ export const useDesktopNotifications = () => {
     isSupported,
     permission,
     requestPermission,
+    showPromptModal,
+    checkAndPromptPermission,
+    acceptPrompt,
+    dismissPrompt,
     sendNotification,
     notifyNewPlatformNotification,
   };
