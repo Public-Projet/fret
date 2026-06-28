@@ -21,6 +21,12 @@
         <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
           Soyez informé en temps réel des nouvelles opportunités de fret, des messages de vos partenaires et du suivi de vos trajets.
         </p>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+          <span class="inline-flex items-center gap-1">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            Une confirmation de votre navigateur sera demandée.
+          </span>
+        </p>
       </div>
     </div>
 
@@ -62,7 +68,7 @@
           class="order-1 sm:order-2 flex-1 px-4 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-sm font-semibold text-white transition-all shadow-md shadow-primary-500/10 hover:shadow-primary-600/25 flex items-center justify-center gap-2"
         >
           <IconBell class="w-4 h-4" />
-          Activer les notifications
+          Continuer et activer
         </button>
       </div>
     </template>
