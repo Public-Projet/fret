@@ -120,8 +120,6 @@ export async function proxyBinaryToBackend(
   }
 
   // Injecter le token JWT déchiffré dans les headers avant de proxifier.
-  // proxyRequest relaie les headers bruts du navigateur, mais le token est
-  // stocké dans un cookie chiffré que le backend ne sait pas déchiffrer.
   const token = getTokenFromEvent(event);
   if (token) {
     event.node.req.headers['authorization'] = `Bearer ${token}`;
