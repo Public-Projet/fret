@@ -22,7 +22,9 @@
       <div v-else-if="profile" class="flex items-end space-x-6 w-full">
         <!-- Avatar contenu -->
         <div class="w-32 h-32 bg-white rounded-lg shadow-xl p-1 flex items-center justify-center -mb-16 shrink-0">
-          <div
+          <img v-if="profile.photoUrl" :src="profile.photoUrl" :alt="`${profile.firstname} ${profile.lastname}`"
+            class="w-full h-full object-cover rounded" />
+          <div v-else
             class="w-full h-full bg-slate-100 rounded flex items-center justify-center text-4xl font-bold text-slate-700 uppercase">
             {{ profile.firstname?.[0] }}{{ profile.lastname?.[0] }}
           </div>
