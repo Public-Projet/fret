@@ -8,7 +8,7 @@
       <UiThemeToggle class="hidden sm:flex" />
 
       <!-- Notifications -->
-      <LayoutNotificationDrop />
+      <ModalGlobalNotificationDrop />
 
       <!-- User Dropdown -->
       <LayoutDefaultHeaderUserDropdown :current-user="currentUser" :user-initials="userInitials" :user-name="userName"
