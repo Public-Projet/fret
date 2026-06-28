@@ -17,7 +17,6 @@
 
     <!-- Notifications Toast -->
     <UiAppToast />
-    <UtilsNoScript />
   </div>
 </template>
 
