@@ -40,7 +40,8 @@ onMounted(async () => {
   if (authStore.isAuthenticated) {
     notificationStore.fetchUserNotifications();
     notificationStore.startPolling();
-    checkAndPromptPermission();
+    // Délai pour laisser le temps à l'hydratation SSR de se terminer
+    setTimeout(() => checkAndPromptPermission(), 2000);
   }
 });
 
