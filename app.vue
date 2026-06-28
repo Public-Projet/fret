@@ -17,6 +17,9 @@
 
     <!-- Notifications Toast -->
     <UiAppToast />
+
+    <!-- Modal de consentement des notifications desktop -->
+    <ModalGlobalNotificationPermission />
   </div>
 </template>
 
@@ -30,14 +33,14 @@ const heroImagePath = "https://assets.volvo.com/is/image/VolvoInformationTechnol
 const baseUrl = "https://boursefret.netlify.app";
 const authStore = useCmnAuthStore();
 const notificationStore = useCmnNotificationStore();
-const { requestPermission } = useDesktopNotifications();
+const { checkAndPromptPermission } = useDesktopNotifications();
 
 onMounted(async () => {
   await authStore.restoreSession();
   if (authStore.isAuthenticated) {
     notificationStore.fetchUserNotifications();
     notificationStore.startPolling();
-    await requestPermission();
+    checkAndPromptPermission();
   }
 });
 
