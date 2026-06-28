@@ -50,7 +50,7 @@
             {{ profile.firstname }} {{ profile.lastname }}
           </h1>
           <p class="text-slate-400 mt-1 max-w-2xl text-sm">
-            {{ profile.bio || 'Expert en logistique et transport de marchandises.' }}
+            {{ profile.bio || 'Pas de description' }}
           </p>
         </div>
 
