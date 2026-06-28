@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50 font-body">
+    <VitePwaManifest />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -16,24 +17,29 @@
 
     <!-- Notifications Toast -->
     <UiAppToast />
+    <UtilsNoScript />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useCmnAuthStore } from '~/stores/cmnAuth';
 import { useCmnNotificationStore } from '~/stores/cmnNotification';
+import { useDesktopNotifications } from '~/composables/useDesktopNotifications';
 import { IconBrandWhatsapp } from '@tabler/icons-vue';
 
 const heroImagePath = "https://assets.volvo.com/is/image/VolvoInformationTechnologyAB/Volvo-High-Capacity-Transport-1?wid=1024";
 const baseUrl = "https://boursefret.netlify.app";
 const authStore = useCmnAuthStore();
 const notificationStore = useCmnNotificationStore();
+const { requestPermission } = useDesktopNotifications();
 
 onMounted(async () => {
   await authStore.restoreSession();
   if (authStore.isAuthenticated) {
     notificationStore.fetchUserNotifications();
     notificationStore.startPolling();
+    // Demander l'autorisation pour les notifications desktop
+    await requestPermission();
   }
 });
 
@@ -41,8 +47,19 @@ onUnmounted(() => {
   notificationStore.stopPolling();
 });
 
+// Titre dynamique avec badge de notifications
+const titleTemplate = computed(() => {
+  const count = notificationStore.unreadCount;
+  const isAuth = authStore.isAuthenticated;
+  if (isAuth && count > 0) {
+    const badge = count > 99 ? '(99+)' : `(${count})`;
+    return `${badge} %s | Bourse de Fret Bénin`;
+  }
+  return '%s | Bourse de Fret Bénin';
+});
+
 useHead({
-  titleTemplate: '%s | Bourse de Fret Bénin',
+  titleTemplate: () => titleTemplate.value,
   meta: [
     {
       key: 'description',
