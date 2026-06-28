@@ -77,10 +77,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCmnNotificationStore } from '~/stores/cmnNotification';
-import {
-  IconInfoCircle, IconAlertTriangle, IconAlertCircle,
-  IconTrash, IconSearchOff
-} from '@tabler/icons-vue';
+import { IconInfoCircle, IconAlertTriangle, IconAlertCircle, IconTrash, IconSearchOff } from '@tabler/icons-vue';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
