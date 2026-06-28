@@ -1,10 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 pt-12">
     <div class="container-custom px-4 md:px-6">
-      <div v-if="loading" class="flex flex-col items-center justify-center py-20">
-        <IconLoader2 class="w-12 h-12 text-primary-600 animate-spin mb-4" />
-        <p class="text-gray-500 font-medium">Récupération des informations...</p>
-      </div>
+      <RootAnnonceDetailLoading v-if="loading" />
 
       <!-- Availability View -->
       <CommonAvailDetails v-else-if="dataType === 'avail' && item" :item="item" :is-owner="isOwner"
@@ -44,7 +41,7 @@ import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { IconLoader2, IconAlertCircle } from '@tabler/icons-vue';
+import { IconAlertCircle } from '@tabler/icons-vue';
 
 const route = useRoute();
 const pbcAvailStore = usePbcAvailabilityStore();
