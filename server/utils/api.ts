@@ -1,4 +1,4 @@
-import { getHeader, getCookie, proxyRequest } from 'h3';
+import { getHeader, getCookie, proxyRequest, deleteCookie } from 'h3';
 import type { H3Event } from 'h3';
 import { decryptToken, isEncryptedToken } from '~/server/utils/crypto';
 
@@ -72,6 +72,11 @@ export async function proxyToBackend<T = unknown>(
   } catch (error: any) {
     const statusCode = error?.response?.status || error?.statusCode || 500;
     const data = error?.response?._data || error?.data || { message: 'Erreur serveur' };
+
+    if (statusCode === 401) {
+      deleteCookie(event, 'auth_token', { path: '/' });
+      deleteCookie(event, 'auth_role', { path: '/' });
+    }
 
     throw createError({
       statusCode,

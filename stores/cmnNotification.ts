@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Notification } from '~/types';
 import { extractErrorMessage } from '~/utils/error';
+import { useDesktopNotifications } from '~/composables/useDesktopNotifications';
 
 export const useCmnNotificationStore = defineStore('cmnNotification', {
   state: () => ({
@@ -34,6 +35,24 @@ export const useCmnNotificationStore = defineStore('cmnNotification', {
         });
 
         if (response?.notifications) {
+          // Détecter les nouvelles notifications non lues pour les notifier en desktop
+          if (page === 1 && this.notifications.length > 0) {
+            const existingIds = new Set(this.notifications.map((n: Notification) => String(n.id)));
+            const newUnread = (response.notifications as Notification[]).filter(
+              (n: Notification) => !existingIds.has(String(n.id)) && n.status === 'unread'
+            );
+            if (newUnread.length > 0) {
+              const { notifyNewPlatformNotification } = useDesktopNotifications();
+              newUnread.forEach((n: Notification) => {
+                notifyNewPlatformNotification(
+                  n.title || 'Nouvelle notification',
+                  n.content || '',
+                  { tag: `bourse-fret-${n.id}` }
+                );
+              });
+            }
+          }
+
           if (page === 1) {
             this.notifications = response.notifications;
           } else {

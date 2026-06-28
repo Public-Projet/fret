@@ -38,7 +38,6 @@ onMounted(async () => {
   if (authStore.isAuthenticated) {
     notificationStore.fetchUserNotifications();
     notificationStore.startPolling();
-    // Demander l'autorisation pour les notifications desktop
     await requestPermission();
   }
 });
