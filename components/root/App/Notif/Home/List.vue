@@ -2,15 +2,14 @@
   <div
     class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
 
-    <!-- Chargement initial -->
+    <!-- Chargement -->
     <div v-if="isLoading && notifications.length === 0" class="p-6 space-y-4">
       <UiAppSkeleton v-for="i in 4" :key="i" :loading="true" type="rectangle" height="7.5rem" radius="1.5rem" />
     </div>
 
     <!-- Aucun élément -->
     <div v-else-if="notifications.length === 0" class="py-20 text-center px-4">
-      <div
-        class="w-20 h-20 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div class="w-20 h-20 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
         <IconBellOff class="w-10 h-10 text-gray-400" />
       </div>
       <h3 class="text-lg font-bold text-gray-900 dark:text-white">Aucune notification</h3>
