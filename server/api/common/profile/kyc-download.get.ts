@@ -1,4 +1,4 @@
-import { proxyRequest, getCookie } from 'h3';
+import { proxyBinaryToBackend } from '~/server/utils/api';
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
@@ -11,14 +11,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const config = useRuntimeConfig();
-  const baseUrl = config.apiBaseUrl as string;
-  const token = getCookie(event, 'auth_token');
-
-  if (token) {
-    event.node.req.headers['authorization'] = `Bearer ${token}`;
-  }
-
-  const url = `${baseUrl}${path}`;
-  return proxyRequest(event, url);
+  return proxyBinaryToBackend(event, path);
 });
