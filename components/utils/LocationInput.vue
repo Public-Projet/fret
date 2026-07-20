@@ -95,7 +95,6 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted, nextTick } from 'vue';
-import { Country, City } from 'country-state-city';
 import { IconMapPin, IconChevronDown, IconX, IconLoader2 } from '@tabler/icons-vue';
 import 'leaflet/dist/leaflet.css';
 
@@ -133,9 +132,13 @@ const selectedFromMap = ref({ city: '', country: '', address: '', postalCode: ''
 let mapInstance: any = null;
 let markerInstance: any = null;
 
-onMounted(() => {
-  countries.value = Country.getAllCountries().map(c => ({ name: c.name, isoCode: c.isoCode }));
-  initCitiesForCurrentCountry();
+onMounted(async () => {
+  try {
+    countries.value = await ($fetch as any)('/api/countries');
+    await initCitiesForCurrentCountry();
+  } catch (e) {
+    console.error('Failed to load countries', e);
+  }
 });
 
 // Watch for prop changes (External -> Local)
@@ -179,10 +182,24 @@ const onCountryChange = () => {
     initCitiesForCurrentCountry();
 }
 
-const initCitiesForCurrentCountry = () => {
+const initCitiesForCurrentCountry = async () => {
+  if (countries.value.length === 0) {
+    try {
+      countries.value = await ($fetch as any)('/api/countries');
+    } catch (e) {
+      console.error('Failed to load countries', e);
+      return;
+    }
+  }
+
   const country = countries.value.find(c => c.name === localValue.value.country);
   if (country) {
-    availableCities.value = City.getCitiesOfCountry(country.isoCode) || [];
+    try {
+      availableCities.value = await ($fetch as any)(`/api/cities?countryCode=${country.isoCode}`);
+    } catch (e) {
+      console.error('Failed to load cities', e);
+      availableCities.value = [];
+    }
   } else {
     availableCities.value = [];
   }
