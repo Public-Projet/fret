@@ -147,7 +147,7 @@
           <div class="bg-gradient-to-br from-primary-600 to-primary-800 text-white rounded-[2rem] p-6 shadow-lg shadow-primary-600/10">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-primary-200 uppercase tracking-widest">Budget proposé</span>
-              <span v-if="announcement.distance > 0" class="text-xs bg-white/20 px-2.5 py-1 rounded-full font-bold text-white">{{ announcement.distance }} km</span>
+              <span v-if="announcement.distance && announcement.distance > 0" class="text-xs bg-white/20 px-2.5 py-1 rounded-full font-bold text-white">{{ announcement.distance }} km</span>
             </div>
             <p class="text-3xl font-black">
               {{ announcement.budget.toLocaleString() }} <span class="text-lg font-bold">FCFA</span>
@@ -215,7 +215,7 @@
                 <span class="text-gray-500">Volume</span>
                 <span class="font-bold text-gray-900 dark:text-white">{{ announcement.volume }} m³</span>
               </div>
-              <div v-if="announcement.distance > 0" class="flex justify-between">
+              <div v-if="announcement.distance && announcement.distance > 0" class="flex justify-between">
                 <span class="text-gray-500">Distance estimée</span>
                 <span class="font-bold text-gray-900 dark:text-white">{{ announcement.distance }} km</span>
               </div>
@@ -237,7 +237,7 @@
       </div>
     </div>
 
-    <ModalDashboardEditAnnounce v-if="showEditModal" :announcement="announcement" @close="showEditModal = false"
+    <ModalDashboardEditAnnounce v-if="showEditModal" :announcement="announcement" :loading="isUpdating" @close="showEditModal = false"
       @update="handleUpdate" />
 
     <ModalAnnonceNegotiation v-if="showNegotiationModal" :targetId="announcementId" :dataType="'announcement'"
@@ -265,6 +265,7 @@ const announcementId = route.params.id as string;
 const showEditModal = ref(false);
 const showNegotiationModal = ref(false);
 const selectedProposalForCounter = ref<any>(null);
+const isUpdating = ref(false);
 
 const startCounterNegotiation = (proposal: any) => {
   selectedProposalForCounter.value = proposal;
@@ -279,11 +280,11 @@ const closeNegotiationModal = () => {
 const handleNegotiationSuccess = async () => {
   showNegotiationModal.value = false;
   selectedProposalForCounter.value = null;
-  await refreshData();
+  await refreshData(true);
 };
 
-const refreshData = async () => {
-  await announcementStore.fetchShpAnnouncement(announcementId);
+const refreshData = async (forceSilent: boolean = false) => {
+  await announcementStore.fetchShpAnnouncement(announcementId, forceSilent);
   await announcementStore.fetchShpOffersForAnnouncement(announcementId);
 };
 
@@ -340,8 +341,13 @@ const handleCancel = async () => {
 };
 
 const handleUpdate = async (updatedData: any) => {
-  await announcementStore.updateShpAnnouncement(announcementId, updatedData);
-  showEditModal.value = false;
+  isUpdating.value = true;
+  try {
+    await announcementStore.updateShpAnnouncement(announcementId, updatedData);
+    showEditModal.value = false;
+  } finally {
+    isUpdating.value = false;
+  }
 };
 
 const contactCarrier = async (carrierId: string) => {
