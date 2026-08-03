@@ -27,7 +27,6 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
   actions: {
     // Créer une nouvelle annonce
     async shpCreateAnnouncement(announcementData: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt' | 'status'>) {
-      this.loading = true;
       try {
         const newAnnouncement = await $fetch<Announcement>('/api/shipper/announce/create', {
           method: 'POST',
@@ -38,8 +37,6 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
       } catch (error: any) {
         console.error('Erreur lors de la création de l\'annonce:', error);
         return { success: false, error: extractErrorMessage(error) };
-      } finally {
-        this.loading = false;
       }
     },
 
@@ -61,8 +58,8 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
     },
 
     // Obtenir une seule annonce
-    async fetchShpAnnouncement(id: string) {
-      this.loading = true;
+    async fetchShpAnnouncement(id: string, forceSilent: boolean = false) {
+      if (!forceSilent) this.loading = true;
       try {
         const response = await $fetch<Announcement>(`/api/shipper/announce/get`, {
           query: { id }
@@ -79,16 +76,16 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         console.error('Erreur lors du chargement de l\'annonce:', error);
         return { success: false, error: extractErrorMessage(error) };
       } finally {
-        this.loading = false;
+        if (!forceSilent) this.loading = false;
       }
     },
 
     // Mettre à jour une annonce
     async updateShpAnnouncement(id: string, updates: Partial<Announcement>) {
-      this.loading = true;
       try {
         const updated = await $fetch<Announcement>(`/api/shipper/announce/update`, {
           method: 'PATCH',
+          query: { id },
           body: updates,
         });
         const index = this.announcements.findIndex(a => a.id === id);
@@ -102,8 +99,6 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
       } catch (error: any) {
         console.error('Erreur lors de la mise à jour de l\'annonce:', error);
         return { success: false, error: extractErrorMessage(error) };
-      } finally {
-        this.loading = false;
       }
     },
 
@@ -114,9 +109,11 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
 
     // Supprimer une annonce
     async deleteShpAnnouncement(id: string) {
-      this.loading = true;
       try {
-        await ($fetch as any)(`/api/shipper/announce/delete`, { method: 'DELETE' });
+        await $fetch(`/api/shipper/announce/delete`, {
+          method: 'DELETE',
+          query: { id }
+        });
         this.announcements = this.announcements.filter(a => a.id !== id);
         if (this.currentAnnouncement?.id === id) {
           this.currentAnnouncement = null;
@@ -125,14 +122,11 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
       } catch (error: any) {
         console.error('Erreur lors de la suppression de l\'annonce:', error);
         return { success: false, error: extractErrorMessage(error) };
-      } finally {
-        this.loading = false;
       }
     },
 
     // Lister les offres d'une annonce
     async fetchShpOffersForAnnouncement(announcementId: string) {
-      this.loading = true;
       try {
         const token = useCookie('auth_token').value;
         const res = await $fetch<any[]>(`/api/shipper/announce/offer-list`, {
@@ -145,8 +139,6 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
         }
       } catch (e) {
         console.error('Failed to fetch offers for announcement', e);
-      } finally {
-        this.loading = false;
       }
     },
 
