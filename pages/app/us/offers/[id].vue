@@ -1,11 +1,55 @@
 <template>
   <div class="container-custom py-8">
-    <div v-if="loading" class="flex flex-col items-center justify-center py-24 animate-in fade-in duration-700">
-      <div class="relative w-20 h-20">
-        <div class="absolute inset-0 border-4 border-primary-100 dark:border-primary-900/30 rounded-full"></div>
-        <div class="absolute inset-0 border-4 border-primary-600 rounded-full border-t-transparent animate-spin"></div>
+    <!-- Skeleton Loading State -->
+    <div v-if="loading" class="space-y-8 animate-in fade-in duration-500">
+      <!-- Header Skeleton -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-3 flex-1">
+          <UiAppSkeleton type="text" width="150px" height="16px" />
+          <div class="flex items-center gap-3">
+            <UiAppSkeleton type="heading" width="300px" height="36px" />
+            <UiAppSkeleton type="text" width="100px" height="24px" class="rounded-full" />
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <UiAppSkeleton type="text" width="120px" height="42px" class="rounded-xl" />
+          <UiAppSkeleton type="text" width="120px" height="42px" class="rounded-xl" />
+        </div>
       </div>
-      <p class="mt-6 text-gray-500 dark:text-gray-400 font-medium animate-pulse">Chargement de votre annonce...</p>
+
+      <!-- Content Grid Skeleton -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main: Offers -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 space-y-4">
+            <UiAppSkeleton type="heading" width="200px" height="24px" />
+            <UiAppSkeleton type="text" :count="3" gap="3" />
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 space-y-4">
+            <UiAppSkeleton type="heading" width="250px" height="24px" />
+            <div class="space-y-4 mt-6">
+              <UiAppSkeleton type="table-row" v-for="i in 2" :key="i" height="80px" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+          <UiAppSkeleton type="rectangle" height="100px" class="rounded-[2rem]" />
+          <div class="space-y-6 bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+            <UiAppSkeleton type="heading" width="150px" height="20px" />
+            <div class="space-y-6 mt-6">
+              <div class="border-l-2 border-gray-200 dark:border-gray-700 pl-6 space-y-6">
+                <UiAppSkeleton type="text" width="100%" height="40px" />
+                <UiAppSkeleton type="text" width="100%" height="40px" />
+              </div>
+              <div class="space-y-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                <UiAppSkeleton type="text" v-for="i in 5" :key="i" height="20px" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div v-else-if="!announcement"
@@ -78,6 +122,13 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content: Offers List -->
         <div class="lg:col-span-2 space-y-6">
+          <!-- Description Card -->
+          <div v-if="announcement.description" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200/60 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Description de l'annonce</h3>
+            <p class="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{{ announcement.description }}</p>
+          </div>
+
+          <!-- Offers Received -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <IconInbox class="w-5 h-5 mr-2 text-primary-600" />
@@ -92,50 +143,93 @@
 
         <!-- Sidebar: Details -->
         <div class="space-y-6">
-          <div class="card p-6">
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Détails du transport</h3>
+          <!-- Budget Card -->
+          <div class="bg-gradient-to-br from-primary-600 to-primary-800 text-white rounded-[2rem] p-6 shadow-lg shadow-primary-600/10">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-primary-200 uppercase tracking-widest">Budget proposé</span>
+              <span v-if="announcement.distance > 0" class="text-xs bg-white/20 px-2.5 py-1 rounded-full font-bold text-white">{{ announcement.distance }} km</span>
+            </div>
+            <p class="text-3xl font-black">
+              {{ announcement.budget.toLocaleString() }} <span class="text-lg font-bold">FCFA</span>
+            </p>
+          </div>
 
-            <!-- Trajet -->
-            <div class="relative pl-6 border-l-2 border-gray-200 dark:border-gray-700 space-y-6 mb-6">
+          <!-- Detailed Transport Info -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/60 dark:border-gray-700 p-6 space-y-6">
+            <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2 pb-3 border-b border-gray-100 dark:border-gray-700/60">
+              <IconMapPin class="w-5 h-5 text-primary-600" />
+              Détails du transport
+            </h3>
+
+            <!-- Trajet détaillé -->
+            <div class="relative pl-6 border-l-2 border-primary-100 dark:border-primary-900/40 space-y-6">
               <!-- Départ -->
               <div class="relative">
-                <div class="absolute -left-[29px] top-0 w-4 h-4 rounded-full bg-white border-2 border-primary-600">
+                <div class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-primary-600 dark:bg-gray-800">
                 </div>
                 <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wide">Départ</p>
-                  <p class="font-medium text-gray-900 dark:text-white">{{ announcement.origin.city }}</p>
-                  <p class="text-sm text-gray-500">{{ formatDate(announcement.pickupDate) }}</p>
+                  <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Départ</p>
+                  <p class="font-bold text-gray-900 dark:text-white text-base">
+                    {{ announcement.origin.city }}<span v-if="announcement.origin.country">, {{ announcement.origin.country }}</span>
+                  </p>
+                  <p v-if="announcement.origin.address" class="text-sm text-gray-500 mt-0.5">
+                    {{ announcement.origin.address }}
+                  </p>
+                  <p class="text-xs text-gray-400 mt-1 flex items-center">
+                    <IconCalendar class="w-3.5 h-3.5 mr-1 text-primary-500" />
+                    Enlèvement : {{ formatDate(announcement.pickupDate) }}
+                  </p>
                 </div>
               </div>
               <!-- Arrivée -->
               <div class="relative">
-                <div class="absolute -left-[29px] top-0 w-4 h-4 rounded-full bg-white border-2 border-secondary-600">
+                <div class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-secondary-600 dark:bg-gray-800">
                 </div>
                 <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wide">Arrivée</p>
-                  <p class="font-medium text-gray-900 dark:text-white">{{ announcement.destination.city }}</p>
-                  <p class="text-sm text-gray-500">{{ formatDate(announcement.deliveryDate) }}</p>
+                  <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Arrivée</p>
+                  <p class="font-bold text-gray-900 dark:text-white text-base">
+                    {{ announcement.destination.city }}<span v-if="announcement.destination.country">, {{ announcement.destination.country }}</span>
+                  </p>
+                  <p v-if="announcement.destination.address" class="text-sm text-gray-500 mt-0.5">
+                    {{ announcement.destination.address }}
+                  </p>
+                  <p class="text-xs text-gray-400 mt-1 flex items-center">
+                    <IconCalendar class="w-3.5 h-3.5 mr-1 text-secondary-500" />
+                    Livraison : {{ formatDate(announcement.deliveryDate) }}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div class="space-y-3 pt-4 border-t border-gray-100 dark:border-gray-700">
-              <div class="flex justify-between text-sm">
+            <!-- Caractéristiques techniques de la marchandise -->
+            <div class="space-y-3 pt-4 border-t border-gray-100 dark:border-gray-700/60 text-sm">
+              <div class="flex justify-between">
                 <span class="text-gray-500">Marchandise</span>
-                <span class="font-medium text-gray-900 dark:text-white capitalize">{{ announcement.cargoType }}</span>
+                <span class="font-bold text-gray-900 dark:text-white capitalize">{{ announcement.cargoType }}</span>
               </div>
-              <div class="flex justify-between text-sm">
+              <div class="flex justify-between">
                 <span class="text-gray-500">Poids</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ announcement.weight }} kg</span>
+                <span class="font-bold text-gray-900 dark:text-white">{{ announcement.weight }} kg</span>
               </div>
-              <div class="flex justify-between text-sm">
+              <div class="flex justify-between">
                 <span class="text-gray-500">Volume</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ announcement.volume }} m³</span>
+                <span class="font-bold text-gray-900 dark:text-white">{{ announcement.volume }} m³</span>
               </div>
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-500">Vues (totales / uniques)</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ announcement.views || 0 }} / {{
-                  announcement.uniqueViews || 0 }}</span>
+              <div v-if="announcement.distance > 0" class="flex justify-between">
+                <span class="text-gray-500">Distance estimée</span>
+                <span class="font-bold text-gray-900 dark:text-white">{{ announcement.distance }} km</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Vues totales</span>
+                <span class="font-bold text-gray-900 dark:text-white">{{ announcement.views || 0 }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Vues uniques</span>
+                <span class="font-bold text-gray-900 dark:text-white">{{ announcement.uniqueViews || 0 }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Publiée le</span>
+                <span class="font-bold text-gray-900 dark:text-white">{{ formatDate(announcement.createdAt) }}</span>
               </div>
             </div>
           </div>
@@ -159,7 +253,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useCmnMessagingStore } from '~/stores/cmnMessaging';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled, IconCheck, IconMessage, IconBadge, IconSearch, IconRotateClockwise } from '@tabler/icons-vue';
+import { IconArrowLeft, IconPencil, IconX, IconInbox, IconMailOpened, IconStarFilled, IconCheck, IconMessage, IconBadge, IconSearch, IconRotateClockwise, IconCalendar, IconMapPin, IconArrowRight, IconEye, IconUsers } from '@tabler/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
