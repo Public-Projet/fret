@@ -29,13 +29,34 @@
         </div>
       </div>
 
-      <div v-if="loading" class="p-20 text-center">
-        <div class="relative w-16 h-16 mx-auto">
-          <div class="absolute inset-0 border-4 border-primary-100 dark:border-primary-900/30 rounded-full"></div>
-          <div class="absolute inset-0 border-4 border-primary-600 rounded-full border-t-transparent animate-spin">
+      <!-- Skeleton Loading State -->
+      <div v-if="loading" class="p-6 space-y-6">
+        <div v-for="i in 3" :key="i"
+          class="p-6 border border-gray-100 dark:border-gray-800 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="flex-1 min-w-0 space-y-4">
+            <div class="flex items-center gap-3">
+              <UiAppSkeleton type="text" width="90px" height="24px" class="rounded-lg" />
+              <UiAppSkeleton type="text" width="110px" height="14px" />
+            </div>
+            <UiAppSkeleton type="heading" width="40%" height="28px" />
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+              <UiAppSkeleton type="text" width="180px" height="32px" class="rounded-lg" />
+              <UiAppSkeleton type="text" width="150px" height="20px" />
+              <UiAppSkeleton type="text" width="100px" height="32px" class="rounded-lg" />
+            </div>
+          </div>
+          <div class="flex items-center justify-between lg:flex-col lg:items-end lg:justify-center gap-4 pt-4 lg:pt-0 border-t lg:border-t-0 border-gray-100 dark:border-gray-800">
+            <div class="space-y-1">
+              <UiAppSkeleton type="text" width="80px" height="12px" />
+              <UiAppSkeleton type="text" width="120px" height="24px" />
+            </div>
+            <div class="flex gap-2">
+              <UiAppSkeleton type="circle" width="40px" height="40px" />
+              <UiAppSkeleton type="circle" width="40px" height="40px" />
+              <UiAppSkeleton type="circle" width="40px" height="40px" />
+            </div>
           </div>
         </div>
-        <p class="mt-4 text-gray-500 font-medium">Chargement de vos annonces...</p>
       </div>
 
       <div v-else-if="filteredAnnouncements.length === 0" class="p-20 text-center">
@@ -139,7 +160,7 @@
       </div>
     </div>
 
-    <ModalDashboardEditAnnounce v-if="showEditModal" :announcement="announcementToEdit" @close="showEditModal = false"
+    <ModalDashboardEditAnnounce v-if="showEditModal" :announcement="announcementToEdit" :loading="isUpdating" @close="showEditModal = false"
       @update="handleUpdate" />
   </div>
 </template>
@@ -156,6 +177,7 @@ const announcementStore = useShpAnnouncementStore();
 const currentFilter = ref('all');
 const showEditModal = ref(false);
 const announcementToEdit = ref<Announcement | null>(null);
+const isUpdating = ref(false);
 
 const loading = computed(() => announcementStore.loading);
 const currentUser = computed(() => authStore.currentUser);
@@ -215,9 +237,14 @@ const handleDelete = async (id: string) => {
 
 const handleUpdate = async (updatedData: Partial<Announcement>) => {
   if (announcementToEdit.value) {
-    await announcementStore.updateShpAnnouncement(announcementToEdit.value.id, updatedData);
-    showEditModal.value = false;
-    announcementToEdit.value = null;
+    isUpdating.value = true;
+    try {
+      await announcementStore.updateShpAnnouncement(announcementToEdit.value.id, updatedData);
+      showEditModal.value = false;
+      announcementToEdit.value = null;
+    } finally {
+      isUpdating.value = false;
+    }
   }
 };
 
