@@ -88,6 +88,16 @@ export const useShpAnnouncementStore = defineStore('shpAnnouncement', {
           query: { id },
           body: updates,
         });
+        // Normalisation : préserver userId depuis shipper si absent (comme dans fetchShpAnnouncements)
+        const shipperId = typeof updated.shipper === 'object' && updated.shipper !== null
+          ? (updated.shipper as any).id
+          : updated.shipper;
+        if (shipperId && !updated.userId) updated.userId = shipperId as string;
+        // Préserver le userId de l'ancienne entrée en fallback
+        if (!updated.userId) {
+          const existing = this.announcements.find(a => a.id === id);
+          if (existing?.userId) updated.userId = existing.userId;
+        }
         const index = this.announcements.findIndex(a => a.id === id);
         if (index !== -1) {
           this.announcements[index] = updated;
