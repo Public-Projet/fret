@@ -1,23 +1,34 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 pt-12">
+  <div class="min-h-screen bg-gradient-to-b from-gray-50 via-gray-50/80 to-gray-100/50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pb-24 pt-8 md:pt-12">
     <div class="container-custom px-4 md:px-6">
-      <RootAnnonceDetailLoading v-if="loading" />
+      <Transition name="fade" mode="out-in">
+        <RootAnnonceDetailLoading v-if="loading" />
 
-      <!-- Availability View -->
-      <CommonAvailDetails v-else-if="dataType === 'avail' && item" :item="item" :is-owner="isOwner"
-        :already-enrolled="alreadyEnrolled" :can-rate="canRate" @enroll="enroll"
-        @show-rating-modal="showRatingModal = true" @refresh="fetchData" @counter="startCounterNegotiation" />
+        <!-- Availability View -->
+        <CommonAvailDetails v-else-if="dataType === 'avail' && item" :item="item" :is-owner="isOwner"
+          :already-enrolled="alreadyEnrolled" :can-rate="canRate" @enroll="enroll"
+          @show-rating-modal="showRatingModal = true" @refresh="fetchData" @counter="startCounterNegotiation" />
 
-      <!-- Offer View -->
-      <RootAnnonceDetailOffer v-else-if="(dataType === 'offer' || dataType === 'fret') && item" :item="item"
-        :is-owner="isOwner" :can-rate="canRate" :rating-label="ratingLabel" @show-rating-modal="showRatingModal = true"
-        @enroll="enroll" @refresh="fetchData" @counter="startCounterNegotiation" />
+        <!-- Offer View -->
+        <RootAnnonceDetailOffer v-else-if="(dataType === 'offer' || dataType === 'fret') && item" :item="item"
+          :is-owner="isOwner" :can-rate="canRate" :rating-label="ratingLabel" @show-rating-modal="showRatingModal = true"
+          @enroll="enroll" @refresh="fetchData" @counter="startCounterNegotiation" />
 
-      <div v-else class="text-center py-20">
-        <IconAlertCircle class="w-12 h-12 text-red-500 mx-auto mb-4" />
-        <p class="text-lg text-gray-500">Détails non trouvés ou erreur de chargement.</p>
-        <NuxtLink to="/annonces" class="btn btn-primary mt-4">Retour au marché</NuxtLink>
-      </div>
+        <!-- Fallback Error View -->
+        <div v-else class="max-w-md mx-auto text-center py-16 px-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl border border-gray-100 dark:border-gray-700 shadow-xl shadow-gray-200/50 dark:shadow-none space-y-5">
+          <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-2xl flex items-center justify-center mx-auto border border-red-100 dark:border-red-900/30">
+            <IconAlertCircle class="w-8 h-8" />
+          </div>
+          <div class="space-y-2">
+            <h3 class="text-xl font-extrabold text-gray-900 dark:text-white">Annonce introuvable</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Les détails de cette annonce ne sont pas disponibles ou l'annonce a été retirée.</p>
+          </div>
+          <NuxtLink to="/annonces" class="inline-flex items-center justify-center gap-2 w-full py-3.5 px-4 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-sm shadow-md shadow-primary-500/20 transition-all">
+            <IconArrowLeft class="w-4 h-4" />
+            <span>Retour au marché</span>
+          </NuxtLink>
+        </div>
+      </Transition>
     </div>
 
     <!-- Negotiation Modal -->
@@ -28,9 +39,9 @@
 
     <!-- Rating Modal -->
     <ModalGlobalRatingForm :show="showRatingModal"
-      :targetId="dataType === 'avail' ? item?.carrier?.id || '' : item?.user?.id || ''"
+      :targetId="dataType === 'avail' ? item?.carrier?.id || '' : item?.user?.id || item?.shipper?.id || ''"
       :targetRole="dataType === 'avail' ? 'carrier' : 'shipper'"
-      :initialData="dataType === 'avail' ? item?.carrier?.myReview : item?.user?.myReview"
+      :initialData="dataType === 'avail' ? item?.carrier?.myReview : (item?.user?.myReview || item?.shipper?.myReview)"
       @close="showRatingModal = false" @success="handleRatingSuccess" />
   </div>
 </template>
