@@ -51,13 +51,15 @@ import { ref, computed, onMounted } from 'vue';
 import { usePbcAvailabilityStore } from '~/stores/pbcAvailability';
 import { useShpAvailabilityStore } from '~/stores/shpAvailability';
 import { usePbcAnnouncementStore } from '~/stores/pbcAnnouncement';
+import { useShpAnnouncementStore } from '~/stores/shpAnnouncement';
 import { useCmnAuthStore } from '~/stores/cmnAuth';
-import { IconAlertCircle } from '@tabler/icons-vue';
+import { IconAlertCircle, IconArrowLeft } from '@tabler/icons-vue';
 
 const route = useRoute();
 const pbcAvailStore = usePbcAvailabilityStore();
 const shpAvailStore = useShpAvailabilityStore();
 const fretStore = usePbcAnnouncementStore();
+const shpAnnouncementStore = useShpAnnouncementStore();
 const authStore = useCmnAuthStore();
 
 const id = route.params.id as string;
@@ -91,11 +93,12 @@ const isOwner = computed(() => {
   if (!authStore.isAuthenticated || !authStore.user?.id || !item.value) return false;
 
   if (dataType.value === 'avail') {
-    const carrierId = item.value?.carrier?.id;
+    const carrierId = item.value?.carrier?.id || item.value?.carrier;
     return authStore.isCarrier && carrierId && String(carrierId) === String(authStore.user.id);
   }
-  const userId = item.value?.userId;
-  return authStore.isShipper && userId && String(userId) === String(authStore.user.id);
+
+  const shipperId = item.value?.shipper?.id || item.value?.shipper || item.value?.userId || item.value?.user?.id;
+  return authStore.isShipper && shipperId && String(shipperId) === String(authStore.user.id);
 });
 
 const alreadyEnrolled = computed(() => {
@@ -110,12 +113,11 @@ const canRate = computed(() => {
   if (dataType.value === 'avail') {
     return authStore.isShipper;
   }
-
   return authStore.isCarrier;
 });
 
 const ratingLabel = computed(() => {
-  const hasReview = dataType.value === 'avail' ? item.value?.carrier?.myReview : item.value?.user?.myReview;
+  const hasReview = dataType.value === 'avail' ? item.value?.carrier?.myReview : (item.value?.user?.myReview || item.value?.shipper?.myReview);
   return hasReview ? 'Modifier mon avis' : 'Noter cet expéditeur';
 });
 
@@ -128,43 +130,83 @@ const handleRatingSuccess = (data: { rating: number, reviewsCount: number, myRev
       item.value.carrier.myReview = data.myReview;
     }
   } else {
-    if (item.value.user) {
-      item.value.user.rating = data.rating;
-      item.value.user.reviewCount = data.reviewsCount;
-      item.value.user.myReview = data.myReview;
+    const userObj = item.value.shipper || item.value.user;
+    if (userObj) {
+      userObj.rating = data.rating;
+      userObj.reviewCount = data.reviewsCount;
+      userObj.myReview = data.myReview;
     }
   }
 };
 
 const enroll = () => {
+  selectedProposalForCounter.value = null;
   showNegotiationModal.value = true;
 };
 
 const fetchData = async () => {
   loading.value = true;
 
-  // Try to load based on type or try both
-  if (dataType.value === 'avail') {
-    const res = await pbcAvailStore.fetchPbcMineAvailability(id);
-    if (res.success) item.value = res.availability;
-  } else if (dataType.value === 'offer' || dataType.value === 'fret') {
-    const res = await fretStore.getPbcAnnouncements(id);
-    item.value = fretStore.currentAnnouncement;
-  } else {
-    const resAvail = await pbcAvailStore.fetchPbcMineAvailability(id);
-    if (resAvail.success) {
-      item.value = resAvail.availability;
-      dataType.value = 'avail';
-    } else {
-      const resOffer = await fretStore.getPbcAnnouncements(id);
-      if (resOffer) {
+  try {
+    if (dataType.value === 'avail') {
+      const res = await pbcAvailStore.fetchPbcMineAvailability(id);
+      if (res.success && res.availability) {
+        item.value = res.availability;
+      }
+    } else if (dataType.value === 'offer' || dataType.value === 'fret') {
+      if (authStore.isAuthenticated && authStore.isShipper) {
+        const resShp = await shpAnnouncementStore.fetchShpAnnouncement(id);
+        if (resShp.success && resShp.announcement) {
+          item.value = resShp.announcement;
+          await shpAnnouncementStore.fetchShpOffersForAnnouncement(id);
+          item.value.offers = shpAnnouncementStore.offers.filter(
+            (o: any) => String(o.announcementId || o.announcement?.id || o.announcement) === String(id)
+          );
+        } else {
+          await fretStore.getPbcAnnouncements(id);
+          item.value = fretStore.currentAnnouncement;
+        }
+      } else {
+        await fretStore.getPbcAnnouncements(id);
         item.value = fretStore.currentAnnouncement;
-        dataType.value = 'offer';
+      }
+    } else {
+      // Auto-detect type
+      const resAvail = await pbcAvailStore.fetchPbcMineAvailability(id);
+      if (resAvail.success && resAvail.availability) {
+        item.value = resAvail.availability;
+        dataType.value = 'avail';
+      } else {
+        if (authStore.isAuthenticated && authStore.isShipper) {
+          const resShp = await shpAnnouncementStore.fetchShpAnnouncement(id);
+          if (resShp.success && resShp.announcement) {
+            item.value = resShp.announcement;
+            dataType.value = 'offer';
+            await shpAnnouncementStore.fetchShpOffersForAnnouncement(id);
+            item.value.offers = shpAnnouncementStore.offers.filter(
+              (o: any) => String(o.announcementId || o.announcement?.id || o.announcement) === String(id)
+            );
+          } else {
+            await fretStore.getPbcAnnouncements(id);
+            if (fretStore.currentAnnouncement) {
+              item.value = fretStore.currentAnnouncement;
+              dataType.value = 'offer';
+            }
+          }
+        } else {
+          await fretStore.getPbcAnnouncements(id);
+          if (fretStore.currentAnnouncement) {
+            item.value = fretStore.currentAnnouncement;
+            dataType.value = 'offer';
+          }
+        }
       }
     }
+  } catch (err) {
+    console.error('Error fetching detail:', err);
+  } finally {
+    loading.value = false;
   }
-
-  loading.value = false;
 };
 
 onMounted(() => {
