@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden">
     <RootHomeHero />
-    <RootHomePartners />
+    <!-- <RootHomePartners /> -->
     <RootHomeFeatures />
     <RootHomeAdvantages />
     <RootHomeTestimonials />
