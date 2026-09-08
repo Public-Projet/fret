@@ -36,8 +36,8 @@ const CONTACT_ITEMS = [
     iconBg: 'bg-blue-100 dark:bg-blue-900/30',
     iconColor: 'text-blue-600 dark:text-blue-400',
     linkColor: 'text-blue-600 dark:text-blue-400',
-    href: 'tel:+22901XXXXXXXX',
-    value: '+229 01 XX XX XX XX'
+    href: 'tel:+2290160300607',
+    value: '+229 01 60 30 06 07'
   },
   {
     label: 'Bureau',
