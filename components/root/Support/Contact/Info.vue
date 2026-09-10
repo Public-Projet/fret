@@ -47,7 +47,9 @@ const CONTACT_ITEMS = [
     iconColor: 'text-green-600 dark:text-green-400',
     linkColor: '',
     href: null,
-    value: 'Zone xxx,<br />Cotonou, Bénin'
+    // value: 'Zone xxx,<br />Cotonou, Bénin'
+    value: 'Cotonou, Bénin'
+
   }
 ];
 </script>
