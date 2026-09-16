@@ -1,0 +1,1 @@
+import{a5 as a}from"./yvDnXYef.js";var h=a("outline","calendar-check","CalendarCheck",[["path",{d:"M11.5 21h-5.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v6",key:"svg-0"}],["path",{d:"M16 3v4",key:"svg-1"}],["path",{d:"M8 3v4",key:"svg-2"}],["path",{d:"M4 11h16",key:"svg-3"}],["path",{d:"M15 19l2 2l4 -4",key:"svg-4"}]]);export{h as I};
