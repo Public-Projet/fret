@@ -27,6 +27,7 @@ jobs:
         run: npm run build
         env:
           NUXT_PUBLIC_API_BASE: ${{ vars.NUXT_PUBLIC_API_BASE }}
+          NUXT_TOKEN_ENCRYPTION_KEY: ${{ vars.NUXT_TOKEN_ENCRYPTION_KEY }}
           UV_THREADPOOL_SIZE: "2"
           RAYON_NUM_THREADS: "2"
           # ajoute ici toute autre variable NUXT_PUBLIC_* nécessaire au build
