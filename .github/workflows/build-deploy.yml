@@ -18,7 +18,7 @@ jobs:
       - name: 🔧 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: 📦 Install deps
         run: npm ci
@@ -27,6 +27,8 @@ jobs:
         run: npm run build
         env:
           NUXT_PUBLIC_API_BASE: ${{ vars.NUXT_PUBLIC_API_BASE }}
+          UV_THREADPOOL_SIZE: "2"
+          RAYON_NUM_THREADS: "2"
           # ajoute ici toute autre variable NUXT_PUBLIC_* nécessaire au build
 
       - name: 📤 Push .output vers la branche deploy
